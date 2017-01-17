@@ -1,0 +1,14 @@
+﻿<Window x:Class="GreedyKidEditor.TextInputDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GreedyKidEditor"
+        mc:Ignorable="d"
+        Title="New object name..." Height="124" Width="138" WindowStartupLocation="CenterOwner">
+    <Grid>
+        <TextBlock Text="Name:" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,7,0,0" />
+        <TextBox x:Name="ResponseTextBox" Height="20" Width="100" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,28,0,0" KeyDown="ResponseTextBox_KeyDown" />
+        <Button Content="OK" Click="OKButton_Click" Width="21" Height="20" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,55,0,0" />
+    </Grid>
+</Window>
