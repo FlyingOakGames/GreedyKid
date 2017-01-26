@@ -11,18 +11,21 @@ namespace GreedyKidEditor
         Building,
         Level,
         Floor,
+        Room
     }
 
     public class BuildingTreeViewItem : TreeViewItem
     {
         public int Level = 0;
         public int Floor = 0;
+        public int Room = 0;
         public BuildingElement Type = BuildingElement.Building;
 
-        public BuildingTreeViewItem(BuildingElement type = BuildingElement.Building, int level = 0, int floor = 0)
+        public BuildingTreeViewItem(BuildingElement type = BuildingElement.Building, int level = 0, int floor = 0, int room = 0)
         {
             Level = level;
             Floor = floor;
+            Room = room;
             Type = type;
         }
     }
@@ -160,7 +163,7 @@ namespace GreedyKidEditor
             this.Close();
         }
 
-        private void RefreshTreeView(int selectedLevel = -1, int selectedFloor = -1)
+        private void RefreshTreeView(int selectedLevel = -1, int selectedFloor = -1, int selectedRoom = -1)
         {
             treeView.Items.Clear();
 
@@ -176,6 +179,7 @@ namespace GreedyKidEditor
             {
                 BuildingTreeViewItem levelItem = new BuildingTreeViewItem(BuildingElement.Level, l);
                 levelItem.Header = "Level " + (l + 1) + ": " + _building.Levels[l].Name;
+
                 if (l == selectedLevel)
                 {
                     levelItem.IsExpanded = true;
@@ -189,7 +193,24 @@ namespace GreedyKidEditor
                     floorItem.Header = "Floor " + (f + 1) + ": " + _building.Levels[l].Floors[f].Name;
 
                     if (f == selectedFloor)
+                    {
+                        floorItem.IsExpanded = true;
                         floorItem.IsSelected = true;
+                    }
+
+                    // rooms
+                    for (int r = 0; r < _building.Levels[l].Floors[f].Rooms.Count; r++)
+                    {
+                        BuildingTreeViewItem roomItem = new BuildingTreeViewItem(BuildingElement.Room, l, f, r);
+                        roomItem.Header = "Room " + (r + 1) + ": " + _building.Levels[l].Floors[f].Rooms[r].Name;
+
+                        if (r == selectedRoom)
+                        {
+                            roomItem.IsSelected = true;
+                        }
+
+                        floorItem.Items.Add(roomItem);
+                    }
 
                     levelItem.Items.Add(floorItem);
                 }
@@ -215,7 +236,12 @@ namespace GreedyKidEditor
                 {
                     _building.Levels[selectedItem.Level].Floors.Add(new Floor());
                     RefreshTreeView(selectedItem.Level);
-                }                
+                }
+                else if (selectedItem.Type == BuildingElement.Floor)
+                {
+                    _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms.Add(new Room());
+                    RefreshTreeView(selectedItem.Level, selectedItem.Floor);
+                }      
             }
         }
 
@@ -236,6 +262,12 @@ namespace GreedyKidEditor
                     _building.Levels[selectedItem.Level].Floors.RemoveAt(selectedItem.Floor);
 
                     RefreshTreeView(selectedItem.Level, selectedItem.Floor - 1);
+                }
+                else if (selectedItem.Type == BuildingElement.Room)
+                {
+                    _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms.RemoveAt(selectedItem.Room);
+
+                    RefreshTreeView(selectedItem.Level, selectedItem.Floor, selectedItem.Room - 1);
                 }
             }
         }
@@ -268,6 +300,11 @@ namespace GreedyKidEditor
                         _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Name = name;
                         selectedItem.Header = "Floor " + (selectedItem.Floor + 1) + ": " + name;
                     }
+                    else if (selectedItem.Type == BuildingElement.Room)
+                    {
+                        _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].Name = name;
+                        selectedItem.Header = "Room " + (selectedItem.Room + 1) + ": " + name;
+                    }
                 }
             }
         }
@@ -282,13 +319,13 @@ namespace GreedyKidEditor
                 {
                     renderer.SelectedLevel = selectedItem.Level;
 
-                    if (selectedItem.Type == BuildingElement.Floor)
+                    if (selectedItem.Type == BuildingElement.Room)
                     {
-                        paintTextBox.Text = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].BackgroundColor.ToString();
-                        leftMarginTextBox.Text = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].LeftMargin.ToString();
-                        rightMarginTextBox.Text = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].RightMargin.ToString();
-                        leftDecorationTextBox.Text = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].LeftDecoration.ToString();
-                        rightDecorationTextBox.Text = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].RightDecoration.ToString();
+                        paintTextBox.Text = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].BackgroundColor.ToString();
+                        leftMarginTextBox.Text = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].LeftMargin.ToString();
+                        rightMarginTextBox.Text = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].RightMargin.ToString();
+                        leftDecorationTextBox.Text = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].LeftDecoration.ToString();
+                        rightDecorationTextBox.Text = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].RightDecoration.ToString();
                     }
                 }
             }
@@ -300,11 +337,11 @@ namespace GreedyKidEditor
 
             if (selectedItem != null)
             {
-                if (selectedItem.Type == BuildingElement.Floor)
+                if (selectedItem.Type == BuildingElement.Room)
                 {
-                    _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].BackgroundColor++;
-                    _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].BackgroundColor = Math.Min(_building.Levels[selectedItem.Level].Floors[selectedItem.Floor].BackgroundColor, Floor.PaintCount - 1);
-                    paintTextBox.Text = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].BackgroundColor.ToString();
+                    _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].BackgroundColor++;
+                    _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].BackgroundColor = Math.Min(_building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].BackgroundColor, Room.PaintCount - 1);
+                    paintTextBox.Text = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].BackgroundColor.ToString();
                 }
             }
         }
@@ -315,11 +352,11 @@ namespace GreedyKidEditor
 
             if (selectedItem != null)
             {
-                if (selectedItem.Type == BuildingElement.Floor)
+                if (selectedItem.Type == BuildingElement.Room)
                 {
-                    _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].BackgroundColor--;
-                    _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].BackgroundColor = Math.Max(_building.Levels[selectedItem.Level].Floors[selectedItem.Floor].BackgroundColor, 0);
-                    paintTextBox.Text = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].BackgroundColor.ToString();
+                    _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].BackgroundColor--;
+                    _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].BackgroundColor = Math.Max(_building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].BackgroundColor, 0);
+                    paintTextBox.Text = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].BackgroundColor.ToString();
                 }
             }
         }
@@ -330,11 +367,11 @@ namespace GreedyKidEditor
 
             if (selectedItem != null)
             {
-                if (selectedItem.Type == BuildingElement.Floor)
+                if (selectedItem.Type == BuildingElement.Room)
                 {
-                    _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].LeftMargin++;
-                    _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].LeftMargin = Math.Min(_building.Levels[selectedItem.Level].Floors[selectedItem.Floor].LeftMargin, 30);
-                    leftMarginTextBox.Text = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].LeftMargin.ToString();
+                    _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].LeftMargin++;
+                    _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].LeftMargin = Math.Min(_building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].LeftMargin, 30);
+                    leftMarginTextBox.Text = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].LeftMargin.ToString();
                 }
             }
         }
@@ -345,11 +382,11 @@ namespace GreedyKidEditor
 
             if (selectedItem != null)
             {
-                if (selectedItem.Type == BuildingElement.Floor)
+                if (selectedItem.Type == BuildingElement.Room)
                 {
-                    _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].LeftMargin--;
-                    _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].LeftMargin = Math.Max(_building.Levels[selectedItem.Level].Floors[selectedItem.Floor].LeftMargin, 0);
-                    leftMarginTextBox.Text = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].LeftMargin.ToString();
+                    _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].LeftMargin--;
+                    _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].LeftMargin = Math.Max(_building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].LeftMargin, 0);
+                    leftMarginTextBox.Text = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].LeftMargin.ToString();
                 }
             }
         }
@@ -360,11 +397,11 @@ namespace GreedyKidEditor
 
             if (selectedItem != null)
             {
-                if (selectedItem.Type == BuildingElement.Floor)
+                if (selectedItem.Type == BuildingElement.Room)
                 {
-                    _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].RightMargin++;
-                    _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].RightMargin = Math.Min(_building.Levels[selectedItem.Level].Floors[selectedItem.Floor].RightMargin, 30);
-                    rightMarginTextBox.Text = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].RightMargin.ToString();
+                    _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].RightMargin++;
+                    _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].RightMargin = Math.Min(_building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].RightMargin, 30);
+                    rightMarginTextBox.Text = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].RightMargin.ToString();
                 }
             }
         }
@@ -375,11 +412,11 @@ namespace GreedyKidEditor
 
             if (selectedItem != null)
             {
-                if (selectedItem.Type == BuildingElement.Floor)
+                if (selectedItem.Type == BuildingElement.Room)
                 {
-                    _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].RightMargin--;
-                    _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].RightMargin = Math.Max(_building.Levels[selectedItem.Level].Floors[selectedItem.Floor].RightMargin, 0);
-                    rightMarginTextBox.Text = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].RightMargin.ToString();
+                    _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].RightMargin--;
+                    _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].RightMargin = Math.Max(_building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].RightMargin, 0);
+                    rightMarginTextBox.Text = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].RightMargin.ToString();
                 }
             }
         }
@@ -390,11 +427,11 @@ namespace GreedyKidEditor
 
             if (selectedItem != null)
             {
-                if (selectedItem.Type == BuildingElement.Floor)
+                if (selectedItem.Type == BuildingElement.Room)
                 {
-                    _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].LeftDecoration++;
-                    _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].LeftDecoration = Math.Min(_building.Levels[selectedItem.Level].Floors[selectedItem.Floor].LeftDecoration, Floor.DecorationCount - 1);
-                    leftDecorationTextBox.Text = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].LeftDecoration.ToString();
+                    _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].LeftDecoration++;
+                    _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].LeftDecoration = Math.Min(_building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].LeftDecoration, Room.DecorationCount - 1);
+                    leftDecorationTextBox.Text = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].LeftDecoration.ToString();
                 }
             }
         }
@@ -405,11 +442,11 @@ namespace GreedyKidEditor
 
             if (selectedItem != null)
             {
-                if (selectedItem.Type == BuildingElement.Floor)
+                if (selectedItem.Type == BuildingElement.Room)
                 {
-                    _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].LeftDecoration--;
-                    _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].LeftDecoration = Math.Max(_building.Levels[selectedItem.Level].Floors[selectedItem.Floor].LeftDecoration, 0);
-                    leftDecorationTextBox.Text = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].LeftDecoration.ToString();
+                    _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].LeftDecoration--;
+                    _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].LeftDecoration = Math.Max(_building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].LeftDecoration, 0);
+                    leftDecorationTextBox.Text = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].LeftDecoration.ToString();
                 }
             }
         }
@@ -420,11 +457,11 @@ namespace GreedyKidEditor
 
             if (selectedItem != null)
             {
-                if (selectedItem.Type == BuildingElement.Floor)
+                if (selectedItem.Type == BuildingElement.Room)
                 {
-                    _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].RightDecoration++;
-                    _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].RightDecoration = Math.Min(_building.Levels[selectedItem.Level].Floors[selectedItem.Floor].RightDecoration, Floor.DecorationCount - 1);
-                    rightDecorationTextBox.Text = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].RightDecoration.ToString();
+                    _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].RightDecoration++;
+                    _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].RightDecoration = Math.Min(_building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].RightDecoration, Room.DecorationCount - 1);
+                    rightDecorationTextBox.Text = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].RightDecoration.ToString();
                 }
             }
         }
@@ -437,9 +474,9 @@ namespace GreedyKidEditor
             {
                 if (selectedItem.Type == BuildingElement.Floor)
                 {
-                    _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].RightDecoration--;
-                    _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].RightDecoration = Math.Max(_building.Levels[selectedItem.Level].Floors[selectedItem.Floor].RightDecoration, 0);
-                    rightDecorationTextBox.Text = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].RightDecoration.ToString();
+                    _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].RightDecoration--;
+                    _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].RightDecoration = Math.Max(_building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].RightDecoration, 0);
+                    rightDecorationTextBox.Text = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].RightDecoration.ToString();
                 }
             }
         }

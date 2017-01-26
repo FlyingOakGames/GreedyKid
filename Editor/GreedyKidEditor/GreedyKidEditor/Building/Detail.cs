@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace GreedyKidEditor
 {
-    public sealed class Floor
+    public sealed class Detail
     {
-        public string Name = "";
+        public const int DetailCount = 5;
 
-        public List<Room> Rooms = new List<Room>();
+        public int Type = 0;
+        public int X = 0;
     }
 }

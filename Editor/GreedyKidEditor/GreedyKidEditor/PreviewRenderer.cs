@@ -15,12 +15,13 @@ namespace GreedyKidEditor
 
         System.Windows.Forms.Form _form;
 
-        public static int Width = 312;
-        public static int Height = 176;
+        public static int Width = 328; // 312
+        public static int Height = 184; // 176
 
         Texture2D _levelTexture;
         
-        Rectangle[][][] _floorRectangle;
+        Rectangle[][][] _roomRectangle;
+        Rectangle[][] _detailRectangle;
 
         Color _fillColor = new Color(34, 32, 52);
 
@@ -71,22 +72,29 @@ namespace GreedyKidEditor
 
 
 
-            _floorRectangle = new Rectangle[Floor.PaintCount][][]; // colors
+            _roomRectangle = new Rectangle[Room.PaintCount][][]; // colors
+            _detailRectangle = new Rectangle[Room.PaintCount][];
 
-            for (int p = 0; p < Floor.PaintCount; p++)
+            for (int p = 0; p < Room.PaintCount; p++)
             {
-                _floorRectangle[p] = new Rectangle[Floor.DecorationCount][]; // decoration
+                _roomRectangle[p] = new Rectangle[Room.DecorationCount][]; // decoration
 
-                for (int d = 0; d < Floor.DecorationCount; d++)
+                for (int d = 0; d < Room.DecorationCount; d++)
                 {
-                    _floorRectangle[p][d] = new Rectangle[]
+                    _roomRectangle[p][d] = new Rectangle[]
                     {
                         new Rectangle(56 * d, 48 * p, 24, 48), // left
                         new Rectangle(24 + 56 * d, 48 * p, 8, 48), // fill
                         new Rectangle(24 + 8 + 56 * d, 48 * p, 24, 48), // right
                     };
                 }
-            }
+
+                _detailRectangle[p] = new Rectangle[Detail.DetailCount];
+                for (int i = 0; i < Detail.DetailCount; i++)
+                {
+                    _detailRectangle[p][i] = new Rectangle(56 * Room.DecorationCount + i * 32, 48 * p, 32, 48);
+                }
+            }            
         }
 
         protected override void UnloadContent()
@@ -113,45 +121,63 @@ namespace GreedyKidEditor
             GraphicsDevice.Clear(_fillColor);
 
             spriteBatch.Begin(samplerState: SamplerState.PointWrap);
-
+            
             if (SelectedLevel >= 0 && SelectedLevel < _building.Levels.Count)
             {
                 for (int f = 0; f < _building.Levels[SelectedLevel].Floors.Count; f++)
                 {
                     Floor floor = _building.Levels[SelectedLevel].Floors[f];
 
-                    // background
-                    int startX = 16 + floor.LeftMargin * 8;
-                    int nbSlice = 35 - floor.LeftMargin - floor.RightMargin;
-
-                    Rectangle source = _floorRectangle[floor.BackgroundColor][0][1];
-
-                    for (int s = 0; s < nbSlice; s++)
+                    // rooms
+                    for (int r = 0; r < floor.Rooms.Count; r++)
                     {
+                        Room room = floor.Rooms[r];
+                        // background
+                        int startX = 16 + room.LeftMargin * 8;
+                        int nbSlice = 35 - room.LeftMargin - room.RightMargin;
+
+                        Rectangle source = _roomRectangle[room.BackgroundColor][0][1];
+
+                        for (int s = 0; s < nbSlice; s++)
+                        {
+                            spriteBatch.Draw(_levelTexture,
+                                new Rectangle(startX + 8 * s, 128 - 40 * f, source.Width, source.Height),
+                                source,
+                                Color.White);
+                        }
+
+                        // left wall
+                        source = _roomRectangle[room.BackgroundColor][room.LeftDecoration][0];
+
                         spriteBatch.Draw(_levelTexture,
-                            new Rectangle(startX + 8 * s, 128 - 40 * f, source.Width, source.Height),
+                            new Rectangle(room.LeftMargin * 8, 128 - 40 * f, source.Width, source.Height),
+                            source,
+                            Color.White);
+
+                        // right wall
+                        source = _roomRectangle[room.BackgroundColor][room.RightDecoration][2];
+
+                        spriteBatch.Draw(_levelTexture,
+                            new Rectangle(288 - room.RightMargin * 8, 128 - 40 * f, source.Width, source.Height),
                             source,
                             Color.White);
                     }
 
-                    // left decoration
-                    source = _floorRectangle[floor.BackgroundColor][floor.LeftDecoration][0];
+                    // rooms details
+                    for (int r = 0; r < floor.Rooms.Count; r++)
+                    {
+                        Room room = floor.Rooms[r];
+                        // background
+                        int startX = 16;
 
-                    spriteBatch.Draw(_levelTexture,
-                        new Rectangle(floor.LeftMargin * 8, 128 - 40 *f, source.Width, source.Height),
-                        source,
-                        Color.White);
+                        for (int d = 0; d < room.Details.Count; d++)
+                        {
 
-                    // right decoration
-                    source = _floorRectangle[floor.BackgroundColor][floor.RightDecoration][2];
-
-                    spriteBatch.Draw(_levelTexture,
-                        new Rectangle(288 - floor.RightMargin  * 8, 128 - 40 * f, source.Width, source.Height),
-                        source,
-                        Color.White);
+                        }
+                    }
                 }
             }
-
+            
             spriteBatch.End();
 
             base.Draw(gameTime);

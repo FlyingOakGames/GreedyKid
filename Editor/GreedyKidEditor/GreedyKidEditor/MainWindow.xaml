@@ -43,13 +43,13 @@
             </Grid>
             <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
             <Grid x:Name="rendererBackgroundGrid" Grid.Column="2" Background="Black" SizeChanged="rendererBackgroundGrid_SizeChanged">
-                <WindowsFormsHost x:Name="wfHost" Height="176" Width="312" >
+                <WindowsFormsHost x:Name="wfHost" Height="184" Width="328" >
                     <wf:Panel x:Name="monoGameRenderPanel"/>
                 </WindowsFormsHost>
             </Grid>
             <GridSplitter Grid.Column="3" Width="5" HorizontalAlignment="Stretch"/>
             <Grid Grid.Column="4" >
-                <Label x:Name="label1" Content="Floor properties" Margin="0,2,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="114" FontWeight="Bold"/>
+                <Label x:Name="label1" Content="Room properties" Margin="0,2,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="114" FontWeight="Bold"/>
 
                 <Grid Width="40" Height="26" Margin="0,33,10,0" HorizontalAlignment="Right" VerticalAlignment="Top">
                     <Grid.ColumnDefinitions>
@@ -123,8 +123,9 @@
                 </Grid>
                 <Label x:Name="label2_Copy" Content="Left margin" HorizontalAlignment="Right" Margin="0,66,61,0" VerticalAlignment="Top"/>
                 <Label x:Name="label2_Copy1" Content="Right margin" HorizontalAlignment="Right" Margin="0,99,52,0" VerticalAlignment="Top"/>
-                <Label x:Name="label2_Copy2" Content="Left detail" HorizontalAlignment="Right" Margin="0,132,69,0" VerticalAlignment="Top"/>
-                <Label x:Name="label2_Copy3" Content="Right detail" HorizontalAlignment="Right" Margin="0,165,60,0" VerticalAlignment="Top"/>
+                <Label x:Name="label2_Copy2" Content="Left wall" HorizontalAlignment="Right" Margin="0,132,77,0" VerticalAlignment="Top"/>
+                <Label x:Name="label2_Copy3" Content="Right wall" HorizontalAlignment="Right" Margin="0,165,68,0" VerticalAlignment="Top"/>
+                <Label x:Name="label1_Copy" Content="Room details" Margin="0,195,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="114" FontWeight="Bold"/>
             </Grid>
         </Grid>
     </Grid>
