@@ -28,6 +28,8 @@ namespace GreedyKidEditor
         Building _building;
 
         public int SelectedLevel = -1;
+        public int SelectedFloor = -1;
+        public int SelectedRoom = -1;
 
         private void OnPreparingDeviceSettings(object sender, PreparingDeviceSettingsEventArgs args)
         {
@@ -134,7 +136,7 @@ namespace GreedyKidEditor
                         Room room = floor.Rooms[r];
                         // background
                         int startX = 16 + room.LeftMargin * 8;
-                        int nbSlice = 35 - room.LeftMargin - room.RightMargin;
+                        int nbSlice = 37 - room.LeftMargin - room.RightMargin;
 
                         Rectangle source = _roomRectangle[room.BackgroundColor][0][1];
 
@@ -158,7 +160,7 @@ namespace GreedyKidEditor
                         source = _roomRectangle[room.BackgroundColor][room.RightDecoration][2];
 
                         spriteBatch.Draw(_levelTexture,
-                            new Rectangle(288 - room.RightMargin * 8, 128 - 40 * f, source.Width, source.Height),
+                            new Rectangle(304 - room.RightMargin * 8, 128 - 40 * f, source.Width, source.Height),
                             source,
                             Color.White);
                     }
@@ -166,18 +168,28 @@ namespace GreedyKidEditor
                     // rooms details
                     for (int r = 0; r < floor.Rooms.Count; r++)
                     {
-                        Room room = floor.Rooms[r];
-                        // background
-                        int startX = 16;
+                        Room room = floor.Rooms[r];                        
 
                         for (int d = 0; d < room.Details.Count; d++)
                         {
+                            Detail detail = room.Details[d];
+                            Rectangle source = _detailRectangle[room.BackgroundColor][detail.Type];
 
+                            spriteBatch.Draw(_levelTexture,
+                                new Rectangle(detail.X, 128 - 40 * f, source.Width, source.Height),
+                                source,
+                                Color.White);
                         }
                     }
                 }
             }
-            
+
+            // overlay
+            spriteBatch.Draw(_levelTexture,
+                new Rectangle(0, 0, 328, 184),
+                new Rectangle(0, 840, 328, 184),
+                Color.White);
+
             spriteBatch.End();
 
             base.Draw(gameTime);

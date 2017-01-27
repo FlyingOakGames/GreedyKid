@@ -15,8 +15,8 @@ namespace GreedyKidEditor
 
         public int BackgroundColor = 0;
 
-        public int LeftMargin = 0;
-        public int RightMargin = 0;
+        public int LeftMargin = 1;
+        public int RightMargin = 1;
 
         public int LeftDecoration = 0;
         public int RightDecoration = 0;

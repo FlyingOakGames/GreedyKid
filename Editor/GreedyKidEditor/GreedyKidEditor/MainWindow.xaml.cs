@@ -321,11 +321,16 @@ namespace GreedyKidEditor
 
                     if (selectedItem.Type == BuildingElement.Room)
                     {
+                        renderer.SelectedFloor = selectedItem.Floor;
+                        renderer.SelectedRoom = selectedItem.Room;
+
                         paintTextBox.Text = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].BackgroundColor.ToString();
                         leftMarginTextBox.Text = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].LeftMargin.ToString();
                         rightMarginTextBox.Text = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].RightMargin.ToString();
                         leftDecorationTextBox.Text = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].LeftDecoration.ToString();
                         rightDecorationTextBox.Text = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].RightDecoration.ToString();
+
+                        RefreshDetailListBox();
                     }
                 }
             }
@@ -478,6 +483,44 @@ namespace GreedyKidEditor
                     _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].RightDecoration = Math.Max(_building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].RightDecoration, 0);
                     rightDecorationTextBox.Text = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].RightDecoration.ToString();
                 }
+            }
+        }
+
+        private void RefreshDetailListBox()
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count && 
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedFloor];
+
+                int prevSelection = detailListBox.SelectedIndex;
+
+                detailListBox.Items.Clear();
+                for (int i = 0; i < room.Details.Count; i++)
+                {
+                    detailListBox.Items.Add("Detail " + i);
+                }
+
+                if (prevSelection < detailListBox.Items.Count)
+                    detailListBox.SelectedIndex = prevSelection;                
+                else if (detailListBox.Items.Count > 0)
+                    detailListBox.SelectedIndex = 0;
+            }
+        }
+
+        private void addDetail_Click(object sender, RoutedEventArgs e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedFloor];
+
+                room.Details.Add(new Detail());
+
+                RefreshDetailListBox();
+                detailListBox.SelectedIndex = detailListBox.Items.Count - 1;
             }
         }
     }

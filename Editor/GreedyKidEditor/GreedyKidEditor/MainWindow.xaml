@@ -126,6 +126,9 @@
                 <Label x:Name="label2_Copy2" Content="Left wall" HorizontalAlignment="Right" Margin="0,132,77,0" VerticalAlignment="Top"/>
                 <Label x:Name="label2_Copy3" Content="Right wall" HorizontalAlignment="Right" Margin="0,165,68,0" VerticalAlignment="Top"/>
                 <Label x:Name="label1_Copy" Content="Room details" Margin="0,195,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="114" FontWeight="Bold"/>
+                <ListBox x:Name="detailListBox" HorizontalAlignment="Right" Height="100" Margin="0,248,10,0" VerticalAlignment="Top" Width="140"/>
+                <Button x:Name="addDetail" Content="+" HorizontalAlignment="Right" Margin="0,223,129,0" VerticalAlignment="Top" Width="20" Height="20" Click="addDetail_Click"/>
+                <Button x:Name="removeDetail" Content="-" HorizontalAlignment="Right" Margin="0,223,104,0" VerticalAlignment="Top" Width="20" Height="20"/>
             </Grid>
         </Grid>
     </Grid>

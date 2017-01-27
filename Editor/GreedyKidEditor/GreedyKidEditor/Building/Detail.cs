@@ -12,5 +12,10 @@ namespace GreedyKidEditor
 
         public int Type = 0;
         public int X = 0;
+
+        public Detail(int x)
+        {
+            X = x;
+        }
     }
 }
