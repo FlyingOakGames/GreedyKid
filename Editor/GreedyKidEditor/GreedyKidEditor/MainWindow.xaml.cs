@@ -313,11 +313,15 @@ namespace GreedyKidEditor
         {
             BuildingTreeViewItem selectedItem = treeView.SelectedItem as BuildingTreeViewItem;
 
-            if (selectedItem != null)
+            if (selectedItem != null && renderer != null)
             {
+                renderer.SelectedLevel = -1;
+                renderer.SelectedFloor = -1;
+                renderer.SelectedRoom = -1;
+
                 if (selectedItem.Type != BuildingElement.Building)
                 {
-                    renderer.SelectedLevel = selectedItem.Level;
+                    renderer.SelectedLevel = selectedItem.Level;                    
 
                     if (selectedItem.Type == BuildingElement.Room)
                     {
@@ -492,7 +496,7 @@ namespace GreedyKidEditor
                 renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
                 renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count)
             {
-                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedFloor];
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
 
                 int prevSelection = detailListBox.SelectedIndex;
 
@@ -515,12 +519,70 @@ namespace GreedyKidEditor
                 renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
                 renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count)
             {
-                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedFloor];
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
 
-                room.Details.Add(new Detail());
+                int roomWidth = 328 - room.LeftMargin * 8 - room.RightMargin * 8;
+                room.Details.Add(new Detail(room.LeftMargin * 8 + roomWidth / 2 - 16)); // middle of the room
 
                 RefreshDetailListBox();
                 detailListBox.SelectedIndex = detailListBox.Items.Count - 1;
+            }
+        }
+
+        private void xDetail_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count &&
+                detailListBox.SelectedIndex >= 0 && detailListBox.SelectedIndex < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom].Details.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+
+                room.Details[detailListBox.SelectedIndex].X = (int)xDetail.Value;
+            }
+        }
+
+        private void detailListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count &&
+                detailListBox.SelectedIndex >= 0 && detailListBox.SelectedIndex < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom].Details.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+
+                xDetail.Value = room.Details[detailListBox.SelectedIndex].X;
+                detailTextBox.Text = room.Details[detailListBox.SelectedIndex].Type.ToString();
+            }
+        }
+
+        private void detailButtonUP_Click(object sender, RoutedEventArgs e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count &&
+                detailListBox.SelectedIndex >= 0 && detailListBox.SelectedIndex < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom].Details.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+
+                room.Details[detailListBox.SelectedIndex].Type++;
+                room.Details[detailListBox.SelectedIndex].Type = Math.Min(room.Details[detailListBox.SelectedIndex].Type, Detail.DetailCount - 1);
+                detailTextBox.Text = room.Details[detailListBox.SelectedIndex].Type.ToString();
+            }
+        }
+
+        private void detailButtonDown_Click(object sender, RoutedEventArgs e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count &&
+                detailListBox.SelectedIndex >= 0 && detailListBox.SelectedIndex < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom].Details.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+
+                room.Details[detailListBox.SelectedIndex].Type--;
+                room.Details[detailListBox.SelectedIndex].Type = Math.Max(room.Details[detailListBox.SelectedIndex].Type, 0);
+                detailTextBox.Text = room.Details[detailListBox.SelectedIndex].Type.ToString();
             }
         }
     }
