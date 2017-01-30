@@ -22,6 +22,7 @@ namespace GreedyKidEditor
         
         Rectangle[][][] _roomRectangle;
         Rectangle[][] _detailRectangle;
+        Rectangle[][][] _floorDoorRectangle;
 
         Color _fillColor = new Color(34, 32, 52);
 
@@ -76,6 +77,7 @@ namespace GreedyKidEditor
 
             _roomRectangle = new Rectangle[Room.PaintCount][][]; // colors
             _detailRectangle = new Rectangle[Room.PaintCount][];
+            _floorDoorRectangle = new Rectangle[Room.PaintCount][][];
 
             for (int p = 0; p < Room.PaintCount; p++)
             {
@@ -92,9 +94,24 @@ namespace GreedyKidEditor
                 }
 
                 _detailRectangle[p] = new Rectangle[Detail.DetailCount];
-                for (int i = 0; i < Detail.DetailCount; i++)
+                for (int d = 0; d < Detail.DetailCount; d++)
                 {
-                    _detailRectangle[p][i] = new Rectangle(56 * Room.DecorationCount + i * 32, 48 * p, 32, 48);
+                    _detailRectangle[p][d] = new Rectangle(56 * Room.DecorationCount + d * 32, 48 * p, 32, 48);
+                }
+
+                _floorDoorRectangle[p] = new Rectangle[FloorDoor.DoorCount][];                
+                for (int d = 0; d < FloorDoor.DoorCount; d++)
+                {
+                    int row = d / FloorDoor.DoorPerLine;
+                    int col = d % FloorDoor.DoorPerLine;
+                    int nbLine = (int)Math.Ceiling(FloorDoor.DoorCount / (float)FloorDoor.DoorPerLine);
+
+                    _floorDoorRectangle[p][d] = new Rectangle[FloorDoor.DoorFrames];
+
+                    for (int f = 0; f < FloorDoor.DoorFrames; f++)
+                    {
+                        _floorDoorRectangle[p][d][f] = new Rectangle(col * 40 * FloorDoor.DoorFrames + f * 40, Room.PaintCount * 48 + p * 48 * nbLine + row * 48, 40, 48);
+                    }
                 }
             }            
         }
@@ -177,6 +194,23 @@ namespace GreedyKidEditor
 
                             spriteBatch.Draw(_levelTexture,
                                 new Rectangle(detail.X, 128 - 40 * f, source.Width, source.Height),
+                                source,
+                                Color.White);
+                        }
+                    }
+
+                    // floor doors
+                    for (int r = 0; r < floor.Rooms.Count; r++)
+                    {
+                        Room room = floor.Rooms[r];
+
+                        for (int d = 0; d < room.FloorDoors.Count; d++)
+                        {
+                            FloorDoor floorDoor = room.FloorDoors[d];
+                            Rectangle source = _floorDoorRectangle[room.BackgroundColor][floorDoor.Color][3];
+
+                            spriteBatch.Draw(_levelTexture,
+                                new Rectangle(floorDoor.X, 128 - 40 * f, source.Width, source.Height),
                                 source,
                                 Color.White);
                         }

@@ -335,6 +335,7 @@ namespace GreedyKidEditor
                         rightDecorationTextBox.Text = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].RightDecoration.ToString();
 
                         RefreshDetailListBox();
+                        RefreshFloorDoorListBox();
                     }
                 }
             }
@@ -529,6 +530,24 @@ namespace GreedyKidEditor
             }
         }
 
+        private void removeDetail_Click(object sender, RoutedEventArgs e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count &&
+                detailListBox.SelectedIndex >= 0 && detailListBox.SelectedIndex < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom].Details.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+
+                
+                room.Details.RemoveAt(detailListBox.SelectedIndex);
+
+                RefreshDetailListBox();
+                if (detailListBox.SelectedIndex >= 0)
+                    detailListBox.SelectedIndex = detailListBox.SelectedIndex - 1;
+            }
+        }
+
         private void xDetail_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
@@ -585,5 +604,121 @@ namespace GreedyKidEditor
                 detailTextBox.Text = room.Details[detailListBox.SelectedIndex].Type.ToString();
             }
         }
+
+        private void RefreshFloorDoorListBox()
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+
+                int prevSelection = floorDoorListBox.SelectedIndex;
+
+                floorDoorListBox.Items.Clear();
+                for (int i = 0; i < room.FloorDoors.Count; i++)
+                {
+                    floorDoorListBox.Items.Add("Floor door " + i);
+                }
+
+                if (prevSelection < floorDoorListBox.Items.Count)
+                    floorDoorListBox.SelectedIndex = prevSelection;
+                else if (floorDoorListBox.Items.Count > 0)
+                    floorDoorListBox.SelectedIndex = 0;
+            }
+        }
+
+        private void addFloorDoor_Click(object sender, RoutedEventArgs e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+
+                int roomWidth = 328 - room.LeftMargin * 8 - room.RightMargin * 8;
+                room.FloorDoors.Add(new FloorDoor(room.LeftMargin * 8 + roomWidth / 2 - 20)); // middle of the room
+
+                RefreshFloorDoorListBox();
+                floorDoorListBox.SelectedIndex = floorDoorListBox.Items.Count - 1;
+            }
+        }
+
+        private void removeFloorDoor_Click(object sender, RoutedEventArgs e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count &&
+                floorDoorListBox.SelectedIndex >= 0 && floorDoorListBox.SelectedIndex < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom].FloorDoors.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+
+
+                room.FloorDoors.RemoveAt(floorDoorListBox.SelectedIndex);
+
+                RefreshDetailListBox();
+                if (floorDoorListBox.SelectedIndex >= 0)
+                    floorDoorListBox.SelectedIndex = floorDoorListBox.SelectedIndex - 1;
+            }
+        }
+
+        private void floorDoorListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count &&
+                floorDoorListBox.SelectedIndex >= 0 && floorDoorListBox.SelectedIndex < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom].FloorDoors.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+
+                xFloorDoor.Value = room.FloorDoors[floorDoorListBox.SelectedIndex].X;
+                floorDoorTextBox.Text = room.FloorDoors[floorDoorListBox.SelectedIndex].Color.ToString();
+            }
+        }
+
+        private void xFloorDoor_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count &&
+                floorDoorListBox.SelectedIndex >= 0 && floorDoorListBox.SelectedIndex < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom].FloorDoors.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+
+                room.FloorDoors[floorDoorListBox.SelectedIndex].X = (int)xFloorDoor.Value;
+            }
+        }
+
+        private void floorDoorButtonUP_Click(object sender, RoutedEventArgs e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count &&
+                floorDoorListBox.SelectedIndex >= 0 && floorDoorListBox.SelectedIndex < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom].FloorDoors.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+
+                room.FloorDoors[floorDoorListBox.SelectedIndex].Color++;
+                room.FloorDoors[floorDoorListBox.SelectedIndex].Color = Math.Min(room.FloorDoors[floorDoorListBox.SelectedIndex].Color, FloorDoor.DoorCount - 1);
+                floorDoorTextBox.Text = room.FloorDoors[floorDoorListBox.SelectedIndex].Color.ToString();
+            }
+        }
+
+        private void floorDoorButtonDown_Click(object sender, RoutedEventArgs e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count &&
+                floorDoorListBox.SelectedIndex >= 0 && floorDoorListBox.SelectedIndex < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom].FloorDoors.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+
+                room.FloorDoors[floorDoorListBox.SelectedIndex].Color--;
+                room.FloorDoors[floorDoorListBox.SelectedIndex].Color = Math.Max(room.FloorDoors[floorDoorListBox.SelectedIndex].Color, 0);
+                floorDoorTextBox.Text = room.FloorDoors[floorDoorListBox.SelectedIndex].Color.ToString();
+            }
+        }
+
+
     }
 }

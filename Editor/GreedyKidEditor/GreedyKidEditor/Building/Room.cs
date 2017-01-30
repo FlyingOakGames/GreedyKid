@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace GreedyKidEditor
 {
@@ -21,6 +17,7 @@ namespace GreedyKidEditor
         public int LeftDecoration = 0;
         public int RightDecoration = 0;
 
-        public List<Detail> Details = new List<Detail>();             
+        public List<Detail> Details = new List<Detail>();
+        public List<FloorDoor> FloorDoors = new List<FloorDoor>();        
     }
 }

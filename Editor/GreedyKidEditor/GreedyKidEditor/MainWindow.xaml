@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:GreedyKidEditor"
         xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
         mc:Ignorable="d"
-        Title="Greedy Kid Editor" Height="500" Width="700" Closing="Window_Closing" WindowStartupLocation="CenterScreen" WindowState="Maximized">
+        Title="Greedy Kid Editor" Height="790" Width="700" Closing="Window_Closing" WindowStartupLocation="CenterScreen" WindowState="Maximized">
     <Grid>
         <Menu Height="23" VerticalAlignment="Top">
             <MenuItem Header="_File">
@@ -128,7 +128,7 @@
                 <Label x:Name="label1_Copy" Content="Room details" Margin="0,195,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="114" FontWeight="Bold"/>
                 <ListBox x:Name="detailListBox" HorizontalAlignment="Right" Height="100" Margin="0,248,10,0" VerticalAlignment="Top" Width="140" SelectionChanged="detailListBox_SelectionChanged"/>
                 <Button x:Name="addDetail" Content="+" HorizontalAlignment="Right" Margin="0,223,129,0" VerticalAlignment="Top" Width="20" Height="20" Click="addDetail_Click"/>
-                <Button x:Name="removeDetail" Content="-" HorizontalAlignment="Right" Margin="0,223,104,0" VerticalAlignment="Top" Width="20" Height="20"/>
+                <Button x:Name="removeDetail" Content="-" HorizontalAlignment="Right" Margin="0,223,104,0" VerticalAlignment="Top" Width="20" Height="20" Click="removeDetail_Click"/>
                 <Slider x:Name="xDetail" HorizontalAlignment="Right" Margin="0,353,10,0" VerticalAlignment="Top" Width="123" SmallChange="1" Maximum="328" ValueChanged="xDetail_ValueChanged"/>
                 <Label x:Name="label2_Copy4" Content="X" HorizontalAlignment="Right" Margin="0,348,136,0" VerticalAlignment="Top"/>
                 <Grid Width="40" Height="26" Margin="0,375,10,0" HorizontalAlignment="Right" VerticalAlignment="Top">
@@ -145,6 +145,26 @@
                     <RepeatButton Name="detailButtonDown"  Grid.Column="1" Grid.Row="1" FontSize="8"  FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="13" VerticalAlignment="Bottom" Click="detailButtonDown_Click">6</RepeatButton>
                 </Grid>
                 <Label x:Name="label2_Copy5" Content="Type" HorizontalAlignment="Right" Margin="0,376,52,0" VerticalAlignment="Top"/>
+                <Label x:Name="label1_Copy1" Content="Floor doors" Margin="0,404,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="114" FontWeight="Bold"/>
+                <ListBox x:Name="floorDoorListBox" HorizontalAlignment="Right" Height="100" Margin="0,457,10,0" VerticalAlignment="Top" Width="140" SelectionChanged="floorDoorListBox_SelectionChanged"/>
+                <Button x:Name="addFloorDoor" Content="+" HorizontalAlignment="Right" Margin="0,432,129,0" VerticalAlignment="Top" Width="20" Height="20" Click="addFloorDoor_Click"/>
+                <Button x:Name="removeFloorDoor" Content="-" HorizontalAlignment="Right" Margin="0,432,104,0" VerticalAlignment="Top" Width="20" Height="20" Click="removeFloorDoor_Click"/>
+                <Slider x:Name="xFloorDoor" HorizontalAlignment="Right" Margin="0,562,10,0" VerticalAlignment="Top" Width="123" SmallChange="1" Maximum="328" ValueChanged="xFloorDoor_ValueChanged"/>
+                <Label x:Name="label2_Copy6" Content="X" HorizontalAlignment="Right" Margin="0,557,136,0" VerticalAlignment="Top"/>
+                <Grid Width="40" Height="26" Margin="0,584,10,0" HorizontalAlignment="Right" VerticalAlignment="Top">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="13" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="13" />
+                        <RowDefinition Height="13" />
+                    </Grid.RowDefinitions>
+                    <TextBox x:Name="floorDoorTextBox"  Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" TextAlignment="Right" Text="0" IsEnabled="False" />
+                    <RepeatButton x:Name="floorDoorButtonUP"  Grid.Column="1" Grid.Row="0" FontSize="8" FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="5" Click="floorDoorButtonUP_Click"/>
+                    <RepeatButton x:Name="floorDoorButtonDown"  Grid.Column="1" Grid.Row="1" FontSize="8"  FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="13" VerticalAlignment="Bottom" Content="6" Click="floorDoorButtonDown_Click"/>
+                </Grid>
+                <Label x:Name="label2_Copy7" Content="Color" HorizontalAlignment="Right" Margin="0,585,52,0" VerticalAlignment="Top"/>
             </Grid>
         </Grid>
     </Grid>
