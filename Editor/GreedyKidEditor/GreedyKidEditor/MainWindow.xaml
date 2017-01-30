@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:GreedyKidEditor"
         xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
         mc:Ignorable="d"
-        Title="Greedy Kid Editor" Height="790" Width="700" Closing="Window_Closing" WindowStartupLocation="CenterScreen" WindowState="Maximized">
+        Title="Greedy Kid Editor" Height="867" Width="995" Closing="Window_Closing" WindowStartupLocation="CenterScreen" WindowState="Maximized">
     <Grid>
         <Menu Height="23" VerticalAlignment="Top">
             <MenuItem Header="_File">
@@ -165,6 +165,12 @@
                     <RepeatButton x:Name="floorDoorButtonDown"  Grid.Column="1" Grid.Row="1" FontSize="8"  FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="13" VerticalAlignment="Bottom" Content="6" Click="floorDoorButtonDown_Click"/>
                 </Grid>
                 <Label x:Name="label2_Copy7" Content="Color" HorizontalAlignment="Right" Margin="0,585,52,0" VerticalAlignment="Top"/>
+                <Label x:Name="label1_Copy2" Content="Room doors" Margin="0,614,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="114" FontWeight="Bold"/>
+                <ListBox x:Name="roomDoorListBox" HorizontalAlignment="Right" Height="100" Margin="0,667,10,0" VerticalAlignment="Top" Width="140" SelectionChanged="roomDoorListBox_SelectionChanged"/>
+                <Button x:Name="addRoomDoor" Content="+" HorizontalAlignment="Right" Margin="0,642,129,0" VerticalAlignment="Top" Width="20" Height="20" Click="addRoomDoor_Click"/>
+                <Button x:Name="removeRoomDoor" Content="-" HorizontalAlignment="Right" Margin="0,642,104,0" VerticalAlignment="Top" Width="20" Height="20" Click="removeRoomDoor_Click"/>
+                <Slider x:Name="xRoomDoor" HorizontalAlignment="Right" Margin="0,772,10,0" VerticalAlignment="Top" Width="123" SmallChange="1" Maximum="328" ValueChanged="xRoomDoor_ValueChanged"/>
+                <Label x:Name="label2_Copy8" Content="X" HorizontalAlignment="Right" Margin="0,767,136,0" VerticalAlignment="Top"/>
             </Grid>
         </Grid>
     </Grid>

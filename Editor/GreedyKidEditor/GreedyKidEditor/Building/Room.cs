@@ -18,6 +18,7 @@ namespace GreedyKidEditor
         public int RightDecoration = 0;
 
         public List<Detail> Details = new List<Detail>();
-        public List<FloorDoor> FloorDoors = new List<FloorDoor>();        
+        public List<FloorDoor> FloorDoors = new List<FloorDoor>();
+        public List<RoomDoor> RoomDoors = new List<RoomDoor>();
     }
 }
