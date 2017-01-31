@@ -881,6 +881,14 @@ namespace GreedyKidEditor
             }
         }
 
+        private void checkBox_Checked(object sender, RoutedEventArgs e)
+        {
+            PreviewRenderer.PreviewAnimation = true;
+        }
 
+        private void checkBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            PreviewRenderer.PreviewAnimation = false;
+        }
     }
 }
