@@ -20,5 +20,12 @@ namespace GreedyKidEditor
         public List<Detail> Details = new List<Detail>();
         public List<FloorDoor> FloorDoors = new List<FloorDoor>();
         public List<RoomDoor> RoomDoors = new List<RoomDoor>();
+
+        public const int ElevatorFrames = 5;
+
+        public bool HasStart = false;
+        public int StartX = 0;
+        public bool HasExit = false;
+        public int ExitX = 0;
     }
 }

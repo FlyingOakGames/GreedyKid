@@ -24,6 +24,7 @@ namespace GreedyKidEditor
         Rectangle[][] _detailRectangle;
         Rectangle[][][] _floorDoorRectangle;
         Rectangle[][] _roomDoorRectangle;
+        Rectangle[][] _elevatorRectangle;
 
         Color _fillColor = new Color(34, 32, 52);
 
@@ -47,9 +48,19 @@ namespace GreedyKidEditor
             13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
             13, 14, 15, 16, 17
         };
+        int[] _elevatorSequence = new int[]
+        {
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 1, 2, 3, 4,
+            4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+            4, 3, 2, 1, 0,
+        };
         int _currentFloorDoorFrame = 0;
         int _currentRoomDoorFrame = 0;
+        int _currentElevatorFrame = 0;
         float _currentFrameTime = 0.0f;
+
+        public static bool PreviewAnimation = false;
 
         private void OnPreparingDeviceSettings(object sender, PreparingDeviceSettingsEventArgs args)
         {
@@ -143,7 +154,17 @@ namespace GreedyKidEditor
 
                     _roomDoorRectangle[p][f] = new Rectangle(FloorDoor.DoorPerLine * FloorDoor.DoorFrames * 40 + col * 32, Room.PaintCount * 48 + p * 48 * nbLine + row * 48, 32, 48);
                 }
-            }            
+            }
+
+            _elevatorRectangle = new Rectangle[2][];
+            _elevatorRectangle[0] = new Rectangle[Room.ElevatorFrames];
+            _elevatorRectangle[1] = new Rectangle[Room.ElevatorFrames];
+            int nbDoorLine = (int)Math.Ceiling(FloorDoor.DoorCount / (float)FloorDoor.DoorPerLine);
+            for (int f = 0; f < Room.ElevatorFrames; f++)
+            {
+                _elevatorRectangle[0][f] = new Rectangle(f * 40, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine, 40, 48);
+                _elevatorRectangle[1][f] = new Rectangle(f * 40 + 40 * Room.ElevatorFrames, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine, 40, 48);
+            }
         }
 
         protected override void UnloadContent()
@@ -174,6 +195,16 @@ namespace GreedyKidEditor
                 _currentRoomDoorFrame++;
                 if (_currentRoomDoorFrame >= _roomDoorSequence.Length)
                     _currentRoomDoorFrame = 0;
+                _currentElevatorFrame++;
+                if (_currentElevatorFrame >= _elevatorSequence.Length)
+                    _currentElevatorFrame = 0;
+            }
+
+            if (!PreviewAnimation)
+            {
+                _currentFloorDoorFrame = 0;
+                _currentRoomDoorFrame = 0;
+                _currentElevatorFrame = 0;
             }
 
             base.Update(gameTime);
@@ -243,11 +274,12 @@ namespace GreedyKidEditor
                         }
                     }
 
-                    // floor doors
+                    
                     for (int r = 0; r < floor.Rooms.Count; r++)
                     {
                         Room room = floor.Rooms[r];
 
+                        // floor doors
                         for (int d = 0; d < room.FloorDoors.Count; d++)
                         {
                             FloorDoor floorDoor = room.FloorDoors[d];
@@ -258,13 +290,8 @@ namespace GreedyKidEditor
                                 source,
                                 Color.White);
                         }
-                    }
 
-                    // room doors
-                    for (int r = 0; r < floor.Rooms.Count; r++)
-                    {
-                        Room room = floor.Rooms[r];
-
+                        // room doors
                         for (int d = 0; d < room.RoomDoors.Count; d++)
                         {
                             RoomDoor roomDoor = room.RoomDoors[d];
@@ -275,7 +302,42 @@ namespace GreedyKidEditor
                                 source,
                                 Color.White);
                         }
-                    }
+
+                        // elevator
+                        if (room.HasStart)
+                        {
+                            Rectangle source = _elevatorRectangle[0][_elevatorSequence[_currentElevatorFrame]];
+
+                            spriteBatch.Draw(_levelTexture,
+                                new Rectangle(room.StartX, 128 - 40 * f, source.Width, source.Height),
+                                source,
+                                Color.White);
+
+                            source = _elevatorRectangle[1][_elevatorSequence[_currentElevatorFrame]];
+
+                            spriteBatch.Draw(_levelTexture,
+                                new Rectangle(room.StartX, 128 - 40 * f, source.Width, source.Height),
+                                source,
+                                Color.White);
+                        }
+
+                        if (room.HasExit)
+                        {
+                            Rectangle source = _elevatorRectangle[0][_elevatorSequence[_currentElevatorFrame]];
+
+                            spriteBatch.Draw(_levelTexture,
+                                new Rectangle(room.ExitX, 128 - 40 * f, source.Width, source.Height),
+                                source,
+                                Color.White);
+
+                            source = _elevatorRectangle[1][_elevatorSequence[_currentElevatorFrame]];
+
+                            spriteBatch.Draw(_levelTexture,
+                                new Rectangle(room.ExitX, 128 - 40 * f, source.Width, source.Height),
+                                source,
+                                Color.White);
+                        }
+                    }                  
                 }
             }
 

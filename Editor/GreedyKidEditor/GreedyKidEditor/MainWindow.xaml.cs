@@ -333,6 +333,10 @@ namespace GreedyKidEditor
                         rightMarginTextBox.Text = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].RightMargin.ToString();
                         leftDecorationTextBox.Text = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].LeftDecoration.ToString();
                         rightDecorationTextBox.Text = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].RightDecoration.ToString();
+                        startCheckBox.IsChecked = (_building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].HasStart == true);
+                        exitCheckBox.IsChecked = (_building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].HasExit == true);
+                        xStart.Value = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].StartX;
+                        xExit.Value = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].ExitX;
 
                         RefreshDetailListBox();
                         RefreshFloorDoorListBox();
@@ -483,12 +487,80 @@ namespace GreedyKidEditor
 
             if (selectedItem != null)
             {
-                if (selectedItem.Type == BuildingElement.Floor)
+                if (selectedItem.Type == BuildingElement.Room)
                 {
                     _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].RightDecoration--;
                     _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].RightDecoration = Math.Max(_building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].RightDecoration, 0);
                     rightDecorationTextBox.Text = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].RightDecoration.ToString();
                 }
+            }
+        }
+
+        private void exitCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                 renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                 renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+                room.HasExit = true;
+                int roomWidth = 328 - room.LeftMargin * 8 - room.RightMargin * 8;
+                room.ExitX = room.LeftMargin * 8 + roomWidth / 2 - 20;
+                xExit.Value = room.ExitX;
+            }
+        }
+
+        private void exitCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count)
+            {
+                _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom].HasExit = false;
+            }
+        }
+
+        private void startCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+                room.HasStart = true;
+                int roomWidth = 328 - room.LeftMargin * 8 - room.RightMargin * 8;
+                room.StartX = room.LeftMargin * 8 + roomWidth / 2 - 20;
+                xStart.Value = room.StartX;
+            }
+        }
+
+        private void startCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count)
+            {
+                _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom].HasStart = false;
+            }
+        }
+
+        private void xStart_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count)
+            {
+                _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom].StartX = (int)xStart.Value;
+            }
+        }
+
+        private void xExit_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count)
+            {
+                _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom].ExitX = (int)xExit.Value;
             }
         }
 
@@ -808,5 +880,7 @@ namespace GreedyKidEditor
                 room.RoomDoors[roomDoorListBox.SelectedIndex].X = (int)xRoomDoor.Value;
             }
         }
+
+
     }
 }
