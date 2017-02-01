@@ -1,4 +1,5 @@
-﻿
+﻿using System.IO;
+
 namespace GreedyKidEditor
 {
     public sealed class FloorDoor
@@ -11,9 +12,26 @@ namespace GreedyKidEditor
         public int Color = 0;
         public int X = 0;
 
+        public FloorDoor()
+        {
+
+        }
+
         public FloorDoor(int x)
         {
             X = x;
+        }
+
+        public void Save(BinaryWriter writer)
+        {
+            writer.Write(Color);
+            writer.Write(X);
+        }
+
+        public void Load(BinaryReader reader)
+        {
+            Color = reader.ReadInt32();
+            X = reader.ReadInt32();
         }
     }
 }

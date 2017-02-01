@@ -10,14 +10,14 @@
     <Grid>
         <Menu Height="23" VerticalAlignment="Top">
             <MenuItem Header="_File">
-                <MenuItem Header="_Load">
-                    <MenuItem.InputBindings>
-                        <KeyBinding Key="L" Modifiers="control"/>
-                    </MenuItem.InputBindings>
-                </MenuItem>
-                <MenuItem Header="_Save">
+                <MenuItem Header="_Save" Click="MenuItem_Click_1">
                     <MenuItem.InputBindings>
                         <KeyBinding Key="S" Modifiers="control"/>
+                    </MenuItem.InputBindings>
+                </MenuItem>
+                <MenuItem Header="_Export">
+                    <MenuItem.InputBindings>
+                        <KeyBinding Key="E" Modifiers="control"/>
                     </MenuItem.InputBindings>
                 </MenuItem>
                 <Separator/>

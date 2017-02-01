@@ -3,6 +3,8 @@ using System.Threading;
 using System.Windows;
 using System.ComponentModel;
 using System.Windows.Controls;
+using System.IO;
+using System.IO.Compression;
 
 namespace GreedyKidEditor
 {
@@ -40,7 +42,9 @@ namespace GreedyKidEditor
 
         private Thread mouseThread;
 
-        private Building _building = new Building("My Building");
+        private const string _saveFile = "Building";
+
+        private Building _building = new Building("New building");
 
         public MainWindow()
         {
@@ -49,14 +53,27 @@ namespace GreedyKidEditor
 
             InitializeComponent();
 
-            //RenderOptions.SetBitmapScalingMode(tilesetViewerCanvas, BitmapScalingMode.NearestNeighbor);
-
             mouseThread = new Thread(MouseWorker);
             mouseThread.Start();
 
             IntPtr handle = monoGameRenderPanel.Handle;
             rendererThread = new Thread(new ThreadStart(() => { renderer = new PreviewRenderer(handle, this, _building); renderer.Run(); }));
             rendererThread.Start();
+
+            // load
+            if (File.Exists(_saveFile))
+            {
+                using (FileStream fs = new FileStream(_saveFile, FileMode.Open))
+                {
+                    using (GZipStream gzipStream = new GZipStream(fs, CompressionMode.Decompress))
+                    {
+                        using (BinaryReader reader = new BinaryReader(gzipStream))
+                        {                            
+                            _building.Load(reader);
+                        }
+                    }
+                }
+            }
 
             RefreshTreeView();
         }
@@ -161,6 +178,20 @@ namespace GreedyKidEditor
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        private void MenuItem_Click_1(object sender, RoutedEventArgs e)
+        {
+            using (FileStream fs = new FileStream(_saveFile, FileMode.OpenOrCreate))
+            {
+                using (GZipStream gzipStream = new GZipStream(fs, CompressionMode.Compress))
+                {
+                    using (BinaryWriter writer = new BinaryWriter(gzipStream))
+                    {
+                        _building.Save(writer);
+                    }
+                }
+            }
         }
 
         private void checkBox_Checked(object sender, RoutedEventArgs e)
@@ -515,9 +546,12 @@ namespace GreedyKidEditor
             {
                 Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
                 room.HasExit = true;
-                int roomWidth = 328 - room.LeftMargin * 8 - room.RightMargin * 8;
-                room.ExitX = room.LeftMargin * 8 + roomWidth / 2 - 20;
-                xExit.Value = room.ExitX;
+                if (room.ExitX == 0)
+                {
+                    int roomWidth = 328 - room.LeftMargin * 8 - room.RightMargin * 8;
+                    room.ExitX = room.LeftMargin * 8 + roomWidth / 2 - 20;
+                    xExit.Value = room.ExitX;
+                }
             }
         }
 
@@ -539,9 +573,12 @@ namespace GreedyKidEditor
             {
                 Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
                 room.HasStart = true;
-                int roomWidth = 328 - room.LeftMargin * 8 - room.RightMargin * 8;
-                room.StartX = room.LeftMargin * 8 + roomWidth / 2 - 20;
-                xStart.Value = room.StartX;
+                if (room.StartX == 0)
+                {
+                    int roomWidth = 328 - room.LeftMargin * 8 - room.RightMargin * 8;
+                    room.StartX = room.LeftMargin * 8 + roomWidth / 2 - 20;
+                    xStart.Value = room.StartX;
+                }
             }
         }
 
@@ -671,7 +708,7 @@ namespace GreedyKidEditor
                 Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
 
                 room.Details[detailListBox.SelectedIndex].Type++;
-                room.Details[detailListBox.SelectedIndex].Type = Math.Min(room.Details[detailListBox.SelectedIndex].Type, Detail.DetailCount - 1);
+                room.Details[detailListBox.SelectedIndex].Type = Math.Min(room.Details[detailListBox.SelectedIndex].Type, Detail.NormalDetailCount + Detail.AnimatedDetailCount - 1);
                 detailTextBox.Text = room.Details[detailListBox.SelectedIndex].Type.ToString();
             }
         }
@@ -1007,5 +1044,7 @@ namespace GreedyKidEditor
                 furnitureTextBox.Text = room.Furnitures[furnitureListBox.SelectedIndex].Type.ToString();
             }
         }
+
+
     }
 }

@@ -128,10 +128,13 @@ namespace GreedyKidEditor
                     };
                 }
 
-                _detailRectangle[p] = new Rectangle[Detail.DetailCount];
-                for (int d = 0; d < Detail.DetailCount; d++)
+                _detailRectangle[p] = new Rectangle[Detail.NormalDetailCount + Detail.AnimatedDetailCount];
+                for (int d = 0; d < Detail.NormalDetailCount + Detail.AnimatedDetailCount; d++)
                 {
-                    _detailRectangle[p][d] = new Rectangle(56 * Room.DecorationCount + d * 32, 48 * p, 32, 48);
+                    if (d < Detail.NormalDetailCount)
+                        _detailRectangle[p][d] = new Rectangle(56 * Room.DecorationCount + d * 32, 48 * p, 32, 48);
+                    else
+                        _detailRectangle[p][d] = new Rectangle(56 * Room.DecorationCount + Detail.NormalDetailCount * 32 + d * 32 * Detail.AnimatedDetailFrames, 48 * p, 32, 48);
                 }
 
                 _floorDoorRectangle[p] = new Rectangle[FloorDoor.DoorCount][];                
@@ -170,7 +173,7 @@ namespace GreedyKidEditor
 
                     for (int ff = 0; ff < Furniture.FurnitureFrames; ff++)
                     {
-                        _furnitureRectangle[p][f][ff] = new Rectangle(col * 32 * Furniture.FurnitureFrames + ff * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48, 32, 48);
+                        _furnitureRectangle[p][f][ff] = new Rectangle(col * 32 * Furniture.FurnitureFrames + ff * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + row * 48 + p * 48 * nbLine, 32, 48);
                     }
                 }
             }

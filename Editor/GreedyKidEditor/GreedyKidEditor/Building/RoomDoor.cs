@@ -1,4 +1,5 @@
-﻿
+﻿using System.IO;
+
 namespace GreedyKidEditor
 {
     public sealed class RoomDoor
@@ -8,9 +9,24 @@ namespace GreedyKidEditor
 
         public int X = 0;
 
+        public RoomDoor()
+        {
+
+        }
+
         public RoomDoor(int x)
         {
             X = x;
+        }
+
+        public void Save(BinaryWriter writer)
+        {
+            writer.Write(X);
+        }
+
+        public void Load(BinaryReader reader)
+        {
+            X = reader.ReadInt32();
         }
     }
 }
