@@ -781,7 +781,7 @@ namespace GreedyKidEditor
 
                 room.FloorDoors.RemoveAt(floorDoorListBox.SelectedIndex);
 
-                RefreshDetailListBox();
+                RefreshFloorDoorListBox();
                 if (floorDoorListBox.SelectedIndex >= 0)
                     floorDoorListBox.SelectedIndex = floorDoorListBox.SelectedIndex - 1;
             }

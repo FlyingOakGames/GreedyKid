@@ -178,14 +178,19 @@ namespace GreedyKidEditor
                 }
             }
 
-            _elevatorRectangle = new Rectangle[2][];
+            _elevatorRectangle = new Rectangle[3][];
             _elevatorRectangle[0] = new Rectangle[Room.ElevatorFrames];
             _elevatorRectangle[1] = new Rectangle[Room.ElevatorFrames];
-            
+            _elevatorRectangle[2] = new Rectangle[Room.PaintCount];
+
             for (int f = 0; f < Room.ElevatorFrames; f++)
             {
                 _elevatorRectangle[0][f] = new Rectangle(f * 40, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine, 40, 48);
                 _elevatorRectangle[1][f] = new Rectangle(f * 40 + 40 * Room.ElevatorFrames, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine, 40, 48);
+            }
+            for (int p = 0; p < Room.PaintCount; p++)
+            {
+                _elevatorRectangle[2][p] = new Rectangle(2 * 40 * Room.ElevatorFrames + p * 40, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine, 40, 48);
             }
         }
 
@@ -353,7 +358,14 @@ namespace GreedyKidEditor
                                 new Rectangle(room.StartX, 128 - 40 * f, source.Width, source.Height),
                                 source,
                                 Color.White);
-                        }
+
+                            source = _elevatorRectangle[2][room.BackgroundColor];
+
+                            spriteBatch.Draw(_levelTexture,
+                                new Rectangle(room.StartX, 128 - 40 * f, source.Width, source.Height),
+                                source,
+                                Color.White);
+                        }                    
 
                         if (room.HasExit)
                         {
@@ -365,6 +377,13 @@ namespace GreedyKidEditor
                                 Color.White);
 
                             source = _elevatorRectangle[1][_elevatorSequence[_currentElevatorFrame]];
+
+                            spriteBatch.Draw(_levelTexture,
+                                new Rectangle(room.ExitX, 128 - 40 * f, source.Width, source.Height),
+                                source,
+                                Color.White);
+
+                            source = _elevatorRectangle[2][room.BackgroundColor];
 
                             spriteBatch.Draw(_levelTexture,
                                 new Rectangle(room.ExitX, 128 - 40 * f, source.Width, source.Height),
