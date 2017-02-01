@@ -25,6 +25,7 @@ namespace GreedyKidEditor
         Rectangle[][][] _floorDoorRectangle;
         Rectangle[][] _roomDoorRectangle;
         Rectangle[][] _elevatorRectangle;
+        Rectangle[][][] _furnitureRectangle;
 
         Color _fillColor = new Color(34, 32, 52);
 
@@ -109,6 +110,9 @@ namespace GreedyKidEditor
             _detailRectangle = new Rectangle[Room.PaintCount][];
             _floorDoorRectangle = new Rectangle[Room.PaintCount][][];
             _roomDoorRectangle = new Rectangle[Room.PaintCount][];
+            _furnitureRectangle = new Rectangle[Room.PaintCount][][];
+
+            int nbDoorLine = (int)Math.Ceiling(FloorDoor.DoorCount / (float)FloorDoor.DoorPerLine);
 
             for (int p = 0; p < Room.PaintCount; p++)
             {
@@ -154,12 +158,27 @@ namespace GreedyKidEditor
 
                     _roomDoorRectangle[p][f] = new Rectangle(FloorDoor.DoorPerLine * FloorDoor.DoorFrames * 40 + col * 32, Room.PaintCount * 48 + p * 48 * nbLine + row * 48, 32, 48);
                 }
+
+                _furnitureRectangle[p] = new Rectangle[Furniture.FurnitureCount][];
+                for (int f = 0; f < Furniture.FurnitureCount; f++)
+                {                    
+                    int row = f / Furniture.FurniturePerLine;
+                    int col = f % Furniture.FurniturePerLine;
+                    int nbLine = (int)Math.Ceiling(Furniture.FurnitureCount / (float)Furniture.FurniturePerLine);
+
+                    _furnitureRectangle[p][f] = new Rectangle[Furniture.FurnitureFrames];
+
+                    for (int ff = 0; ff < Furniture.FurnitureFrames; ff++)
+                    {
+                        _furnitureRectangle[p][f][ff] = new Rectangle(col * 32 * Furniture.FurnitureFrames + ff * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48, 32, 48);
+                    }
+                }
             }
 
             _elevatorRectangle = new Rectangle[2][];
             _elevatorRectangle[0] = new Rectangle[Room.ElevatorFrames];
             _elevatorRectangle[1] = new Rectangle[Room.ElevatorFrames];
-            int nbDoorLine = (int)Math.Ceiling(FloorDoor.DoorCount / (float)FloorDoor.DoorPerLine);
+            
             for (int f = 0; f < Room.ElevatorFrames; f++)
             {
                 _elevatorRectangle[0][f] = new Rectangle(f * 40, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine, 40, 48);
@@ -303,6 +322,18 @@ namespace GreedyKidEditor
                                 Color.White);
                         }
 
+                        // furniture
+                        for (int ff = 0; ff < room.Furnitures.Count; ff++)
+                        {
+                            Furniture furniture = room.Furnitures[ff];
+                            Rectangle source = _furnitureRectangle[room.BackgroundColor][furniture.Type][0];
+
+                            spriteBatch.Draw(_levelTexture,
+                                new Rectangle(furniture.X, 128 - 40 * f, source.Width, source.Height),
+                                source,
+                                Color.White);
+                        }
+
                         // elevator
                         if (room.HasStart)
                         {
@@ -344,7 +375,7 @@ namespace GreedyKidEditor
             // overlay
             spriteBatch.Draw(_levelTexture,
                 new Rectangle(0, 0, 328, 184),
-                new Rectangle(0, 840, 328, 184),
+                new Rectangle(0, 1864, 328, 184),
                 Color.White);
 
             spriteBatch.End();

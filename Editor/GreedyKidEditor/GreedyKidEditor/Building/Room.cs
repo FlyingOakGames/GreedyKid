@@ -20,6 +20,7 @@ namespace GreedyKidEditor
         public List<Detail> Details = new List<Detail>();
         public List<FloorDoor> FloorDoors = new List<FloorDoor>();
         public List<RoomDoor> RoomDoors = new List<RoomDoor>();
+        public List<Furniture> Furnitures = new List<Furniture>();
 
         public const int ElevatorFrames = 5;
 

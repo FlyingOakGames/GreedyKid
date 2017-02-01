@@ -163,6 +163,16 @@ namespace GreedyKidEditor
             this.Close();
         }
 
+        private void checkBox_Checked(object sender, RoutedEventArgs e)
+        {
+            PreviewRenderer.PreviewAnimation = true;
+        }
+
+        private void checkBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            PreviewRenderer.PreviewAnimation = false;
+        }
+
         private void RefreshTreeView(int selectedLevel = -1, int selectedFloor = -1, int selectedRoom = -1)
         {
             treeView.Items.Clear();
@@ -341,6 +351,7 @@ namespace GreedyKidEditor
                         RefreshDetailListBox();
                         RefreshFloorDoorListBox();
                         RefreshRoomDoorListBox();
+                        RefreshFurnitureListBox();
                     }
                 }
             }
@@ -881,14 +892,120 @@ namespace GreedyKidEditor
             }
         }
 
-        private void checkBox_Checked(object sender, RoutedEventArgs e)
+        //************************ FURNITURE ************************\\
+
+        private void RefreshFurnitureListBox()
         {
-            PreviewRenderer.PreviewAnimation = true;
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+
+                int prevSelection = furnitureListBox.SelectedIndex;
+
+                furnitureListBox.Items.Clear();
+                for (int i = 0; i < room.Furnitures.Count; i++)
+                {
+                    furnitureListBox.Items.Add("Furniture " + i);
+                }
+
+                if (prevSelection < furnitureListBox.Items.Count)
+                    furnitureListBox.SelectedIndex = prevSelection;
+                else if (furnitureListBox.Items.Count > 0)
+                    furnitureListBox.SelectedIndex = 0;
+            }
         }
 
-        private void checkBox_Unchecked(object sender, RoutedEventArgs e)
+        private void addFurniture_Click(object sender, RoutedEventArgs e)
         {
-            PreviewRenderer.PreviewAnimation = false;
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+
+                int roomWidth = 328 - room.LeftMargin * 8 - room.RightMargin * 8;
+                room.Furnitures.Add(new Furniture(room.LeftMargin * 8 + roomWidth / 2 - 16)); // middle of the room
+
+                RefreshFurnitureListBox();
+                furnitureListBox.SelectedIndex = furnitureListBox.Items.Count - 1;
+            }
+        }
+
+        private void removeFurniture_Click(object sender, RoutedEventArgs e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count &&
+                furnitureListBox.SelectedIndex >= 0 && furnitureListBox.SelectedIndex < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom].Furnitures.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+
+
+                room.Furnitures.RemoveAt(furnitureListBox.SelectedIndex);
+
+                RefreshFurnitureListBox();
+                if (furnitureListBox.SelectedIndex >= 0)
+                    furnitureListBox.SelectedIndex = furnitureListBox.SelectedIndex - 1;
+            }
+        }
+
+        private void furnitureListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count &&
+                furnitureListBox.SelectedIndex >= 0 && furnitureListBox.SelectedIndex < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom].Furnitures.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+
+                xFurniture.Value = room.Furnitures[furnitureListBox.SelectedIndex].X;
+                furnitureTextBox.Text = room.Furnitures[furnitureListBox.SelectedIndex].Type.ToString();
+            }
+        }
+
+        private void xFurniture_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count &&
+                furnitureListBox.SelectedIndex >= 0 && furnitureListBox.SelectedIndex < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom].Furnitures.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+
+                room.Furnitures[furnitureListBox.SelectedIndex].X = (int)xFurniture.Value;
+            }
+        }
+
+        private void furnitureButtonUP_Click(object sender, RoutedEventArgs e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count &&
+                furnitureListBox.SelectedIndex >= 0 && furnitureListBox.SelectedIndex < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom].Furnitures.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+
+                room.Furnitures[furnitureListBox.SelectedIndex].Type++;
+                room.Furnitures[furnitureListBox.SelectedIndex].Type = Math.Min(room.Furnitures[furnitureListBox.SelectedIndex].Type, Furniture.FurnitureCount - 1);
+                furnitureTextBox.Text = room.Furnitures[furnitureListBox.SelectedIndex].Type.ToString();
+            }
+        }
+
+        private void furnitureButtonDown_Click(object sender, RoutedEventArgs e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count &&
+                furnitureListBox.SelectedIndex >= 0 && furnitureListBox.SelectedIndex < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom].Furnitures.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+
+                room.Furnitures[furnitureListBox.SelectedIndex].Type--;
+                room.Furnitures[furnitureListBox.SelectedIndex].Type = Math.Max(room.Furnitures[furnitureListBox.SelectedIndex].Type, 0);
+                furnitureTextBox.Text = room.Furnitures[furnitureListBox.SelectedIndex].Type.ToString();
+            }
         }
     }
 }

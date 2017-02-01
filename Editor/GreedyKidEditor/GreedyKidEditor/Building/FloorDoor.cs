@@ -4,7 +4,7 @@ namespace GreedyKidEditor
     public sealed class FloorDoor
     {
         public const int DoorCount = 5;
-        public const int DoorPerLine = 3;
+        public const int DoorPerLine = 6;
 
         public const int DoorFrames = 6;
 
