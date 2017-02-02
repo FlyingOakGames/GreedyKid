@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Windows.Controls;
 using System.IO;
 using System.IO.Compression;
+using System.Windows.Input;
 
 namespace GreedyKidEditor
 {
@@ -180,7 +181,7 @@ namespace GreedyKidEditor
             this.Close();
         }
 
-        private void MenuItem_Click_1(object sender, RoutedEventArgs e)
+        private void MenuItem_Click_1(object sender, ExecutedRoutedEventArgs e)
         {
             using (FileStream fs = new FileStream(_saveFile, FileMode.OpenOrCreate))
             {
@@ -192,9 +193,11 @@ namespace GreedyKidEditor
                     }
                 }
             }
+
+            System.Media.SystemSounds.Beep.Play();
         }
 
-        private void MenuItem_Click_2(object sender, RoutedEventArgs e)
+        private void MenuItem_Click_2(object sender, ExecutedRoutedEventArgs e)
         {
             System.Windows.Forms.FolderBrowserDialog dialog = new System.Windows.Forms.FolderBrowserDialog();
             dialog.SelectedPath = @"D:\Projects\GreedyKid\GreedyKid_Desktop\GreedyKid_Desktop\Content";
@@ -211,6 +214,30 @@ namespace GreedyKidEditor
                         }
                     }
                 }
+            }
+
+            System.Media.SystemSounds.Beep.Play();
+
+            // verification
+            if (_building.Levels.Count == 0)
+            {
+                MessageBox.Show("Warning: There is no level.");
+            }
+            for (int i = 0; i < _building.Levels.Count; i++)
+            {
+                int start = _building.Levels[i].HasStart();
+
+                if (start > 1)
+                    MessageBox.Show("Warning: Level " + (i + 1) + " has too many starts.");
+                else if (start == 0)
+                    MessageBox.Show("Warning: Level " + (i + 1) + " has no start.");
+
+                int exit = _building.Levels[i].HasExit();
+
+                if (exit > 1)
+                    MessageBox.Show("Warning: Level " + (i + 1) + " has too many exits.");
+                else if (exit == 0)
+                    MessageBox.Show("Warning: Level " + (i + 1) + " has no exit.");
             }
         }
 

@@ -30,5 +30,37 @@ namespace GreedyKidEditor
                 Floors.Add(r);
             }
         }
+
+        public int HasStart()
+        {
+            int startCount = 0;
+            
+            for (int i = 0; i < Floors.Count; i++)
+            {
+                for (int n = 0; n < Floors[i].Rooms.Count; n++)
+                {
+                    if (Floors[i].Rooms[n].HasStart)
+                        startCount++;
+                }
+            }
+
+            return startCount;
+        }
+
+        public int HasExit()
+        {
+            int exitCount = 0;
+
+            for (int i = 0; i < Floors.Count; i++)
+            {
+                for (int n = 0; n < Floors[i].Rooms.Count; n++)
+                {
+                    if (Floors[i].Rooms[n].HasExit)
+                        exitCount++;
+                }
+            }
+
+            return exitCount;
+        }
     }
 }

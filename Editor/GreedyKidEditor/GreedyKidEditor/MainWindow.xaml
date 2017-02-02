@@ -7,21 +7,37 @@
         xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
         mc:Ignorable="d"
         Title="Greedy Kid Editor" Height="673" Width="995" Closing="Window_Closing" WindowStartupLocation="CenterScreen" WindowState="Maximized">
+    <Window.Resources>
+        <RoutedUICommand x:Key="SaveCmd" Text="Save">
+            <RoutedUICommand.InputGestures>
+                <KeyGesture>CTRL+S</KeyGesture>
+            </RoutedUICommand.InputGestures>
+        </RoutedUICommand>
+        <RoutedUICommand x:Key="ExportCmd" Text="Export">
+            <RoutedUICommand.InputGestures>
+                <KeyGesture>CTRL+S</KeyGesture>
+            </RoutedUICommand.InputGestures>
+        </RoutedUICommand>
+    </Window.Resources>
+    <Window.CommandBindings>
+        <CommandBinding Command="{StaticResource SaveCmd}" Executed="MenuItem_Click_1"/>
+        <CommandBinding Command="{StaticResource ExportCmd}" Executed="MenuItem_Click_2"/>
+    </Window.CommandBindings>
     <Grid>
         <Menu Height="23" VerticalAlignment="Top">
             <MenuItem Header="_File">
-                <MenuItem Header="_Save" InputGestureText="Crtl+S" Click="MenuItem_Click_1">
+                <MenuItem Header="_Save" InputGestureText="Crtl+S" Command="{StaticResource SaveCmd}">
                     <MenuItem.InputBindings>
                         <KeyBinding Key="S" Modifiers="control"/>
                     </MenuItem.InputBindings>
                 </MenuItem>
-                <MenuItem Header="_Export" InputGestureText="Crtl+E" Click="MenuItem_Click_2">
+                <MenuItem Header="_Export" InputGestureText="Crtl+E" Command="{StaticResource ExportCmd}">
                     <MenuItem.InputBindings>
                         <KeyBinding Key="E" Modifiers="control"/>
                     </MenuItem.InputBindings>
                 </MenuItem>
                 <Separator/>
-                <MenuItem Header="E_xit" InputGestureText="Crtl+X" Click="MenuItem_Click"/>
+                <MenuItem Header="Exit" Click="MenuItem_Click"/>
             </MenuItem>
         </Menu>
         <Grid Margin="0,23,0,0">
