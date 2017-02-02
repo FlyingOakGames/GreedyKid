@@ -42,7 +42,7 @@ namespace GreedyKidEditor
 
         private Thread mouseThread;
 
-        private const string _saveFile = "Building";
+        private const string _saveFile = "building";
 
         private Building _building = new Building("New building");
 
@@ -189,6 +189,26 @@ namespace GreedyKidEditor
                     using (BinaryWriter writer = new BinaryWriter(gzipStream))
                     {
                         _building.Save(writer);
+                    }
+                }
+            }
+        }
+
+        private void MenuItem_Click_2(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Forms.FolderBrowserDialog dialog = new System.Windows.Forms.FolderBrowserDialog();
+            dialog.SelectedPath = @"D:\Projects\GreedyKid\GreedyKid_Desktop\GreedyKid_Desktop\Content";
+            System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+            if (result == System.Windows.Forms.DialogResult.OK)
+            {
+                using (FileStream fs = new FileStream(dialog.SelectedPath + "\\" + _saveFile, FileMode.OpenOrCreate))
+                {
+                    using (GZipStream gzipStream = new GZipStream(fs, CompressionMode.Compress))
+                    {
+                        using (BinaryWriter writer = new BinaryWriter(gzipStream))
+                        {
+                            _building.Save(writer);
+                        }
                     }
                 }
             }
@@ -1045,6 +1065,6 @@ namespace GreedyKidEditor
             }
         }
 
-
+ 
     }
 }

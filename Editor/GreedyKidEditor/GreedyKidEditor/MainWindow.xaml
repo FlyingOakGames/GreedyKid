@@ -6,22 +6,22 @@
         xmlns:local="clr-namespace:GreedyKidEditor"
         xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
         mc:Ignorable="d"
-        Title="Greedy Kid Editor" Height="1111" Width="995" Closing="Window_Closing" WindowStartupLocation="CenterScreen" WindowState="Maximized">
+        Title="Greedy Kid Editor" Height="673" Width="995" Closing="Window_Closing" WindowStartupLocation="CenterScreen" WindowState="Maximized">
     <Grid>
         <Menu Height="23" VerticalAlignment="Top">
             <MenuItem Header="_File">
-                <MenuItem Header="_Save" Click="MenuItem_Click_1">
+                <MenuItem Header="_Save" InputGestureText="Crtl+S" Click="MenuItem_Click_1">
                     <MenuItem.InputBindings>
                         <KeyBinding Key="S" Modifiers="control"/>
                     </MenuItem.InputBindings>
                 </MenuItem>
-                <MenuItem Header="_Export">
+                <MenuItem Header="_Export" InputGestureText="Crtl+E" Click="MenuItem_Click_2">
                     <MenuItem.InputBindings>
                         <KeyBinding Key="E" Modifiers="control"/>
                     </MenuItem.InputBindings>
                 </MenuItem>
                 <Separator/>
-                <MenuItem Header="E_xit" Click="MenuItem_Click"/>
+                <MenuItem Header="E_xit" InputGestureText="Crtl+X" Click="MenuItem_Click"/>
             </MenuItem>
         </Menu>
         <Grid Margin="0,23,0,0">
