@@ -9,8 +9,8 @@
     <ProjectGuid>{0A17F63D-5157-4EC5-BF3E-8E10F0F474B6}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GreedyKid_Desktop</RootNamespace>
-    <AssemblyName>GreedyKid_Desktop</AssemblyName>
+    <RootNamespace>GreedyKid</RootNamespace>
+    <AssemblyName>GreedyKid</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MonoGamePlatform>DesktopGL</MonoGamePlatform>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
@@ -43,9 +43,29 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="BuildingManager.cs" />
+    <Compile Include="Building\Building.cs" />
+    <Compile Include="Building\Detail.cs" />
+    <Compile Include="Building\Floor.cs" />
+    <Compile Include="Building\FloorDoor.cs" />
+    <Compile Include="Building\Furniture.cs" />
+    <Compile Include="Building\Level.cs" />
+    <Compile Include="Building\Room.cs" />
+    <Compile Include="Building\RoomDoor.cs" />
     <Compile Include="GreedyKidGame.cs" />
+    <Compile Include="Helper\GZip\CRC32.cs" />
+    <Compile Include="Helper\GZip\Deflate.cs" />
+    <Compile Include="Helper\GZip\GZipStream.cs" />
+    <Compile Include="Helper\GZip\Inflate.cs" />
+    <Compile Include="Helper\GZip\InfTree.cs" />
+    <Compile Include="Helper\GZip\Tree.cs" />
+    <Compile Include="Helper\GZip\Zlib.cs" />
+    <Compile Include="Helper\GZip\ZlibBaseStream.cs" />
+    <Compile Include="Helper\GZip\ZlibCodec.cs" />
+    <Compile Include="Helper\GZip\ZlibConstants.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TextureManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -75,6 +95,9 @@
     </None>
     <None Include="app.config" />
     <None Include="app.manifest" />
+    <None Include="Content\building">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\MonoGame\MonoGame.Framework\MonoGame.Framework.Linux.csproj">

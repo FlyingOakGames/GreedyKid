@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GreedyKid_Desktop
+namespace GreedyKid
 {
     /// <summary>
     /// The main class.

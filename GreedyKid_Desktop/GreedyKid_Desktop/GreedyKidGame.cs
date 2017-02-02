@@ -2,20 +2,34 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace GreedyKid_Desktop
+namespace GreedyKid
 {
     /// <summary>
     /// This is the main type for your game.
     /// </summary>
     public class GreedyKidGame : Game
     {
+
+        public const int Width = 328; // 312
+        public const int Height = 184; // 176
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        
+
+        RenderTarget2D renderTarget;
+
+        Color fillColor = new Color(34, 32, 52);
+
+        BuildingManager buildingManager;
+
+        Rectangle destination = new Rectangle();
+
         public GreedyKidGame()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+            Window.AllowUserResizing = true;
         }
 
         /// <summary>
@@ -25,8 +39,7 @@ namespace GreedyKid_Desktop
         /// and initialize them as well.
         /// </summary>
         protected override void Initialize()
-        {
-            // TODO: Add your initialization logic here
+        {            
 
             base.Initialize();
         }
@@ -40,7 +53,12 @@ namespace GreedyKid_Desktop
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
+            buildingManager = new BuildingManager();
+            buildingManager.LoadBuilding();
+
+            renderTarget = new RenderTarget2D(GraphicsDevice, Width, Height);
+
+            TextureManager.LoadBuilding(Content);
         }
 
         /// <summary>
@@ -62,7 +80,9 @@ namespace GreedyKid_Desktop
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
+            float gameTimeF = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            buildingManager.Update(gameTimeF);
 
             base.Update(gameTime);
         }
@@ -73,9 +93,55 @@ namespace GreedyKid_Desktop
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
-            // TODO: Add your drawing code here
+            GraphicsDevice.SetRenderTarget(renderTarget);
+            GraphicsDevice.Clear(fillColor);
+
+
+
+
+            // do all the rendering here
+
+            buildingManager.Draw(spriteBatch);
+
+
+
+
+
+
+            GraphicsDevice.SetRenderTarget(null);
+            GraphicsDevice.Clear(Color.Black);
+
+            spriteBatch.Begin(samplerState: SamplerState.PointWrap);
+
+            float targetRatio = Width / (float)Height;
+            float gameRatio = GraphicsDevice.Viewport.Bounds.Width / (float)GraphicsDevice.Viewport.Bounds.Height;
+
+            if (gameRatio > targetRatio)
+            {
+                // black border width
+                destination.Width = (int)(GraphicsDevice.Viewport.Bounds.Height * targetRatio);
+                destination.Height = GraphicsDevice.Viewport.Bounds.Height;
+                destination.X = (GraphicsDevice.Viewport.Bounds.Width - destination.Width) / 2;
+                destination.Y = 0;                
+            }
+            else if (gameRatio < targetRatio)
+            {
+                // black border height
+                destination.Width = GraphicsDevice.Viewport.Bounds.Width;
+                destination.Height = (int)(GraphicsDevice.Viewport.Bounds.Width / targetRatio);
+                destination.X = 0;
+                destination.Y = (GraphicsDevice.Viewport.Bounds.Height - destination.Height) / 2;
+            }
+            else
+            {
+                destination = GraphicsDevice.Viewport.Bounds;
+            }
+
+            spriteBatch.Draw(renderTarget, destination, Color.White);
+
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
