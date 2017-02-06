@@ -30,6 +30,10 @@ namespace GreedyKid
             Content.RootDirectory = "Content";
 
             Window.AllowUserResizing = true;
+
+            graphics.PreferredBackBufferWidth = 1280;
+            graphics.PreferredBackBufferHeight = 720;
+            graphics.ApplyChanges();
         }
 
         /// <summary>
@@ -39,8 +43,7 @@ namespace GreedyKid
         /// and initialize them as well.
         /// </summary>
         protected override void Initialize()
-        {            
-
+        {
             base.Initialize();
         }
 
@@ -81,6 +84,9 @@ namespace GreedyKid
                 Exit();
 
             float gameTimeF = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (InputManager.PlayerDevice == null)
+                InputManager.CheckEngagement();
 
             buildingManager.Update(gameTimeF);
 

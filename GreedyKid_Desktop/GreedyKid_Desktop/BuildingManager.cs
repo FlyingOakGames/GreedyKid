@@ -17,8 +17,12 @@ namespace GreedyKid
 
         public int SelectedLevel = 0;
 
+        public Player Player;
+
         public BuildingManager()
         {
+            Player = new Player();
+
             _roomRectangle = new Rectangle[Room.PaintCount][][]; // colors
             _detailRectangle = new Rectangle[Room.PaintCount][];
             _floorDoorRectangle = new Rectangle[Room.PaintCount][][];
@@ -111,11 +115,59 @@ namespace GreedyKid
         {
             _building = new Building();
             _building.Load(building);
+
+            ResetLevel(0);
+        }
+
+        public void ResetLevel(int level)
+        {
+            SelectedLevel = level;
+
+            Player.Room = null;
+
+            // look for start
+            for (int f = 0; f < _building.Levels[SelectedLevel].Floors.Length; f++)
+            {
+                for (int r = 0; r < _building.Levels[SelectedLevel].Floors[f].Rooms.Length; r++)
+                {
+                    if (_building.Levels[SelectedLevel].Floors[f].Rooms[r].HasStart)
+                    {
+                        Player.Room = _building.Levels[SelectedLevel].Floors[f].Rooms[r];
+                        Player.X = Player.Room.StartX + 4;
+                        break;
+                    }
+                }
+                if (Player.Room != null)
+                    break;
+            }
         }
 
         public void Update(float gameTime)
         {
+            if (InputManager.PlayerDevice != null)
+                InputManager.PlayerDevice.HandleIngameInputs(Player);
 
+            Player.Update(gameTime);
+
+            if (SelectedLevel >= 0 && SelectedLevel < _building.Levels.Length)
+            {
+                for (int f = 0; f < _building.Levels[SelectedLevel].Floors.Length; f++)
+                {
+                    Floor floor = _building.Levels[SelectedLevel].Floors[f];
+
+                    // rooms
+                    for (int r = 0; r < floor.Rooms.Length; r++)
+                    {
+                        Room room = floor.Rooms[r];
+
+                        // room doors
+                        for (int d = 0; d < room.RoomDoors.Length; d++)
+                        {
+                            room.RoomDoors[d].Update(gameTime);
+                        }
+                    }
+                }
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -203,12 +255,12 @@ namespace GreedyKid
                         for (int d = 0; d < room.RoomDoors.Length; d++)
                         {
                             RoomDoor roomDoor = room.RoomDoors[d];
-                            Rectangle source = _roomDoorRectangle[room.BackgroundColor][0];
+                            Rectangle source = _roomDoorRectangle[room.BackgroundColor][roomDoor.Frame];
 
                             spriteBatch.Draw(texture,
                                 new Rectangle(roomDoor.X, 128 - 40 * f, source.Width, source.Height),
                                 source,
-                                Color.White);
+                                (roomDoor.CanClose ? Color.Red : Color.White));
                         }
 
                         // furniture
@@ -274,6 +326,8 @@ namespace GreedyKid
                     }
                 }
             }
+
+            Player.Draw(spriteBatch);
 
             spriteBatch.End();
         }

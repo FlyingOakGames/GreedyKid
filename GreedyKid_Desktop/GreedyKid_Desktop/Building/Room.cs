@@ -29,6 +29,8 @@ namespace GreedyKid
         public bool HasExit = false;
         public int ExitX = 0;
 
+        public int Y = 0;
+
         public void Load(BinaryReader reader)
         {
             Name = reader.ReadString();

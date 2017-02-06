@@ -4,7 +4,7 @@ namespace GreedyKidEditor
 {
     public sealed class Furniture
     {
-        public const int FurnitureCount = 3;
+        public const int FurnitureCount = 8;
         public const int FurnitureFrames = 14;
         public const int FurniturePerLine = 4;
 

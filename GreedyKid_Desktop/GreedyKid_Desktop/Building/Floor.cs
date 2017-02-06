@@ -8,6 +8,8 @@ namespace GreedyKid
 
         public Room[] Rooms;
 
+        public int Y = 0;
+
         public void Load(BinaryReader reader)
         {
             Name = reader.ReadString();
@@ -17,6 +19,7 @@ namespace GreedyKid
             for (int i = 0; i < n; i++)
             {
                 Rooms[i] = new Room();
+                Rooms[i].Y = Y;
                 Rooms[i].Load(reader);
             }
         }

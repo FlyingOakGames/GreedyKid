@@ -17,6 +17,7 @@ namespace GreedyKid
             for (int i = 0; i < n; i++)
             {
                 Floors[i] = new Floor();
+                Floors[i].Y = i;
                 Floors[i].Load(reader);
             }
         }
