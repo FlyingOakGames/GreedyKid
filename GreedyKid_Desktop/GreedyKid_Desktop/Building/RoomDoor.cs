@@ -91,7 +91,7 @@ namespace GreedyKid
             }
         }
 
-        public void CanCloseFromLeft()
+        public void CheckCanCloseFromLeft()
         {
             if (_state == RoomDoorState.OpenLeft)
             {
@@ -99,7 +99,7 @@ namespace GreedyKid
             }
         }
 
-        public void CanCloseFromRight()
+        public void CheckCanCloseFromRight()
         {
             if (_state == RoomDoorState.OpenRight)
             {

@@ -56,6 +56,7 @@ namespace GreedyKid
             {
                 FloorDoors[i] = new FloorDoor();
                 FloorDoors[i].Load(reader);
+                FloorDoors[i].Room = this;
             }
             n = reader.ReadInt32();
             RoomDoors = new RoomDoor[n];

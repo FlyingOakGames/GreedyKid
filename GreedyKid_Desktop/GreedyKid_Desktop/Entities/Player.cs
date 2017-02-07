@@ -100,9 +100,9 @@ namespace GreedyKid
                 RoomDoor roomDoor = Room.RoomDoors[d];
 
                 if (X + 16 > roomDoor.X && X + 16 < roomDoor.X + 8)
-                    roomDoor.CanCloseFromLeft();
+                    roomDoor.CheckCanCloseFromLeft();
                 else if (X + 16 > roomDoor.X + 24 && X + 16 < roomDoor.X + 32)
-                    roomDoor.CanCloseFromRight();
+                    roomDoor.CheckCanCloseFromRight();
                 else
                     roomDoor.CanClose = false;
 
@@ -110,6 +110,22 @@ namespace GreedyKid
                 {
                     roomDoor.Close();
                 }
+            }
+
+            for (int d = 0; d < Room.FloorDoors.Length; d++)
+            {
+                FloorDoor floorDoor = Room.FloorDoors[d];
+
+                if (X + 16 > floorDoor.X + 11 && X + 16 < floorDoor.X + 27)
+                    floorDoor.CheckCanOpen();
+                else
+                {
+                    floorDoor.CanOpen = false;
+                    floorDoor.SisterDoor.CanOpen = false;
+                }
+
+                if (_doingAction && floorDoor.CanOpen)
+                    floorDoor.EnterOpen();
             }
 
             // moving

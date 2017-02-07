@@ -165,6 +165,12 @@ namespace GreedyKid
                         {
                             room.RoomDoors[d].Update(gameTime);
                         }
+
+                        // floor doors
+                        for (int d = 0; d < room.FloorDoors.Length; d++)
+                        {
+                            room.FloorDoors[d].Update(gameTime);
+                        }
                     }
                 }
             }
@@ -243,12 +249,12 @@ namespace GreedyKid
                         for (int d = 0; d < room.FloorDoors.Length; d++)
                         {
                             FloorDoor floorDoor = room.FloorDoors[d];
-                            Rectangle source = _floorDoorRectangle[room.BackgroundColor][floorDoor.Color][3];
+                            Rectangle source = _floorDoorRectangle[room.BackgroundColor][floorDoor.Color][floorDoor.Frame];
 
                             spriteBatch.Draw(texture,
                                 new Rectangle(floorDoor.X, 128 - 40 * f, source.Width, source.Height),
                                 source,
-                                Color.White);
+                                (floorDoor.CanOpen ? Color.Red : Color.White));
                         }
 
                         // room doors
