@@ -284,7 +284,7 @@ namespace GreedyKid
                             spriteBatch.Draw(texture,
                                 new Rectangle(furniture.X, 128 - 40 * f, source.Width, source.Height),
                                 source,
-                                (furniture.CanHide ? Color.White : Color.White));
+                                (furniture.CanHide ? Color.Red : Color.White));
                         }
 
                         // elevator
