@@ -171,6 +171,12 @@ namespace GreedyKid
                         {
                             room.FloorDoors[d].Update(gameTime);
                         }
+
+                        // furnitures
+                        for (int ff = 0; ff < room.Furnitures.Length; ff++)
+                        {
+                            room.Furnitures[ff].Update(gameTime);
+                        }
                     }
                 }
             }
@@ -273,12 +279,12 @@ namespace GreedyKid
                         for (int ff = 0; ff < room.Furnitures.Length; ff++)
                         {
                             Furniture furniture = room.Furnitures[ff];
-                            Rectangle source = _furnitureRectangle[room.BackgroundColor][furniture.Type][0];
+                            Rectangle source = _furnitureRectangle[room.BackgroundColor][furniture.Type][furniture.Frame];
 
                             spriteBatch.Draw(texture,
                                 new Rectangle(furniture.X, 128 - 40 * f, source.Width, source.Height),
                                 source,
-                                Color.White);
+                                (furniture.CanHide ? Color.White : Color.White));
                         }
 
                         // elevator

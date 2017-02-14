@@ -33,6 +33,9 @@ namespace GreedyKid
 
         public bool IsLocked = false;
 
+        // transiting entities
+        public Player ArrivingPlayer = null;
+
         public void Load(BinaryReader reader)
         {
             Color = reader.ReadInt32();
@@ -89,6 +92,12 @@ namespace GreedyKid
                 _state = FloorDoorState.Exiting;
                 Frame = 0;
                 _currentFrameTime = 0.0f;
+
+                if (ArrivingPlayer != null)
+                {
+                    ArrivingPlayer.Exit();
+                    ArrivingPlayer = null;
+                }
             }
         }
 

@@ -27,6 +27,17 @@ namespace GreedyKid
         // action
         private bool _doingAction = false;
 
+        // entering / exiting
+        private bool _isVisible = true;
+        private FloorDoor _targetDoor = null;
+
+        // hiding / showing
+        private Furniture _targetFurniture = null;
+
+        // smoke animation
+        private int _currentSmokeFrame = -1;
+        private float _currentSmokeFrameTime = 0.0f;
+
         public Player()
         {
             _frames = new Rectangle[(int)EntityState.Count][];
@@ -58,6 +69,46 @@ namespace GreedyKid
                 _frames[(int)EntityState.Rolling][f] = new Rectangle(f * 32 + 12 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine, 32, 32);
             }
             _frameDuration[(int)EntityState.Rolling] = 0.1f;
+
+            // entering
+            _frames[(int)EntityState.Entering] = new Rectangle[3];
+            for (int f = 0; f < _frames[(int)EntityState.Entering].Length; f++)
+            {
+                _frames[(int)EntityState.Entering][f] = new Rectangle(f * 32 + 33 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine, 32, 32);
+            }
+            _frameDuration[(int)EntityState.Entering] = 0.1f;
+
+            // exiting
+            _frames[(int)EntityState.Exiting] = new Rectangle[3];
+            for (int f = 0; f < _frames[(int)EntityState.Exiting].Length; f++)
+            {
+                _frames[(int)EntityState.Exiting][f] = new Rectangle(f * 32 + 36 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine, 32, 32);
+            }
+            _frameDuration[(int)EntityState.Exiting] = 0.1f;
+
+            // hiding
+            _frames[(int)EntityState.Hiding] = new Rectangle[5];
+            for (int f = 0; f < _frames[(int)EntityState.Hiding].Length; f++)
+            {
+                _frames[(int)EntityState.Hiding][f] = new Rectangle(f * 32 + 24 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine, 32, 32);
+            }
+            _frameDuration[(int)EntityState.Hiding] = 0.1f;
+
+            // showing
+            _frames[(int)EntityState.Showing] = new Rectangle[2];
+            for (int f = 0; f < _frames[(int)EntityState.Showing].Length; f++)
+            {
+                _frames[(int)EntityState.Showing][f] = new Rectangle(f * 32 + 39 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine, 32, 32);
+            }
+            _frameDuration[(int)EntityState.Showing] = 0.1f;
+
+            // smoke
+            _frames[(int)EntityState.Smoke] = new Rectangle[5];
+            for (int f = 0; f < _frames[(int)EntityState.Smoke].Length; f++)
+            {
+                _frames[(int)EntityState.Smoke][f] = new Rectangle(f * 32 + 41 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine, 32, 32);
+            }
+            _frameDuration[(int)EntityState.Smoke] = 0.1f;
         }
 
         public void Update(float gameTime)
@@ -77,8 +128,56 @@ namespace GreedyKid
                     // stop rolling
                     if (State == EntityState.Rolling)
                         State = EntityState.Idle;
+                    // entering doors
+                    else if (State == EntityState.Entering)
+                    {
+                        _isVisible = false;
+                        State = EntityState.Idle;
+                        if (_targetDoor != null)
+                        {
+                            Room = _targetDoor.Room;
+                            X = _targetDoor.X;
+                            _targetDoor = null;
+                        }
+                    }
+                    // exiting doors
+                    else if (State == EntityState.Exiting)
+                    {
+                        State = EntityState.Idle;
+                    }
+                    // continue hiding
+                    else if (State == EntityState.Hiding)
+                    {
+                        _currentFrame = _frames[(int)State].Length - 1; // block on last frame
+                    }
+                    // showing
+                    else if (State == EntityState.Showing)
+                    {
+                        // generate smoke
+                        Smoke();
+                        State = EntityState.Idle;
+                    }
                 }
             }
+
+            // smoke anim
+            if (_currentSmokeFrame >= 0)
+            {
+                _currentSmokeFrameTime += gameTime;
+                if (_currentSmokeFrameTime > _frameDuration[(int)EntityState.Smoke])
+                {
+                    _currentSmokeFrameTime -= _frameDuration[(int)EntityState.Smoke];
+                    _currentSmokeFrame++;
+
+                    if (_currentSmokeFrame == _frames[(int)EntityState.Smoke].Length)
+                    {
+                        _currentSmokeFrame = -1;
+                    }
+                }
+            }
+
+            // preventing any movements if invisible
+            if (!_isVisible) _moveDirection = 0;
 
             // start / stop running
             if (_moveDirection != 0 && State == EntityState.Idle)
@@ -95,6 +194,8 @@ namespace GreedyKid
             }
 
             // can interact with entities?
+
+            // closing room doors
             for (int d = 0; d < Room.RoomDoors.Length; d++)
             {
                 RoomDoor roomDoor = Room.RoomDoors[d];
@@ -112,6 +213,7 @@ namespace GreedyKid
                 }
             }
 
+            // entering floor doors
             for (int d = 0; d < Room.FloorDoors.Length; d++)
             {
                 FloorDoor floorDoor = Room.FloorDoors[d];
@@ -125,7 +227,40 @@ namespace GreedyKid
                 }
 
                 if (_doingAction && floorDoor.CanOpen)
+                {
                     floorDoor.EnterOpen();
+                    Enter(floorDoor);
+                }
+            }
+
+            // hiding behind furnitures
+            for (int f = 0; f < Room.Furnitures.Length; f++)
+            {
+                Furniture furniture = Room.Furnitures[f];
+
+                if (X + 16 > furniture.X + 11 && X + 16 < furniture.X + 27)
+                    furniture.CheckCanHide();
+                else
+                {
+                    furniture.CanHide = false;
+                }
+
+                if (_doingAction && furniture.CanHide)
+                {
+                    furniture.Hide();
+                    Hide(furniture);
+                }
+            }
+
+            // unhide
+            if (_doingAction && State == EntityState.Hiding && _currentFrame == _frames[(int)State].Length - 1)
+            {
+                if (_targetFurniture != null)
+                {
+                    _targetFurniture.Show();
+                    _targetFurniture = null;
+                    Show();
+                }
             }
 
             // moving
@@ -166,6 +301,9 @@ namespace GreedyKid
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            if (!_isVisible)
+                return;
+
             Texture2D texture = TextureManager.Building;
 
             spriteBatch.Draw(texture,
@@ -176,10 +314,20 @@ namespace GreedyKid
                 Vector2.Zero,
                 Orientation,
                 0.0f);
+
+            if (_currentSmokeFrame >= 0)
+            {
+                spriteBatch.Draw(texture,
+                new Rectangle((int)X, 128 - 40 * Room.Y + 16, 32, 32),
+                _frames[(int)EntityState.Smoke][_currentSmokeFrame],
+                Color.White);
+            }
         }
 
         public void MoveLeft()
         {
+            if (!_isVisible)
+                return;
             if (State == EntityState.Idle || State == EntityState.Running)
             {
                 _moveDirection = -1;
@@ -189,6 +337,8 @@ namespace GreedyKid
 
         public void MoveRight()
         {
+            if (!_isVisible)
+                return;
             if (State == EntityState.Idle || State == EntityState.Running)
             {
                 _moveDirection = 1;
@@ -198,6 +348,8 @@ namespace GreedyKid
 
         public void Roll()
         {
+            if (!_isVisible)
+                return;
             if (State == EntityState.Idle || State == EntityState.Running)
             {                
                 if (Orientation == SpriteEffects.None)
@@ -213,10 +365,61 @@ namespace GreedyKid
 
         public void Action()
         {
+            if (!_isVisible)
+                return;
             if (State == EntityState.Idle || State == EntityState.Running)
             {
                 _doingAction = true;
             }
+            else if (State == EntityState.Hiding && _targetFurniture != null && _targetFurniture.CheckCanShow())
+            {
+                _doingAction = true;
+            }
+        }
+
+        private void Enter(FloorDoor floorDoor)
+        {
+            X = floorDoor.X;
+            _targetDoor = floorDoor.SisterDoor;
+            floorDoor.SisterDoor.ArrivingPlayer = this;
+
+            _currentFrame = 0;
+            _currentFrameTime = 0.0f;
+            State = EntityState.Entering;
+        }
+
+        public void Exit()
+        {
+            _isVisible = true;
+            _currentFrame = 0;
+            _currentFrameTime = 0.0f;
+            State = EntityState.Exiting;
+        }
+
+        private void Hide(Furniture furniture)
+        {
+            X = furniture.X;
+            _currentFrame = 0;
+            _currentFrameTime = 0.0f;
+            State = EntityState.Hiding;
+
+            _targetFurniture = furniture;
+
+            // generate smoke
+            Smoke();
+        }
+
+        private void Show()
+        {
+            _currentFrame = 0;
+            _currentFrameTime = 0.0f;
+            State = EntityState.Showing;
+        }
+
+        private void Smoke()
+        {
+            _currentSmokeFrame = 0;
+            _currentSmokeFrameTime = 0.0f;
         }
     }
 }

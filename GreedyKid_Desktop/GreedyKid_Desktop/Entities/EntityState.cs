@@ -7,6 +7,11 @@ namespace GreedyKid
         Running,
         Rolling,
         Shouting,
+        Entering,
+        Exiting,
+        Hiding,
+        Showing,
+        Smoke,
 
         Count
     }
