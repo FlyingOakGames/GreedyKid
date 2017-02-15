@@ -12,6 +12,7 @@ namespace GreedyKid
         Hiding,
         Showing,
         Smoke,
+        Taunting,
 
         Count
     }

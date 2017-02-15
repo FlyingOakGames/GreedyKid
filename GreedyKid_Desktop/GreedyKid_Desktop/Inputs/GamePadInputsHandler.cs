@@ -61,6 +61,14 @@ namespace GreedyKid
             if (currentState.Buttons.A == ButtonState.Pressed && _previousGamePadState.Buttons.A == ButtonState.Released)
                 player.Action();
 
+            // shouting
+            if (currentState.Buttons.B == ButtonState.Pressed)
+                player.Shout();
+
+            // taunting
+            if (currentState.Buttons.Y == ButtonState.Pressed)
+                player.Taunt();
+
             _previousGamePadState = currentState;
         }
     }

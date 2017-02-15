@@ -4,27 +4,51 @@ using System;
 
 namespace GreedyKid
 {
+    public enum ObjectType
+    {
+        HealthPack,
+        CashBig,
+        CashMedium,
+        CashSmall,
+        Arrow,
+
+        Count
+    }
+
     public sealed class BuildingManager
     {
         private Building _building;
 
         private Rectangle[][][] _roomRectangle;
-        private Rectangle[][] _detailRectangle;
+        private Rectangle[][][] _detailRectangle;
         private Rectangle[][][] _floorDoorRectangle;
         private Rectangle[][] _roomDoorRectangle;
         private Rectangle[][] _elevatorRectangle;
         private Rectangle[][][] _furnitureRectangle;
+        private Rectangle[][] _objectsRectangle;
 
         public int SelectedLevel = 0;
 
         public Player Player;
+
+        // arrow animation
+        private int _currentArrowFrame = 0;
+        private float _currentArrowFrameTime = 0.0f;
+        private const float _arrowFrameTime = 0.1f;
+
+        // shouting animation
+        private int _currentShoutFrame = 0;
+        private float _currentShoutFrameTime = 0.0f;
+        private const float _shoutFrameTime = 0.05f;
+
+        private int _shoutDistance = 32;
 
         public BuildingManager()
         {
             Player = new Player();
 
             _roomRectangle = new Rectangle[Room.PaintCount][][]; // colors
-            _detailRectangle = new Rectangle[Room.PaintCount][];
+            _detailRectangle = new Rectangle[Room.PaintCount][][];
             _floorDoorRectangle = new Rectangle[Room.PaintCount][][];
             _roomDoorRectangle = new Rectangle[Room.PaintCount][];
             _furnitureRectangle = new Rectangle[Room.PaintCount][][];
@@ -45,13 +69,22 @@ namespace GreedyKid
                     };
                 }
 
-                _detailRectangle[p] = new Rectangle[Detail.NormalDetailCount + Detail.AnimatedDetailCount];
+                _detailRectangle[p] = new Rectangle[Detail.NormalDetailCount + Detail.AnimatedDetailCount][];
                 for (int d = 0; d < Detail.NormalDetailCount + Detail.AnimatedDetailCount; d++)
                 {
                     if (d < Detail.NormalDetailCount)
-                        _detailRectangle[p][d] = new Rectangle(56 * Room.DecorationCount + d * 32, 48 * p, 32, 48);
+                    {
+                        _detailRectangle[p][d] = new Rectangle[1];
+                        _detailRectangle[p][d][0] = new Rectangle(56 * Room.DecorationCount + d * 32, 48 * p, 32, 48);
+                    }
                     else
-                        _detailRectangle[p][d] = new Rectangle(56 * Room.DecorationCount + Detail.NormalDetailCount * 32 + d * 32 * Detail.AnimatedDetailFrames, 48 * p, 32, 48);
+                    {
+                        _detailRectangle[p][d] = new Rectangle[Detail.AnimatedDetailFrames];
+                        for (int f = 0; f < Detail.AnimatedDetailFrames; f++)
+                        {
+                            _detailRectangle[p][d][f] = new Rectangle(56 * Room.DecorationCount + Detail.NormalDetailCount * 32 + (d - Detail.NormalDetailCount) * 32 * Detail.AnimatedDetailFrames + f * 32, 48 * p, 32, 48);
+                        }
+                    }
                 }
 
                 _floorDoorRectangle[p] = new Rectangle[FloorDoor.DoorCount][];
@@ -108,6 +141,23 @@ namespace GreedyKid
             for (int p = 0; p < Room.PaintCount; p++)
             {
                 _elevatorRectangle[2][p] = new Rectangle(2 * 40 * Room.ElevatorFrames + p * 40, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine, 40, 48);
+            }
+
+            _objectsRectangle = new Rectangle[(int)ObjectType.Count][];
+            _objectsRectangle[(int)ObjectType.HealthPack] = new Rectangle[6];
+            _objectsRectangle[(int)ObjectType.CashBig] = new Rectangle[5];
+            _objectsRectangle[(int)ObjectType.CashMedium] = new Rectangle[5];
+            _objectsRectangle[(int)ObjectType.CashSmall] = new Rectangle[5];
+            _objectsRectangle[(int)ObjectType.Arrow] = new Rectangle[4];
+
+            int objectFrameCount = 0;
+            for (int o = 0; o < (int)ObjectType.Count; o++)
+            {
+                for (int f = _objectsRectangle[o].Length - 1; f >= 0; f--)
+                {
+                    objectFrameCount++;
+                    _objectsRectangle[o][f] = new Rectangle(2048 - objectFrameCount * 16, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine, 16, 16);
+                }
             }
         }
 
@@ -180,6 +230,24 @@ namespace GreedyKid
                     }
                 }
             }
+
+            // arrow animation
+            _currentArrowFrameTime += gameTime;
+            if (_currentArrowFrameTime > _arrowFrameTime)
+            {
+                _currentArrowFrameTime -= _arrowFrameTime;
+                _currentArrowFrame++;
+                _currentArrowFrame %= _objectsRectangle[(int)ObjectType.Arrow].Length;
+            }
+
+            // shout animation
+            _currentShoutFrameTime += gameTime;
+            if (_currentShoutFrameTime > _shoutFrameTime)
+            {
+                _currentShoutFrameTime -= _shoutFrameTime;
+                _currentShoutFrame++;
+                _currentShoutFrame %= Detail.AnimatedDetailFrames;
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -190,6 +258,10 @@ namespace GreedyKid
 
             if (SelectedLevel >= 0 && SelectedLevel < _building.Levels.Length)
             {
+                int shoutingFrame = Furniture.FurnitureFrames - 4 + _currentShoutFrame;
+                bool isShouting = Player.IsShouting;
+                int playerMiddle = (int)Player.X + 16;
+
                 for (int f = 0; f < _building.Levels[SelectedLevel].Floors.Length; f++)
                 {
                     Floor floor = _building.Levels[SelectedLevel].Floors[f];
@@ -237,7 +309,12 @@ namespace GreedyKid
                         for (int d = 0; d < room.Details.Length; d++)
                         {
                             Detail detail = room.Details[d];
-                            Rectangle source = _detailRectangle[room.BackgroundColor][detail.Type];
+
+                            int frame = 0;
+                            if (isShouting && detail.Type >= Detail.NormalDetailCount && Math.Abs(detail.X + 16 - playerMiddle) <= _shoutDistance)
+                                frame = _currentShoutFrame;
+
+                            Rectangle source = _detailRectangle[room.BackgroundColor][detail.Type][frame];
 
                             spriteBatch.Draw(texture,
                                 new Rectangle(detail.X, 128 - 40 * f, source.Width, source.Height),
@@ -260,7 +337,17 @@ namespace GreedyKid
                             spriteBatch.Draw(texture,
                                 new Rectangle(floorDoor.X, 128 - 40 * f, source.Width, source.Height),
                                 source,
-                                (floorDoor.CanOpen ? Color.Red : Color.White));
+                                Color.White);
+
+                            if (floorDoor.CanOpen)
+                            {
+                                source = _objectsRectangle[(int)ObjectType.Arrow][_currentArrowFrame];
+
+                                spriteBatch.Draw(texture,
+                                    new Rectangle(floorDoor.X + 8, 128 - 40 * f + 8, source.Width, source.Height),
+                                    source,
+                                    Color.White);
+                            }
                         }
 
                         // room doors
@@ -272,19 +359,53 @@ namespace GreedyKid
                             spriteBatch.Draw(texture,
                                 new Rectangle(roomDoor.X, 128 - 40 * f, source.Width, source.Height),
                                 source,
-                                (roomDoor.CanClose ? Color.Red : Color.White));
+                                Color.White);
+
+                            if (roomDoor.CanClose && roomDoor.IsOpenLeft)
+                            {
+                                source = _objectsRectangle[(int)ObjectType.Arrow][_currentArrowFrame];
+
+                                spriteBatch.Draw(texture,
+                                    new Rectangle(roomDoor.X, 128 - 40 * f + 8, source.Width, source.Height),
+                                    source,
+                                    Color.White);
+                            }
+                            else if (roomDoor.CanClose && roomDoor.IsOpenRight)
+                            {
+                                source = _objectsRectangle[(int)ObjectType.Arrow][_currentArrowFrame];
+
+                                spriteBatch.Draw(texture,
+                                    new Rectangle(roomDoor.X + 16, 128 - 40 * f + 8, source.Width, source.Height),
+                                    source,
+                                    Color.White);
+                            }
                         }
 
                         // furniture
                         for (int ff = 0; ff < room.Furnitures.Length; ff++)
                         {
                             Furniture furniture = room.Furnitures[ff];
-                            Rectangle source = _furnitureRectangle[room.BackgroundColor][furniture.Type][furniture.Frame];
+
+                            int frame = furniture.Frame;
+                            if (isShouting && Math.Abs(furniture.X + 16 - playerMiddle) <= _shoutDistance)
+                                frame = shoutingFrame;
+                            
+                            Rectangle source = _furnitureRectangle[room.BackgroundColor][furniture.Type][frame];
 
                             spriteBatch.Draw(texture,
                                 new Rectangle(furniture.X, 128 - 40 * f, source.Width, source.Height),
                                 source,
-                                (furniture.CanHide ? Color.Red : Color.White));
+                                Color.White);
+
+                            if (furniture.CanHide)
+                            {
+                                source = _objectsRectangle[(int)ObjectType.Arrow][_currentArrowFrame];
+
+                                spriteBatch.Draw(texture,
+                                    new Rectangle(furniture.X + 8, 128 - 40 * f + 8, source.Width, source.Height),
+                                    source,
+                                    Color.White);
+                            }
                         }
 
                         // elevator

@@ -6,7 +6,7 @@ namespace GreedyKid
     {
         public const int NormalDetailCount = 20;
         public const int AnimatedDetailCount = 7;
-        public const int AnimatedDetailFrames = 5;
+        public const int AnimatedDetailFrames = 4;
 
         public int Type = 0;
         public int X = 0;

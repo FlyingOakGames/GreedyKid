@@ -29,6 +29,16 @@ namespace GreedyKid
 
         public bool CanClose = false;
 
+        public bool IsOpenLeft
+        {
+            get { return _state == RoomDoorState.OpenLeft; }
+        }
+
+        public bool IsOpenRight
+        {
+            get { return _state == RoomDoorState.OpenRight; }
+        }
+
         public void Load(BinaryReader reader)
         {
             X = reader.ReadInt32();

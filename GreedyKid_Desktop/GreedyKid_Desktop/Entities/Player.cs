@@ -27,6 +27,12 @@ namespace GreedyKid
         // action
         private bool _doingAction = false;
 
+        // shouting
+        private bool _shouting = false;
+
+        // tauting
+        private bool _taunting = false;
+
         // entering / exiting
         private bool _isVisible = true;
         private FloorDoor _targetDoor = null;
@@ -54,6 +60,14 @@ namespace GreedyKid
             }
             _frameDuration[(int)EntityState.Idle] = 0.1f;
 
+            // taunting
+            _frames[(int)EntityState.Taunting] = new Rectangle[4];
+            for (int f = 0; f < _frames[(int)EntityState.Taunting].Length; f++)
+            {
+                _frames[(int)EntityState.Taunting][f] = new Rectangle(f * 32 + 4 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine, 32, 32);
+            }
+            _frameDuration[(int)EntityState.Taunting] = 0.075f;
+
             // running
             _frames[(int)EntityState.Running] = new Rectangle[4];
             for (int f = 0; f < _frames[(int)EntityState.Running].Length; f++)
@@ -69,6 +83,14 @@ namespace GreedyKid
                 _frames[(int)EntityState.Rolling][f] = new Rectangle(f * 32 + 12 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine, 32, 32);
             }
             _frameDuration[(int)EntityState.Rolling] = 0.1f;
+
+            // shouting
+            _frames[(int)EntityState.Shouting] = new Rectangle[5];
+            for (int f = 0; f < _frames[(int)EntityState.Shouting].Length; f++)
+            {
+                _frames[(int)EntityState.Shouting][f] = new Rectangle(f * 32 + 19 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine, 32, 32);
+            }
+            _frameDuration[(int)EntityState.Shouting] = 0.05f;
 
             // entering
             _frames[(int)EntityState.Entering] = new Rectangle[3];
@@ -157,6 +179,11 @@ namespace GreedyKid
                         Smoke();
                         State = EntityState.Idle;
                     }
+                    // shouting
+                    else if (State == EntityState.Shouting)
+                    {
+                        _currentFrame = 1;
+                    }
                 }
             }
 
@@ -187,6 +214,34 @@ namespace GreedyKid
                 _currentFrameTime = 0.0f;
             }
             else if (_moveDirection == 0 && State == EntityState.Running)
+            {
+                State = EntityState.Idle;
+                _currentFrame = 0;
+                _currentFrameTime = 0.0f;
+            }
+
+            // start / stop shouting
+            if (_shouting && (State == EntityState.Idle || State == EntityState.Running))
+            {
+                State = EntityState.Shouting;
+                _currentFrame = 0;
+                _currentFrameTime = 0.0f;
+            }
+            else if (!_shouting && State == EntityState.Shouting)
+            {
+                State = EntityState.Idle;
+                _currentFrame = 0;
+                _currentFrameTime = 0.0f;
+            }
+
+            // start / stop taunting
+            if (_taunting && (State == EntityState.Idle || State == EntityState.Running))
+            {
+                State = EntityState.Taunting;
+                _currentFrame = 0;
+                _currentFrameTime = 0.0f;
+            }
+            else if (!_taunting && State == EntityState.Taunting)
             {
                 State = EntityState.Idle;
                 _currentFrame = 0;
@@ -296,7 +351,8 @@ namespace GreedyKid
             }
 
             _doingAction = false;
-
+            _shouting = false;
+            _taunting = false;
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -377,6 +433,28 @@ namespace GreedyKid
             }
         }
 
+        public void Shout()
+        {
+            if (!_isVisible)
+                return;
+            if (State == EntityState.Idle || State == EntityState.Running || State == EntityState.Shouting)
+            {
+                _moveDirection = 0;
+                _shouting = true;
+            }
+        }
+
+        public void Taunt()
+        {
+            if (!_isVisible)
+                return;
+            if (State == EntityState.Idle || State == EntityState.Running || State == EntityState.Taunting)
+            {
+                _moveDirection = 0;
+                _taunting = true;
+            }
+        }
+
         private void Enter(FloorDoor floorDoor)
         {
             X = floorDoor.X;
@@ -420,6 +498,11 @@ namespace GreedyKid
         {
             _currentSmokeFrame = 0;
             _currentSmokeFrameTime = 0.0f;
+        }
+
+        public bool IsShouting
+        {
+            get { return State == EntityState.Shouting; }
         }
     }
 }

@@ -134,7 +134,7 @@ namespace GreedyKidEditor
                     if (d < Detail.NormalDetailCount)
                         _detailRectangle[p][d] = new Rectangle(56 * Room.DecorationCount + d * 32, 48 * p, 32, 48);
                     else
-                        _detailRectangle[p][d] = new Rectangle(56 * Room.DecorationCount + Detail.NormalDetailCount * 32 + d * 32 * Detail.AnimatedDetailFrames, 48 * p, 32, 48);
+                        _detailRectangle[p][d] = new Rectangle(56 * Room.DecorationCount + Detail.NormalDetailCount * 32 + (d - Detail.NormalDetailCount) * 32 * Detail.AnimatedDetailFrames, 48 * p, 32, 48);
                 }
 
                 _floorDoorRectangle[p] = new Rectangle[FloorDoor.DoorCount][];                
