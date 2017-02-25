@@ -13,6 +13,8 @@ namespace GreedyKid
         Showing,
         Smoke,
         Taunting,
+        Turning,
+        Walking,
 
         Count
     }

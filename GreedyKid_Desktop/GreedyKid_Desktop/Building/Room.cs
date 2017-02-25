@@ -20,7 +20,7 @@ namespace GreedyKid
         public Detail[] Details;
         public FloorDoor[] FloorDoors;
         public RoomDoor[] RoomDoors;
-        public Furniture[] Furnitures;
+        public Furniture[] Furnitures;        
 
         public const int ElevatorFrames = 5;
 
@@ -30,6 +30,8 @@ namespace GreedyKid
         public int ExitX = 0;
 
         public int Y = 0;
+
+        public Retired[] Retireds;
 
         public void Load(BinaryReader reader)
         {
@@ -71,6 +73,14 @@ namespace GreedyKid
             {
                 Furnitures[i] = new Furniture();
                 Furnitures[i].Load(reader);
+            }
+            n = reader.ReadInt32();
+            Retireds = new Retired[n];
+            for (int i = 0; i < n; i++)
+            {
+                Retireds[i] = new Retired();
+                Retireds[i].Load(reader);
+                Retireds[i].Room = this;
             }
 
             HasStart = reader.ReadBoolean();

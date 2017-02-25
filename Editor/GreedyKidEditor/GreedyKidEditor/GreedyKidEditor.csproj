@@ -99,6 +99,7 @@
     <Compile Include="Building\Detail.cs" />
     <Compile Include="Building\FloorDoor.cs" />
     <Compile Include="Building\Furniture.cs" />
+    <Compile Include="Building\Retired.cs" />
     <Compile Include="Building\Room.cs" />
     <Compile Include="Building\RoomDoor.cs" />
     <Compile Include="TextInputDialog.xaml.cs">

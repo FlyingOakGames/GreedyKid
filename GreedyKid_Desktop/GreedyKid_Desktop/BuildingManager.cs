@@ -227,6 +227,14 @@ namespace GreedyKid
                         {
                             room.Furnitures[ff].Update(gameTime);
                         }
+
+                        // retireds
+                        for (int rr = 0; rr < room.Retireds.Length; rr++)
+                        {
+                            Retired retired = room.Retireds[rr];
+                            if (retired != null)
+                                retired.Update(gameTime);
+                        }
                     }
                 }
             }
@@ -455,6 +463,14 @@ namespace GreedyKid
                                 new Rectangle(room.ExitX, 128 - 40 * f, source.Width, source.Height),
                                 source,
                                 Color.White);
+                        }
+
+                        // retired
+                        for (int rr = 0; rr < room.Retireds.Length; rr++)
+                        {
+                            Retired retired = room.Retireds[rr];
+                            if (retired != null)
+                                retired.Draw(spriteBatch);
                         }
                     }
                 }

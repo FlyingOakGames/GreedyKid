@@ -200,7 +200,10 @@ namespace GreedyKidEditor
         private void MenuItem_Click_2(object sender, ExecutedRoutedEventArgs e)
         {
             System.Windows.Forms.FolderBrowserDialog dialog = new System.Windows.Forms.FolderBrowserDialog();
-            dialog.SelectedPath = @"D:\Projects\GreedyKid\GreedyKid_Desktop\GreedyKid_Desktop\Content";
+            if (Directory.Exists(@"D:\Projects\GreedyKid\GreedyKid_Desktop\GreedyKid_Desktop\Content"))
+                dialog.SelectedPath = @"D:\Projects\GreedyKid\GreedyKid_Desktop\GreedyKid_Desktop\Content";
+            else if (Directory.Exists(@"D:\FlyingOak\GreedyKid\GreedyKid_Desktop\GreedyKid_Desktop\Content"))
+                dialog.SelectedPath = @"D:\FlyingOak\GreedyKid\GreedyKid_Desktop\GreedyKid_Desktop\Content";
             System.Windows.Forms.DialogResult result = dialog.ShowDialog();
             if (result == System.Windows.Forms.DialogResult.OK)
             {
@@ -430,6 +433,7 @@ namespace GreedyKidEditor
                         RefreshFloorDoorListBox();
                         RefreshRoomDoorListBox();
                         RefreshFurnitureListBox();
+                        RefreshRetiredListBox();
                     }
                 }
             }
@@ -1092,6 +1096,151 @@ namespace GreedyKidEditor
             }
         }
 
- 
+        //************************ RETIREDS ************************\\
+
+        private void RefreshRetiredListBox()
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+
+                int prevSelection = retiredListBox.SelectedIndex;
+
+                retiredListBox.Items.Clear();
+                for (int i = 0; i < room.Retireds.Count; i++)
+                {
+                    retiredListBox.Items.Add("Floor Retired " + i);
+                }
+
+                if (prevSelection < retiredListBox.Items.Count)
+                    retiredListBox.SelectedIndex = prevSelection;
+                else if (retiredListBox.Items.Count > 0)
+                    retiredListBox.SelectedIndex = 0;
+            }
+        }
+
+        private void addRetired_Click(object sender, RoutedEventArgs e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+
+                int roomWidth = 328 - room.LeftMargin * 8 - room.RightMargin * 8;
+                room.Retireds.Add(new Retired(room.LeftMargin * 8 + roomWidth / 2 - 16)); // middle of the room
+
+                RefreshRetiredListBox();
+                retiredListBox.SelectedIndex = retiredListBox.Items.Count - 1;
+            }
+        }
+
+        private void removeRetired_Click(object sender, RoutedEventArgs e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count &&
+                retiredListBox.SelectedIndex >= 0 && retiredListBox.SelectedIndex < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom].Retireds.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+
+
+                room.Retireds.RemoveAt(retiredListBox.SelectedIndex);
+
+                RefreshRetiredListBox();
+                if (retiredListBox.SelectedIndex >= 0)
+                    retiredListBox.SelectedIndex = retiredListBox.SelectedIndex - 1;
+            }
+        }
+
+        private void retiredListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count &&
+                retiredListBox.SelectedIndex >= 0 && retiredListBox.SelectedIndex < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom].Retireds.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+
+                xRetired.Value = room.Retireds[retiredListBox.SelectedIndex].X;
+                retiredTextBox.Text = room.Retireds[retiredListBox.SelectedIndex].Type.ToString();
+                retiredLifeTextBox.Text = room.Retireds[retiredListBox.SelectedIndex].Life.ToString();
+            }
+        }
+
+        private void xRetired_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count &&
+                retiredListBox.SelectedIndex >= 0 && retiredListBox.SelectedIndex < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom].Retireds.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+
+                room.Retireds[retiredListBox.SelectedIndex].X = (int)xRetired.Value;
+            }
+        }
+
+        private void retiredButtonUP_Click(object sender, RoutedEventArgs e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count &&
+                retiredListBox.SelectedIndex >= 0 && retiredListBox.SelectedIndex < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom].Retireds.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+
+                room.Retireds[retiredListBox.SelectedIndex].Type++;
+                room.Retireds[retiredListBox.SelectedIndex].Type = Math.Min(room.Retireds[retiredListBox.SelectedIndex].Type, Retired.RetiredCount - 1);
+                retiredTextBox.Text = room.Retireds[retiredListBox.SelectedIndex].Type.ToString();
+            }
+        }
+
+        private void retiredButtonDown_Click(object sender, RoutedEventArgs e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count &&
+                retiredListBox.SelectedIndex >= 0 && retiredListBox.SelectedIndex < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom].Retireds.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+
+                room.Retireds[retiredListBox.SelectedIndex].Type--;
+                room.Retireds[retiredListBox.SelectedIndex].Type = Math.Max(room.Retireds[retiredListBox.SelectedIndex].Type, 0);
+                retiredTextBox.Text = room.Retireds[retiredListBox.SelectedIndex].Type.ToString();
+            }
+        }
+
+        private void retiredLifeButtonUP_Click(object sender, RoutedEventArgs e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count &&
+                retiredListBox.SelectedIndex >= 0 && retiredListBox.SelectedIndex < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom].Retireds.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+
+                room.Retireds[retiredListBox.SelectedIndex].Life++;
+                room.Retireds[retiredListBox.SelectedIndex].Life = Math.Min(room.Retireds[retiredListBox.SelectedIndex].Life, 10);
+                retiredLifeTextBox.Text = room.Retireds[retiredListBox.SelectedIndex].Life.ToString();
+            }
+        }
+
+        private void retiredLifeButtonDown_Click(object sender, RoutedEventArgs e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count &&
+                retiredListBox.SelectedIndex >= 0 && retiredListBox.SelectedIndex < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom].Retireds.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+
+                room.Retireds[retiredListBox.SelectedIndex].Life--;
+                room.Retireds[retiredListBox.SelectedIndex].Life = Math.Max(room.Retireds[retiredListBox.SelectedIndex].Life, 1);
+                retiredLifeTextBox.Text = room.Retireds[retiredListBox.SelectedIndex].Life.ToString();
+            }
+        }
     }
 }

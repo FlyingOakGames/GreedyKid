@@ -54,6 +54,7 @@
     <Compile Include="Building\RoomDoor.cs" />
     <Compile Include="Entities\EntityState.cs" />
     <Compile Include="Entities\Player.cs" />
+    <Compile Include="Entities\Retired.cs" />
     <Compile Include="GreedyKidGame.cs" />
     <Compile Include="Helper\GZip\CRC32.cs" />
     <Compile Include="Helper\GZip\Deflate.cs" />
@@ -65,6 +66,7 @@
     <Compile Include="Helper\GZip\ZlibBaseStream.cs" />
     <Compile Include="Helper\GZip\ZlibCodec.cs" />
     <Compile Include="Helper\GZip\ZlibConstants.cs" />
+    <Compile Include="Helper\RandomHelper.cs" />
     <Compile Include="Inputs\GamePadInputsHandler.cs" />
     <Compile Include="Inputs\HybridMouseGamePadHandler.cs" />
     <Compile Include="Inputs\IInputsHandler.cs" />

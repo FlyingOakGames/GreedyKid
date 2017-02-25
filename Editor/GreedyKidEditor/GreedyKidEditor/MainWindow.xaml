@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:GreedyKidEditor"
         xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
         mc:Ignorable="d"
-        Title="Greedy Kid Editor" Height="673" Width="995" Closing="Window_Closing" WindowStartupLocation="CenterScreen" WindowState="Maximized">
+        Title="Greedy Kid Editor" Height="859" Width="995" Closing="Window_Closing" WindowStartupLocation="CenterScreen" WindowState="Maximized">
     <Window.Resources>
         <RoutedUICommand x:Key="SaveCmd" Text="Save">
             <RoutedUICommand.InputGestures>
@@ -213,7 +213,41 @@
                     <RepeatButton x:Name="furnitureButtonDown"  Grid.Column="1" Grid.Row="1" FontSize="8"  FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="13" VerticalAlignment="Bottom" Content="6" Click="furnitureButtonDown_Click"/>
                 </Grid>
                 <Label x:Name="label2_Copy12" Content="Type" HorizontalAlignment="Right" Margin="0,555,52,0" VerticalAlignment="Top"/>
-                
+                <GroupBox x:Name="groupBox_Copy4" Header="Retireds" HorizontalAlignment="Right" Margin="0,587,157,-178" VerticalAlignment="Top" Height="210" Width="152" FontWeight="Bold"/>
+                <ListBox x:Name="retiredListBox" HorizontalAlignment="Right" Height="100" Margin="0,636,163,-117" VerticalAlignment="Top" Width="140" SelectionChanged="retiredListBox_SelectionChanged"/>
+                <Button x:Name="addRetired" Content="+" HorizontalAlignment="Right" Margin="0,611,282,-12" VerticalAlignment="Top" Width="20" Height="20" Click="addRetired_Click"/>
+                <Button x:Name="removeRetired" Content="-" HorizontalAlignment="Right" Margin="0,611,257,-12" VerticalAlignment="Top" Width="20" Height="20" Click="removeRetired_Click"/>
+                <Slider x:Name="xRetired" HorizontalAlignment="Right" Margin="0,741,163,-140" VerticalAlignment="Top" Width="123" SmallChange="1" Maximum="328" ValueChanged="xRetired_ValueChanged"/>
+                <Label x:Name="label2_Copy13" Content="X" HorizontalAlignment="Right" Margin="0,736,289,-143" VerticalAlignment="Top"/>
+                <Grid Width="30" Height="26" Margin="0,765,163,0" HorizontalAlignment="Right" VerticalAlignment="Top">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="13" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="13" />
+                        <RowDefinition Height="13" />
+                    </Grid.RowDefinitions>
+                    <TextBox x:Name="retiredTextBox"  Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" TextAlignment="Right" Text="0" IsEnabled="False" />
+                    <RepeatButton x:Name="retiredButtonUP"  Grid.Column="1" Grid.Row="0" FontSize="8" FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="5" Click="retiredButtonUP_Click"/>
+                    <RepeatButton x:Name="retiredButtonDown"  Grid.Column="1" Grid.Row="1" FontSize="8"  FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="13" VerticalAlignment="Bottom" Content="6" Click="retiredButtonDown_Click"/>
+                </Grid>
+                <Label x:Name="label2_Copy14" Content="Type" HorizontalAlignment="Right" Margin="0,764,193,0" VerticalAlignment="Top"/>
+                <Grid Width="29" Height="26" Margin="0,765,248,0" HorizontalAlignment="Right" VerticalAlignment="Top">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="13" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="13" />
+                        <RowDefinition Height="13" />
+                    </Grid.RowDefinitions>
+                    <TextBox x:Name="retiredLifeTextBox"  Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" TextAlignment="Right" Text="0" IsEnabled="False" />
+                    <RepeatButton x:Name="retiredLifeButtonUP"  Grid.Column="1" Grid.Row="0" FontSize="8" FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="5" Click="retiredLifeButtonUP_Click"/>
+                    <RepeatButton x:Name="retiredLifeButtonDown"  Grid.Column="1" Grid.Row="1" FontSize="8"  FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="13" VerticalAlignment="Bottom" Content="6" Click="retiredLifeButtonDown_Click"/>
+                </Grid>
+                <Label x:Name="label2_Copy15" Content="Life" HorizontalAlignment="Right" Margin="0,764,278,0" VerticalAlignment="Top"/>
+
 
             </Grid>
         </Grid>

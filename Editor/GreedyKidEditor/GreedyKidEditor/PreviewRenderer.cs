@@ -26,6 +26,7 @@ namespace GreedyKidEditor
         Rectangle[][] _roomDoorRectangle;
         Rectangle[][] _elevatorRectangle;
         Rectangle[][][] _furnitureRectangle;
+        Rectangle[][] _retiredRectangle;
 
         Color _fillColor = new Color(34, 32, 52);
 
@@ -60,6 +61,13 @@ namespace GreedyKidEditor
         int _currentRoomDoorFrame = 0;
         int _currentElevatorFrame = 0;
         float _currentFrameTime = 0.0f;
+
+        int[] _retiredSequence = new int[]
+        {
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+            3, 0, 1, 2,
+        };
+        int _currentRetiredFrame = 0;
 
         public static bool PreviewAnimation = false;
 
@@ -192,6 +200,18 @@ namespace GreedyKidEditor
             {
                 _elevatorRectangle[2][p] = new Rectangle(2 * 40 * Room.ElevatorFrames + p * 40, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine, 40, 48);
             }
+
+            int nbFurnitureLine = (int)Math.Ceiling(Furniture.FurnitureCount / (float)Furniture.FurniturePerLine);
+
+            _retiredRectangle = new Rectangle[Retired.RetiredCount][];
+            for (int t = 0; t < Retired.RetiredCount; t++)
+            {
+                _retiredRectangle[t] = new Rectangle[4];
+                for (int f = 0; f < 4; f++) // idle animation
+                {
+                    _retiredRectangle[t][f] = new Rectangle(4 * 32 + f * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32, 32, 32);
+                }
+            }
         }
 
         protected override void UnloadContent()
@@ -225,6 +245,12 @@ namespace GreedyKidEditor
                 _currentElevatorFrame++;
                 if (_currentElevatorFrame >= _elevatorSequence.Length)
                     _currentElevatorFrame = 0;
+
+                _currentRetiredFrame++;
+                if (_currentRetiredFrame >= _retiredSequence.Length)
+                {
+                    _currentRetiredFrame = 0;
+                }
             }
 
             if (!PreviewAnimation)
@@ -387,6 +413,20 @@ namespace GreedyKidEditor
 
                             spriteBatch.Draw(_levelTexture,
                                 new Rectangle(room.ExitX, 128 - 40 * f, source.Width, source.Height),
+                                source,
+                                Color.White);
+                        }
+
+                        // retired
+
+                        for (int rr = 0; rr < room.Retireds.Count; rr++)
+                        {
+                            Retired retired = room.Retireds[rr];
+
+                            Rectangle source = _retiredRectangle[retired.Type][_retiredSequence[_currentRetiredFrame]];
+
+                            spriteBatch.Draw(_levelTexture,
+                                new Rectangle((int)retired.X, 128 - 40 * f + 16, 32, 32),
                                 source,
                                 Color.White);
                         }
