@@ -5,7 +5,7 @@ using System.IO;
 
 namespace GreedyKid
 {
-    public sealed class Retired
+    public sealed class Retired : IEntity
     {
         public const int RetiredCount = 1;
 
@@ -31,6 +31,7 @@ namespace GreedyKid
         // entering / exiting
         private bool _isVisible = true;
         private FloorDoor _targetDoor = null;
+        private bool _wantsToOpenDoor = false;
 
         // walking
         private float _actionTime = 0.0f;
@@ -76,6 +77,24 @@ namespace GreedyKid
                         _frames[(int)EntityState.Walking][t][f] = new Rectangle(f * 32 + 8 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32, 32, 32);
                     }
                     _frameDuration[(int)EntityState.Walking] = 0.1f;
+
+                    // entering
+                    _frames[(int)EntityState.Entering] = new Rectangle[RetiredCount][];
+                    _frames[(int)EntityState.Entering][t] = new Rectangle[3];
+                    for (int f = 0; f < _frames[(int)EntityState.Entering][t].Length; f++)
+                    {
+                        _frames[(int)EntityState.Entering][t][f] = new Rectangle(f * 32 + 32 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32, 32, 32);
+                    }
+                    _frameDuration[(int)EntityState.Entering] = 0.1f;
+
+                    // exiting
+                    _frames[(int)EntityState.Exiting] = new Rectangle[RetiredCount][];
+                    _frames[(int)EntityState.Exiting][t] = new Rectangle[3];
+                    for (int f = 0; f < _frames[(int)EntityState.Exiting][t].Length; f++)
+                    {
+                        _frames[(int)EntityState.Exiting][t][f] = new Rectangle(f * 32 + 35 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32, 32, 32);
+                    }
+                    _frameDuration[(int)EntityState.Exiting] = 0.1f;
                 }
             }
         }
@@ -103,7 +122,7 @@ namespace GreedyKid
                    
                     // AI states
 
-                    if (State == EntityState.Idle)
+                    if (State == EntityState.Idle && _isVisible)
                     {
                         // should walk or turn
                         if (!_hasJustTurned && RandomHelper.Next() < 0.5f)
@@ -130,7 +149,9 @@ namespace GreedyKid
                         State = EntityState.Idle;
                         if (_targetDoor != null)
                         {
+                            Room.Retireds.Remove(this);
                             Room = _targetDoor.Room;
+                            Room.Retireds.Add(this);
                             X = _targetDoor.X;
                             _targetDoor = null;
                         }
@@ -151,6 +172,7 @@ namespace GreedyKid
                 {
                     State = EntityState.Idle;
                     _currentFrame = 0;
+                    _wantsToOpenDoor = false;
                 }
             }
 
@@ -164,13 +186,11 @@ namespace GreedyKid
                 // handle wall collisions
                 if (X < Room.LeftMargin * 8 + 8)
                 {
-                    _actionTime = 0.0f;
                     Turn();
                     X = Room.LeftMargin * 8 + 8;
                 }
                 if (X > 304 - Room.RightMargin * 8 - 16)
                 {
-                    _actionTime = 0.0f;
                     Turn();
                     X = 304 - Room.RightMargin * 8 - 16;
                 }
@@ -184,16 +204,32 @@ namespace GreedyKid
                     {
                         if (Orientation == SpriteEffects.FlipHorizontally && X - 12 < roomDoor.X && X - 12 > roomDoor.X - 4)
                         {
-                            _actionTime = 0.0f;
                             Turn();
                         }
                         else if (Orientation == SpriteEffects.None && X + 8 > roomDoor.X && X + 8 < roomDoor.X + 4)
                         {
-                            _actionTime = 0.0f;
                             Turn();
                         }
                     }
+                }
 
+                // entering floor doors
+                if (_wantsToOpenDoor)
+                {
+                    for (int d = 0; d < Room.FloorDoors.Length; d++)
+                    {
+                        FloorDoor floorDoor = Room.FloorDoors[d];
+
+                        if (X + 16 > floorDoor.X + 11 && X + 16 < floorDoor.X + 27)
+                        {
+                            if (_wantsToOpenDoor && floorDoor.CanAIOpen)
+                            {
+                                floorDoor.EnterOpen();
+                                Enter(floorDoor);
+                                _wantsToOpenDoor = false;
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -202,6 +238,7 @@ namespace GreedyKid
         {
             State = EntityState.Turning;
             _hasJustTurned = true;
+            _actionTime = 0.0f;
         }
 
         private void Walk()
@@ -209,6 +246,35 @@ namespace GreedyKid
             State = EntityState.Walking;
             _actionTime = RandomHelper.Next() * 2.0f + 1.0f;
             _hasJustTurned = false;
+
+            _wantsToOpenDoor = false;
+            if (RandomHelper.Next() <= 0.25f)
+            {
+                _wantsToOpenDoor = true;
+            }
+        }
+
+        private void Enter(FloorDoor floorDoor)
+        {
+            X = floorDoor.X;
+            _targetDoor = floorDoor.SisterDoor;
+            floorDoor.SisterDoor.ArrivingEntity = this;
+
+            _currentFrame = 0;
+            _currentFrameTime = 0.0f;
+            State = EntityState.Entering;
+
+            _actionTime = 0.0f;
+        }
+
+        public void Exit()
+        {
+            _isVisible = true;
+            _currentFrame = 0;
+            _currentFrameTime = 0.0f;
+            State = EntityState.Exiting;
+
+            _actionTime = 0.0f;
         }
 
         public void Draw(SpriteBatch spriteBatch)

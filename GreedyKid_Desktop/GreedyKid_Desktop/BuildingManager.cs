@@ -229,7 +229,7 @@ namespace GreedyKid
                         }
 
                         // retireds
-                        for (int rr = 0; rr < room.Retireds.Length; rr++)
+                        for (int rr = 0; rr < room.Retireds.Count; rr++)
                         {
                             Retired retired = room.Retireds[rr];
                             if (retired != null)
@@ -466,7 +466,7 @@ namespace GreedyKid
                         }
 
                         // retired
-                        for (int rr = 0; rr < room.Retireds.Length; rr++)
+                        for (int rr = 0; rr < room.Retireds.Count; rr++)
                         {
                             Retired retired = room.Retireds[rr];
                             if (retired != null)

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 
 namespace GreedyKid
 {
@@ -31,7 +32,7 @@ namespace GreedyKid
 
         public int Y = 0;
 
-        public Retired[] Retireds;
+        public List<Retired> Retireds;
 
         public void Load(BinaryReader reader)
         {
@@ -75,18 +76,19 @@ namespace GreedyKid
                 Furnitures[i].Load(reader);
             }
             n = reader.ReadInt32();
-            Retireds = new Retired[n];
+            Retireds = new List<Retired>(10);
             for (int i = 0; i < n; i++)
             {
-                Retireds[i] = new Retired();
-                Retireds[i].Load(reader);
-                Retireds[i].Room = this;
+                Retired retired = new Retired();
+                retired.Load(reader);
+                retired.Room = this;
+                Retireds.Add(retired);
             }
 
             HasStart = reader.ReadBoolean();
             StartX = reader.ReadInt32();
             HasExit = reader.ReadBoolean();
             ExitX = reader.ReadInt32();
-        }
+        }        
     }
 }

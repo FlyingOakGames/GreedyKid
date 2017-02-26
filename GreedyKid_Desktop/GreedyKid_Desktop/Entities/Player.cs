@@ -4,7 +4,7 @@ using System;
 
 namespace GreedyKid
 {
-    public sealed class Player
+    public sealed class Player : IEntity
     {
         private const float _walkSpeed = 64.0f;
         private const float _rollSpeed = 96.0f;
@@ -459,7 +459,7 @@ namespace GreedyKid
         {
             X = floorDoor.X;
             _targetDoor = floorDoor.SisterDoor;
-            floorDoor.SisterDoor.ArrivingPlayer = this;
+            floorDoor.SisterDoor.ArrivingEntity = this;
 
             _currentFrame = 0;
             _currentFrameTime = 0.0f;

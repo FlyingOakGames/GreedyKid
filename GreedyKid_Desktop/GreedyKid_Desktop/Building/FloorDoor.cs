@@ -34,7 +34,7 @@ namespace GreedyKid
         public bool IsLocked = false;
 
         // transiting entities
-        public Player ArrivingPlayer = null;
+        public IEntity ArrivingEntity = null;
 
         public void Load(BinaryReader reader)
         {
@@ -93,10 +93,10 @@ namespace GreedyKid
                 Frame = 0;
                 _currentFrameTime = 0.0f;
 
-                if (ArrivingPlayer != null)
+                if (ArrivingEntity != null)
                 {
-                    ArrivingPlayer.Exit();
-                    ArrivingPlayer = null;
+                    ArrivingEntity.Exit();
+                    ArrivingEntity = null;
                 }
             }
         }
@@ -108,6 +108,11 @@ namespace GreedyKid
                 CanOpen = true;
                 SisterDoor.CanOpen = true;
             }
-        }        
+        }    
+    
+        public bool CanAIOpen
+        {
+            get { return _state == FloorDoorState.Closed && !IsLocked; }
+        }
     }
 }
