@@ -19,6 +19,8 @@ namespace GreedyKid
         Boo,
         IdleAngry,
         KO,
+        Slam,
+        Stun,
 
         Count
     }

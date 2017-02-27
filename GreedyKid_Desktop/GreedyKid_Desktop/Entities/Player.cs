@@ -204,7 +204,8 @@ namespace GreedyKid
             }
 
             // preventing any movements if invisible
-            if (!_isVisible) _moveDirection = 0;
+            if (!_isVisible || _currentSmokeFrame >= 0)
+                _moveDirection = 0;
 
             // start / stop running
             if (_moveDirection != 0 && State == EntityState.Idle)

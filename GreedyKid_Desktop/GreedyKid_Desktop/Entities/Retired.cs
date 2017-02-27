@@ -40,6 +40,9 @@ namespace GreedyKid
         // angry
         private float _angryTime = 0.0f;
 
+        // stun
+        private int _XWarp = -1;
+
         public Retired()
         {
             // init once
@@ -143,6 +146,24 @@ namespace GreedyKid
                         _frames[(int)EntityState.KO][t][f] = new Rectangle(f * 32 + 27 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32, 32, 32);
                     }
                     _frameDuration[(int)EntityState.KO] = 0.1f;
+
+                    // Slam
+                    _frames[(int)EntityState.Slam] = new Rectangle[RetiredCount][];
+                    _frames[(int)EntityState.Slam][t] = new Rectangle[3];
+                    for (int f = 0; f < _frames[(int)EntityState.Slam][t].Length; f++)
+                    {
+                        _frames[(int)EntityState.Slam][t][f] = new Rectangle(f * 32 + 46 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32, 32, 32);
+                    }
+                    _frameDuration[(int)EntityState.Slam] = 0.1f;
+
+                    // Stun
+                    _frames[(int)EntityState.Stun] = new Rectangle[RetiredCount][];
+                    _frames[(int)EntityState.Stun][t] = new Rectangle[4];
+                    for (int f = 0; f < _frames[(int)EntityState.Stun][t].Length; f++)
+                    {
+                        _frames[(int)EntityState.Stun][t][f] = new Rectangle(f * 32 + 49 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32, 32, 32);
+                    }
+                    _frameDuration[(int)EntityState.Stun] = 0.1f;
                 }
             }
 
@@ -198,6 +219,13 @@ namespace GreedyKid
                     else if (State == EntityState.Boo)
                     {
                         NextAction();
+                    }
+                    else if (State == EntityState.Slam)
+                    {
+                        if (_angryTime > 0.0f)
+                            Stun();
+                        else
+                            NextAction();
                     }
 
                     else if (State == EntityState.KO)
@@ -265,6 +293,25 @@ namespace GreedyKid
                 }
             }
 
+            // warp from slam
+            if (_XWarp >= 0)
+            {
+                if (X < _XWarp)
+                {
+                    X = X + _runSpeed * 2.0f * gameTime;
+                    if (X > _XWarp)
+                        _XWarp = -1;
+                }
+                else if (X > _XWarp)
+                {
+                    X = X - _runSpeed * 2.0f * gameTime;
+                    if (X < _XWarp)
+                        _XWarp = -1;
+                }
+                else
+                    _XWarp = -1;
+            }
+
             if (State == EntityState.Walking || State == EntityState.Running)
             {
                 float speed = _walkSpeed;
@@ -293,7 +340,7 @@ namespace GreedyKid
                 {
                     RoomDoor roomDoor = Room.RoomDoors[d];
 
-                    if (!roomDoor.IsOpenLeft && !roomDoor.IsOpenRight)
+                    if (roomDoor.IsClosed)
                     {
                         if (Orientation == SpriteEffects.FlipHorizontally && X - 12 < roomDoor.X && X - 12 > roomDoor.X - 4)
                         {
@@ -302,6 +349,20 @@ namespace GreedyKid
                         else if (Orientation == SpriteEffects.None && X + 8 > roomDoor.X && X + 8 < roomDoor.X + 4)
                         {
                             Turn();
+                        }
+                    }
+                    else if (roomDoor.IsClosingFromLeft)
+                    {
+                        if (X < roomDoor.X + 14 && X > roomDoor.X - 14)
+                        {
+                            Slam(roomDoor.X + 14);
+                        }
+                    }
+                    else if (roomDoor.IsClosingFromRight)
+                    {
+                        if (X < roomDoor.X + 14 && X > roomDoor.X - 14)
+                        {
+                            Slam(roomDoor.X - 14);
                         }
                     }
                 }
@@ -385,6 +446,23 @@ namespace GreedyKid
 
                 NextAction();
             }
+        }
+
+        private void Stun()
+        {
+            _currentFrame = 0;
+            State = EntityState.Stun;
+            _actionTime = RandomHelper.Next() * 2.0f + 1.0f;
+            _hasJustTurned = false;
+        }
+
+        private void Slam(int warp)
+        {
+            _XWarp = warp;
+            State = EntityState.Slam;
+            _currentFrame = 0;
+            _actionTime = 0.0f;
+            _hasJustTurned = false;
         }
 
         private void WaitSpecial()
