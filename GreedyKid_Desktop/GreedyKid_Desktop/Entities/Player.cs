@@ -363,7 +363,7 @@ namespace GreedyKid
             Texture2D texture = TextureManager.Building;
 
             spriteBatch.Draw(texture,
-                new Rectangle((int)X, 128 - 40 * Room.Y + 16, 32, 32),
+                new Rectangle((int)X, 128 - 40 * Room.Y + 9, 32, 32),
                 _frames[(int)State][_currentFrame],
                 Color.White,
                 0.0f,
@@ -374,7 +374,7 @@ namespace GreedyKid
             if (_currentSmokeFrame >= 0)
             {
                 spriteBatch.Draw(texture,
-                new Rectangle((int)X, 128 - 40 * Room.Y + 16, 32, 32),
+                new Rectangle((int)X, 128 - 40 * Room.Y + 9, 32, 32),
                 _frames[(int)EntityState.Smoke][_currentSmokeFrame],
                 Color.White);
             }

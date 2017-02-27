@@ -15,6 +15,10 @@ namespace GreedyKid
         Taunting,
         Turning,
         Walking,
+        IdleSpecial,
+        Boo,
+        IdleAngry,
+        KO,
 
         Count
     }

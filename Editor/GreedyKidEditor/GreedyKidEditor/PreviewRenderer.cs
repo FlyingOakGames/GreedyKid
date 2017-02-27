@@ -426,7 +426,7 @@ namespace GreedyKidEditor
                             Rectangle source = _retiredRectangle[retired.Type][_retiredSequence[_currentRetiredFrame]];
 
                             spriteBatch.Draw(_levelTexture,
-                                new Rectangle((int)retired.X, 128 - 40 * f + 16, 32, 32),
+                                new Rectangle((int)retired.X, 128 - 40 * f + 9, 32, 32),
                                 source,
                                 Color.White);
                         }

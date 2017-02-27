@@ -37,6 +37,9 @@ namespace GreedyKid
         private float _actionTime = 0.0f;
         private bool _hasJustTurned = false;
 
+        // angry
+        private float _angryTime = 0.0f;
+
         public Retired()
         {
             // init once
@@ -53,12 +56,30 @@ namespace GreedyKid
                 {
                     // idle
                     _frames[(int)EntityState.Idle] = new Rectangle[RetiredCount][];
-                    _frames[(int)EntityState.Idle][t] = new Rectangle[4];
+                    _frames[(int)EntityState.Idle][t] = new Rectangle[8];
                     for (int f = 0; f < _frames[(int)EntityState.Idle][t].Length; f++)
                     {
-                        _frames[(int)EntityState.Idle][t][f] = new Rectangle(f * 32 + 4 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32, 32, 32);
+                        _frames[(int)EntityState.Idle][t][f] = new Rectangle(f * 32 + 38 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32, 32, 32);
                     }
                     _frameDuration[(int)EntityState.Idle] = 0.1f;
+
+                    // idle special
+                    _frames[(int)EntityState.IdleSpecial] = new Rectangle[RetiredCount][];
+                    _frames[(int)EntityState.IdleSpecial][t] = new Rectangle[4];
+                    for (int f = 0; f < _frames[(int)EntityState.IdleSpecial][t].Length; f++)
+                    {
+                        _frames[(int)EntityState.IdleSpecial][t][f] = new Rectangle(f * 32 + 4 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32, 32, 32);
+                    }
+                    _frameDuration[(int)EntityState.IdleSpecial] = 0.1f;
+
+                    // idle angry
+                    _frames[(int)EntityState.IdleAngry] = new Rectangle[RetiredCount][];
+                    _frames[(int)EntityState.IdleAngry][t] = new Rectangle[4];
+                    for (int f = 0; f < _frames[(int)EntityState.IdleAngry][t].Length; f++)
+                    {
+                        _frames[(int)EntityState.IdleAngry][t][f] = new Rectangle(f * 32 + 18 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32, 32, 32);
+                    }
+                    _frameDuration[(int)EntityState.IdleAngry] = 0.1f;
 
                     // turning
                     _frames[(int)EntityState.Turning] = new Rectangle[RetiredCount][];
@@ -78,6 +99,15 @@ namespace GreedyKid
                     }
                     _frameDuration[(int)EntityState.Walking] = 0.1f;
 
+                    // running
+                    _frames[(int)EntityState.Running] = new Rectangle[RetiredCount][];
+                    _frames[(int)EntityState.Running][t] = new Rectangle[4];
+                    for (int f = 0; f < _frames[(int)EntityState.Running][t].Length; f++)
+                    {
+                        _frames[(int)EntityState.Running][t][f] = new Rectangle(f * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32, 32, 32);
+                    }
+                    _frameDuration[(int)EntityState.Running] = 0.1f;
+
                     // entering
                     _frames[(int)EntityState.Entering] = new Rectangle[RetiredCount][];
                     _frames[(int)EntityState.Entering][t] = new Rectangle[3];
@@ -95,8 +125,28 @@ namespace GreedyKid
                         _frames[(int)EntityState.Exiting][t][f] = new Rectangle(f * 32 + 35 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32, 32, 32);
                     }
                     _frameDuration[(int)EntityState.Exiting] = 0.1f;
+
+                    // boo
+                    _frames[(int)EntityState.Boo] = new Rectangle[RetiredCount][];
+                    _frames[(int)EntityState.Boo][t] = new Rectangle[5];
+                    for (int f = 0; f < _frames[(int)EntityState.Boo][t].Length; f++)
+                    {
+                        _frames[(int)EntityState.Boo][t][f] = new Rectangle(f * 32 + 22 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32, 32, 32);
+                    }
+                    _frameDuration[(int)EntityState.Boo] = 0.1f;
+
+                    // KO
+                    _frames[(int)EntityState.KO] = new Rectangle[RetiredCount][];
+                    _frames[(int)EntityState.KO][t] = new Rectangle[5];
+                    for (int f = 0; f < _frames[(int)EntityState.KO][t].Length; f++)
+                    {
+                        _frames[(int)EntityState.KO][t][f] = new Rectangle(f * 32 + 27 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32, 32, 32);
+                    }
+                    _frameDuration[(int)EntityState.KO] = 0.1f;
                 }
             }
+
+            NextAction();
         }
 
         public void Load(BinaryReader reader)
@@ -106,8 +156,18 @@ namespace GreedyKid
             Life = reader.ReadInt32();
         }
 
-        public void Update(float gameTime)
+        public void Update(float gameTime, bool boo)
         {
+            // boo
+            if (boo && _isVisible && _angryTime <= 0.0f 
+                && State != EntityState.Boo 
+                && State != EntityState.Entering 
+                && State != EntityState.Exiting 
+                && State != EntityState.KO)
+            {
+                Boo();
+            }
+
             // update state
             _currentFrameTime += gameTime;
 
@@ -121,26 +181,31 @@ namespace GreedyKid
                     _currentFrame = 0;
                    
                     // AI states
-
-                    if (State == EntityState.Idle && _isVisible)
-                    {
-                        // should walk or turn
-                        if (!_hasJustTurned && RandomHelper.Next() < 0.5f)
-                            Turn();
-                        else
-                            Walk();
-                    }
-                    else if (State == EntityState.Turning)
+                    
+                    if (State == EntityState.Turning)
                     {
                         if (Orientation == SpriteEffects.None)
                             Orientation = SpriteEffects.FlipHorizontally;
                         else
                             Orientation = SpriteEffects.None;
 
-
-                        State = EntityState.Idle;
+                        NextAction();
+                    }                   
+                    else if (State == EntityState.IdleSpecial)
+                    {
+                        NextAction();
+                    }
+                    else if (State == EntityState.Boo)
+                    {
+                        NextAction();
                     }
 
+                    else if (State == EntityState.KO)
+                    {
+                        _currentFrame = _frames[(int)State][Type].Length - 1;
+                        if (RandomHelper.Next() < 0.1f)
+                            _currentFrame = _frames[(int)State][Type].Length - 2;
+                    }
 
                     // entering doors
                     else if (State == EntityState.Entering)
@@ -159,29 +224,57 @@ namespace GreedyKid
                     // exiting doors
                     else if (State == EntityState.Exiting)
                     {
-                        State = EntityState.Idle;
+                        NextAction();
                     }                    
                 }
             }
 
-            if (_actionTime > 0.0f)
+            // AI states
+
+            if (_angryTime > 0.0f)
+            {
+                _angryTime -= gameTime;
+
+                if (_angryTime <= 0.0f)
+                {
+                    _currentFrame = 0;
+
+                    if (State == EntityState.Running)
+                        State = EntityState.Walking;
+                    else if (State == EntityState.IdleAngry)
+                        State = EntityState.Idle;
+                }
+            }
+
+            if (_isVisible && _actionTime > 0.0f)
             {
                 _actionTime -= gameTime;
 
                 if (_actionTime <= 0.0f)
                 {
-                    State = EntityState.Idle;
-                    _currentFrame = 0;
-                    _wantsToOpenDoor = false;
+                    /*
+                    if (State == EntityState.Walking)
+                    {
+                        NextAction();
+                    }
+                    else if (State == EntityState.Idle)
+                    {
+                        NextAction();
+                    }*/
+                    NextAction();
                 }
             }
 
-            if (State == EntityState.Walking)
+            if (State == EntityState.Walking || State == EntityState.Running)
             {
+                float speed = _walkSpeed;
+                if (State == EntityState.Running)
+                    speed = _runSpeed;
+
                 if (Orientation == SpriteEffects.None)
-                    X = X + _walkSpeed * gameTime;
+                    X = X + speed * gameTime;
                 else
-                    X = X - _walkSpeed * gameTime;
+                    X = X - speed * gameTime;
 
                 // handle wall collisions
                 if (X < Room.LeftMargin * 8 + 8)
@@ -220,13 +313,14 @@ namespace GreedyKid
                     {
                         FloorDoor floorDoor = Room.FloorDoors[d];
 
-                        if (X + 16 > floorDoor.X + 11 && X + 16 < floorDoor.X + 27)
+                        if (X + 16 > floorDoor.X + 14 && X + 16 < floorDoor.X + 24)
                         {
-                            if (_wantsToOpenDoor && floorDoor.CanAIOpen)
+                            if (floorDoor.CanAIOpen)
                             {
                                 floorDoor.EnterOpen();
                                 Enter(floorDoor);
                                 _wantsToOpenDoor = false;
+                                break;
                             }
                         }
                     }
@@ -234,11 +328,70 @@ namespace GreedyKid
             }
         }
 
+        private void Boo()
+        {
+            Life--;
+
+            _currentFrame = 0;
+            _actionTime = 0.0f;
+            _hasJustTurned = false;
+
+            if (Orientation == SpriteEffects.None)
+                Orientation = SpriteEffects.FlipHorizontally;
+            else
+                Orientation = SpriteEffects.None;
+
+            if (Life <= 0)
+            {
+                State = EntityState.KO;
+            }
+            else
+            {
+
+                _angryTime = RandomHelper.Next() * 5.0f + 3.0f;
+                
+                State = EntityState.Boo;                
+            }
+        }
+
+        private void NextAction()
+        {
+            _currentFrame = 0;
+            _wantsToOpenDoor = false;
+
+            // should walk or turn
+            if (!_hasJustTurned && RandomHelper.Next() < 0.5f)
+                Turn();
+            else if (_angryTime <= 0.0f && RandomHelper.Next() < 0.5f)
+                WaitSpecial();
+            else if (RandomHelper.Next() < 0.75f)
+                Walk();
+            else
+                Wait();
+        }
+
         private void Turn()
         {
             State = EntityState.Turning;
             _hasJustTurned = true;
             _actionTime = 0.0f;
+
+            if (_angryTime > 0.0f)
+            {
+                if (Orientation == SpriteEffects.None)
+                    Orientation = SpriteEffects.FlipHorizontally;
+                else
+                    Orientation = SpriteEffects.None;
+
+                NextAction();
+            }
+        }
+
+        private void WaitSpecial()
+        {
+            State = EntityState.IdleSpecial;
+            _actionTime = 0.0f;
+            _hasJustTurned = false;
         }
 
         private void Walk()
@@ -251,6 +404,29 @@ namespace GreedyKid
             if (RandomHelper.Next() <= 0.25f)
             {
                 _wantsToOpenDoor = true;
+            }
+
+            if (_angryTime > 0.0f)
+            {
+                State = EntityState.Running;
+            }
+        }
+
+        private void Wait()
+        {
+            State = EntityState.Idle;
+            _actionTime = RandomHelper.Next() * 2.0f + 1.0f;
+            _hasJustTurned = false;
+
+            _wantsToOpenDoor = false;
+            if (RandomHelper.Next() <= 0.25f)
+            {
+                _wantsToOpenDoor = true;
+            }
+
+            if (_angryTime > 0.0f)
+            {
+                State = EntityState.IdleAngry;
             }
         }
 
@@ -285,13 +461,25 @@ namespace GreedyKid
             Texture2D texture = TextureManager.Building;
 
             spriteBatch.Draw(texture,
-                new Rectangle((int)X, 128 - 40 * Room.Y + 16, 32, 32),
+                new Rectangle((int)X, 128 - 40 * Room.Y + 9, 32, 32),
                 _frames[(int)State][Type][_currentFrame],
                 Color.White,
                 0.0f,
                 Vector2.Zero,
                 Orientation,
                 0.0f);
+        }
+
+        public bool NotFacing(int playerMiddle)
+        {
+            int retiredMiddle = (int)X + 16;
+
+            if (Orientation == SpriteEffects.None && retiredMiddle >= playerMiddle)
+                return true;
+            else if (Orientation == SpriteEffects.FlipHorizontally && retiredMiddle <= playerMiddle)
+                return true;
+
+            return false;
         }
     }
 }

@@ -199,6 +199,9 @@ namespace GreedyKid
 
             Player.Update(gameTime);
 
+            bool isShouting = Player.IsShouting;
+            int playerMiddle = (int)Player.X + 16;
+
             if (SelectedLevel >= 0 && SelectedLevel < _building.Levels.Length)
             {
                 for (int f = 0; f < _building.Levels[SelectedLevel].Floors.Length; f++)
@@ -233,7 +236,18 @@ namespace GreedyKid
                         {
                             Retired retired = room.Retireds[rr];
                             if (retired != null)
-                                retired.Update(gameTime);
+                            {
+                                bool boo = false;
+
+                                if (isShouting && retired.Room.Y == Player.Room.Y)
+                                {
+                                    int retiredMiddle = (int)retired.X + 16;
+                                    if (Math.Abs(retiredMiddle - playerMiddle) <= _shoutDistance && retired.NotFacing(playerMiddle))
+                                    boo = true;
+                                }
+
+                                retired.Update(gameTime, boo);
+                            }
                         }
                     }
                 }
@@ -319,7 +333,7 @@ namespace GreedyKid
                             Detail detail = room.Details[d];
 
                             int frame = 0;
-                            if (isShouting && detail.Type >= Detail.NormalDetailCount && Math.Abs(detail.X + 16 - playerMiddle) <= _shoutDistance)
+                            if (isShouting && floor.Y == Player.Room.Y && detail.Type >= Detail.NormalDetailCount && Math.Abs(detail.X + 16 - playerMiddle) <= _shoutDistance)
                                 frame = _currentShoutFrame;
 
                             Rectangle source = _detailRectangle[room.BackgroundColor][detail.Type][frame];
@@ -395,7 +409,7 @@ namespace GreedyKid
                             Furniture furniture = room.Furnitures[ff];
 
                             int frame = furniture.Frame;
-                            if (isShouting && Math.Abs(furniture.X + 16 - playerMiddle) <= _shoutDistance)
+                            if (isShouting && floor.Y == Player.Room.Y && Math.Abs(furniture.X + 16 - playerMiddle) <= _shoutDistance)
                                 frame = shoutingFrame;
                             
                             Rectangle source = _furnitureRectangle[room.BackgroundColor][furniture.Type][frame];
