@@ -21,6 +21,8 @@ namespace GreedyKid
         KO,
         Slam,
         Stun,
+        Hit,
+        Crying,
 
         Count
     }

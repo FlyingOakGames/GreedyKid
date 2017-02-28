@@ -1223,7 +1223,7 @@ namespace GreedyKidEditor
                 Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
 
                 room.Retireds[retiredListBox.SelectedIndex].Life++;
-                room.Retireds[retiredListBox.SelectedIndex].Life = Math.Min(room.Retireds[retiredListBox.SelectedIndex].Life, 10);
+                room.Retireds[retiredListBox.SelectedIndex].Life = Math.Min(room.Retireds[retiredListBox.SelectedIndex].Life, 3);
                 retiredLifeTextBox.Text = room.Retireds[retiredListBox.SelectedIndex].Life.ToString();
             }
         }

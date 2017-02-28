@@ -15,5 +15,10 @@ namespace GreedyKid
         {
             return (float)_random.NextDouble();
         }
+
+        public static int Next(int max)
+        {
+            return _random.Next(max);
+        }
     }
 }

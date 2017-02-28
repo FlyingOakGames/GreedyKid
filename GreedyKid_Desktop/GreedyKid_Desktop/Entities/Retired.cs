@@ -8,6 +8,7 @@ namespace GreedyKid
     public sealed class Retired : IEntity
     {
         public const int RetiredCount = 1;
+        public const int MaxLife = 3;
 
         private const float _walkSpeed = 16.0f;
         private const float _runSpeed = 48.0f;
@@ -24,6 +25,7 @@ namespace GreedyKid
         // shared statics
         private Rectangle[][][] _frames;
         private float[] _frameDuration;
+        private Rectangle[][] _lifeRectangles;
 
         private int _currentFrame = 0;
         private float _currentFrameTime = 0.0f;
@@ -42,6 +44,11 @@ namespace GreedyKid
 
         // stun
         private int _XWarp = -1;
+
+        // heart
+        private int _currentHeartFrame = 0;
+        private float _currentHeartFrameTime = 0.0f;
+        private const float _heartFrameTime = 0.1f;
 
         public Retired()
         {
@@ -165,9 +172,23 @@ namespace GreedyKid
                     }
                     _frameDuration[(int)EntityState.Stun] = 0.1f;
                 }
+
+                // life rectangles
+                _lifeRectangles = new Rectangle[MaxLife][];
+                for (int l = 0; l < MaxLife; l++)
+                {
+                    int nbFrames = 4 + l * 4;
+                    _lifeRectangles[l] = new Rectangle[nbFrames];
+
+                    for (int f = 0; f < nbFrames; f++)
+                    {
+                        _lifeRectangles[l][f] = new Rectangle(2048 - (4 + (MaxLife - 1) * 4) * 16 + f * 16, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 16, 16, 16);
+                    }
+                }
             }
 
             NextAction();
+            _currentHeartFrame = RandomHelper.Next(4 + (Life - 1) * 4);
         }
 
         public void Load(BinaryReader reader)
@@ -187,6 +208,19 @@ namespace GreedyKid
                 && State != EntityState.KO)
             {
                 Boo();
+            }
+
+            // update heart
+            if (Life > 0)
+            {
+                _currentHeartFrameTime += gameTime;
+
+                if (_currentHeartFrameTime > _heartFrameTime)
+                {
+                    _currentHeartFrameTime -= _heartFrameTime;
+                    _currentHeartFrame++;
+                    _currentHeartFrame %= _lifeRectangles[Life - 1].Length;
+                }
             }
 
             // update state
@@ -334,39 +368,50 @@ namespace GreedyKid
                     Turn();
                     X = 304 - Room.RightMargin * 8 - 16;
                 }
+            }
 
-                // handle room door collisions
-                for (int d = 0; d < Room.RoomDoors.Length; d++)
+
+            // handle room door collisions
+            for (int d = 0; d < Room.RoomDoors.Length; d++)
+            {
+                RoomDoor roomDoor = Room.RoomDoors[d];
+
+                if (Life <= 0 && X < roomDoor.X + 16 && X > roomDoor.X - 16)
                 {
-                    RoomDoor roomDoor = Room.RoomDoors[d];
-
-                    if (roomDoor.IsClosed)
-                    {
-                        if (Orientation == SpriteEffects.FlipHorizontally && X - 12 < roomDoor.X && X - 12 > roomDoor.X - 4)
-                        {
-                            Turn();
-                        }
-                        else if (Orientation == SpriteEffects.None && X + 8 > roomDoor.X && X + 8 < roomDoor.X + 4)
-                        {
-                            Turn();
-                        }
-                    }
-                    else if (roomDoor.IsClosingFromLeft)
-                    {
-                        if (X < roomDoor.X + 14 && X > roomDoor.X - 14)
-                        {
-                            Slam(roomDoor.X + 14);
-                        }
-                    }
-                    else if (roomDoor.IsClosingFromRight)
-                    {
-                        if (X < roomDoor.X + 14 && X > roomDoor.X - 14)
-                        {
-                            Slam(roomDoor.X - 14);
-                        }
-                    }
+                    roomDoor.CanClose = false;
+                    roomDoor.IsKOBlocked = true;
+                    continue;
                 }
 
+                if (roomDoor.IsClosed && (State == EntityState.Walking || State == EntityState.Running))
+                {
+                    if (Orientation == SpriteEffects.FlipHorizontally && X - 12 < roomDoor.X && X - 12 > roomDoor.X - 4)
+                    {
+                        Turn();
+                    }
+                    else if (Orientation == SpriteEffects.None && X + 8 > roomDoor.X && X + 8 < roomDoor.X + 4)
+                    {
+                        Turn();
+                    }
+                }
+                else if (roomDoor.IsClosingFromLeft && State != EntityState.KO)
+                {
+                    if (X < roomDoor.X + 14 && X > roomDoor.X - 14)
+                    {
+                        Slam(roomDoor.X + 14);
+                    }
+                }
+                else if (roomDoor.IsClosingFromRight && State != EntityState.KO)
+                {
+                    if (X < roomDoor.X + 14 && X > roomDoor.X - 14)
+                    {
+                        Slam(roomDoor.X - 14);
+                    }
+                }
+            }
+
+            if (State == EntityState.Walking || State == EntityState.Running)
+            {
                 // entering floor doors
                 if (_wantsToOpenDoor)
                 {
@@ -392,6 +437,8 @@ namespace GreedyKid
         private void Boo()
         {
             Life--;
+
+            _currentHeartFrame = 0;
 
             _currentFrame = 0;
             _actionTime = 0.0f;
@@ -463,13 +510,14 @@ namespace GreedyKid
             _currentFrame = 0;
             _actionTime = 0.0f;
             _hasJustTurned = false;
+            _wantsToOpenDoor = false;
         }
 
         private void WaitSpecial()
         {
             State = EntityState.IdleSpecial;
             _actionTime = 0.0f;
-            _hasJustTurned = false;
+            //_hasJustTurned = false;
         }
 
         private void Walk()
@@ -546,6 +594,14 @@ namespace GreedyKid
                 Vector2.Zero,
                 Orientation,
                 0.0f);
+
+            if (Life > 0)
+            {
+                spriteBatch.Draw(texture,
+                new Rectangle((int)X + 8, 128 - 40 * Room.Y + 9, 16, 16),
+                _lifeRectangles[Life - 1][_currentHeartFrame],
+                Color.White);
+            }
         }
 
         public bool NotFacing(int playerMiddle)
@@ -558,6 +614,12 @@ namespace GreedyKid
                 return true;
 
             return false;
+        }
+
+        public bool IsAngry
+        {
+            get { return _angryTime > 0.0f && State != EntityState.Entering && State != EntityState.Exiting;
+            }
         }
     }
 }
