@@ -417,9 +417,15 @@ namespace GreedyKid
 
                 // handle wall collisions
                 if (X < Room.LeftMargin * 8 + 4)
+                {
                     X = Room.LeftMargin * 8 + 4;
+                    _XWarp = -1;
+                }
                 if (X > 304 - Room.RightMargin * 8 - 12)
+                {
                     X = 304 - Room.RightMargin * 8 - 12;
+                    _XWarp = -1;
+                }
             }
 
             // moving
@@ -636,6 +642,11 @@ namespace GreedyKid
         public bool IsShouting
         {
             get { return State == EntityState.Shouting; }
+        }
+
+        public bool IsTaunting
+        {
+            get { return State == EntityState.Taunting; }
         }
     }
 }

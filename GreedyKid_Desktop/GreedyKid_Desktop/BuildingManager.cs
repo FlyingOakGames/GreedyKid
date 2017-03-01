@@ -200,6 +200,7 @@ namespace GreedyKid
             Player.Update(gameTime);
 
             bool isShouting = Player.IsShouting;
+            bool isTaunting = Player.IsTaunting;
             int playerMiddle = (int)Player.X + 16;
 
             if (SelectedLevel >= 0 && SelectedLevel < _building.Levels.Length)
@@ -239,14 +240,22 @@ namespace GreedyKid
                             {
                                 bool boo = false;
 
-                                if (isShouting && retired.Room.Y == Player.Room.Y)
+                                if (isShouting && retired.Room == Player.Room)
                                 {
                                     int retiredMiddle = (int)retired.X + 16;
                                     if (Math.Abs(retiredMiddle - playerMiddle) <= _shoutDistance && retired.NotFacing(playerMiddle))
                                     boo = true;
                                 }
+                                if (retired.Room == Player.Room)
+                                {
+                                    retired.LastKnownPlayerPosition = playerMiddle;
+                                }
+                                else
+                                {
+                                    retired.LastKnownPlayerPosition = -1;
+                                }
 
-                                retired.Update(gameTime, boo);
+                                retired.Update(gameTime, boo, isTaunting);
                             }
                         }
                     }

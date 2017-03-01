@@ -41,6 +41,7 @@ namespace GreedyKid
 
         // angry
         private float _angryTime = 0.0f;
+        public int LastKnownPlayerPosition = -1;
 
         // stun
         private int _XWarp = -1;
@@ -198,7 +199,7 @@ namespace GreedyKid
             Life = reader.ReadInt32();
         }
 
-        public void Update(float gameTime, bool boo)
+        public void Update(float gameTime, bool boo, bool taunted)
         {
             // boo
             if (boo && _isVisible && _angryTime <= 0.0f 
@@ -372,16 +373,43 @@ namespace GreedyKid
 
 
             // handle room door collisions
+
+            bool canSeePlayer = true;
+
             for (int d = 0; d < Room.RoomDoors.Length; d++)
             {
-                RoomDoor roomDoor = Room.RoomDoors[d];
+                RoomDoor roomDoor = Room.RoomDoors[d];              
 
                 if (Life <= 0 && X < roomDoor.X + 16 && X > roomDoor.X - 16)
                 {
                     roomDoor.CanClose = false;
                     roomDoor.IsKOBlocked = true;
+                    canSeePlayer = false;
                     continue;
                 }
+
+                // check if player in sight
+                if (LastKnownPlayerPosition >= 0)
+                {
+                    if (LastKnownPlayerPosition > X + 16
+                        && Orientation == SpriteEffects.None
+                        && roomDoor.IsClosed
+                        && roomDoor.X + 16 > X && LastKnownPlayerPosition > roomDoor.X + 16)
+                        canSeePlayer = false;
+                    else if (LastKnownPlayerPosition < X + 16
+                        && Orientation == SpriteEffects.FlipHorizontally
+                        && roomDoor.IsClosed
+                        && roomDoor.X + 16 < X && LastKnownPlayerPosition < roomDoor.X + 16)
+                        canSeePlayer = false;
+                    else if (LastKnownPlayerPosition < X + 16
+                        && Orientation == SpriteEffects.None)
+                        canSeePlayer = false;
+                    else if (LastKnownPlayerPosition > X + 16
+                        && Orientation == SpriteEffects.FlipHorizontally)
+                        canSeePlayer = false;
+                }
+                else
+                    canSeePlayer = false;
 
                 if (roomDoor.IsClosed && (State == EntityState.Walking || State == EntityState.Running))
                 {
@@ -408,6 +436,12 @@ namespace GreedyKid
                         Slam(roomDoor.X - 14);
                     }
                 }
+            }
+
+            // player in sight action
+            if (canSeePlayer && taunted)
+            {
+                Taunt();
             }
 
             if (State == EntityState.Walking || State == EntityState.Running)
@@ -460,6 +494,18 @@ namespace GreedyKid
                 
                 State = EntityState.Boo;                
             }
+        }
+
+        private void Taunt()
+        {
+            if (_angryTime > 0.0f)
+                return;
+            _currentFrame = 0;
+            _actionTime = 0.0f;
+            _hasJustTurned = false;
+            _angryTime = RandomHelper.Next() * 5.0f + 3.0f;
+
+            Walk();
         }
 
         private void NextAction()
@@ -618,8 +664,7 @@ namespace GreedyKid
 
         public bool IsAngry
         {
-            get { return _angryTime > 0.0f && State != EntityState.Entering && State != EntityState.Exiting;
-            }
+            get { return _angryTime > 0.0f && State != EntityState.Entering && State != EntityState.Exiting; }
         }
     }
 }
