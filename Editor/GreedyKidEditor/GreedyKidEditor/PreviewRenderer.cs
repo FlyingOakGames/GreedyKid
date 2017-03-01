@@ -27,6 +27,7 @@ namespace GreedyKidEditor
         Rectangle[][] _elevatorRectangle;
         Rectangle[][][] _furnitureRectangle;
         Rectangle[][] _retiredRectangle;
+        Rectangle[][] _nurseRectangle;
 
         Color _fillColor = new Color(34, 32, 52);
 
@@ -68,6 +69,13 @@ namespace GreedyKidEditor
             3, 0, 1, 2,
         };
         int _currentRetiredFrame = 0;
+
+        int[] _nurseSequence = new int[]
+        {
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+            3, 0, 1, 2,
+        };
+        int _currentNurseFrame = 0;
 
         public static bool PreviewAnimation = false;
 
@@ -212,6 +220,16 @@ namespace GreedyKidEditor
                     _retiredRectangle[t][f] = new Rectangle(4 * 32 + f * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32, 32, 32);
                 }
             }
+
+            _nurseRectangle = new Rectangle[Nurse.NurseCount][];
+            for (int t = 0; t < Nurse.NurseCount; t++)
+            {
+                _nurseRectangle[t] = new Rectangle[4];
+                for (int f = 0; f < 4; f++) // idle animation
+                {
+                    _nurseRectangle[t][f] = new Rectangle(4 * 32 + f * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + 32 * Retired.RetiredCount, 32, 32);
+                }
+            }
         }
 
         protected override void UnloadContent()
@@ -250,6 +268,12 @@ namespace GreedyKidEditor
                 if (_currentRetiredFrame >= _retiredSequence.Length)
                 {
                     _currentRetiredFrame = 0;
+                }
+
+                _currentNurseFrame++;
+                if (_currentNurseFrame >= _nurseSequence.Length)
+                {
+                    _currentNurseFrame = 0;
                 }
             }
 
@@ -427,6 +451,19 @@ namespace GreedyKidEditor
 
                             spriteBatch.Draw(_levelTexture,
                                 new Rectangle((int)retired.X, 128 - 40 * f + 9, 32, 32),
+                                source,
+                                Color.White);
+                        }
+
+                        // nurse
+                        for (int n = 0; n < room.Nurses.Count; n++)
+                        {
+                            Nurse nurse = room.Nurses[n];
+
+                            Rectangle source = _nurseRectangle[nurse.Type][_nurseSequence[_currentNurseFrame]];
+
+                            spriteBatch.Draw(_levelTexture,
+                                new Rectangle((int)nurse.X, 128 - 40 * f + 9, 32, 32),
                                 source,
                                 Color.White);
                         }

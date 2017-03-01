@@ -258,6 +258,33 @@ namespace GreedyKid
                                 retired.Update(gameTime, boo, isTaunting);
                             }
                         }
+
+                        // nurses
+                        for (int n = 0; n < room.Nurses.Count; n++)
+                        {
+                            Nurse nurse = room.Nurses[n];
+                            if (nurse != null)
+                            {
+                                bool boo = false;
+
+                                if (isShouting && nurse.Room == Player.Room)
+                                {
+                                    int retiredMiddle = (int)nurse.X + 16;
+                                    if (Math.Abs(retiredMiddle - playerMiddle) <= _shoutDistance && nurse.NotFacing(playerMiddle))
+                                        boo = true;
+                                }
+                                if (nurse.Room == Player.Room)
+                                {
+                                    nurse.LastKnownPlayerPosition = playerMiddle;
+                                }
+                                else
+                                {
+                                    nurse.LastKnownPlayerPosition = -1;
+                                }
+
+                                nurse.Update(gameTime, boo, isTaunting);
+                            }
+                        }
                     }
                 }
             }
@@ -494,6 +521,14 @@ namespace GreedyKid
                             Retired retired = room.Retireds[rr];
                             if (retired != null)
                                 retired.Draw(spriteBatch);
+                        }
+
+                        // nurse
+                        for (int n = 0; n < room.Nurses.Count; n++)
+                        {
+                            Nurse nurse = room.Nurses[n];
+                            if (nurse != null)
+                                nurse.Draw(spriteBatch);
                         }
                     }
                 }

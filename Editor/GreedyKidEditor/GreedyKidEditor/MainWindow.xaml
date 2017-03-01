@@ -247,6 +247,40 @@
                     <RepeatButton x:Name="retiredLifeButtonDown"  Grid.Column="1" Grid.Row="1" FontSize="8"  FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="13" VerticalAlignment="Bottom" Content="6" Click="retiredLifeButtonDown_Click"/>
                 </Grid>
                 <Label x:Name="label2_Copy15" Content="Life" HorizontalAlignment="Right" Margin="0,764,278,0" VerticalAlignment="Top"/>
+                <GroupBox x:Name="groupBox_Copy5" Header="Nurses" HorizontalAlignment="Right" Margin="0,587,3,0" VerticalAlignment="Top" Height="210" Width="152" FontWeight="Bold"/>
+                <ListBox x:Name="nurseListBox" HorizontalAlignment="Right" Height="100" Margin="0,636,9,0" VerticalAlignment="Top" Width="140" SelectionChanged="nurseListBox_SelectionChanged"/>
+                <Button x:Name="addNurse" Content="+" HorizontalAlignment="Right" Margin="0,611,128,0" VerticalAlignment="Top" Width="20" Height="20" Click="addNurse_Click"/>
+                <Button x:Name="removeNurse" Content="-" HorizontalAlignment="Right" Margin="0,611,103,0" VerticalAlignment="Top" Width="20" Height="20" Click="removeNurse_Click"/>
+                <Slider x:Name="xNurse" HorizontalAlignment="Right" Margin="0,741,9,0" VerticalAlignment="Top" Width="123" SmallChange="1" Maximum="328" ValueChanged="xNurse_ValueChanged"/>
+                <Label x:Name="label2_Copy16" Content="X" HorizontalAlignment="Right" Margin="0,736,135,0" VerticalAlignment="Top"/>
+                <Grid Width="30" Height="26" Margin="0,765,9,0" HorizontalAlignment="Right" VerticalAlignment="Top">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="13" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="13" />
+                        <RowDefinition Height="13" />
+                    </Grid.RowDefinitions>
+                    <TextBox x:Name="nurseTextBox"  Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" TextAlignment="Right" Text="0" IsEnabled="False" />
+                    <RepeatButton x:Name="nurseButtonUP"  Grid.Column="1" Grid.Row="0" FontSize="8" FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="5" Click="nurseButtonUP_Click"/>
+                    <RepeatButton x:Name="nurseButtonDown"  Grid.Column="1" Grid.Row="1" FontSize="8"  FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="13" VerticalAlignment="Bottom" Content="6" Click="nurseButtonDown_Click"/>
+                </Grid>
+                <Label x:Name="label2_Copy17" Content="Type" HorizontalAlignment="Right" Margin="0,764,39,0" VerticalAlignment="Top"/>
+                <Grid Width="29" Height="26" Margin="0,765,94,0" HorizontalAlignment="Right" VerticalAlignment="Top">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="13" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="13" />
+                        <RowDefinition Height="13" />
+                    </Grid.RowDefinitions>
+                    <TextBox x:Name="nurseLifeTextBox"  Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" TextAlignment="Right" Text="0" IsEnabled="False" />
+                    <RepeatButton x:Name="nurseLifeButtonUP"  Grid.Column="1" Grid.Row="0" FontSize="8" FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="5" Click="nurseLifeButtonUP_Click"/>
+                    <RepeatButton x:Name="nurseLifeButtonDown"  Grid.Column="1" Grid.Row="1" FontSize="8"  FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="13" VerticalAlignment="Bottom" Content="6" Click="nurseLifeButtonDown_Click"/>
+                </Grid>
+                <Label x:Name="label2_Copy18" Content="Life" HorizontalAlignment="Right" Margin="0,764,124,0" VerticalAlignment="Top"/>
 
 
             </Grid>

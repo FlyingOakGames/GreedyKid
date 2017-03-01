@@ -23,6 +23,7 @@ namespace GreedyKidEditor
         public List<RoomDoor> RoomDoors = new List<RoomDoor>();
         public List<Furniture> Furnitures = new List<Furniture>();
         public List<Retired> Retireds = new List<Retired>();
+        public List<Nurse> Nurses = new List<Nurse>();
 
         public const int ElevatorFrames = 5;
 
@@ -58,6 +59,9 @@ namespace GreedyKidEditor
             writer.Write(Retireds.Count);
             for (int i = 0; i < Retireds.Count; i++)
                 Retireds[i].Save(writer);
+            writer.Write(Nurses.Count);
+            for (int i = 0; i < Nurses.Count; i++)
+                Nurses[i].Save(writer);
 
             writer.Write(HasStart);
             writer.Write(StartX);
@@ -111,6 +115,13 @@ namespace GreedyKidEditor
                 Retired d = new Retired();
                 d.Load(reader);
                 Retireds.Add(d);
+            }
+            n = reader.ReadInt32();
+            for (int i = 0; i < n; i++)
+            {
+                Nurse d = new Nurse();
+                d.Load(reader);
+                Nurses.Add(d);
             }
 
             HasStart = reader.ReadBoolean();

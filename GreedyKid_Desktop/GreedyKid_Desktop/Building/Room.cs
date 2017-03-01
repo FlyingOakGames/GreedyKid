@@ -33,6 +33,7 @@ namespace GreedyKid
         public int Y = 0;
 
         public List<Retired> Retireds;
+        public List<Nurse> Nurses;
 
         public void Load(BinaryReader reader)
         {
@@ -83,6 +84,15 @@ namespace GreedyKid
                 retired.Load(reader);
                 retired.Room = this;
                 Retireds.Add(retired);
+            }
+            n = reader.ReadInt32();
+            Nurses = new List<Nurse>(10);
+            for (int i = 0; i < n; i++)
+            {
+                Nurse nurse = new Nurse();
+                nurse.Load(reader);
+                nurse.Room = this;
+                Nurses.Add(nurse);
             }
 
             HasStart = reader.ReadBoolean();

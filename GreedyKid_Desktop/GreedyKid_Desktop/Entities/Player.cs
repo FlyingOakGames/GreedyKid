@@ -395,6 +395,16 @@ namespace GreedyKid
                         Hit();
                     }
                 }
+
+                for (int n = 0; n < Room.Nurses.Count; n++)
+                {
+                    Nurse nurse = Room.Nurses[n];
+
+                    if (nurse.IsAngry && Math.Abs(nurse.X - X) < 11.0f)
+                    {
+                        Hit();
+                    }
+                }
             }
 
             // warp from hit

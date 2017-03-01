@@ -434,6 +434,7 @@ namespace GreedyKidEditor
                         RefreshRoomDoorListBox();
                         RefreshFurnitureListBox();
                         RefreshRetiredListBox();
+                        RefreshNurseListBox();
                     }
                 }
             }
@@ -1240,6 +1241,153 @@ namespace GreedyKidEditor
                 room.Retireds[retiredListBox.SelectedIndex].Life--;
                 room.Retireds[retiredListBox.SelectedIndex].Life = Math.Max(room.Retireds[retiredListBox.SelectedIndex].Life, 1);
                 retiredLifeTextBox.Text = room.Retireds[retiredListBox.SelectedIndex].Life.ToString();
+            }
+        }
+
+        //************************ NURSES ************************\\
+
+        private void RefreshNurseListBox()
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+
+                int prevSelection = nurseListBox.SelectedIndex;
+
+                nurseListBox.Items.Clear();
+                for (int i = 0; i < room.Nurses.Count; i++)
+                {
+                    nurseListBox.Items.Add("Floor Nurse " + i);
+                }
+
+                if (prevSelection < nurseListBox.Items.Count)
+                    nurseListBox.SelectedIndex = prevSelection;
+                else if (nurseListBox.Items.Count > 0)
+                    nurseListBox.SelectedIndex = 0;
+            }
+        }
+
+        private void addNurse_Click(object sender, RoutedEventArgs e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+
+                int roomWidth = 328 - room.LeftMargin * 8 - room.RightMargin * 8;
+                room.Nurses.Add(new Nurse(room.LeftMargin * 8 + roomWidth / 2 - 16)); // middle of the room
+
+                RefreshNurseListBox();
+                nurseListBox.SelectedIndex = nurseListBox.Items.Count - 1;
+            }
+        }
+
+        private void removeNurse_Click(object sender, RoutedEventArgs e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count &&
+                nurseListBox.SelectedIndex >= 0 && nurseListBox.SelectedIndex < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom].Nurses.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+
+
+                room.Nurses.RemoveAt(nurseListBox.SelectedIndex);
+
+                RefreshNurseListBox();
+                if (nurseListBox.SelectedIndex >= 0)
+                    nurseListBox.SelectedIndex = nurseListBox.SelectedIndex - 1;
+            }
+        }
+
+        private void nurseListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count &&
+                nurseListBox.SelectedIndex >= 0 && nurseListBox.SelectedIndex < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom].Nurses.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+
+                xNurse.Value = room.Nurses[nurseListBox.SelectedIndex].X;
+                nurseTextBox.Text = room.Nurses[nurseListBox.SelectedIndex].Type.ToString();
+                nurseLifeTextBox.Text = room.Nurses[nurseListBox.SelectedIndex].Life.ToString();
+            }
+        }
+
+        private void xNurse_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count &&
+                nurseListBox.SelectedIndex >= 0 && nurseListBox.SelectedIndex < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom].Nurses.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+
+                room.Nurses[nurseListBox.SelectedIndex].X = (int)xNurse.Value;
+            }
+        }
+
+        private void nurseButtonUP_Click(object sender, RoutedEventArgs e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count &&
+                nurseListBox.SelectedIndex >= 0 && nurseListBox.SelectedIndex < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom].Nurses.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+
+                room.Nurses[nurseListBox.SelectedIndex].Type++;
+                room.Nurses[nurseListBox.SelectedIndex].Type = Math.Min(room.Nurses[nurseListBox.SelectedIndex].Type, Nurse.NurseCount - 1);
+                nurseTextBox.Text = room.Nurses[nurseListBox.SelectedIndex].Type.ToString();
+            }
+        }
+
+        private void nurseButtonDown_Click(object sender, RoutedEventArgs e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count &&
+                nurseListBox.SelectedIndex >= 0 && nurseListBox.SelectedIndex < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom].Nurses.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+
+                room.Nurses[nurseListBox.SelectedIndex].Type--;
+                room.Nurses[nurseListBox.SelectedIndex].Type = Math.Max(room.Nurses[nurseListBox.SelectedIndex].Type, 0);
+                nurseTextBox.Text = room.Nurses[nurseListBox.SelectedIndex].Type.ToString();
+            }
+        }
+
+        private void nurseLifeButtonUP_Click(object sender, RoutedEventArgs e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count &&
+                nurseListBox.SelectedIndex >= 0 && nurseListBox.SelectedIndex < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom].Nurses.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+
+                room.Nurses[nurseListBox.SelectedIndex].Life++;
+                room.Nurses[nurseListBox.SelectedIndex].Life = Math.Min(room.Nurses[nurseListBox.SelectedIndex].Life, 3);
+                nurseLifeTextBox.Text = room.Nurses[nurseListBox.SelectedIndex].Life.ToString();
+            }
+        }
+
+        private void nurseLifeButtonDown_Click(object sender, RoutedEventArgs e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count &&
+                nurseListBox.SelectedIndex >= 0 && nurseListBox.SelectedIndex < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom].Nurses.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+
+                room.Nurses[nurseListBox.SelectedIndex].Life--;
+                room.Nurses[nurseListBox.SelectedIndex].Life = Math.Max(room.Nurses[nurseListBox.SelectedIndex].Life, 1);
+                nurseLifeTextBox.Text = room.Nurses[nurseListBox.SelectedIndex].Life.ToString();
             }
         }
     }
