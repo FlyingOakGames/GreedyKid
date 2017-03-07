@@ -103,7 +103,7 @@ namespace GreedyKid
 
                     // walking
                     _frames[(int)EntityState.Walking] = new Rectangle[RetiredCount][];
-                    _frames[(int)EntityState.Walking][t] = new Rectangle[4];
+                    _frames[(int)EntityState.Walking][t] = new Rectangle[6];
                     for (int f = 0; f < _frames[(int)EntityState.Walking][t].Length; f++)
                     {
                         _frames[(int)EntityState.Walking][t][f] = new Rectangle(f * 32 + 8 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32, 32, 32);
@@ -529,6 +529,7 @@ namespace GreedyKid
             State = EntityState.Turning;
             _hasJustTurned = true;
             _actionTime = 0.0f;
+            _currentFrame = 0;
 
             if (_angryTime > 0.0f)
             {
