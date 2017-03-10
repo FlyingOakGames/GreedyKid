@@ -62,11 +62,35 @@ namespace GreedyKid
                 int nbDoorLine = (int)Math.Ceiling(FloorDoor.DoorCount / (float)FloorDoor.DoorPerLine);
                 int nbFurnitureLine = (int)Math.Ceiling(Furniture.FurnitureCount / (float)Furniture.FurniturePerLine);
 
+                // idle
+                _frames[(int)EntityState.Idle] = new Rectangle[NurseCount][];
+                // idle special
+                _frames[(int)EntityState.IdleSpecial] = new Rectangle[NurseCount][];
+                // idle angry
+                _frames[(int)EntityState.IdleAngry] = new Rectangle[NurseCount][];
+                // turning
+                _frames[(int)EntityState.Turning] = new Rectangle[NurseCount][];
+                // walking
+                _frames[(int)EntityState.Walking] = new Rectangle[NurseCount][];
+                // running
+                _frames[(int)EntityState.Running] = new Rectangle[NurseCount][];
+                // entering
+                _frames[(int)EntityState.Entering] = new Rectangle[NurseCount][];
+                // exiting
+                _frames[(int)EntityState.Exiting] = new Rectangle[NurseCount][];
+                // boo
+                _frames[(int)EntityState.Boo] = new Rectangle[NurseCount][];
+                // KO
+                _frames[(int)EntityState.KO] = new Rectangle[NurseCount][];
+                // Slam
+                _frames[(int)EntityState.Slam] = new Rectangle[NurseCount][];
+                // Stun
+                _frames[(int)EntityState.Stun] = new Rectangle[NurseCount][];
+
                 // type
                 for (int t = 0; t < NurseCount; t++)
                 {
                     // idle
-                    _frames[(int)EntityState.Idle] = new Rectangle[NurseCount][];
                     _frames[(int)EntityState.Idle][t] = new Rectangle[8];
                     for (int f = 0; f < _frames[(int)EntityState.Idle][t].Length; f++)
                     {
@@ -75,7 +99,6 @@ namespace GreedyKid
                     _frameDuration[(int)EntityState.Idle] = 0.1f;
 
                     // idle special
-                    _frames[(int)EntityState.IdleSpecial] = new Rectangle[NurseCount][];
                     _frames[(int)EntityState.IdleSpecial][t] = new Rectangle[4];
                     for (int f = 0; f < _frames[(int)EntityState.IdleSpecial][t].Length; f++)
                     {
@@ -84,7 +107,6 @@ namespace GreedyKid
                     _frameDuration[(int)EntityState.IdleSpecial] = 0.1f;
 
                     // idle angry
-                    _frames[(int)EntityState.IdleAngry] = new Rectangle[NurseCount][];
                     _frames[(int)EntityState.IdleAngry][t] = new Rectangle[4];
                     for (int f = 0; f < _frames[(int)EntityState.IdleAngry][t].Length; f++)
                     {
@@ -93,7 +115,6 @@ namespace GreedyKid
                     _frameDuration[(int)EntityState.IdleAngry] = 0.1f;
 
                     // turning
-                    _frames[(int)EntityState.Turning] = new Rectangle[NurseCount][];
                     _frames[(int)EntityState.Turning][t] = new Rectangle[5];
                     for (int f = 0; f < _frames[(int)EntityState.Turning][t].Length; f++)
                     {
@@ -102,7 +123,6 @@ namespace GreedyKid
                     _frameDuration[(int)EntityState.Turning] = 0.1f;
 
                     // walking
-                    _frames[(int)EntityState.Walking] = new Rectangle[NurseCount][];
                     _frames[(int)EntityState.Walking][t] = new Rectangle[6];
                     for (int f = 0; f < _frames[(int)EntityState.Walking][t].Length; f++)
                     {
@@ -111,7 +131,6 @@ namespace GreedyKid
                     _frameDuration[(int)EntityState.Walking] = 0.1f;
 
                     // running
-                    _frames[(int)EntityState.Running] = new Rectangle[NurseCount][];
                     _frames[(int)EntityState.Running][t] = new Rectangle[4];
                     for (int f = 0; f < _frames[(int)EntityState.Running][t].Length; f++)
                     {
@@ -120,7 +139,6 @@ namespace GreedyKid
                     _frameDuration[(int)EntityState.Running] = 0.1f;
 
                     // entering
-                    _frames[(int)EntityState.Entering] = new Rectangle[NurseCount][];
                     _frames[(int)EntityState.Entering][t] = new Rectangle[3];
                     for (int f = 0; f < _frames[(int)EntityState.Entering][t].Length; f++)
                     {
@@ -129,7 +147,6 @@ namespace GreedyKid
                     _frameDuration[(int)EntityState.Entering] = 0.1f;
 
                     // exiting
-                    _frames[(int)EntityState.Exiting] = new Rectangle[NurseCount][];
                     _frames[(int)EntityState.Exiting][t] = new Rectangle[3];
                     for (int f = 0; f < _frames[(int)EntityState.Exiting][t].Length; f++)
                     {
@@ -138,7 +155,6 @@ namespace GreedyKid
                     _frameDuration[(int)EntityState.Exiting] = 0.1f;
 
                     // boo
-                    _frames[(int)EntityState.Boo] = new Rectangle[NurseCount][];
                     _frames[(int)EntityState.Boo][t] = new Rectangle[5];
                     for (int f = 0; f < _frames[(int)EntityState.Boo][t].Length; f++)
                     {
@@ -147,7 +163,6 @@ namespace GreedyKid
                     _frameDuration[(int)EntityState.Boo] = 0.1f;
 
                     // KO
-                    _frames[(int)EntityState.KO] = new Rectangle[NurseCount][];
                     _frames[(int)EntityState.KO][t] = new Rectangle[5];
                     for (int f = 0; f < _frames[(int)EntityState.KO][t].Length; f++)
                     {
@@ -156,7 +171,6 @@ namespace GreedyKid
                     _frameDuration[(int)EntityState.KO] = 0.1f;
 
                     // Slam
-                    _frames[(int)EntityState.Slam] = new Rectangle[NurseCount][];
                     _frames[(int)EntityState.Slam][t] = new Rectangle[3];
                     for (int f = 0; f < _frames[(int)EntityState.Slam][t].Length; f++)
                     {
@@ -165,7 +179,6 @@ namespace GreedyKid
                     _frameDuration[(int)EntityState.Slam] = 0.1f;
 
                     // Stun
-                    _frames[(int)EntityState.Stun] = new Rectangle[NurseCount][];
                     _frames[(int)EntityState.Stun][t] = new Rectangle[4];
                     for (int f = 0; f < _frames[(int)EntityState.Stun][t].Length; f++)
                     {
@@ -498,7 +511,7 @@ namespace GreedyKid
 
         private void Taunt()
         {
-            if (_angryTime > 0.0f)
+            if (_angryTime > 0.0f || Life <= 0)
                 return;
             _currentFrame = 0;
             _actionTime = 0.0f;

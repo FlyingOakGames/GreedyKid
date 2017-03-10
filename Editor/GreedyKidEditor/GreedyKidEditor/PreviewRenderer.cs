@@ -217,7 +217,7 @@ namespace GreedyKidEditor
                 _retiredRectangle[t] = new Rectangle[4];
                 for (int f = 0; f < 4; f++) // idle animation
                 {
-                    _retiredRectangle[t][f] = new Rectangle(4 * 32 + f * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32, 32, 32);
+                    _retiredRectangle[t][f] = new Rectangle(4 * 32 + f * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32, 32, 32);
                 }
             }
 
