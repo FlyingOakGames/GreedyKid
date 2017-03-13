@@ -10,8 +10,8 @@ namespace GreedyKid
         public const int NurseCount = 1;
         public const int MaxLife = 3;
 
-        private const float _walkSpeed = 16.0f;
-        private const float _runSpeed = 48.0f;
+        private const float _walkSpeed = 24.0f;
+        private const float _runSpeed = 80.0f;
 
         public int Type = 0;
         public float X = 0;
@@ -42,6 +42,10 @@ namespace GreedyKid
         // angry
         private float _angryTime = 0.0f;
         public int LastKnownPlayerPosition = -1;
+
+        // ressurecting retired
+        public Retired LastKnownKORetired = null;
+        private int _ressurectPump = 0;
 
         // stun
         private int _XWarp = -1;
@@ -86,6 +90,10 @@ namespace GreedyKid
                 _frames[(int)EntityState.Slam] = new Rectangle[NurseCount][];
                 // Stun
                 _frames[(int)EntityState.Stun] = new Rectangle[NurseCount][];
+                // Ressurecting
+                _frames[(int)EntityState.Ressurecting] = new Rectangle[NurseCount][];
+                // Panic
+                _frames[(int)EntityState.Panic] = new Rectangle[NurseCount][];
 
                 // type
                 for (int t = 0; t < NurseCount; t++)
@@ -185,6 +193,22 @@ namespace GreedyKid
                         _frames[(int)EntityState.Stun][t][f] = new Rectangle(f * 32 + 49 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32, 32, 32);
                     }
                     _frameDuration[(int)EntityState.Stun] = 0.1f;
+
+                    // Ressurecting
+                    _frames[(int)EntityState.Ressurecting][t] = new Rectangle[4];
+                    for (int f = 0; f < _frames[(int)EntityState.Ressurecting][t].Length; f++)
+                    {
+                        _frames[(int)EntityState.Ressurecting][t][f] = new Rectangle(f * 32 + 53 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32, 32, 32);
+                    }
+                    _frameDuration[(int)EntityState.Ressurecting] = 0.1f;
+
+                    // Panic
+                    _frames[(int)EntityState.Panic][t] = new Rectangle[4];
+                    for (int f = 0; f < _frames[(int)EntityState.Panic][t].Length; f++)
+                    {
+                        _frames[(int)EntityState.Panic][t][f] = new Rectangle(f * 32 + 57 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32, 32, 32);
+                    }
+                    _frameDuration[(int)EntityState.Panic] = 0.1f;
                 }
 
                 // life rectangles
@@ -219,7 +243,8 @@ namespace GreedyKid
                 && State != EntityState.Boo
                 && State != EntityState.Entering
                 && State != EntityState.Exiting
-                && State != EntityState.KO)
+                && State != EntityState.KO
+                && State != EntityState.Ressurecting)
             {
                 Boo();
             }
@@ -302,6 +327,20 @@ namespace GreedyKid
                     {
                         NextAction();
                     }
+                    // ressurecting
+                    else if (State == EntityState.Ressurecting)
+                    {
+                        _ressurectPump--;
+                        if (_ressurectPump <= 0)
+                        {
+                            Walk();
+                            if (LastKnownKORetired != null)
+                            {
+                                LastKnownKORetired.Revive();
+                                LastKnownKORetired = null;
+                            }
+                        }
+                    }
                 }
             }
 
@@ -341,6 +380,19 @@ namespace GreedyKid
                 }
             }
 
+            // panic
+            if (State != EntityState.Panic
+                && State != EntityState.Entering
+                && State != EntityState.Exiting
+                && LastKnownKORetired != null && _isVisible)
+            {
+                Panic();
+            }
+            else if (State == EntityState.Panic && LastKnownKORetired == null)
+            {
+                NextAction();
+            }
+
             // warp from slam
             if (_XWarp >= 0)
             {
@@ -360,10 +412,10 @@ namespace GreedyKid
                     _XWarp = -1;
             }
 
-            if (State == EntityState.Walking || State == EntityState.Running)
+            if (State == EntityState.Walking || State == EntityState.Running || State == EntityState.Panic)
             {
                 float speed = _walkSpeed;
-                if (State == EntityState.Running)
+                if (State == EntityState.Running || State == EntityState.Panic)
                     speed = _runSpeed;
 
                 if (Orientation == SpriteEffects.None)
@@ -381,6 +433,12 @@ namespace GreedyKid
                 {
                     Turn();
                     X = 304 - Room.RightMargin * 8 - 16;
+                }
+
+                // can ressurect?
+                if (State == EntityState.Panic && LastKnownKORetired != null && Math.Abs(X - LastKnownKORetired.X) < 4.0f)
+                {
+                    Ressurect();
                 }
             }
 
@@ -511,7 +569,7 @@ namespace GreedyKid
 
         private void Taunt()
         {
-            if (_angryTime > 0.0f || Life <= 0)
+            if (_angryTime > 0.0f || Life <= 0 || State == EntityState.Ressurecting)
                 return;
             _currentFrame = 0;
             _actionTime = 0.0f;
@@ -519,6 +577,38 @@ namespace GreedyKid
             _angryTime = RandomHelper.Next() * 5.0f + 3.0f;
 
             Walk();
+        }
+
+        private void Panic()
+        {
+            if (_angryTime > 0.0f || Life <= 0 || State == EntityState.Ressurecting)
+                return;
+            _currentFrame = 0;
+            _actionTime = 0.0f;
+            _hasJustTurned = false;
+            _wantsToOpenDoor = false;
+
+            State = EntityState.Panic;
+        }
+
+        private void Ressurect()
+        {
+            if (_angryTime > 0.0f || Life <= 0)
+                return;
+            _currentFrame = 0;
+            _actionTime = 0.0f;
+            _hasJustTurned = false;
+            _wantsToOpenDoor = false;
+
+            State = EntityState.Ressurecting;
+
+            _ressurectPump = 3 + RandomHelper.Next(4);
+
+            if (LastKnownKORetired != null)
+            {
+                X = LastKnownKORetired.X;
+                LastKnownKORetired.Ressurect();
+            }
         }
 
         private void NextAction()
@@ -679,6 +769,11 @@ namespace GreedyKid
         public bool IsAngry
         {
             get { return _angryTime > 0.0f && State != EntityState.Entering && State != EntityState.Exiting; }
+        }
+
+        public bool IsRessurecting
+        {
+            get { return State == EntityState.Ressurecting; }
         }
     }
 }

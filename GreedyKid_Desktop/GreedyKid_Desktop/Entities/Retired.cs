@@ -86,6 +86,8 @@ namespace GreedyKid
                 _frames[(int)EntityState.Slam] = new Rectangle[RetiredCount][];
                 // Stun
                 _frames[(int)EntityState.Stun] = new Rectangle[RetiredCount][];
+                // BeingRessurected
+                _frames[(int)EntityState.BeingRessurected] = new Rectangle[RetiredCount][];
 
                 // type
                 for (int t = 0; t < RetiredCount; t++)
@@ -185,6 +187,14 @@ namespace GreedyKid
                         _frames[(int)EntityState.Stun][t][f] = new Rectangle(f * 32 + 49 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32, 32, 32);
                     }
                     _frameDuration[(int)EntityState.Stun] = 0.1f;
+
+                    // BeingRessurected
+                    _frames[(int)EntityState.BeingRessurected][t] = new Rectangle[4];
+                    for (int f = 0; f < _frames[(int)EntityState.BeingRessurected][t].Length; f++)
+                    {
+                        _frames[(int)EntityState.BeingRessurected][t][f] = new Rectangle(f * 32 + 53 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32, 32, 32);
+                    }
+                    _frameDuration[(int)EntityState.BeingRessurected] = 0.1f;
                 }
 
                 // life rectangles
@@ -219,7 +229,8 @@ namespace GreedyKid
                 && State != EntityState.Boo 
                 && State != EntityState.Entering 
                 && State != EntityState.Exiting 
-                && State != EntityState.KO)
+                && State != EntityState.KO
+                && State != EntityState.BeingRessurected)
             {
                 Boo();
             }
@@ -573,6 +584,35 @@ namespace GreedyKid
             _wantsToOpenDoor = false;
         }
 
+        public void Ressurect()
+        {
+            _currentFrame = 0;
+            _actionTime = 0.0f;
+            _hasJustTurned = false;
+            _wantsToOpenDoor = false;
+
+            State = EntityState.BeingRessurected;
+        }
+
+        public void Revive()
+        {
+            Life = 1;
+            State = EntityState.Idle;
+            _currentFrame = 0;
+            _hasJustTurned = true;
+            _wantsToOpenDoor = false;
+            _actionTime = 0.0f;
+
+            NextAction();
+
+            if (RandomHelper.Next() > 0.5f)
+            {
+                _angryTime = RandomHelper.Next() * 5.0f + 3.0f;                
+            }
+            else
+                Stun();            
+        }
+
         private void WaitSpecial()
         {
             State = EntityState.IdleSpecial;
@@ -658,7 +698,7 @@ namespace GreedyKid
             if (Life > 0)
             {
                 spriteBatch.Draw(texture,
-                new Rectangle((int)X + 8, 128 - 40 * Room.Y + 9, 16, 16),
+                new Rectangle((int)X + 8, 128 - 40 * Room.Y + 4, 16, 16),
                 _lifeRectangles[Life - 1][_currentHeartFrame],
                 Color.White);
             }

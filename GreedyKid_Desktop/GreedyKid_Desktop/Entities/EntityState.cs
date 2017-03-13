@@ -23,6 +23,9 @@ namespace GreedyKid
         Stun,
         Hit,
         Crying,
+        Panic,
+        Ressurecting,
+        BeingRessurected,
 
         Count
     }

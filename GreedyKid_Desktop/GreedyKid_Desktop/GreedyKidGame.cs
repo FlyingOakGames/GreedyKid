@@ -88,7 +88,8 @@ namespace GreedyKid
             if (InputManager.PlayerDevice == null)
                 InputManager.CheckEngagement();
 
-            buildingManager.Update(gameTimeF);
+            if (InputManager.PlayerDevice != null)
+                buildingManager.Update(gameTimeF);
 
             base.Update(gameTime);
         }
