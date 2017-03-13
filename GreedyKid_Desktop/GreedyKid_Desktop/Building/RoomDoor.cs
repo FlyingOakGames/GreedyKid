@@ -103,7 +103,7 @@ namespace GreedyKid
             if (_state == RoomDoorState.Closed)
             {
                 _state = RoomDoorState.OpeningToLeft;
-                Frame = 9;
+                Frame = 10;
                 _currentFrameTime = 0.0f;
             }
         }
@@ -113,7 +113,7 @@ namespace GreedyKid
             if (_state == RoomDoorState.Closed)
             {
                 _state = RoomDoorState.OpeningToRight;
-                Frame = 0;
+                Frame = 1;
                 _currentFrameTime = 0.0f;
             }
         }
@@ -139,14 +139,14 @@ namespace GreedyKid
             if (_state == RoomDoorState.OpenRight)
             {
                 _state = RoomDoorState.ClosingFromRight;
-                Frame = 4;
+                Frame = 5;
                 _currentFrameTime = 0.0f;
                 CanClose = false;
             }
             else if (_state == RoomDoorState.OpenLeft)
             {
                 _state = RoomDoorState.ClosingFromLeft;
-                Frame = 13;
+                Frame = 14;
                 _currentFrameTime = 0.0f;
                 CanClose = false;
             }

@@ -43,8 +43,10 @@ namespace GreedyKid
         private Furniture _targetFurniture = null;
 
         // smoke animation
+        private int _smokeX = 0;
         private int _currentSmokeFrame = -1;
         private float _currentSmokeFrameTime = 0.0f;
+        private const int _smokeFrameMovement = 0; // number of smoke from which prevent movements
 
         // closing doors
         private RoomDoor _closingDoor = null;
@@ -231,6 +233,7 @@ namespace GreedyKid
                     else if (State == EntityState.Hit)
                     {
                         State = EntityState.Idle;
+                        _XWarp = -1;
                         _hitShow = false;
 
                         if (Life <= 0)
@@ -256,7 +259,7 @@ namespace GreedyKid
             }
 
             // preventing any movements if invisible
-            if (!_isVisible || _currentSmokeFrame >= 0 || State == EntityState.Hit || State == EntityState.KO)
+            if (!_isVisible || State == EntityState.Hit || State == EntityState.KO || (_currentSmokeFrame >= 0 && _currentSmokeFrame < _smokeFrameMovement))
                 _moveDirection = 0;
 
             // start / stop running
@@ -495,7 +498,7 @@ namespace GreedyKid
             if (_currentSmokeFrame >= 0)
             {
                 spriteBatch.Draw(texture,
-                new Rectangle((int)X, 128 - 40 * Room.Y + 9, 32, 32),
+                new Rectangle(_smokeX, 128 - 40 * Room.Y + 9, 32, 32),
                 _frames[(int)EntityState.Smoke][_currentSmokeFrame],
                 Color.White);
             }
@@ -527,7 +530,7 @@ namespace GreedyKid
         {
             if (!_isVisible)
                 return;
-            if (State == EntityState.Idle || State == EntityState.Running)
+            if ((_currentSmokeFrame < 0 || _currentSmokeFrame >= _smokeFrameMovement) && (State == EntityState.Idle || State == EntityState.Running))
             {                
                 if (Orientation == SpriteEffects.None)
                     _moveDirection = 1;
@@ -647,6 +650,7 @@ namespace GreedyKid
         {
             _currentSmokeFrame = 0;
             _currentSmokeFrameTime = 0.0f;
+            _smokeX = (int)X;
         }
 
         public bool IsShouting
