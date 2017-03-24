@@ -205,6 +205,8 @@ namespace GreedyKidEditor
             else if (Directory.Exists(@"D:\FlyingOak\GreedyKid\GreedyKid_Desktop\GreedyKid_Desktop\Content"))
                 dialog.SelectedPath = @"D:\FlyingOak\GreedyKid\GreedyKid_Desktop\GreedyKid_Desktop\Content";
             System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+
+            // export
             if (result == System.Windows.Forms.DialogResult.OK)
             {
                 using (FileStream fs = new FileStream(dialog.SelectedPath + "\\" + _saveFile, FileMode.OpenOrCreate))
@@ -213,7 +215,21 @@ namespace GreedyKidEditor
                     {
                         using (BinaryWriter writer = new BinaryWriter(gzipStream))
                         {
-                            _building.Save(writer);
+                            _building.Save(writer, true);
+                        }
+                    }
+                }
+
+                for (int l = 0; l < _building.Levels.Count; l++)
+                {
+                    using (FileStream fs = new FileStream(dialog.SelectedPath + "\\level_" + l, FileMode.OpenOrCreate))
+                    {
+                        using (GZipStream gzipStream = new GZipStream(fs, CompressionMode.Compress))
+                        {
+                            using (BinaryWriter writer = new BinaryWriter(gzipStream))
+                            {
+                                _building.Levels[l].Save(writer);
+                            }
                         }
                     }
                 }

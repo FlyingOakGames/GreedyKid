@@ -19,13 +19,17 @@ namespace GreedyKidEditor
             Name = name;
         }
 
-        public void Save(BinaryWriter writer)
+        public void Save(BinaryWriter writer, bool export = false)
         {
             writer.Write(Name);
 
             writer.Write(Levels.Count);
-            for (int i = 0; i < Levels.Count; i++)
-                Levels[i].Save(writer);
+
+            if (!export)
+            {
+                for (int i = 0; i < Levels.Count; i++)
+                    Levels[i].Save(writer);
+            }
         }
 
         public void Load(BinaryReader reader)
