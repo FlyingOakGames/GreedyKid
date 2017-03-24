@@ -38,7 +38,7 @@ namespace GreedyKid
 
         public int Score = 0;
         private int[] _encodedScore = new int[] { 0, 0, 0 };
-        public int Time = 1380;
+        public int Time = 0;
         private int[] _encodedTime = new int[] { 0, 0, 10, 0, 0 };
 
         // arrow animation
