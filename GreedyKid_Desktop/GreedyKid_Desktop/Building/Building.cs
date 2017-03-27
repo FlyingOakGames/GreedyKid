@@ -41,6 +41,7 @@ namespace GreedyKid
 
             CurrentLevel = null;
 
+            // clean previous building if any
             GC.Collect();
         }
 

@@ -161,6 +161,10 @@ namespace GreedyKid
                 _frames[(int)EntityState.Hit][f] = new Rectangle(f * 32 + 46 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine, 32, 32);
             }
             _frameDuration[(int)EntityState.Hit] = 0.1f;
+
+
+            // hiding before entering
+            _isVisible = false;
         }
 
         public void Update(float gameTime)
