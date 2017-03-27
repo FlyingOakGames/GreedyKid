@@ -29,6 +29,17 @@ namespace GreedyKidEditor
         Rectangle[][] _retiredRectangle;
         Rectangle[][] _nurseRectangle;
 
+        private Rectangle[] _uiRectangle;
+        private Rectangle[] _iconRectangle;
+        private Rectangle[] _maskRectangle;
+        private Rectangle[] _numberRectangle;
+
+        public int Score = 0;
+        private int[] _encodedScore = new int[] { 0, 0, 0 };
+        public int Time = 0;
+        private int[] _encodedTime = new int[] { 0, 0, 10, 0, 0 };
+        public int PlayerLife = 3;
+
         Color _fillColor = new Color(34, 32, 52);
 
         Building _building;
@@ -230,6 +241,34 @@ namespace GreedyKidEditor
                     _nurseRectangle[t][f] = new Rectangle(4 * 32 + f * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + 32 * Retired.RetiredCount, 32, 32);
                 }
             }
+
+            _uiRectangle = new Rectangle[8];
+            _uiRectangle[0] = new Rectangle(0, 2024, 12, 13); // upper left
+            _uiRectangle[1] = new Rectangle(11, 2024, 12, 13); // upper right
+            _uiRectangle[2] = new Rectangle(0, 2036, 12, 12); // lower left
+            _uiRectangle[3] = new Rectangle(11, 2036, 12, 12); // lower right
+            _uiRectangle[4] = new Rectangle(11, 2024, 1, 9); // up
+            _uiRectangle[5] = new Rectangle(11, 2040, 1, 8); // down
+            _uiRectangle[6] = new Rectangle(0, 2036, 8, 1); // left
+            _uiRectangle[7] = new Rectangle(15, 2036, 8, 1); // right
+
+            _iconRectangle = new Rectangle[3];
+            _iconRectangle[0] = new Rectangle(23, 2024, 13, 13);
+            _iconRectangle[1] = new Rectangle(36, 2024, 13, 13);
+            _iconRectangle[2] = new Rectangle(49, 2024, 13, 13);
+
+            _maskRectangle = new Rectangle[3];
+            _maskRectangle[0] = new Rectangle(23, 2038, 49, 10);
+            _maskRectangle[1] = new Rectangle(72, 2038, 57, 10);
+            _maskRectangle[2] = new Rectangle(129, 2038, 51, 10);
+
+            _numberRectangle = new Rectangle[12];
+            for (int i = 0; i < _numberRectangle.Length; i++)
+            {
+                _numberRectangle[i] = new Rectangle(74 + 11 * i, 2024, 11, 13);
+            }
+            _numberRectangle[10].Width = 5;
+            _numberRectangle[11].X = _numberRectangle[10].X + _numberRectangle[10].Width;
         }
 
         protected override void UnloadContent()
@@ -471,10 +510,138 @@ namespace GreedyKidEditor
                 }
             }
 
-            // overlay
+            // ****** UI ******
+
+            // up
             spriteBatch.Draw(_levelTexture,
-                new Rectangle(0, 0, 328, 184),
-                new Rectangle(0, 1864, 328, 184),
+                new Rectangle(0, 0, Width, _uiRectangle[4].Height),
+                _uiRectangle[4],
+                Color.White);
+
+            // down
+            spriteBatch.Draw(_levelTexture,
+                new Rectangle(0, Height - _uiRectangle[5].Height, Width, _uiRectangle[5].Height),
+                _uiRectangle[5],
+                Color.White);
+
+            // left
+            spriteBatch.Draw(_levelTexture,
+                new Rectangle(0, 0, _uiRectangle[6].Width, Height),
+                _uiRectangle[6],
+                Color.White);
+
+            // right
+            spriteBatch.Draw(_levelTexture,
+                new Rectangle(Width - _uiRectangle[7].Width, 0, _uiRectangle[6].Width, Height),
+                _uiRectangle[7],
+                Color.White);
+
+            // upper left
+            spriteBatch.Draw(_levelTexture,
+                new Rectangle(0, 0, _uiRectangle[0].Width, _uiRectangle[0].Height),
+                _uiRectangle[0],
+                Color.White);
+
+            // upper right
+            spriteBatch.Draw(_levelTexture,
+                new Rectangle(Width - _uiRectangle[1].Width, 0, _uiRectangle[1].Width, _uiRectangle[1].Height),
+                _uiRectangle[1],
+                Color.White);
+
+            // lower left
+            spriteBatch.Draw(_levelTexture,
+                new Rectangle(0, Height - _uiRectangle[2].Height, _uiRectangle[2].Width, _uiRectangle[2].Height),
+                _uiRectangle[2],
+                Color.White);
+
+            // lower right
+            spriteBatch.Draw(_levelTexture,
+                new Rectangle(Width - _uiRectangle[3].Width, Height - _uiRectangle[3].Height, _uiRectangle[3].Width, _uiRectangle[3].Height),
+                _uiRectangle[3],
+                Color.White);
+
+            // masks
+            spriteBatch.Draw(_levelTexture,
+                new Rectangle(19, 0, _maskRectangle[0].Width, _maskRectangle[0].Height),
+                _maskRectangle[0],
+                Color.White);
+            spriteBatch.Draw(_levelTexture,
+                new Rectangle(136, 0, _maskRectangle[1].Width, _maskRectangle[1].Height),
+                _maskRectangle[1],
+                Color.White);
+            spriteBatch.Draw(_levelTexture,
+                new Rectangle(257, 0, _maskRectangle[2].Width, _maskRectangle[2].Height),
+                _maskRectangle[2],
+                Color.White);
+
+            // player life
+            for (int h = 0; h < 3; h++)
+            {
+                if (PlayerLife / ((h + 1) * 2) >= 1)
+                {
+                    // full
+                    spriteBatch.Draw(_levelTexture,
+                        new Rectangle(24 + h * _iconRectangle[0].Width, 0, _iconRectangle[0].Width, _iconRectangle[0].Height),
+                        _iconRectangle[0],
+                        Color.White);
+                }
+                else if ((PlayerLife - h * 2) % ((h + 1) * 2) >= 1)
+                {
+                    // half
+                    spriteBatch.Draw(_levelTexture,
+                        new Rectangle(24 + h * _iconRectangle[1].Width, 0, _iconRectangle[1].Width, _iconRectangle[1].Height),
+                        _iconRectangle[1],
+                        Color.White);
+                }
+                else
+                {
+                    // empty
+                    spriteBatch.Draw(_levelTexture,
+                        new Rectangle(24 + h * _iconRectangle[2].Width, 0, _iconRectangle[2].Width, _iconRectangle[2].Height),
+                        _iconRectangle[2],
+                        Color.White);
+                }
+            }
+
+            // time
+            _encodedTime[0] = Time / 600;
+            _encodedTime[1] = (Time - _encodedTime[0] * 600) / 60;
+            int seconds = Time % 60;
+            _encodedTime[3] = seconds / 10;
+            _encodedTime[4] = seconds % 10;
+
+            int textX = 0;
+            for (int t = 0; t < _encodedTime.Length; t++)
+            {
+                Rectangle source = _numberRectangle[_encodedTime[t]];
+                spriteBatch.Draw(_levelTexture,
+                    new Rectangle(140 + textX, 0, source.Width, source.Height),
+                    source,
+                    Color.White);
+
+                textX += source.Width;
+            }
+
+            // score
+            _encodedScore[0] = Score / 100;
+            _encodedScore[1] = (Score - _encodedScore[0] * 100) / 10;
+            _encodedScore[2] = Score % 10;
+
+            textX = 0;
+            for (int s = 0; s < _encodedScore.Length; s++)
+            {
+                Rectangle source = _numberRectangle[_encodedScore[s]];
+                spriteBatch.Draw(_levelTexture,
+                    new Rectangle(261 + textX, 0, source.Width, source.Height),
+                    source,
+                    Color.White);
+
+                textX += source.Width;
+            }
+            // $
+            spriteBatch.Draw(_levelTexture,
+                new Rectangle(261 + textX, 0, _numberRectangle[11].Width, _numberRectangle[11].Height),
+                _numberRectangle[11],
                 Color.White);
 
             spriteBatch.End();
