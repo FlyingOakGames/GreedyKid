@@ -4,7 +4,7 @@ namespace GreedyKidEditor
 {
     public sealed class Retired
     {
-        public const int RetiredCount = 2;
+        public const int RetiredCount = 4;
 
         public int Type = 0;
         public int X = 0;
