@@ -158,13 +158,21 @@ namespace GreedyKid
             }
             _frameDuration[(int)EntityState.Smoke] = 0.1f;
 
-            // smoke
+            // hit
             _frames[(int)EntityState.Hit] = new Rectangle[3];
             for (int f = 0; f < _frames[(int)EntityState.Hit].Length; f++)
             {
                 _frames[(int)EntityState.Hit][f] = new Rectangle(f * 32 + 46 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine, 32, 32);
             }
             _frameDuration[(int)EntityState.Hit] = 0.1f;
+
+            // slaming door
+            _frames[(int)EntityState.SlamingDoor] = new Rectangle[4];
+            for (int f = 0; f < _frames[(int)EntityState.SlamingDoor].Length; f++)
+            {
+                _frames[(int)EntityState.SlamingDoor][f] = new Rectangle(f * 32 + 49 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine, 32, 32);
+            }
+            _frameDuration[(int)EntityState.SlamingDoor] = 0.1f;
 
 
             // hiding before entering
@@ -247,6 +255,10 @@ namespace GreedyKid
                         if (Life <= 0)
                             KO();
                     }
+                    else if (State == EntityState.SlamingDoor)
+                    {
+                        State = EntityState.Idle;
+                    }
                 }
             }
 
@@ -319,10 +331,20 @@ namespace GreedyKid
             {
                 RoomDoor roomDoor = Room.RoomDoors[d];
 
+                SpriteEffects targetOrientation = SpriteEffects.None;
+
                 if (X + 16 > roomDoor.X && X + 16 < roomDoor.X + 8)
-                    roomDoor.CheckCanCloseFromLeft();
+                {
+                    roomDoor.CheckCanCloseFromLeft();                    
+                    if (roomDoor.CanClose)
+                        targetOrientation = SpriteEffects.None;
+                }
                 else if (X + 16 > roomDoor.X + 24 && X + 16 < roomDoor.X + 32)
+                {
                     roomDoor.CheckCanCloseFromRight();
+                    if (roomDoor.CanClose)
+                        targetOrientation = SpriteEffects.FlipHorizontally;
+                }
                 else
                     roomDoor.CanClose = false;
 
@@ -330,6 +352,8 @@ namespace GreedyKid
                 {
                     roomDoor.Close();
                     _closingDoor = roomDoor;
+                    Orientation = targetOrientation;
+                    SlamDoor();
                 }
             }
 
@@ -575,6 +599,13 @@ namespace GreedyKid
             _currentHitShowTime = 0.0f;
 
             Life--;
+        }
+
+        private void SlamDoor()
+        {
+            State = EntityState.SlamingDoor;
+            _currentFrame = 0;
+            _currentFrameTime = 0.0f;
         }
 
         private void KO()

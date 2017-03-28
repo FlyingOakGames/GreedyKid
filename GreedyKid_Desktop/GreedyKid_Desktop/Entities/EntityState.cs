@@ -26,6 +26,7 @@ namespace GreedyKid
         Panic,
         Ressurecting,
         BeingRessurected,
+        SlamingDoor,
 
         Count
     }
