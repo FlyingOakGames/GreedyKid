@@ -319,6 +319,27 @@ namespace GreedyKid
             LoadLevel(SelectedLevel);
         }
 
+        public void NextLevel()
+        {
+            if (_building.CurrentLevel != null)
+            {
+                SelectedLevel++;
+                SelectedLevel %= _building.LevelCount;
+            }
+            LoadLevel(SelectedLevel);
+        }
+
+        public void PreviousLevel()
+        {
+            if (_building.CurrentLevel != null)
+            {
+                SelectedLevel--;
+                if (SelectedLevel < 0)
+                    SelectedLevel = _building.LevelCount - 1;
+            }
+            LoadLevel(SelectedLevel);
+        }
+
         public void Update(float gameTime)
         {
             if (InputManager.PlayerDevice != null)

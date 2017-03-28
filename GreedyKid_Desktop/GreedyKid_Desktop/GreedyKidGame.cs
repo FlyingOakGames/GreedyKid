@@ -24,6 +24,10 @@ namespace GreedyKid
 
         Rectangle destination = new Rectangle();
 
+#if DEBUG
+        KeyboardState previousKeyboardState;
+#endif
+
         public GreedyKidGame()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -80,10 +84,22 @@ namespace GreedyKid
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            // should remove once menus are in
+            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            if (Keyboard.GetState().IsKeyDown(Keys.R))
+#if DEBUG
+            KeyboardState keyboardState = Keyboard.GetState();
+
+            if (keyboardState.IsKeyDown(Keys.R) && previousKeyboardState.IsKeyUp(Keys.R))
                 buildingManager.ResetLevel();
+
+            if (keyboardState.IsKeyDown(Keys.V) && previousKeyboardState.IsKeyUp(Keys.V))
+                buildingManager.NextLevel();
+            if (keyboardState.IsKeyDown(Keys.C) && previousKeyboardState.IsKeyUp(Keys.C))
+                buildingManager.PreviousLevel();
+
+            previousKeyboardState = keyboardState;
+#endif
 
             float gameTimeF = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
