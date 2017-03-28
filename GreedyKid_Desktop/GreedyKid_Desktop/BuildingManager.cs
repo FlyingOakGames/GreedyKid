@@ -479,12 +479,12 @@ namespace GreedyKid
                                                     if (retiredPos > nurse.X + 16
                                                         && nurse.Orientation == SpriteEffects.None
                                                         && roomDoor.IsClosed
-                                                        && roomDoor.X + 16 > nurse.X && retiredPos > roomDoor.X + 16)
+                                                        && roomDoor.X + 16 > nurse.X + 16 && retiredPos > roomDoor.X + 16)
                                                         canSeeRetired = false;
                                                     else if (retiredPos < nurse.X + 16
                                                         && nurse.Orientation == SpriteEffects.FlipHorizontally
                                                         && roomDoor.IsClosed
-                                                        && roomDoor.X + 16 < nurse.X && retiredPos < roomDoor.X + 16)
+                                                        && roomDoor.X + 16 < nurse.X + 16 && retiredPos < roomDoor.X + 16)
                                                         canSeeRetired = false;
                                                     else if (retiredPos < nurse.X + 16
                                                         && nurse.Orientation == SpriteEffects.None)

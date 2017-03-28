@@ -418,12 +418,12 @@ namespace GreedyKid
                     if (LastKnownPlayerPosition > X + 16
                         && Orientation == SpriteEffects.None
                         && roomDoor.IsClosed
-                        && roomDoor.X + 16 > X && LastKnownPlayerPosition > roomDoor.X + 16)
+                        && roomDoor.X + 16 > X + 16 && LastKnownPlayerPosition > roomDoor.X + 16)
                         canSeePlayer = false;
                     else if (LastKnownPlayerPosition < X + 16
                         && Orientation == SpriteEffects.FlipHorizontally
                         && roomDoor.IsClosed
-                        && roomDoor.X + 16 < X && LastKnownPlayerPosition < roomDoor.X + 16)
+                        && roomDoor.X + 16 < X + 16 && LastKnownPlayerPosition < roomDoor.X + 16)
                         canSeePlayer = false;
                     else if (LastKnownPlayerPosition < X + 16
                         && Orientation == SpriteEffects.None)
@@ -441,7 +441,7 @@ namespace GreedyKid
                     {
                         Turn();
                     }
-                    else if (Orientation == SpriteEffects.None && X + 8 > roomDoor.X && X + 8 < roomDoor.X + 4)
+                    else if (Orientation == SpriteEffects.None && X + 12 > roomDoor.X && X + 12 < roomDoor.X + 4)
                     {
                         Turn();
                     }
@@ -463,7 +463,7 @@ namespace GreedyKid
             }
 
             // player in sight action
-            if (canSeePlayer && taunted)
+            if (LastKnownPlayerPosition >= 0 && canSeePlayer && taunted)
             {
                 Taunt();
             }
