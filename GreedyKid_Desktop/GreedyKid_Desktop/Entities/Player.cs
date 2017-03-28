@@ -42,6 +42,10 @@ namespace GreedyKid
         // hiding / showing
         private Furniture _targetFurniture = null;
 
+        // finishing level
+        public bool CanEnterElevator = false;
+        public bool HasEnteredElevator = false;
+
         // smoke animation
         private int _smokeX = 0;
         private int _currentSmokeFrame = -1;
@@ -376,6 +380,14 @@ namespace GreedyKid
                 }
             }
 
+            // entering elevator
+            if (_doingAction && CanEnterElevator)
+            {
+                X = Room.ExitX + 4;
+                Enter(null);
+                HasEnteredElevator = true;
+            }
+
             // unhide
             if (_doingAction && State == EntityState.Hiding && _currentFrame == _frames[(int)State].Length - 1)
             {
@@ -613,9 +625,12 @@ namespace GreedyKid
 
         private void Enter(FloorDoor floorDoor)
         {
-            X = floorDoor.X;
-            _targetDoor = floorDoor.SisterDoor;
-            floorDoor.SisterDoor.ArrivingEntity = this;
+            if (floorDoor != null)
+            {
+                X = floorDoor.X;
+                _targetDoor = floorDoor.SisterDoor;
+                floorDoor.SisterDoor.ArrivingEntity = this;
+            }
 
             _currentFrame = 0;
             _currentFrameTime = 0.0f;

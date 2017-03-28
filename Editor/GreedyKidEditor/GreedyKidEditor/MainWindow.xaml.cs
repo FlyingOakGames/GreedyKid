@@ -379,6 +379,40 @@ namespace GreedyKidEditor
             }
         }
 
+        private void upLevelButton_Click(object sender, RoutedEventArgs e)
+        {
+            BuildingTreeViewItem selectedItem = treeView.SelectedItem as BuildingTreeViewItem;
+
+            if (selectedItem != null)
+            {
+                if (selectedItem.Type == BuildingElement.Level)
+                {
+                    if (selectedItem.Level > 0)
+                    {
+                        Level level = _building.Levels[selectedItem.Level - 1];
+                        _building.Levels[selectedItem.Level - 1] = _building.Levels[selectedItem.Level];
+                        _building.Levels[selectedItem.Level] = level;
+
+                        RefreshTreeView(selectedItem.Level - 1);
+                    }
+                }
+                else if (selectedItem.Type == BuildingElement.Floor)
+                {
+                    /*
+                    _building.Levels[selectedItem.Level].Floors.RemoveAt(selectedItem.Floor);
+
+                    RefreshTreeView(selectedItem.Level, selectedItem.Floor - 1);*/
+                }
+                else if (selectedItem.Type == BuildingElement.Room)
+                {
+                    /*
+                    _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms.RemoveAt(selectedItem.Room);
+
+                    RefreshTreeView(selectedItem.Level, selectedItem.Floor, selectedItem.Room - 1);*/
+                }
+            }
+        }
+
         private void renameButton_Click(object sender, RoutedEventArgs e)
         {
             BuildingTreeViewItem selectedItem = treeView.SelectedItem as BuildingTreeViewItem;

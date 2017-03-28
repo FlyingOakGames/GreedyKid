@@ -42,32 +42,41 @@ namespace GreedyKid
             get { return _isConnected; }
         }
 
-        public void HandleIngameInputs(Player player)
+        public void HandleIngameInputs(BuildingManager manager)
         {
             GamePadState currentState = GamePad.GetState(_playerIndex, GamePadDeadZone.IndependentAxes);
             _isConnected = currentState.IsConnected;
 
-            // moving
-            if (currentState.DPad.Left == ButtonState.Pressed || currentState.ThumbSticks.Left.X < 0.0f)
-                player.MoveLeft();
-            else if (currentState.DPad.Right == ButtonState.Pressed || currentState.ThumbSticks.Left.X > 0.0f)
-                player.MoveRight();
+            if (manager.Player != null)
+            {
+                // moving
+                if (currentState.DPad.Left == ButtonState.Pressed || currentState.ThumbSticks.Left.X < 0.0f)
+                    manager.Player.MoveLeft();
+                else if (currentState.DPad.Right == ButtonState.Pressed || currentState.ThumbSticks.Left.X > 0.0f)
+                    manager.Player.MoveRight();
 
-            // rolling
-            if (currentState.Buttons.X == ButtonState.Pressed && _previousGamePadState.Buttons.X == ButtonState.Released)
-                player.Roll();
+                // rolling
+                if (currentState.Buttons.X == ButtonState.Pressed && _previousGamePadState.Buttons.X == ButtonState.Released)
+                    manager.Player.Roll();
 
-            // action
-            if (currentState.Buttons.A == ButtonState.Pressed && _previousGamePadState.Buttons.A == ButtonState.Released)
-                player.Action();
+                // action
+                if (currentState.Buttons.A == ButtonState.Pressed && _previousGamePadState.Buttons.A == ButtonState.Released)
+                    manager.Player.Action();
 
-            // shouting
-            if (currentState.Buttons.B == ButtonState.Pressed)
-                player.Shout();
+                // shouting
+                if (currentState.Buttons.B == ButtonState.Pressed)
+                    manager.Player.Shout();
 
-            // taunting
-            if (currentState.Buttons.Y == ButtonState.Pressed)
-                player.Taunt();
+                // taunting
+                if (currentState.Buttons.Y == ButtonState.Pressed)
+                    manager.Player.Taunt();
+            }
+            else
+            {
+                // go
+                if (currentState.Buttons.A == ButtonState.Pressed && _previousGamePadState.Buttons.A == ButtonState.Released)
+                    manager.DisappearTransition();
+            }
 
             _previousGamePadState = currentState;
         }

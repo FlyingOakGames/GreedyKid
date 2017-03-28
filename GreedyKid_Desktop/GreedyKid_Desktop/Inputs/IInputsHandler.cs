@@ -10,7 +10,7 @@
 
     public interface IInputsHandler
     {
-        void HandleIngameInputs(Player player);
+        void HandleIngameInputs(BuildingManager manager);        
 
         InputsHandlerTypes InputType { get; }
 
