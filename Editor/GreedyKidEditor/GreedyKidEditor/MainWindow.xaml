@@ -42,7 +42,7 @@
         </Menu>
         <Grid Margin="0,23,0,0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="160" MinWidth="160"/>
+                <ColumnDefinition Width="175" MinWidth="175"/>
                 <ColumnDefinition Width="5" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="5" />
@@ -54,9 +54,10 @@
                 </TreeView>
                 <Button x:Name="addButton" Content="+" HorizontalAlignment="Left" Margin="10,33,0,0" VerticalAlignment="Top" Width="20" Height="20" Click="addButton_Click"/>
                 <Button x:Name="removeButton" Content="-" HorizontalAlignment="Left" Margin="35,33,0,0" VerticalAlignment="Top"  Width="20" Height="20" Click="removeButton_Click"/>
-                <Button x:Name="renameButton" Content="Rename" HorizontalAlignment="Left" Margin="97,33,0,0" VerticalAlignment="Top"  Width="53" Height="20" Click="renameButton_Click"/>
+                <Button x:Name="renameButton" Content="Rename" HorizontalAlignment="Left" Margin="110,33,0,0" VerticalAlignment="Top"  Width="55" Height="20" Click="renameButton_Click"/>
                 <Label x:Name="label" Content="Building composition" Margin="10,2,0,0" VerticalAlignment="Top" FontWeight="Bold" HorizontalAlignment="Left" Width="140"/>
                 <Button x:Name="upLevelButton" Content="Up" HorizontalAlignment="Left" Margin="60,33,0,0" VerticalAlignment="Top"  Width="20" Height="20" Click="upLevelButton_Click"/>
+                <Button x:Name="dwLevelButton" Content="Do" HorizontalAlignment="Left" Margin="85,33,0,0" VerticalAlignment="Top"  Width="20" Height="20" Click="dwLevelButton_Click"/>
             </Grid>
             <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
             <Grid x:Name="rendererBackgroundGrid" Grid.Column="2" Background="Black" SizeChanged="rendererBackgroundGrid_SizeChanged">

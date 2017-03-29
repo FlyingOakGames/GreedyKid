@@ -398,17 +398,67 @@ namespace GreedyKidEditor
                 }
                 else if (selectedItem.Type == BuildingElement.Floor)
                 {
-                    /*
-                    _building.Levels[selectedItem.Level].Floors.RemoveAt(selectedItem.Floor);
+                    if (selectedItem.Floor > 0)
+                    {
+                        Floor floor = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor - 1];
+                        _building.Levels[selectedItem.Level].Floors[selectedItem.Floor - 1] = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor];
+                        _building.Levels[selectedItem.Level].Floors[selectedItem.Floor] = floor;
 
-                    RefreshTreeView(selectedItem.Level, selectedItem.Floor - 1);*/
+                        RefreshTreeView(selectedItem.Level, selectedItem.Floor - 1);
+                    }
                 }
                 else if (selectedItem.Type == BuildingElement.Room)
                 {
-                    /*
-                    _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms.RemoveAt(selectedItem.Room);
+                    if (selectedItem.Room > 0)
+                    {
+                        Room room = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room - 1];
+                        _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room - 1] = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room];
+                        _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room] = room;
 
-                    RefreshTreeView(selectedItem.Level, selectedItem.Floor, selectedItem.Room - 1);*/
+                        RefreshTreeView(selectedItem.Level, selectedItem.Floor, selectedItem.Room - 1);
+                    }                    
+                }
+            }
+        }
+
+        private void dwLevelButton_Click(object sender, RoutedEventArgs e)
+        {
+            BuildingTreeViewItem selectedItem = treeView.SelectedItem as BuildingTreeViewItem;
+
+            if (selectedItem != null)
+            {
+                if (selectedItem.Type == BuildingElement.Level)
+                {
+                    if (selectedItem.Level < _building.Levels.Count - 1)
+                    {
+                        Level level = _building.Levels[selectedItem.Level + 1];
+                        _building.Levels[selectedItem.Level + 1] = _building.Levels[selectedItem.Level];
+                        _building.Levels[selectedItem.Level] = level;
+
+                        RefreshTreeView(selectedItem.Level + 1);
+                    }
+                }
+                else if (selectedItem.Type == BuildingElement.Floor)
+                {
+                    if (selectedItem.Floor < _building.Levels[selectedItem.Level].Floors.Count - 1)
+                    {
+                        Floor floor = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor + 1];
+                        _building.Levels[selectedItem.Level].Floors[selectedItem.Floor + 1] = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor];
+                        _building.Levels[selectedItem.Level].Floors[selectedItem.Floor] = floor;
+
+                        RefreshTreeView(selectedItem.Level, selectedItem.Floor + 1);
+                    }
+                }
+                else if (selectedItem.Type == BuildingElement.Room)
+                {
+                    if (selectedItem.Room < _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms.Count - 1)
+                    {
+                        Room room = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room + 1];
+                        _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room + 1] = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room];
+                        _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room] = room;
+
+                        RefreshTreeView(selectedItem.Level, selectedItem.Floor, selectedItem.Room + 1);
+                    }
                 }
             }
         }

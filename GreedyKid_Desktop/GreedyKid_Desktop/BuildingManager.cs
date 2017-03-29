@@ -99,6 +99,10 @@ namespace GreedyKid
         private float _currentInterLevelFrameTime = 0.0f;
         private const float _interLevelFrameTime = 0.05f;
         private int _currentElevatorBackgroundY = 0;
+        private const int _elevatorKidFrameCount = 4;
+        private int _currentElevatorKidFrame = 0;
+        private float _currentElevatorKidFrameTime = 0.0f;
+        private const float _elevatorKidFrameTime = 0.1f;
 
         public BuildingManager()
         {            
@@ -252,7 +256,7 @@ namespace GreedyKid
             _transitionRectangle[3] = new Rectangle(201, 1864, 328, 184); // half full
 
             // inter level
-            _interLevelRectangle = new Rectangle[_elevatorFrameCount + _cableFrameCount + 3];
+            _interLevelRectangle = new Rectangle[_elevatorFrameCount + _cableFrameCount + 3 + _elevatorKidFrameCount];
             // elevator
             for (int i = 0; i < _elevatorFrameCount; i++)
             {
@@ -267,6 +271,11 @@ namespace GreedyKid
             _interLevelRectangle[_elevatorFrameCount + _cableFrameCount] = new Rectangle(548, 1808, 64, 240);
             _interLevelRectangle[_elevatorFrameCount + _cableFrameCount + 1] = new Rectangle(483, 1844, 64, 10);
             _interLevelRectangle[_elevatorFrameCount + _cableFrameCount + 2] = new Rectangle(483, 1855, 64, 8);
+            // kid
+            for (int i = 0; i < _elevatorKidFrameCount; i++)
+            {
+                _interLevelRectangle[_elevatorFrameCount + _cableFrameCount + 3 + i] = new Rectangle(613 + 32 * i, 1958, 32, 45);
+            }
         }
 
         public void LoadBuilding()
@@ -550,6 +559,14 @@ namespace GreedyKid
                     _currentElevatorBackgroundY %= _interLevelRectangle[_elevatorFrameCount + _cableFrameCount].Height;
 
                     _currentInterLevelFrameTime -= _interLevelFrameTime;
+                }
+
+                _currentElevatorKidFrameTime += gameTime;
+                if (_currentElevatorKidFrameTime >= _elevatorKidFrameTime)
+                {
+                    _currentElevatorKidFrameTime -= _elevatorKidFrameTime;
+                    _currentElevatorKidFrame++;
+                    _currentElevatorKidFrame %= _elevatorKidFrameCount;
                 }
             }
 
@@ -1047,6 +1064,12 @@ namespace GreedyKid
                 spriteBatch.Draw(texture,
                     new Rectangle(_elevatorX, _elevatorY, _interLevelRectangle[0].Width, _interLevelRectangle[0].Height),
                     _interLevelRectangle[_currentElevatorFrame],
+                    Color.White);
+
+                // kid
+                spriteBatch.Draw(texture,
+                    new Rectangle(_elevatorX, _elevatorY, _interLevelRectangle[0].Width, _interLevelRectangle[0].Height),
+                    _interLevelRectangle[_elevatorFrameCount + _cableFrameCount + 3 + _currentElevatorKidFrame],
                     Color.White);
             }
             
