@@ -10,6 +10,7 @@ namespace GreedyKidEditor
         public int X = 0;
 
         public int Life = 1;
+        public int Money = 0;
 
         public Retired()
         {
@@ -26,6 +27,7 @@ namespace GreedyKidEditor
             writer.Write(Type);
             writer.Write(X);
             writer.Write(Life);
+            writer.Write(Money);
         }
 
         public void Load(BinaryReader reader)
@@ -33,6 +35,7 @@ namespace GreedyKidEditor
             Type = reader.ReadInt32();
             X = reader.ReadInt32();
             Life = reader.ReadInt32();
+            Money = reader.ReadInt32();
         }
     }
 }

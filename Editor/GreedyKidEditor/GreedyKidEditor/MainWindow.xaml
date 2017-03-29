@@ -282,6 +282,20 @@
                     <RepeatButton x:Name="nurseLifeButtonDown"  Grid.Column="1" Grid.Row="1" FontSize="8"  FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="13" VerticalAlignment="Bottom" Content="6" Click="nurseLifeButtonDown_Click"/>
                 </Grid>
                 <Label x:Name="label2_Copy18" Content="Life" HorizontalAlignment="Right" Margin="0,764,124,0" VerticalAlignment="Top"/>
+                <Grid Width="30" Height="26" Margin="0,607,163,0" HorizontalAlignment="Right" VerticalAlignment="Top">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="13" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="13" />
+                        <RowDefinition Height="13" />
+                    </Grid.RowDefinitions>
+                    <TextBox x:Name="retiredMoneyTextBox"  Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" TextAlignment="Right" Text="0" IsEnabled="False" />
+                    <RepeatButton x:Name="retiredMoneyButtonUP"  Grid.Column="1" Grid.Row="0" FontSize="8" FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="5" Click="retiredMoneyButtonUP_Click"/>
+                    <RepeatButton x:Name="retiredMoneyButtonDown"  Grid.Column="1" Grid.Row="1" FontSize="8"  FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="13" VerticalAlignment="Bottom" Content="6" Click="retiredMoneyButtonDown_Click"/>
+                </Grid>
+                <Label x:Name="label2_Copy19" Content="Money" HorizontalAlignment="Right" Margin="0,606,193,0" VerticalAlignment="Top"/>
 
 
             </Grid>

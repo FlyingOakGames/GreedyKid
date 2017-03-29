@@ -23,9 +23,9 @@ namespace GreedyKid
         public SpriteEffects Orientation = SpriteEffects.None;
 
         // shared statics
-        private Rectangle[][][] _frames;
-        private float[] _frameDuration;
-        private Rectangle[][] _lifeRectangles;
+        private static Rectangle[][][] _frames;
+        private static float[] _frameDuration;
+        private static Rectangle[][] _lifeRectangles;
 
         private int _currentFrame = 0;
         private float _currentFrameTime = 0.0f;
@@ -557,6 +557,8 @@ namespace GreedyKid
             if (Life <= 0)
             {
                 State = EntityState.KO;
+
+                Room.AddDrop(ObjectType.HealthPack, X);
             }
             else
             {

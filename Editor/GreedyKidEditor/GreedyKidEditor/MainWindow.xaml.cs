@@ -1218,6 +1218,7 @@ namespace GreedyKidEditor
                 xRetired.Value = room.Retireds[retiredListBox.SelectedIndex].X;
                 retiredTextBox.Text = room.Retireds[retiredListBox.SelectedIndex].Type.ToString();
                 retiredLifeTextBox.Text = room.Retireds[retiredListBox.SelectedIndex].Life.ToString();
+                retiredMoneyTextBox.Text = room.Retireds[retiredListBox.SelectedIndex].Money.ToString();
             }
         }
 
@@ -1261,6 +1262,36 @@ namespace GreedyKidEditor
                 room.Retireds[retiredListBox.SelectedIndex].Type--;
                 room.Retireds[retiredListBox.SelectedIndex].Type = Math.Max(room.Retireds[retiredListBox.SelectedIndex].Type, 0);
                 retiredTextBox.Text = room.Retireds[retiredListBox.SelectedIndex].Type.ToString();
+            }
+        }
+
+        private void retiredMoneyButtonUP_Click(object sender, RoutedEventArgs e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count &&
+                retiredListBox.SelectedIndex >= 0 && retiredListBox.SelectedIndex < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom].Retireds.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+
+                room.Retireds[retiredListBox.SelectedIndex].Money++;
+                room.Retireds[retiredListBox.SelectedIndex].Money = Math.Min(room.Retireds[retiredListBox.SelectedIndex].Money, 10);
+                retiredMoneyTextBox.Text = room.Retireds[retiredListBox.SelectedIndex].Money.ToString();
+            }
+        }
+
+        private void retiredMoneyButtonDown_Click(object sender, RoutedEventArgs e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count &&
+                retiredListBox.SelectedIndex >= 0 && retiredListBox.SelectedIndex < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom].Retireds.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+
+                room.Retireds[retiredListBox.SelectedIndex].Money--;
+                room.Retireds[retiredListBox.SelectedIndex].Money = Math.Max(room.Retireds[retiredListBox.SelectedIndex].Money, 0);
+                retiredMoneyTextBox.Text = room.Retireds[retiredListBox.SelectedIndex].Money.ToString();
             }
         }
 

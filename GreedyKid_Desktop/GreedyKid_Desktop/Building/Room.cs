@@ -35,6 +35,8 @@ namespace GreedyKid
         public List<Retired> Retireds;
         public List<Nurse> Nurses;
 
+        public List<Droppable> Drops;
+
         public void Load(BinaryReader reader)
         {
             Name = reader.ReadString();
@@ -99,6 +101,17 @@ namespace GreedyKid
             StartX = reader.ReadInt32();
             HasExit = reader.ReadBoolean();
             ExitX = reader.ReadInt32();
+
+            Drops = new List<Droppable>();
         }        
+
+        public void AddDrop(ObjectType type, float x)
+        {
+            Droppable drop = new Droppable(type);
+            drop.X = x + 8.0f;
+            drop.Room = this;
+            Drops.Add(drop);
+            drop.Drop();
+        }
     }
 }

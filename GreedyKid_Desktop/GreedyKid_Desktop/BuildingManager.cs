@@ -506,6 +506,27 @@ namespace GreedyKid
                                 nurse.Update(gameTime, boo, isTaunting);
                             }
                         }
+
+                        // drops
+                        for (int d = room.Drops.Count - 1; d >= 0; d--)
+                        {
+                            Droppable drop = room.Drops[d];
+                            drop.Update(gameTime);
+
+                            if (Math.Abs((drop.X + 8.0f) - (Player.X + 16.0f)) < 8.0f)
+                            {
+                                if (drop.Type == ObjectType.HealthPack)
+                                {
+                                    Player.Life += 2;
+                                    Player.Life = Math.Min(Player.Life, 6);
+                                }
+                                else
+                                {
+                                    Score += 4 - (int)drop.Type;
+                                }
+                                room.Drops.RemoveAt(d);
+                            }
+                        }
                     }
                 }
 
@@ -972,6 +993,14 @@ namespace GreedyKid
                             Nurse nurse = room.Nurses[n];
                             if (nurse != null)
                                 nurse.Draw(spriteBatch);
+                        }
+
+                        // drops
+                        for (int d = 0; d < room.Drops.Count; d++)
+                        {
+                            Droppable drop = room.Drops[d];
+
+                            drop.Draw(spriteBatch, _objectsRectangle);
                         }
                     }
                 }

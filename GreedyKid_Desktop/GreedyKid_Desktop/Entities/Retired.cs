@@ -19,13 +19,15 @@ namespace GreedyKid
 
         public int Life = 1;
 
+        public int Money = 0;
+
         public EntityState State = EntityState.Idle;
         public SpriteEffects Orientation = SpriteEffects.None;
 
         // shared statics
-        private Rectangle[][][] _frames;
-        private float[] _frameDuration;
-        private Rectangle[][] _lifeRectangles;
+        private static Rectangle[][][] _frames;
+        private static float[] _frameDuration;
+        private static Rectangle[][] _lifeRectangles;
 
         private int _currentFrame = 0;
         private float _currentFrameTime = 0.0f;
@@ -220,6 +222,7 @@ namespace GreedyKid
             Type = reader.ReadInt32();
             X = reader.ReadInt32();
             Life = reader.ReadInt32();
+            Money = reader.ReadInt32();
         }
 
         public void Update(float gameTime, bool boo, bool taunted)
@@ -506,10 +509,29 @@ namespace GreedyKid
                 Orientation = SpriteEffects.FlipHorizontally;
             else
                 Orientation = SpriteEffects.None;
-
+            
             if (Life <= 0)
             {
                 State = EntityState.KO;
+
+                while (Money > 0)
+                {
+                    if (Money > 2)
+                    {
+                        Room.AddDrop(ObjectType.CashBig, X);
+                        Money -= 3;
+                    }
+                    else if (Money > 1)
+                    {
+                        Room.AddDrop(ObjectType.CashMedium, X);
+                        Money -= 2;
+                    }
+                    else
+                    {
+                        Room.AddDrop(ObjectType.CashSmall, X);
+                        Money -= 1;
+                    }
+                }
             }
             else
             {
