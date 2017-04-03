@@ -406,6 +406,36 @@ namespace GreedyKid
                                 Player.CanEnterElevator = true;
                         }
 
+                        // cops
+                        for (int c = 0; c < room.Cops.Count; c++)
+                        {
+                            Cop cop = room.Cops[c];
+                            if (cop != null)
+                            {
+                                // boo
+                                bool boo = false;
+
+                                if (isShouting && cop.Room == Player.Room)
+                                {
+                                    int retiredMiddle = (int)cop.X + 16;
+                                    if (Math.Abs(retiredMiddle - playerMiddle) <= _shoutDistance && cop.NotFacing(playerMiddle))
+                                        boo = true;
+                                }
+
+                                // player pos
+                                if (cop.Room == Player.Room)
+                                {
+                                    cop.LastKnownPlayerPosition = playerMiddle;
+                                }
+                                else
+                                {
+                                    cop.LastKnownPlayerPosition = -1;
+                                }
+
+                                cop.Update(gameTime, boo, isTaunting);
+                            }
+                        }
+
                         // retireds                        
                         for (int rr = 0; rr < room.Retireds.Count; rr++)
                         {
@@ -1010,6 +1040,14 @@ namespace GreedyKid
                             Nurse nurse = room.Nurses[n];
                             if (nurse != null)
                                 nurse.Draw(spriteBatch);
+                        }
+
+                        // cops
+                        for (int c = 0; c < room.Cops.Count; c++)
+                        {
+                            Cop cop = room.Cops[c];
+                            if (cop != null)
+                                cop.Draw(spriteBatch);
                         }
 
                         // drops

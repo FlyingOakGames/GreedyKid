@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:GreedyKidEditor"
         xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
         mc:Ignorable="d"
-        Title="Greedy Kid Editor" Height="859" Width="995" Closing="Window_Closing" WindowStartupLocation="CenterScreen" WindowState="Maximized">
+        Title="Greedy Kid Editor" Height="1181.5" Width="995" Closing="Window_Closing" WindowStartupLocation="CenterScreen" WindowState="Maximized">
     <Window.Resources>
         <RoutedUICommand x:Key="SaveCmd" Text="Save">
             <RoutedUICommand.InputGestures>
@@ -86,10 +86,10 @@
             </Grid>
             <GridSplitter Grid.Column="3" Width="5" HorizontalAlignment="Stretch"/>
             <Grid Grid.Column="4" >
-                <GroupBox x:Name="groupBox" Header="Floor doors" HorizontalAlignment="Right" Margin="0,378,157,0" VerticalAlignment="Top" Height="210" Width="152" FontWeight="Bold"/>
-                <GroupBox x:Name="groupBox_Copy" Header="Furniture" HorizontalAlignment="Right" Margin="0,378,3,0" VerticalAlignment="Top" Height="210" Width="152" FontWeight="Bold"/>
-                <GroupBox x:Name="groupBox_Copy1" Header="Details" HorizontalAlignment="Right" Margin="0,169,157,0" VerticalAlignment="Top" Height="210" Width="152" FontWeight="Bold"/>
-                <GroupBox x:Name="groupBox_Copy2" Header="Separation doors" HorizontalAlignment="Right" Margin="0,169,3,0" VerticalAlignment="Top" Height="210" Width="152" FontWeight="Bold"/>
+                <GroupBox x:Name="groupBox" Header="Floor doors" HorizontalAlignment="Right" Margin="0,166,157,0" VerticalAlignment="Top" Height="180" Width="152" FontWeight="Bold"/>
+                <GroupBox x:Name="groupBox_Copy" Header="Furniture" HorizontalAlignment="Right" Margin="0,345,3,0" VerticalAlignment="Top" Height="210" Width="152" FontWeight="Bold"/>
+                <GroupBox x:Name="groupBox_Copy1" Header="Details" HorizontalAlignment="Right" Margin="0,345,157,0" VerticalAlignment="Top" Height="210" Width="152" FontWeight="Bold"/>
+                <GroupBox x:Name="groupBox_Copy2" Header="Separation doors" HorizontalAlignment="Right" Margin="0,166,3,0" VerticalAlignment="Top" Height="180" Width="152" FontWeight="Bold"/>
                 <GroupBox x:Name="groupBox_Copy3" Header="Room properties" HorizontalAlignment="Right" Margin="0,10,3,0" VerticalAlignment="Top" Height="156" Width="306" FontWeight="Bold"/>
                 <Grid Width="40" Height="26" Margin="0,33,163,0" HorizontalAlignment="Right" VerticalAlignment="Top">
                     <Grid.ColumnDefinitions>
@@ -165,12 +165,12 @@
                 <Label x:Name="label2_Copy1" Content="Right margin" HorizontalAlignment="Right" Margin="0,66,52,0" VerticalAlignment="Top"/>
                 <Label x:Name="label2_Copy2" Content="Left wall" HorizontalAlignment="Right" Margin="0,99,77,0" VerticalAlignment="Top"/>
                 <Label x:Name="label2_Copy3" Content="Right wall" HorizontalAlignment="Right" Margin="0,132,68,0" VerticalAlignment="Top"/>
-                <ListBox x:Name="detailListBox" HorizontalAlignment="Right" Height="100" Margin="0,218,163,0" VerticalAlignment="Top" Width="140" SelectionChanged="detailListBox_SelectionChanged"/>
-                <Button x:Name="addDetail" Content="+" HorizontalAlignment="Right" Margin="0,193,282,0" VerticalAlignment="Top" Width="20" Height="20" Click="addDetail_Click"/>
-                <Button x:Name="removeDetail" Content="-" HorizontalAlignment="Right" Margin="0,193,257,0" VerticalAlignment="Top" Width="20" Height="20" Click="removeDetail_Click"/>
-                <Slider x:Name="xDetail" HorizontalAlignment="Right" Margin="0,323,163,0" VerticalAlignment="Top" Width="123" SmallChange="1" Maximum="328" ValueChanged="xDetail_ValueChanged"/>
-                <Label x:Name="label2_Copy4" Content="X" HorizontalAlignment="Right" Margin="0,318,289,0" VerticalAlignment="Top"/>
-                <Grid Width="40" Height="26" Margin="0,347,163,0" HorizontalAlignment="Right" VerticalAlignment="Top">
+                <ListBox x:Name="detailListBox" HorizontalAlignment="Right" Height="100" Margin="0,394,163,0" VerticalAlignment="Top" Width="140" SelectionChanged="detailListBox_SelectionChanged"/>
+                <Button x:Name="addDetail" Content="+" HorizontalAlignment="Right" Margin="0,369,282,0" VerticalAlignment="Top" Width="20" Height="20" Click="addDetail_Click"/>
+                <Button x:Name="removeDetail" Content="-" HorizontalAlignment="Right" Margin="0,369,257,0" VerticalAlignment="Top" Width="20" Height="20" Click="removeDetail_Click"/>
+                <Slider x:Name="xDetail" HorizontalAlignment="Right" Margin="0,499,163,0" VerticalAlignment="Top" Width="123" SmallChange="1" Maximum="328" ValueChanged="xDetail_ValueChanged"/>
+                <Label x:Name="label2_Copy4" Content="X" HorizontalAlignment="Right" Margin="0,494,289,0" VerticalAlignment="Top"/>
+                <Grid Width="40" Height="26" Margin="0,523,163,0" HorizontalAlignment="Right" VerticalAlignment="Top">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="13" />
@@ -183,13 +183,13 @@
                     <RepeatButton Name="detailButtonUP"  Grid.Column="1" Grid.Row="0" FontSize="8" FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="detailButtonUP_Click">5</RepeatButton>
                     <RepeatButton Name="detailButtonDown"  Grid.Column="1" Grid.Row="1" FontSize="8"  FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="13" VerticalAlignment="Bottom" Click="detailButtonDown_Click">6</RepeatButton>
                 </Grid>
-                <Label x:Name="label2_Copy5" Content="Type" HorizontalAlignment="Right" Margin="0,346,205,0" VerticalAlignment="Top"/>
-                <ListBox x:Name="floorDoorListBox" HorizontalAlignment="Right" Height="100" Margin="0,427,163,0" VerticalAlignment="Top" Width="140" SelectionChanged="floorDoorListBox_SelectionChanged"/>
-                <Button x:Name="addFloorDoor" Content="+" HorizontalAlignment="Right" Margin="0,402,282,0" VerticalAlignment="Top" Width="20" Height="20" Click="addFloorDoor_Click"/>
-                <Button x:Name="removeFloorDoor" Content="-" HorizontalAlignment="Right" Margin="0,402,257,0" VerticalAlignment="Top" Width="20" Height="20" Click="removeFloorDoor_Click"/>
-                <Slider x:Name="xFloorDoor" HorizontalAlignment="Right" Margin="0,532,163,0" VerticalAlignment="Top" Width="123" SmallChange="1" Maximum="328" ValueChanged="xFloorDoor_ValueChanged"/>
-                <Label x:Name="label2_Copy6" Content="X" HorizontalAlignment="Right" Margin="0,527,289,0" VerticalAlignment="Top"/>
-                <Grid Width="40" Height="26" Margin="0,556,163,0" HorizontalAlignment="Right" VerticalAlignment="Top">
+                <Label x:Name="label2_Copy5" Content="Type" HorizontalAlignment="Right" Margin="0,522,205,0" VerticalAlignment="Top"/>
+                <ListBox x:Name="floorDoorListBox" HorizontalAlignment="Right" Height="100" Margin="0,215,163,0" VerticalAlignment="Top" Width="140" SelectionChanged="floorDoorListBox_SelectionChanged"/>
+                <Button x:Name="addFloorDoor" Content="+" HorizontalAlignment="Right" Margin="0,190,282,0" VerticalAlignment="Top" Width="20" Height="20" Click="addFloorDoor_Click"/>
+                <Button x:Name="removeFloorDoor" Content="-" HorizontalAlignment="Right" Margin="0,190,257,0" VerticalAlignment="Top" Width="20" Height="20" Click="removeFloorDoor_Click"/>
+                <Slider x:Name="xFloorDoor" HorizontalAlignment="Right" Margin="0,320,163,0" VerticalAlignment="Top" Width="123" SmallChange="1" Maximum="328" ValueChanged="xFloorDoor_ValueChanged"/>
+                <Label x:Name="label2_Copy6" Content="X" HorizontalAlignment="Right" Margin="0,315,289,0" VerticalAlignment="Top"/>
+                <Grid Width="40" Height="26" Margin="0,186,163,0" HorizontalAlignment="Right" VerticalAlignment="Top">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="13" />
@@ -202,24 +202,24 @@
                     <RepeatButton x:Name="floorDoorButtonUP"  Grid.Column="1" Grid.Row="0" FontSize="8" FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="5" Click="floorDoorButtonUP_Click"/>
                     <RepeatButton x:Name="floorDoorButtonDown"  Grid.Column="1" Grid.Row="1" FontSize="8"  FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="13" VerticalAlignment="Bottom" Content="6" Click="floorDoorButtonDown_Click"/>
                 </Grid>
-                <Label x:Name="label2_Copy7" Content="Color" HorizontalAlignment="Right" Margin="0,555,205,0" VerticalAlignment="Top"/>
-                <ListBox x:Name="roomDoorListBox" HorizontalAlignment="Right" Height="100" Margin="0,218,10,0" VerticalAlignment="Top" Width="140" SelectionChanged="roomDoorListBox_SelectionChanged"/>
-                <Button x:Name="addRoomDoor" Content="+" HorizontalAlignment="Right" Margin="0,193,129,0" VerticalAlignment="Top" Width="20" Height="20" Click="addRoomDoor_Click"/>
-                <Button x:Name="removeRoomDoor" Content="-" HorizontalAlignment="Right" Margin="0,193,104,0" VerticalAlignment="Top" Width="20" Height="20" Click="removeRoomDoor_Click"/>
-                <Slider x:Name="xRoomDoor" HorizontalAlignment="Right" Margin="0,323,10,0" VerticalAlignment="Top" Width="123" SmallChange="1" Maximum="328" ValueChanged="xRoomDoor_ValueChanged"/>
-                <Label x:Name="label2_Copy8" Content="X" HorizontalAlignment="Right" Margin="0,318,136,0" VerticalAlignment="Top"/>
+                <Label x:Name="label2_Copy7" Content="Color" HorizontalAlignment="Right" Margin="0,185,205,0" VerticalAlignment="Top"/>
+                <ListBox x:Name="roomDoorListBox" HorizontalAlignment="Right" Height="100" Margin="0,215,10,0" VerticalAlignment="Top" Width="140" SelectionChanged="roomDoorListBox_SelectionChanged"/>
+                <Button x:Name="addRoomDoor" Content="+" HorizontalAlignment="Right" Margin="0,190,129,0" VerticalAlignment="Top" Width="20" Height="20" Click="addRoomDoor_Click"/>
+                <Button x:Name="removeRoomDoor" Content="-" HorizontalAlignment="Right" Margin="0,190,104,0" VerticalAlignment="Top" Width="20" Height="20" Click="removeRoomDoor_Click"/>
+                <Slider x:Name="xRoomDoor" HorizontalAlignment="Right" Margin="0,320,10,0" VerticalAlignment="Top" Width="123" SmallChange="1" Maximum="328" ValueChanged="xRoomDoor_ValueChanged"/>
+                <Label x:Name="label2_Copy8" Content="X" HorizontalAlignment="Right" Margin="0,315,136,0" VerticalAlignment="Top"/>
                 <CheckBox x:Name="exitCheckBox" Content="Exit" HorizontalAlignment="Right" Margin="0,116,264,0" VerticalAlignment="Top" Checked="exitCheckBox_Checked" Unchecked="exitCheckBox_Unchecked"/>
                 <CheckBox x:Name="startCheckBox" Content="Start" HorizontalAlignment="Right" Margin="0,66,258,0" VerticalAlignment="Top" Checked="startCheckBox_Checked" Unchecked="startCheckBox_Unchecked"/>
                 <Slider x:Name="xExit" HorizontalAlignment="Right" Margin="0,140,163,0" VerticalAlignment="Top" Width="123" SmallChange="1" Maximum="328" ValueChanged="xExit_ValueChanged"/>
                 <Label x:Name="label2_Copy9" Content="X" HorizontalAlignment="Right" Margin="0,135,289,0" VerticalAlignment="Top"/>
                 <Slider x:Name="xStart" HorizontalAlignment="Right" Margin="0,90,163,0" VerticalAlignment="Top" Width="122" SmallChange="1" Maximum="328" ValueChanged="xStart_ValueChanged"/>
                 <Label x:Name="label2_Copy10" Content="X" HorizontalAlignment="Right" Margin="0,85,288,0" VerticalAlignment="Top"/>
-                <ListBox x:Name="furnitureListBox" HorizontalAlignment="Right" Height="100" Margin="0,427,10,0" VerticalAlignment="Top" Width="140" SelectionChanged="furnitureListBox_SelectionChanged"/>
-                <Button x:Name="addFurniture" Content="+" HorizontalAlignment="Right" Margin="0,402,129,0" VerticalAlignment="Top" Width="20" Height="20" Click="addFurniture_Click"/>
-                <Button x:Name="removeFurniture" Content="-" HorizontalAlignment="Right" Margin="0,402,104,0" VerticalAlignment="Top" Width="20" Height="20" Click="removeFurniture_Click"/>
-                <Slider x:Name="xFurniture" HorizontalAlignment="Right" Margin="0,532,10,0" VerticalAlignment="Top" Width="123" SmallChange="1" Maximum="328" ValueChanged="xFurniture_ValueChanged"/>
-                <Label x:Name="label2_Copy11" Content="X" HorizontalAlignment="Right" Margin="0,527,136,0" VerticalAlignment="Top"/>
-                <Grid Width="40" Height="26" Margin="0,556,10,0" HorizontalAlignment="Right" VerticalAlignment="Top">
+                <ListBox x:Name="furnitureListBox" HorizontalAlignment="Right" Height="100" Margin="0,394,10,0" VerticalAlignment="Top" Width="140" SelectionChanged="furnitureListBox_SelectionChanged"/>
+                <Button x:Name="addFurniture" Content="+" HorizontalAlignment="Right" Margin="0,369,129,0" VerticalAlignment="Top" Width="20" Height="20" Click="addFurniture_Click"/>
+                <Button x:Name="removeFurniture" Content="-" HorizontalAlignment="Right" Margin="0,369,104,0" VerticalAlignment="Top" Width="20" Height="20" Click="removeFurniture_Click"/>
+                <Slider x:Name="xFurniture" HorizontalAlignment="Right" Margin="0,499,10,0" VerticalAlignment="Top" Width="123" SmallChange="1" Maximum="328" ValueChanged="xFurniture_ValueChanged"/>
+                <Label x:Name="label2_Copy11" Content="X" HorizontalAlignment="Right" Margin="0,494,136,0" VerticalAlignment="Top"/>
+                <Grid Width="40" Height="26" Margin="0,523,10,0" HorizontalAlignment="Right" VerticalAlignment="Top">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="13" />
@@ -232,14 +232,14 @@
                     <RepeatButton x:Name="furnitureButtonUP"  Grid.Column="1" Grid.Row="0" FontSize="8" FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="5" Click="furnitureButtonUP_Click"/>
                     <RepeatButton x:Name="furnitureButtonDown"  Grid.Column="1" Grid.Row="1" FontSize="8"  FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="13" VerticalAlignment="Bottom" Content="6" Click="furnitureButtonDown_Click"/>
                 </Grid>
-                <Label x:Name="label2_Copy12" Content="Type" HorizontalAlignment="Right" Margin="0,555,52,0" VerticalAlignment="Top"/>
-                <GroupBox x:Name="groupBox_Copy4" Header="Retireds" HorizontalAlignment="Right" Margin="0,587,157,-178" VerticalAlignment="Top" Height="210" Width="152" FontWeight="Bold"/>
-                <ListBox x:Name="retiredListBox" HorizontalAlignment="Right" Height="100" Margin="0,636,163,-117" VerticalAlignment="Top" Width="140" SelectionChanged="retiredListBox_SelectionChanged"/>
-                <Button x:Name="addRetired" Content="+" HorizontalAlignment="Right" Margin="0,611,282,-12" VerticalAlignment="Top" Width="20" Height="20" Click="addRetired_Click"/>
-                <Button x:Name="removeRetired" Content="-" HorizontalAlignment="Right" Margin="0,611,257,-12" VerticalAlignment="Top" Width="20" Height="20" Click="removeRetired_Click"/>
-                <Slider x:Name="xRetired" HorizontalAlignment="Right" Margin="0,741,163,-140" VerticalAlignment="Top" Width="123" SmallChange="1" Maximum="328" ValueChanged="xRetired_ValueChanged"/>
-                <Label x:Name="label2_Copy13" Content="X" HorizontalAlignment="Right" Margin="0,736,289,-143" VerticalAlignment="Top"/>
-                <Grid Width="30" Height="26" Margin="0,765,163,0" HorizontalAlignment="Right" VerticalAlignment="Top">
+                <Label x:Name="label2_Copy12" Content="Type" HorizontalAlignment="Right" Margin="0,522,52,0" VerticalAlignment="Top"/>
+                <GroupBox x:Name="groupBox_Copy4" Header="Retireds" HorizontalAlignment="Right" Margin="0,555,157,0" VerticalAlignment="Top" Height="210" Width="152" FontWeight="Bold"/>
+                <ListBox x:Name="retiredListBox" HorizontalAlignment="Right" Height="100" Margin="0,604,163,0" VerticalAlignment="Top" Width="140" SelectionChanged="retiredListBox_SelectionChanged"/>
+                <Button x:Name="addRetired" Content="+" HorizontalAlignment="Right" Margin="0,579,282,0" VerticalAlignment="Top" Width="20" Height="20" Click="addRetired_Click"/>
+                <Button x:Name="removeRetired" Content="-" HorizontalAlignment="Right" Margin="0,579,257,0" VerticalAlignment="Top" Width="20" Height="20" Click="removeRetired_Click"/>
+                <Slider x:Name="xRetired" HorizontalAlignment="Right" Margin="0,709,163,0" VerticalAlignment="Top" Width="123" SmallChange="1" Maximum="328" ValueChanged="xRetired_ValueChanged"/>
+                <Label x:Name="label2_Copy13" Content="X" HorizontalAlignment="Right" Margin="0,704,289,0" VerticalAlignment="Top"/>
+                <Grid Width="30" Height="26" Margin="0,733,163,0" HorizontalAlignment="Right" VerticalAlignment="Top">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="13" />
@@ -252,8 +252,8 @@
                     <RepeatButton x:Name="retiredButtonUP"  Grid.Column="1" Grid.Row="0" FontSize="8" FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="5" Click="retiredButtonUP_Click"/>
                     <RepeatButton x:Name="retiredButtonDown"  Grid.Column="1" Grid.Row="1" FontSize="8"  FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="13" VerticalAlignment="Bottom" Content="6" Click="retiredButtonDown_Click"/>
                 </Grid>
-                <Label x:Name="label2_Copy14" Content="Type" HorizontalAlignment="Right" Margin="0,764,193,0" VerticalAlignment="Top"/>
-                <Grid Width="29" Height="26" Margin="0,765,248,0" HorizontalAlignment="Right" VerticalAlignment="Top">
+                <Label x:Name="label2_Copy14" Content="Type" HorizontalAlignment="Right" Margin="0,732,193,0" VerticalAlignment="Top"/>
+                <Grid Width="29" Height="26" Margin="0,733,248,0" HorizontalAlignment="Right" VerticalAlignment="Top">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="13" />
@@ -266,14 +266,14 @@
                     <RepeatButton x:Name="retiredLifeButtonUP"  Grid.Column="1" Grid.Row="0" FontSize="8" FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="5" Click="retiredLifeButtonUP_Click"/>
                     <RepeatButton x:Name="retiredLifeButtonDown"  Grid.Column="1" Grid.Row="1" FontSize="8"  FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="13" VerticalAlignment="Bottom" Content="6" Click="retiredLifeButtonDown_Click"/>
                 </Grid>
-                <Label x:Name="label2_Copy15" Content="Life" HorizontalAlignment="Right" Margin="0,764,278,0" VerticalAlignment="Top"/>
-                <GroupBox x:Name="groupBox_Copy5" Header="Nurses" HorizontalAlignment="Right" Margin="0,587,3,0" VerticalAlignment="Top" Height="210" Width="152" FontWeight="Bold"/>
-                <ListBox x:Name="nurseListBox" HorizontalAlignment="Right" Height="100" Margin="0,636,9,0" VerticalAlignment="Top" Width="140" SelectionChanged="nurseListBox_SelectionChanged"/>
-                <Button x:Name="addNurse" Content="+" HorizontalAlignment="Right" Margin="0,611,128,0" VerticalAlignment="Top" Width="20" Height="20" Click="addNurse_Click"/>
-                <Button x:Name="removeNurse" Content="-" HorizontalAlignment="Right" Margin="0,611,103,0" VerticalAlignment="Top" Width="20" Height="20" Click="removeNurse_Click"/>
-                <Slider x:Name="xNurse" HorizontalAlignment="Right" Margin="0,741,9,0" VerticalAlignment="Top" Width="123" SmallChange="1" Maximum="328" ValueChanged="xNurse_ValueChanged"/>
-                <Label x:Name="label2_Copy16" Content="X" HorizontalAlignment="Right" Margin="0,736,135,0" VerticalAlignment="Top"/>
-                <Grid Width="30" Height="26" Margin="0,765,9,0" HorizontalAlignment="Right" VerticalAlignment="Top">
+                <Label x:Name="label2_Copy15" Content="Life" HorizontalAlignment="Right" Margin="0,732,278,0" VerticalAlignment="Top"/>
+                <GroupBox x:Name="groupBox_Copy5" Header="Nurses" HorizontalAlignment="Right" Margin="0,555,3,0" VerticalAlignment="Top" Height="210" Width="152" FontWeight="Bold"/>
+                <ListBox x:Name="nurseListBox" HorizontalAlignment="Right" Height="100" Margin="0,604,9,0" VerticalAlignment="Top" Width="140" SelectionChanged="nurseListBox_SelectionChanged"/>
+                <Button x:Name="addNurse" Content="+" HorizontalAlignment="Right" Margin="0,579,128,0" VerticalAlignment="Top" Width="20" Height="20" Click="addNurse_Click"/>
+                <Button x:Name="removeNurse" Content="-" HorizontalAlignment="Right" Margin="0,579,103,0" VerticalAlignment="Top" Width="20" Height="20" Click="removeNurse_Click"/>
+                <Slider x:Name="xNurse" HorizontalAlignment="Right" Margin="0,709,9,0" VerticalAlignment="Top" Width="123" SmallChange="1" Maximum="328" ValueChanged="xNurse_ValueChanged"/>
+                <Label x:Name="label2_Copy16" Content="X" HorizontalAlignment="Right" Margin="0,704,135,0" VerticalAlignment="Top"/>
+                <Grid Width="30" Height="26" Margin="0,733,9,0" HorizontalAlignment="Right" VerticalAlignment="Top">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="13" />
@@ -286,8 +286,8 @@
                     <RepeatButton x:Name="nurseButtonUP"  Grid.Column="1" Grid.Row="0" FontSize="8" FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="5" Click="nurseButtonUP_Click"/>
                     <RepeatButton x:Name="nurseButtonDown"  Grid.Column="1" Grid.Row="1" FontSize="8"  FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="13" VerticalAlignment="Bottom" Content="6" Click="nurseButtonDown_Click"/>
                 </Grid>
-                <Label x:Name="label2_Copy17" Content="Type" HorizontalAlignment="Right" Margin="0,764,39,0" VerticalAlignment="Top"/>
-                <Grid Width="29" Height="26" Margin="0,765,94,0" HorizontalAlignment="Right" VerticalAlignment="Top">
+                <Label x:Name="label2_Copy17" Content="Type" HorizontalAlignment="Right" Margin="0,732,39,0" VerticalAlignment="Top"/>
+                <Grid Width="29" Height="26" Margin="0,733,94,0" HorizontalAlignment="Right" VerticalAlignment="Top">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="13" />
@@ -300,8 +300,8 @@
                     <RepeatButton x:Name="nurseLifeButtonUP"  Grid.Column="1" Grid.Row="0" FontSize="8" FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="5" Click="nurseLifeButtonUP_Click"/>
                     <RepeatButton x:Name="nurseLifeButtonDown"  Grid.Column="1" Grid.Row="1" FontSize="8"  FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="13" VerticalAlignment="Bottom" Content="6" Click="nurseLifeButtonDown_Click"/>
                 </Grid>
-                <Label x:Name="label2_Copy18" Content="Life" HorizontalAlignment="Right" Margin="0,764,124,0" VerticalAlignment="Top"/>
-                <Grid Width="30" Height="26" Margin="0,607,163,0" HorizontalAlignment="Right" VerticalAlignment="Top">
+                <Label x:Name="label2_Copy18" Content="Life" HorizontalAlignment="Right" Margin="0,732,124,0" VerticalAlignment="Top"/>
+                <Grid Width="30" Height="26" Margin="0,575,163,0" HorizontalAlignment="Right" VerticalAlignment="Top">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="13" />
@@ -314,8 +314,8 @@
                     <RepeatButton x:Name="retiredMoneyButtonUP"  Grid.Column="1" Grid.Row="0" FontSize="8" FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="5" Click="retiredMoneyButtonUP_Click"/>
                     <RepeatButton x:Name="retiredMoneyButtonDown"  Grid.Column="1" Grid.Row="1" FontSize="8"  FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="13" VerticalAlignment="Bottom" Content="6" Click="retiredMoneyButtonDown_Click"/>
                 </Grid>
-                <Label x:Name="label2_Copy19" Content="Money" HorizontalAlignment="Right" Margin="0,606,193,0" VerticalAlignment="Top"/>
-                <Button x:Name="upDetail" Content="->" HorizontalAlignment="Right" Margin="0,193,232,0" VerticalAlignment="Top" Width="20" Height="20" RenderTransformOrigin="0.5,0.5" Click="upDetail_Click">
+                <Label x:Name="label2_Copy19" Content="Money" HorizontalAlignment="Right" Margin="0,574,193,0" VerticalAlignment="Top"/>
+                <Button x:Name="upDetail" Content="->" HorizontalAlignment="Right" Margin="0,369,232,0" VerticalAlignment="Top" Width="20" Height="20" RenderTransformOrigin="0.5,0.5" Click="upDetail_Click">
                     <Button.RenderTransform>
                         <TransformGroup>
                             <ScaleTransform/>
@@ -325,7 +325,7 @@
                         </TransformGroup>
                     </Button.RenderTransform>
                 </Button>
-                <Button x:Name="downDetail" Content="->" HorizontalAlignment="Right" Margin="0,193,206,0" VerticalAlignment="Top" Width="20" Height="20" RenderTransformOrigin="0.5,0.5" Click="downDetail_Click">
+                <Button x:Name="downDetail" Content="->" HorizontalAlignment="Right" Margin="0,369,206,0" VerticalAlignment="Top" Width="20" Height="20" RenderTransformOrigin="0.5,0.5" Click="downDetail_Click">
                     <Button.RenderTransform>
                         <TransformGroup>
                             <ScaleTransform/>
@@ -335,7 +335,7 @@
                         </TransformGroup>
                     </Button.RenderTransform>
                 </Button>
-                <Button x:Name="upFurniture" Content="->" HorizontalAlignment="Right" Margin="0,402,79,0" VerticalAlignment="Top" Width="20" Height="20" RenderTransformOrigin="0.5,0.5" Click="upFurniture_Click">
+                <Button x:Name="upFurniture" Content="->" HorizontalAlignment="Right" Margin="0,369,79,0" VerticalAlignment="Top" Width="20" Height="20" RenderTransformOrigin="0.5,0.5" Click="upFurniture_Click">
                     <Button.RenderTransform>
                         <TransformGroup>
                             <ScaleTransform/>
@@ -345,7 +345,7 @@
                         </TransformGroup>
                     </Button.RenderTransform>
                 </Button>
-                <Button x:Name="downFurniture" Content="->" HorizontalAlignment="Right" Margin="0,402,54,0" VerticalAlignment="Top" Width="20" Height="20" RenderTransformOrigin="0.5,0.5" Click="downFurniture_Click">
+                <Button x:Name="downFurniture" Content="->" HorizontalAlignment="Right" Margin="0,369,54,0" VerticalAlignment="Top" Width="20" Height="20" RenderTransformOrigin="0.5,0.5" Click="downFurniture_Click">
                     <Button.RenderTransform>
                         <TransformGroup>
                             <ScaleTransform/>
@@ -355,6 +355,26 @@
                         </TransformGroup>
                     </Button.RenderTransform>
                 </Button>
+                <GroupBox x:Name="groupBox_Copy6" Header="Cops" HorizontalAlignment="Right" Margin="0,764,157,0" VerticalAlignment="Top" Height="180" Width="152" FontWeight="Bold"/>
+                <ListBox x:Name="copListBox" HorizontalAlignment="Right" Height="100" Margin="0,813,163,0" VerticalAlignment="Top" Width="140" SelectionChanged="copListBox_SelectionChanged"/>
+                <Button x:Name="addCop" Content="+" HorizontalAlignment="Right" Margin="0,788,282,0" VerticalAlignment="Top" Width="20" Height="20" Click="addCop_Click"/>
+                <Button x:Name="removeCop" Content="-" HorizontalAlignment="Right" Margin="0,788,257,0" VerticalAlignment="Top" Width="20" Height="20" Click="removeCop_Click"/>
+                <Slider x:Name="xCop" HorizontalAlignment="Right" Margin="0,918,163,0" VerticalAlignment="Top" Width="123" SmallChange="1" Maximum="328" ValueChanged="xCop_ValueChanged"/>
+                <Label x:Name="label2_Copy20" Content="X" HorizontalAlignment="Right" Margin="0,913,289,0" VerticalAlignment="Top"/>
+                <Grid Width="40" Height="26" Margin="0,784,163,0" HorizontalAlignment="Right" VerticalAlignment="Top">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="13" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="13" />
+                        <RowDefinition Height="13" />
+                    </Grid.RowDefinitions>
+                    <TextBox x:Name="copTextBox"  Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" TextAlignment="Right" Text="0" IsEnabled="False" />
+                    <RepeatButton x:Name="copButtonUP"  Grid.Column="1" Grid.Row="0" FontSize="8" FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="5" Click="copButtonUP_Click"/>
+                    <RepeatButton x:Name="copButtonDown"  Grid.Column="1" Grid.Row="1" FontSize="8"  FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="13" VerticalAlignment="Bottom" Content="6" Click="copButtonDown_Click"/>
+                </Grid>
+                <Label x:Name="label2_Copy21" Content="Type" HorizontalAlignment="Right" Margin="0,783,205,0" VerticalAlignment="Top"/>
 
 
             </Grid>

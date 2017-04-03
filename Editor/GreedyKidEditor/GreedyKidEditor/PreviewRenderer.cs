@@ -28,6 +28,7 @@ namespace GreedyKidEditor
         Rectangle[][][] _furnitureRectangle;
         Rectangle[][] _retiredRectangle;
         Rectangle[][] _nurseRectangle;
+        Rectangle[][] _copRectangle;
 
         private Rectangle[] _uiRectangle;
         private Rectangle[] _iconRectangle;
@@ -87,6 +88,13 @@ namespace GreedyKidEditor
             3, 0, 1, 2,
         };
         int _currentNurseFrame = 0;
+
+        int[] _copSequence = new int[]
+        {
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+            3, 0, 1, 2,
+        };
+        int _currentCopFrame = 0;
 
         public static bool PreviewAnimation = false;
 
@@ -242,6 +250,16 @@ namespace GreedyKidEditor
                 }
             }
 
+            _copRectangle = new Rectangle[Cop.CopCount][];
+            for (int t = 0; t < Cop.CopCount; t++)
+            {
+                _copRectangle[t] = new Rectangle[4];
+                for (int f = 0; f < 4; f++) // idle animation
+                {
+                    _copRectangle[t][f] = new Rectangle(4 * 32 + f * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + 32 * Retired.RetiredCount + 32 * Nurse.NurseCount, 32, 32);
+                }
+            }
+
             _uiRectangle = new Rectangle[8];
             _uiRectangle[0] = new Rectangle(0, 2024, 12, 13); // upper left
             _uiRectangle[1] = new Rectangle(11, 2024, 12, 13); // upper right
@@ -313,6 +331,12 @@ namespace GreedyKidEditor
                 if (_currentNurseFrame >= _nurseSequence.Length)
                 {
                     _currentNurseFrame = 0;
+                }
+
+                _currentCopFrame++;
+                if (_currentCopFrame >= _copSequence.Length)
+                {
+                    _currentCopFrame = 0;
                 }
             }
 
@@ -503,6 +527,19 @@ namespace GreedyKidEditor
 
                             spriteBatch.Draw(_levelTexture,
                                 new Rectangle((int)nurse.X, 128 - 40 * f + 9, 32, 32),
+                                source,
+                                Color.White);
+                        }
+
+                        // cop
+                        for (int c = 0; c < room.Cops.Count; c++)
+                        {
+                            Cop cop = room.Cops[c];
+
+                            Rectangle source = _copRectangle[cop.Type][_copSequence[_currentCopFrame]];
+
+                            spriteBatch.Draw(_levelTexture,
+                                new Rectangle((int)cop.X, 128 - 40 * f + 9, 32, 32),
                                 source,
                                 Color.White);
                         }

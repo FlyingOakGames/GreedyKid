@@ -34,6 +34,7 @@ namespace GreedyKid
 
         public List<Retired> Retireds;
         public List<Nurse> Nurses;
+        public List<Cop> Cops;
 
         public List<Droppable> Drops;
 
@@ -95,6 +96,15 @@ namespace GreedyKid
                 nurse.Load(reader);
                 nurse.Room = this;
                 Nurses.Add(nurse);
+            }
+            n = reader.ReadInt32();
+            Cops = new List<Cop>(10);
+            for (int i = 0; i < n; i++)
+            {
+                Cop cop = new Cop();
+                cop.Load(reader);
+                cop.Room = this;
+                Cops.Add(cop);
             }
 
             HasStart = reader.ReadBoolean();

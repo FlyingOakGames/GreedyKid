@@ -285,7 +285,7 @@ namespace GreedyKidEditor
             for (int l = 0; l < _building.Levels.Count; l++)
             {
                 BuildingTreeViewItem levelItem = new BuildingTreeViewItem(BuildingElement.Level, l);
-                levelItem.Header = "Level " + (l + 1) + ": " + _building.Levels[l].Name;
+                levelItem.Header = "LEVEL " + (l + 1) + ": " + _building.Levels[l].Name;
 
                 if (l == selectedLevel)
                 {
@@ -484,7 +484,7 @@ namespace GreedyKidEditor
                     else if (selectedItem.Type == BuildingElement.Level)
                     {
                         _building.Levels[selectedItem.Level].Name = name;
-                        selectedItem.Header = "Level " + (selectedItem.Level + 1) + ": " + name;
+                        selectedItem.Header = "LEVEL " + (selectedItem.Level + 1) + ": " + name;
                     }
                     else if (selectedItem.Type == BuildingElement.Floor)
                     {
@@ -535,6 +535,7 @@ namespace GreedyKidEditor
                         RefreshFurnitureListBox();
                         RefreshRetiredListBox();
                         RefreshNurseListBox();
+                        RefreshCopListBox();
                     }
                 }
             }
@@ -1613,6 +1614,122 @@ namespace GreedyKidEditor
                 room.Nurses[nurseListBox.SelectedIndex].Life--;
                 room.Nurses[nurseListBox.SelectedIndex].Life = Math.Max(room.Nurses[nurseListBox.SelectedIndex].Life, 1);
                 nurseLifeTextBox.Text = room.Nurses[nurseListBox.SelectedIndex].Life.ToString();
+            }
+        }
+
+        //************************ COPS ************************\\
+
+        private void RefreshCopListBox()
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+
+                int prevSelection = copListBox.SelectedIndex;
+
+                copListBox.Items.Clear();
+                for (int i = 0; i < room.Cops.Count; i++)
+                {
+                    copListBox.Items.Add("Floor Cop " + i);
+                }
+
+                if (prevSelection < copListBox.Items.Count)
+                    copListBox.SelectedIndex = prevSelection;
+                else if (copListBox.Items.Count > 0)
+                    copListBox.SelectedIndex = 0;
+            }
+        }
+
+        private void addCop_Click(object sender, RoutedEventArgs e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+
+                int roomWidth = 328 - room.LeftMargin * 8 - room.RightMargin * 8;
+                room.Cops.Add(new Cop(room.LeftMargin * 8 + roomWidth / 2 - 16)); // middle of the room
+
+                RefreshCopListBox();
+                copListBox.SelectedIndex = copListBox.Items.Count - 1;
+            }
+        }
+
+        private void removeCop_Click(object sender, RoutedEventArgs e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count &&
+                copListBox.SelectedIndex >= 0 && copListBox.SelectedIndex < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom].Cops.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+
+
+                room.Cops.RemoveAt(copListBox.SelectedIndex);
+
+                RefreshCopListBox();
+                if (copListBox.SelectedIndex >= 0)
+                    copListBox.SelectedIndex = copListBox.SelectedIndex - 1;
+            }
+        }
+
+        private void copListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count &&
+                copListBox.SelectedIndex >= 0 && copListBox.SelectedIndex < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom].Cops.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+
+                xCop.Value = room.Cops[copListBox.SelectedIndex].X;
+                copTextBox.Text = room.Cops[copListBox.SelectedIndex].Type.ToString();
+            }
+        }
+
+        private void xCop_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count &&
+                copListBox.SelectedIndex >= 0 && copListBox.SelectedIndex < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom].Cops.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+
+                room.Cops[copListBox.SelectedIndex].X = (int)xCop.Value;
+            }
+        }
+
+        private void copButtonUP_Click(object sender, RoutedEventArgs e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count &&
+                copListBox.SelectedIndex >= 0 && copListBox.SelectedIndex < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom].Cops.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+
+                room.Cops[copListBox.SelectedIndex].Type++;
+                room.Cops[copListBox.SelectedIndex].Type = Math.Min(room.Cops[copListBox.SelectedIndex].Type, Cop.CopCount - 1);
+                copTextBox.Text = room.Cops[copListBox.SelectedIndex].Type.ToString();
+            }
+        }
+
+        private void copButtonDown_Click(object sender, RoutedEventArgs e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count &&
+                renderer.SelectedFloor >= 0 && renderer.SelectedFloor < _building.Levels[renderer.SelectedLevel].Floors.Count &&
+                renderer.SelectedRoom >= 0 && renderer.SelectedRoom < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms.Count &&
+                copListBox.SelectedIndex >= 0 && copListBox.SelectedIndex < _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom].Cops.Count)
+            {
+                Room room = _building.Levels[renderer.SelectedLevel].Floors[renderer.SelectedFloor].Rooms[renderer.SelectedRoom];
+
+                room.Cops[copListBox.SelectedIndex].Type--;
+                room.Cops[copListBox.SelectedIndex].Type = Math.Max(room.Cops[copListBox.SelectedIndex].Type, 0);
+                copTextBox.Text = room.Cops[copListBox.SelectedIndex].Type.ToString();
             }
         }
     }

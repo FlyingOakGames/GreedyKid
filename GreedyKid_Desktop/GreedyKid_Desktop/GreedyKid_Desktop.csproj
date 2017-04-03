@@ -52,6 +52,7 @@
     <Compile Include="Building\Level.cs" />
     <Compile Include="Building\Room.cs" />
     <Compile Include="Building\RoomDoor.cs" />
+    <Compile Include="Entities\Cop.cs" />
     <Compile Include="Entities\EntityState.cs" />
     <Compile Include="Entities\IEntity.cs" />
     <Compile Include="Entities\Droppable.cs" />

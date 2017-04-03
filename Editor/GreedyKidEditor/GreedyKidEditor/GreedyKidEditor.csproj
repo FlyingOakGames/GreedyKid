@@ -96,6 +96,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Building\Cop.cs" />
     <Compile Include="Building\Detail.cs" />
     <Compile Include="Building\FloorDoor.cs" />
     <Compile Include="Building\Furniture.cs" />
