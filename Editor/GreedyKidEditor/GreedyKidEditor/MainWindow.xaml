@@ -56,8 +56,26 @@
                 <Button x:Name="removeButton" Content="-" HorizontalAlignment="Left" Margin="35,33,0,0" VerticalAlignment="Top"  Width="20" Height="20" Click="removeButton_Click"/>
                 <Button x:Name="renameButton" Content="Rename" HorizontalAlignment="Left" Margin="110,33,0,0" VerticalAlignment="Top"  Width="55" Height="20" Click="renameButton_Click"/>
                 <Label x:Name="label" Content="Building composition" Margin="10,2,0,0" VerticalAlignment="Top" FontWeight="Bold" HorizontalAlignment="Left" Width="140"/>
-                <Button x:Name="upLevelButton" Content="Up" HorizontalAlignment="Left" Margin="60,33,0,0" VerticalAlignment="Top"  Width="20" Height="20" Click="upLevelButton_Click"/>
-                <Button x:Name="dwLevelButton" Content="Do" HorizontalAlignment="Left" Margin="85,33,0,0" VerticalAlignment="Top"  Width="20" Height="20" Click="dwLevelButton_Click"/>
+                <Button x:Name="upLevelButton" Content="->" HorizontalAlignment="Left" Margin="60,33,0,0" VerticalAlignment="Top"  Width="20" Height="20" Click="upLevelButton_Click" RenderTransformOrigin="0.5,0.5">
+                    <Button.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="-90"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Button.RenderTransform>
+                </Button>
+                <Button x:Name="dwLevelButton" Content="->" HorizontalAlignment="Left" Margin="85,33,0,0" VerticalAlignment="Top"  Width="20" Height="20" Click="dwLevelButton_Click" RenderTransformOrigin="0.5,0.5">
+                    <Button.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="90"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Button.RenderTransform>
+                </Button>
             </Grid>
             <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
             <Grid x:Name="rendererBackgroundGrid" Grid.Column="2" Background="Black" SizeChanged="rendererBackgroundGrid_SizeChanged">
@@ -297,6 +315,46 @@
                     <RepeatButton x:Name="retiredMoneyButtonDown"  Grid.Column="1" Grid.Row="1" FontSize="8"  FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="13" VerticalAlignment="Bottom" Content="6" Click="retiredMoneyButtonDown_Click"/>
                 </Grid>
                 <Label x:Name="label2_Copy19" Content="Money" HorizontalAlignment="Right" Margin="0,606,193,0" VerticalAlignment="Top"/>
+                <Button x:Name="upDetail" Content="->" HorizontalAlignment="Right" Margin="0,193,232,0" VerticalAlignment="Top" Width="20" Height="20" RenderTransformOrigin="0.5,0.5" Click="upDetail_Click">
+                    <Button.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="-90"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Button.RenderTransform>
+                </Button>
+                <Button x:Name="downDetail" Content="->" HorizontalAlignment="Right" Margin="0,193,206,0" VerticalAlignment="Top" Width="20" Height="20" RenderTransformOrigin="0.5,0.5" Click="downDetail_Click">
+                    <Button.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="90"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Button.RenderTransform>
+                </Button>
+                <Button x:Name="upFurniture" Content="->" HorizontalAlignment="Right" Margin="0,402,79,0" VerticalAlignment="Top" Width="20" Height="20" RenderTransformOrigin="0.5,0.5" Click="upFurniture_Click">
+                    <Button.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="-90"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Button.RenderTransform>
+                </Button>
+                <Button x:Name="downFurniture" Content="->" HorizontalAlignment="Right" Margin="0,402,54,0" VerticalAlignment="Top" Width="20" Height="20" RenderTransformOrigin="0.5,0.5" Click="downFurniture_Click">
+                    <Button.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="90"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Button.RenderTransform>
+                </Button>
 
 
             </Grid>
