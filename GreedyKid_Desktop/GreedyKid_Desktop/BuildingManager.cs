@@ -423,7 +423,7 @@ namespace GreedyKid
                                 }
 
                                 // player pos
-                                if (cop.Room == Player.Room)
+                                if (cop.Room == Player.Room && Player.IsVisible)
                                 {
                                     cop.LastKnownPlayerPosition = playerMiddle;
                                 }

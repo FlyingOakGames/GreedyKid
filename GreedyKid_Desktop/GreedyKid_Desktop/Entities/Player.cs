@@ -448,6 +448,16 @@ namespace GreedyKid
                         Hit();
                     }
                 }
+
+                for (int c = 0; c < Room.Cops.Count; c++)
+                {
+                    Cop cop = Room.Cops[c];
+
+                    if (cop.IsHitting && Math.Abs(cop.X - X) <= Cop.HitRange)
+                    {
+                        Hit();
+                    }
+                }
             }
 
             // warp from hit
@@ -711,6 +721,11 @@ namespace GreedyKid
         public bool IsTaunting
         {
             get { return State == EntityState.Taunting; }
+        }
+
+        public bool IsVisible
+        {
+            get { return State != EntityState.Entering && State != EntityState.Exiting && State != EntityState.Hiding && State != EntityState.Shouting && Life > 0; }
         }
     }
 }

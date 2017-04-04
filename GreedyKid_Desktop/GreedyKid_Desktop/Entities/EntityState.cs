@@ -17,6 +17,7 @@ namespace GreedyKid
         Walking,
         IdleSpecial,
         Boo,
+        Unboo,
         IdleAngry,
         KO,
         Slam,

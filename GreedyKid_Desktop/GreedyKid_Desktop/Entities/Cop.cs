@@ -9,8 +9,8 @@ namespace GreedyKid
     {
         public const int CopCount = 1;
 
-        private const float _walkSpeed = 16.0f;
-        private const float _runSpeed = 48.0f;
+        private const float _walkSpeed = 24.0f;
+        private const float _runSpeed = 80.0f;
 
         public int Type = 0;
         public float X = 0;
@@ -36,8 +36,11 @@ namespace GreedyKid
         private bool _hasJustTurned = false;
 
         // angry
-        private float _angryTime = 0.0f;
         public int LastKnownPlayerPosition = -1;
+        private bool _isAngry = false;
+        private float _currentHitCooldown = 0.0f;
+        private const float _hitCooldown = 3.0f;
+        public const float HitRange = 16.0f;
 
         // stun
         private int _XWarp = -1;
@@ -57,8 +60,6 @@ namespace GreedyKid
                 _frames[(int)EntityState.Idle] = new Rectangle[CopCount][];
                 // idle special
                 _frames[(int)EntityState.IdleSpecial] = new Rectangle[CopCount][];
-                // idle angry
-                _frames[(int)EntityState.IdleAngry] = new Rectangle[CopCount][];
                 // turning
                 _frames[(int)EntityState.Turning] = new Rectangle[CopCount][];
                 // walking
@@ -71,19 +72,17 @@ namespace GreedyKid
                 _frames[(int)EntityState.Exiting] = new Rectangle[CopCount][];
                 // boo
                 _frames[(int)EntityState.Boo] = new Rectangle[CopCount][];
-                // KO
-                _frames[(int)EntityState.KO] = new Rectangle[CopCount][];
+                // unboo
+                _frames[(int)EntityState.Unboo] = new Rectangle[CopCount][];
                 // Slam
                 _frames[(int)EntityState.Slam] = new Rectangle[CopCount][];
-                // Stun
-                _frames[(int)EntityState.Stun] = new Rectangle[CopCount][];
-                // BeingRessurected
-                _frames[(int)EntityState.BeingRessurected] = new Rectangle[CopCount][];
+                // Hit
+                _frames[(int)EntityState.Hit] = new Rectangle[CopCount][];
 
                 // type
                 for (int t = 0; t < CopCount; t++)
                 {
-                    // idle
+                    // idle (ok)
                     _frames[(int)EntityState.Idle][t] = new Rectangle[8];
                     for (int f = 0; f < _frames[(int)EntityState.Idle][t].Length; f++)
                     {
@@ -91,7 +90,7 @@ namespace GreedyKid
                     }
                     _frameDuration[(int)EntityState.Idle] = 0.1f;
 
-                    // idle special
+                    // idle special (missing)
                     _frames[(int)EntityState.IdleSpecial][t] = new Rectangle[4];
                     for (int f = 0; f < _frames[(int)EntityState.IdleSpecial][t].Length; f++)
                     {
@@ -99,31 +98,23 @@ namespace GreedyKid
                     }
                     _frameDuration[(int)EntityState.IdleSpecial] = 0.1f;
 
-                    // idle angry
-                    _frames[(int)EntityState.IdleAngry][t] = new Rectangle[4];
-                    for (int f = 0; f < _frames[(int)EntityState.IdleAngry][t].Length; f++)
-                    {
-                        _frames[(int)EntityState.IdleAngry][t][f] = new Rectangle(f * 32 + 18 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
-                    }
-                    _frameDuration[(int)EntityState.IdleAngry] = 0.1f;
-
-                    // turning
-                    _frames[(int)EntityState.Turning][t] = new Rectangle[5];
+                    // turning (ok)
+                    _frames[(int)EntityState.Turning][t] = new Rectangle[4];
                     for (int f = 0; f < _frames[(int)EntityState.Turning][t].Length; f++)
                     {
-                        _frames[(int)EntityState.Turning][t][f] = new Rectangle(f * 32 + 12 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                        _frames[(int)EntityState.Turning][t][f] = new Rectangle(f * 32 + 14 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
                     }
                     _frameDuration[(int)EntityState.Turning] = 0.1f;
 
-                    // walking
-                    _frames[(int)EntityState.Walking][t] = new Rectangle[6];
+                    // walking (ok)
+                    _frames[(int)EntityState.Walking][t] = new Rectangle[8];
                     for (int f = 0; f < _frames[(int)EntityState.Walking][t].Length; f++)
                     {
-                        _frames[(int)EntityState.Walking][t][f] = new Rectangle(f * 32 + 8 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                        _frames[(int)EntityState.Walking][t][f] = new Rectangle(f * 32 + 18 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
                     }
                     _frameDuration[(int)EntityState.Walking] = 0.1f;
 
-                    // running
+                    // running (ok)
                     _frames[(int)EntityState.Running][t] = new Rectangle[4];
                     for (int f = 0; f < _frames[(int)EntityState.Running][t].Length; f++)
                     {
@@ -131,7 +122,7 @@ namespace GreedyKid
                     }
                     _frameDuration[(int)EntityState.Running] = 0.1f;
 
-                    // entering
+                    // entering (ok)
                     _frames[(int)EntityState.Entering][t] = new Rectangle[3];
                     for (int f = 0; f < _frames[(int)EntityState.Entering][t].Length; f++)
                     {
@@ -139,7 +130,7 @@ namespace GreedyKid
                     }
                     _frameDuration[(int)EntityState.Entering] = 0.1f;
 
-                    // exiting
+                    // exiting (ok)
                     _frames[(int)EntityState.Exiting][t] = new Rectangle[3];
                     for (int f = 0; f < _frames[(int)EntityState.Exiting][t].Length; f++)
                     {
@@ -147,23 +138,23 @@ namespace GreedyKid
                     }
                     _frameDuration[(int)EntityState.Exiting] = 0.1f;
 
-                    // boo
-                    _frames[(int)EntityState.Boo][t] = new Rectangle[5];
+                    // boo (ok)
+                    _frames[(int)EntityState.Boo][t] = new Rectangle[3];
                     for (int f = 0; f < _frames[(int)EntityState.Boo][t].Length; f++)
                     {
-                        _frames[(int)EntityState.Boo][t][f] = new Rectangle(f * 32 + 22 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                        _frames[(int)EntityState.Boo][t][f] = new Rectangle(f * 32 + 49 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
                     }
                     _frameDuration[(int)EntityState.Boo] = 0.1f;
 
-                    // KO
-                    _frames[(int)EntityState.KO][t] = new Rectangle[5];
-                    for (int f = 0; f < _frames[(int)EntityState.KO][t].Length; f++)
+                    // unboo (ok)
+                    _frames[(int)EntityState.Unboo][t] = new Rectangle[4];
+                    for (int f = 0; f < _frames[(int)EntityState.Unboo][t].Length; f++)
                     {
-                        _frames[(int)EntityState.KO][t][f] = new Rectangle(f * 32 + 27 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                        _frames[(int)EntityState.Unboo][t][f] = new Rectangle(f * 32 + 52 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
                     }
-                    _frameDuration[(int)EntityState.KO] = 0.1f;
+                    _frameDuration[(int)EntityState.Unboo] = 0.1f;
 
-                    // Slam
+                    // slam (ok)
                     _frames[(int)EntityState.Slam][t] = new Rectangle[3];
                     for (int f = 0; f < _frames[(int)EntityState.Slam][t].Length; f++)
                     {
@@ -171,21 +162,13 @@ namespace GreedyKid
                     }
                     _frameDuration[(int)EntityState.Slam] = 0.1f;
 
-                    // Stun
-                    _frames[(int)EntityState.Stun][t] = new Rectangle[4];
-                    for (int f = 0; f < _frames[(int)EntityState.Stun][t].Length; f++)
+                    // hit (ok)
+                    _frames[(int)EntityState.Hit][t] = new Rectangle[3];
+                    for (int f = 0; f < _frames[(int)EntityState.Hit][t].Length; f++)
                     {
-                        _frames[(int)EntityState.Stun][t][f] = new Rectangle(f * 32 + 49 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                        _frames[(int)EntityState.Hit][t][f] = new Rectangle(f * 32 + 28 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
                     }
-                    _frameDuration[(int)EntityState.Stun] = 0.1f;
-
-                    // BeingRessurected
-                    _frames[(int)EntityState.BeingRessurected][t] = new Rectangle[4];
-                    for (int f = 0; f < _frames[(int)EntityState.BeingRessurected][t].Length; f++)
-                    {
-                        _frames[(int)EntityState.BeingRessurected][t][f] = new Rectangle(f * 32 + 53 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
-                    }
-                    _frameDuration[(int)EntityState.BeingRessurected] = 0.1f;
+                    _frameDuration[(int)EntityState.Hit] = 0.1f;
                 }
             }
 
@@ -201,12 +184,10 @@ namespace GreedyKid
         public void Update(float gameTime, bool boo, bool taunted)
         {
             // boo
-            if (boo && _isVisible && _angryTime <= 0.0f
+            if (boo && _isVisible
                 && State != EntityState.Boo
                 && State != EntityState.Entering
-                && State != EntityState.Exiting
-                && State != EntityState.KO
-                && State != EntityState.BeingRessurected)
+                && State != EntityState.Exiting)
             {
                 Boo();
             }
@@ -242,21 +223,18 @@ namespace GreedyKid
                     {
                         NextAction();
                     }
+                    else if (State == EntityState.Unboo)
+                    {
+                        NextAction();
+                    }
                     else if (State == EntityState.Slam)
                     {
-                        if (_angryTime > 0.0f)
-                            Stun();
-                        else
-                            NextAction();
+                        NextAction();
                     }
-
-                    else if (State == EntityState.KO)
+                    else if (State == EntityState.Hit)
                     {
-                        _currentFrame = _frames[(int)State][Type].Length - 1;
-                        if (RandomHelper.Next() < 0.1f)
-                            _currentFrame = _frames[(int)State][Type].Length - 2;
+                        Wait();
                     }
-
                     // entering doors
                     else if (State == EntityState.Entering)
                     {
@@ -279,40 +257,20 @@ namespace GreedyKid
                 }
             }
 
-            // AI states
-
-            if (_angryTime > 0.0f)
-            {
-                _angryTime -= gameTime;
-
-                if (_angryTime <= 0.0f)
-                {
-                    _currentFrame = 0;
-
-                    if (State == EntityState.Running)
-                        State = EntityState.Walking;
-                    else if (State == EntityState.IdleAngry)
-                        State = EntityState.Idle;
-                }
-            }
-
+            // action
             if (_isVisible && _actionTime > 0.0f)
             {
                 _actionTime -= gameTime;
 
                 if (_actionTime <= 0.0f)
                 {
-                    /*
-                    if (State == EntityState.Walking)
-                    {
-                        NextAction();
-                    }
-                    else if (State == EntityState.Idle)
-                    {
-                        NextAction();
-                    }*/
                     NextAction();
                 }
+            }
+
+            if (_currentHitCooldown > 0.0f)
+            {
+                _currentHitCooldown -= gameTime;
             }
 
             // warp from slam
@@ -367,16 +325,6 @@ namespace GreedyKid
             {
                 RoomDoor roomDoor = Room.RoomDoors[d];
 
-                /*
-                if (Life <= 0 && X < roomDoor.X + 16 && X > roomDoor.X - 16)
-                {
-                    roomDoor.CanClose = false;
-                    roomDoor.IsKOBlocked = true;
-                    canSeePlayer = false;
-                    continue;
-                }
-                */
-
                 // check if player in sight
                 if (LastKnownPlayerPosition >= 0)
                 {
@@ -427,13 +375,27 @@ namespace GreedyKid
                 }
             }
 
+            if (LastKnownPlayerPosition < 0)
+                canSeePlayer = false;
+
             // player in sight action
-            if (LastKnownPlayerPosition >= 0 && canSeePlayer && taunted)
+            if (_isAngry && !canSeePlayer)
             {
-                Taunt();
+                // lost player             
+                Unboo();                
+            }
+            else if (!_isAngry && canSeePlayer && _currentHitCooldown <= 0.0f)
+            {
+                // caught player
+                Boo(false);
             }
 
-            if (State == EntityState.Walking || State == EntityState.Running)
+            if (_isAngry && canSeePlayer && State != EntityState.Boo && State != EntityState.Slam && Math.Abs(X + 16.0f - LastKnownPlayerPosition) <=  HitRange - 1.0f)
+            {
+                Hit();
+            }
+
+            if (!_isAngry && (State == EntityState.Walking || State == EntityState.Running))
             {
                 // entering floor doors
                 if (_wantsToOpenDoor)
@@ -457,61 +419,35 @@ namespace GreedyKid
             }
         }
 
-        private void Boo()
+        private void Boo(bool turn = true)
         {
             _currentFrame = 0;
             _actionTime = 0.0f;
             _hasJustTurned = false;
 
-            if (Orientation == SpriteEffects.None)
-                Orientation = SpriteEffects.FlipHorizontally;
-            else
-                Orientation = SpriteEffects.None;
-
-            /*
-            if (Life <= 0)
+            if (turn)
             {
-                State = EntityState.KO;
-
-                while (Money > 0)
-                {
-                    if (Money > 2)
-                    {
-                        Room.AddDrop(ObjectType.CashBig, X);
-                        Money -= 3;
-                    }
-                    else if (Money > 1)
-                    {
-                        Room.AddDrop(ObjectType.CashMedium, X);
-                        Money -= 2;
-                    }
-                    else
-                    {
-                        Room.AddDrop(ObjectType.CashSmall, X);
-                        Money -= 1;
-                    }
-                }
+                if (Orientation == SpriteEffects.None)
+                    Orientation = SpriteEffects.FlipHorizontally;
+                else
+                    Orientation = SpriteEffects.None;
             }
-            else
-            */
-            {
-
-                _angryTime = RandomHelper.Next() * 5.0f + 3.0f;
-
-                State = EntityState.Boo;
-            }
+           
+            State = EntityState.Boo;
+            _isAngry = true;            
         }
 
-        private void Taunt()
+        private void Hit()
         {
-            if (_angryTime > 0.0f)
-                return;
             _currentFrame = 0;
             _actionTime = 0.0f;
             _hasJustTurned = false;
-            _angryTime = RandomHelper.Next() * 5.0f + 3.0f;
 
-            Walk();
+            _isAngry = false;
+
+            State = EntityState.Hit;
+
+            _currentHitCooldown = _hitCooldown;
         }
 
         private void NextAction()
@@ -519,15 +455,20 @@ namespace GreedyKid
             _currentFrame = 0;
             _wantsToOpenDoor = false;
 
-            // should walk or turn
-            if (!_hasJustTurned && RandomHelper.Next() < 0.5f)
-                Turn();
-            else if (_angryTime <= 0.0f && RandomHelper.Next() < 0.5f)
-                WaitSpecial();
-            else if (RandomHelper.Next() < 0.75f)
+            if (_isAngry)
                 Walk();
             else
-                Wait();
+            {
+                // should walk or turn
+                if (!_hasJustTurned && RandomHelper.Next() < 0.5f)
+                    Turn();
+                else if (RandomHelper.Next() < 0.5f)
+                    WaitSpecial();
+                else if (RandomHelper.Next() < 0.75f)
+                    Walk();
+                else
+                    Wait();
+            }
         }
 
         private void Turn()
@@ -537,7 +478,7 @@ namespace GreedyKid
             _actionTime = 0.0f;
             _currentFrame = 0;
 
-            if (_angryTime > 0.0f)
+            if (_isAngry)
             {
                 if (Orientation == SpriteEffects.None)
                     Orientation = SpriteEffects.FlipHorizontally;
@@ -546,14 +487,6 @@ namespace GreedyKid
 
                 NextAction();
             }
-        }
-
-        private void Stun()
-        {
-            _currentFrame = 0;
-            State = EntityState.Stun;
-            _actionTime = RandomHelper.Next() * 2.0f + 1.0f;
-            _hasJustTurned = false;
         }
 
         private void Slam(int warp)
@@ -573,6 +506,14 @@ namespace GreedyKid
             //_hasJustTurned = false;
         }
 
+        private void Unboo()
+        {
+            _isAngry = false;
+            _actionTime = 0.0f;
+            _currentFrame = 0;
+            State = EntityState.Unboo;
+        }
+
         private void Walk()
         {
             State = EntityState.Walking;
@@ -580,12 +521,12 @@ namespace GreedyKid
             _hasJustTurned = false;
 
             _wantsToOpenDoor = false;
-            if (RandomHelper.Next() <= 0.25f)
+            if (!_isAngry && RandomHelper.Next() <= 0.25f)
             {
                 _wantsToOpenDoor = true;
             }
 
-            if (_angryTime > 0.0f)
+            if (_isAngry)
             {
                 State = EntityState.Running;
             }
@@ -601,11 +542,6 @@ namespace GreedyKid
             if (RandomHelper.Next() <= 0.25f)
             {
                 _wantsToOpenDoor = true;
-            }
-
-            if (_angryTime > 0.0f)
-            {
-                State = EntityState.IdleAngry;
             }
         }
 
@@ -661,9 +597,9 @@ namespace GreedyKid
             return false;
         }
 
-        public bool IsAngry
+        public bool IsHitting
         {
-            get { return _angryTime > 0.0f && State != EntityState.Entering && State != EntityState.Exiting; }
+            get { return State == EntityState.Hit; }
         }
     }
 }
