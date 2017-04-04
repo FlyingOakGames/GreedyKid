@@ -552,7 +552,7 @@ namespace GreedyKid
                             Droppable drop = room.Drops[d];
                             drop.Update(gameTime);
 
-                            if (Math.Abs((drop.X + 8.0f) - (Player.X + 16.0f)) < 8.0f)
+                            if (drop.Room == Player.Room && Math.Abs((drop.X + 8.0f) - (Player.X + 16.0f)) < 8.0f)
                             {
                                 if (drop.Type == ObjectType.HealthPack)
                                 {
