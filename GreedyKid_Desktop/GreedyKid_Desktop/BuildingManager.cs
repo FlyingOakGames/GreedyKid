@@ -104,6 +104,12 @@ namespace GreedyKid
         private float _currentElevatorKidFrameTime = 0.0f;
         private const float _elevatorKidFrameTime = 0.1f;
 
+        // spawning cop
+        private bool _spawnEntrance = false;
+        private Cop _spawningCop = null;   // to reset
+        private float _currentCopArrivingTime = 0.0f;   // to reset
+        private const float _copArrivingTime = 2.0f;             
+
         public BuildingManager()
         {            
             _roomRectangle = new Rectangle[Room.PaintCount][][]; // colors
@@ -319,6 +325,9 @@ namespace GreedyKid
 
             AppearTransition();
 
+            _spawningCop = null;   // to reset
+            _currentCopArrivingTime = 0.0f;   // to reset
+
             // clean memory
             GC.Collect();
         }
@@ -367,7 +376,20 @@ namespace GreedyKid
                 int playerMiddle = (int)Player.X + 16;
 
                 // elevators
-                UpdateElevators(gameTime);                                
+                UpdateElevators(gameTime);
+
+                // open entrance / door for cop arriving
+                if (_currentCopArrivingTime > 0.0f)
+                {
+                    _currentCopArrivingTime -= gameTime;
+                    if (_currentCopArrivingTime <= 0.0f)
+                    {
+                        if (_spawnEntrance)
+                            OpenEntranceElevator();
+                        else
+                            OpenExitElevator();
+                    }
+                }
 
                 _canEscape = true;
                 Player.CanEnterElevator = false;
@@ -570,10 +592,10 @@ namespace GreedyKid
                 }
 
                 // elevator
-                if (_canEscape && _exitState == ElevatorState.Closed)
-                    _exitState = ElevatorState.Opening;
+                if (_canEscape && _exitState == ElevatorState.Closed && _currentCopArrivingTime <= 0.0f)
+                    OpenExitElevator();
                 else if (Player.HasEnteredElevator && _exitState == ElevatorState.Open)
-                    _exitState = ElevatorState.Closing;     
+                    CloseExitElevator();
             }
             // inter level
             else
@@ -633,7 +655,7 @@ namespace GreedyKid
                     if (_currentTransitionFrame < 0)
                     {
                         _transitionState = TransitionState.None;
-                        OpenElevator();
+                        OpenEntranceElevator();
                     }
                 }
             }
@@ -700,13 +722,19 @@ namespace GreedyKid
                         _currentEntranceFrame++;
                         if (_currentEntranceFrame > 4)
                         {
-                            _currentEntranceFrame = 4;
-                            _entranceState = ElevatorState.Closing;
+                            CloseEntranceElevator();
                         }
                         else if (_currentEntranceFrame == 2)
                         {
+                            // pop cop
+                            if (_spawningCop != null && _spawnEntrance)
+                            {
+                                _spawningCop.Exit();
+                                _spawningCop = null;
+                            }
                             // pop player
-                            Player.Exit();
+                            else
+                                Player.Exit();
                         }
                     }
                     else
@@ -746,6 +774,20 @@ namespace GreedyKid
                         {
                             _currentExitFrame = 4;
                             _exitState = ElevatorState.Open;
+
+                            if (_spawningCop != null && !_spawnEntrance)
+                            {                                
+                                _spawningCop = null;
+                                CloseExitElevator();
+                            }
+                        }
+                        else if (_currentExitFrame == 2)
+                        {
+                            // pop cop
+                            if (_spawningCop != null && !_spawnEntrance)
+                            {
+                                _spawningCop.Exit();
+                            }
                         }
                     }
                     else
@@ -787,11 +829,86 @@ namespace GreedyKid
             }
         }
 
-        private void OpenElevator()
+        private void OpenEntranceElevator()
         {
             _currentEntranceFrame = 0;
             _currentEntranceFrameTime = 0.0f;
             _entranceState = ElevatorState.Opening;
+        }
+
+        private void OpenExitElevator()
+        {
+            _currentExitFrame = 0;
+            _currentExitFrameTime = 0.0f;
+            _exitState = ElevatorState.Opening;
+        }
+
+        private void CloseEntranceElevator()
+        {
+            _currentEntranceFrame = 4;
+            _currentEntranceFrameTime = 0.0f;
+            _entranceState = ElevatorState.Closing;
+        }
+
+        private void CloseExitElevator()
+        {
+            _currentExitFrame = 4;
+            _currentExitFrameTime = 0.0f;
+            _exitState = ElevatorState.Closing;
+        }
+
+        public void SpawnCop()
+        {
+            _spawningCop = new Cop();
+
+            // look for entrance or exit
+            _spawnEntrance = false;
+            if (_exitState != ElevatorState.Closed || RandomHelper.Next() < 0.5f)
+            {
+                _spawnEntrance = true;
+            }
+
+            // look for start
+            if (_spawnEntrance)
+            {
+                for (int f = 0; f < _building.CurrentLevel.Floors.Length; f++)
+                {
+                    for (int r = 0; r < _building.CurrentLevel.Floors[f].Rooms.Length; r++)
+                    {
+                        if (_building.CurrentLevel.Floors[f].Rooms[r].HasStart)
+                        {
+                            _spawningCop.Room = _building.CurrentLevel.Floors[f].Rooms[r];
+                            _spawningCop.Room.Cops.Add(_spawningCop);
+                            _spawningCop.Spawn(_spawningCop.Room.StartX + 4);
+                            break;
+                        }
+                    }
+                    if (_spawningCop.Room != null)
+                        break;
+                }
+            }
+            // look for exit
+            else
+            {
+                for (int f = 0; f < _building.CurrentLevel.Floors.Length; f++)
+                {
+                    for (int r = 0; r < _building.CurrentLevel.Floors[f].Rooms.Length; r++)
+                    {
+                        if (_building.CurrentLevel.Floors[f].Rooms[r].HasExit)
+                        {
+                            _spawningCop.Room = _building.CurrentLevel.Floors[f].Rooms[r];
+                            _spawningCop.Room.Cops.Add(_spawningCop);
+                            _spawningCop.Spawn(_spawningCop.Room.ExitX + 4);
+                            break;
+                        }
+                    }
+                    if (_spawningCop.Room != null)
+                        break;
+                }
+            }
+
+            // open entrance / door
+            _currentCopArrivingTime = _copArrivingTime;
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -894,6 +1011,33 @@ namespace GreedyKid
                             }
                         }
 
+                        // furniture
+                        for (int ff = 0; ff < room.Furnitures.Length; ff++)
+                        {
+                            Furniture furniture = room.Furnitures[ff];
+
+                            int frame = furniture.Frame;
+                            if (isShouting && floor.Y == Player.Room.Y && Math.Abs(furniture.X + 16 - playerMiddle) <= _shoutDistance)
+                                frame = shoutingFrame;
+                            
+                            Rectangle source = _furnitureRectangle[room.BackgroundColor][furniture.Type][frame];
+
+                            spriteBatch.Draw(texture,
+                                new Rectangle(furniture.X, 128 - 40 * f, source.Width, source.Height),
+                                source,
+                                Color.White);
+
+                            if (furniture.CanHide)
+                            {
+                                source = _objectsRectangle[(int)ObjectType.Arrow][_currentArrowFrame];
+
+                                spriteBatch.Draw(texture,
+                                    new Rectangle(furniture.X + 8, 128 - 40 * f + 8, source.Width, source.Height),
+                                    source,
+                                    Color.White);
+                            }
+                        }
+
                         // room doors
                         for (int d = 0; d < room.RoomDoors.Length; d++)
                         {
@@ -920,33 +1064,6 @@ namespace GreedyKid
 
                                 spriteBatch.Draw(texture,
                                     new Rectangle(roomDoor.X + 16, 128 - 40 * f + 8, source.Width, source.Height),
-                                    source,
-                                    Color.White);
-                            }
-                        }
-
-                        // furniture
-                        for (int ff = 0; ff < room.Furnitures.Length; ff++)
-                        {
-                            Furniture furniture = room.Furnitures[ff];
-
-                            int frame = furniture.Frame;
-                            if (isShouting && floor.Y == Player.Room.Y && Math.Abs(furniture.X + 16 - playerMiddle) <= _shoutDistance)
-                                frame = shoutingFrame;
-                            
-                            Rectangle source = _furnitureRectangle[room.BackgroundColor][furniture.Type][frame];
-
-                            spriteBatch.Draw(texture,
-                                new Rectangle(furniture.X, 128 - 40 * f, source.Width, source.Height),
-                                source,
-                                Color.White);
-
-                            if (furniture.CanHide)
-                            {
-                                source = _objectsRectangle[(int)ObjectType.Arrow][_currentArrowFrame];
-
-                                spriteBatch.Draw(texture,
-                                    new Rectangle(furniture.X + 8, 128 - 40 * f + 8, source.Width, source.Height),
                                     source,
                                     Color.White);
                             }

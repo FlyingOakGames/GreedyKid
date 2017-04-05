@@ -28,6 +28,7 @@ namespace GreedyKid
         Ressurecting,
         BeingRessurected,
         SlamingDoor,
+        HitCooldown,
 
         Count
     }

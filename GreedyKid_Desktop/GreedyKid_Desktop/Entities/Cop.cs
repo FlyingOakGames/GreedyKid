@@ -11,6 +11,7 @@ namespace GreedyKid
 
         private const float _walkSpeed = 24.0f;
         private const float _runSpeed = 80.0f;
+        private const float _rollSpeed = 96.0f;
 
         public int Type = 0;
         public float X = 0;
@@ -45,6 +46,9 @@ namespace GreedyKid
         // stun
         private int _XWarp = -1;
 
+        // roll arriving
+        private bool _shouldRoll = false;
+
         public Cop()
         {
             // init once
@@ -78,6 +82,10 @@ namespace GreedyKid
                 _frames[(int)EntityState.Slam] = new Rectangle[CopCount][];
                 // Hit
                 _frames[(int)EntityState.Hit] = new Rectangle[CopCount][];
+                // Rolling
+                _frames[(int)EntityState.Rolling] = new Rectangle[CopCount][];
+                // HitCooldown
+                _frames[(int)EntityState.HitCooldown] = new Rectangle[CopCount][];
 
                 // type
                 for (int t = 0; t < CopCount; t++)
@@ -154,6 +162,14 @@ namespace GreedyKid
                     }
                     _frameDuration[(int)EntityState.Unboo] = 0.1f;
 
+                    // HitCooldown (ok)
+                    _frames[(int)EntityState.HitCooldown][t] = new Rectangle[4];
+                    for (int f = 0; f < _frames[(int)EntityState.HitCooldown][t].Length; f++)
+                    {
+                        _frames[(int)EntityState.HitCooldown][t][f] = new Rectangle(f * 32 + 56 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                    }
+                    _frameDuration[(int)EntityState.HitCooldown] = 0.1f;
+
                     // slam (ok)
                     _frames[(int)EntityState.Slam][t] = new Rectangle[3];
                     for (int f = 0; f < _frames[(int)EntityState.Slam][t].Length; f++)
@@ -169,6 +185,14 @@ namespace GreedyKid
                         _frames[(int)EntityState.Hit][t][f] = new Rectangle(f * 32 + 28 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
                     }
                     _frameDuration[(int)EntityState.Hit] = 0.1f;
+
+                    // rolling (ok)
+                    _frames[(int)EntityState.Rolling][t] = new Rectangle[5];
+                    for (int f = 0; f < _frames[(int)EntityState.Rolling][t].Length; f++)
+                    {
+                        _frames[(int)EntityState.Rolling][t][f] = new Rectangle(f * 32 + 8 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                    }
+                    _frameDuration[(int)EntityState.Rolling] = 0.1f;
                 }
             }
 
@@ -179,6 +203,21 @@ namespace GreedyKid
         {
             Type = reader.ReadInt32();
             X = reader.ReadInt32();
+        }
+
+        public void Spawn(float x)
+        {
+            X = x;
+            _isVisible = false;
+            State = EntityState.Idle;
+            _currentFrame = 0;
+            _actionTime = 0.0f;
+            _hasJustTurned = false;
+
+            _isAngry = false;
+            _shouldRoll = true;
+            if (RandomHelper.Next() < 0.5f)
+                Orientation = SpriteEffects.FlipHorizontally;
         }
 
         public void Update(float gameTime, bool boo, bool taunted)
@@ -233,7 +272,11 @@ namespace GreedyKid
                     }
                     else if (State == EntityState.Hit)
                     {
-                        Wait();
+                        Cooldown();
+                    }
+                    else if (State == EntityState.Rolling)
+                    {
+                        NextAction();
                     }
                     // entering doors
                     else if (State == EntityState.Entering)
@@ -247,12 +290,15 @@ namespace GreedyKid
                             Room.Cops.Add(this);
                             X = _targetDoor.X;
                             _targetDoor = null;
-                        }
+                        }                        
                     }
                     // exiting doors
                     else if (State == EntityState.Exiting)
                     {
-                        NextAction();
+                        if (_shouldRoll)
+                            Roll();
+                        else
+                            NextAction();
                     }
                 }
             }
@@ -292,11 +338,13 @@ namespace GreedyKid
                     _XWarp = -1;
             }
 
-            if (State == EntityState.Walking || State == EntityState.Running)
+            if (State == EntityState.Walking || State == EntityState.Running || State == EntityState.Rolling)
             {
                 float speed = _walkSpeed;
                 if (State == EntityState.Running)
                     speed = _runSpeed;
+                else if (State == EntityState.Rolling)
+                    speed = _rollSpeed;
 
                 if (Orientation == SpriteEffects.None)
                     X = X + speed * gameTime;
@@ -348,15 +396,21 @@ namespace GreedyKid
                 else
                     canSeePlayer = false;
 
-                if (roomDoor.IsClosed && (State == EntityState.Walking || State == EntityState.Running))
+                if (roomDoor.IsClosed && (State == EntityState.Walking || State == EntityState.Running || State == EntityState.Rolling))
                 {
                     if (Orientation == SpriteEffects.FlipHorizontally && X - 12 < roomDoor.X && X - 12 > roomDoor.X - 4)
                     {
-                        Turn();
+                        if (State == EntityState.Rolling)
+                            roomDoor.OpenLeft();
+                        else
+                            Turn();
                     }
                     else if (Orientation == SpriteEffects.None && X + 12 > roomDoor.X && X + 12 < roomDoor.X + 4)
                     {
-                        Turn();
+                        if (State == EntityState.Rolling)
+                            roomDoor.OpenRight();
+                        else
+                            Turn();
                     }
                 }
                 else if (roomDoor.IsClosingFromLeft && State != EntityState.KO)
@@ -384,7 +438,7 @@ namespace GreedyKid
                 // lost player             
                 Unboo();                
             }
-            else if (!_isAngry && canSeePlayer && _currentHitCooldown <= 0.0f)
+            else if (_isVisible && !_isAngry && canSeePlayer && _currentHitCooldown <= 0.0f && State != EntityState.Rolling && State != EntityState.Exiting)
             {
                 // caught player
                 Boo(false);
@@ -545,6 +599,17 @@ namespace GreedyKid
             }
         }
 
+        private void Cooldown()
+        {
+            _currentFrame = 0;
+            State = EntityState.HitCooldown;
+            _actionTime = _currentHitCooldown;
+            _hasJustTurned = false;
+
+            _wantsToOpenDoor = false;
+        }
+
+
         private void Enter(FloorDoor floorDoor)
         {
             X = floorDoor.X;
@@ -566,6 +631,17 @@ namespace GreedyKid
             State = EntityState.Exiting;
 
             _actionTime = 0.0f;
+        }
+
+        private void Roll()
+        {            
+            _currentFrame = 0;
+            _currentFrameTime = 0.0f;
+            State = EntityState.Rolling;
+
+            _actionTime = 0.0f;
+
+            _shouldRoll = false;
         }
 
         public void Draw(SpriteBatch spriteBatch)

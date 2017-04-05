@@ -98,6 +98,9 @@ namespace GreedyKid
             if (keyboardState.IsKeyDown(Keys.C) && previousKeyboardState.IsKeyUp(Keys.C))
                 buildingManager.PreviousLevel();
 
+            if (keyboardState.IsKeyDown(Keys.S) && previousKeyboardState.IsKeyUp(Keys.S))
+                buildingManager.SpawnCop();
+
             previousKeyboardState = keyboardState;
 #endif
 
