@@ -52,7 +52,7 @@ namespace GreedyKid
 
             if (_speed != 0.0f)
             {
-
+                float previousX = X;
                 X += _direction * _speed * gameTime;
                 float prevSpeed = _speed;
                 _speed += _acceleration * gameTime;
@@ -64,10 +64,27 @@ namespace GreedyKid
                 if (X < Room.LeftMargin * 8 + 12)
                 {
                     X = Room.LeftMargin * 8 + 12;
+                    _speed = 0.0f;
                 }
                 if (X > 304 - Room.RightMargin * 8 - 4)
                 {
                     X = 304 - Room.RightMargin * 8 - 4;
+                    _speed = 0.0f;
+                }
+
+                // handle room door collisions
+                for (int d = 0; d < Room.RoomDoors.Length; d++)
+                {
+                    RoomDoor roomDoor = Room.RoomDoors[d];
+
+                    if (roomDoor.IsClosed)
+                    {                        
+                        if (X + 8 > roomDoor.X + 10 && X + 8 < roomDoor.X + 22)
+                        {
+                            X = previousX;
+                            _speed = 0.0f;
+                        }
+                    }
                 }
             }
         }
