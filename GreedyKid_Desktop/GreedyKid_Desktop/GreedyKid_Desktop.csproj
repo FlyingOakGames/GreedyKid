@@ -60,6 +60,7 @@
     <Compile Include="Entities\Player.cs" />
     <Compile Include="Entities\Retired.cs" />
     <Compile Include="GreedyKidGame.cs" />
+    <Compile Include="Helper\EasingHelper.cs" />
     <Compile Include="Helper\GZip\CRC32.cs" />
     <Compile Include="Helper\GZip\Deflate.cs" />
     <Compile Include="Helper\GZip\GZipStream.cs" />

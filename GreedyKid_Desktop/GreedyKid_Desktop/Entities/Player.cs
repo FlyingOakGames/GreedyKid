@@ -528,7 +528,7 @@ namespace GreedyKid
             _taunting = false;
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch, int cameraPosY)
         {
             if (!_isVisible)
                 return;
@@ -537,7 +537,7 @@ namespace GreedyKid
 
             if (_hitTime <= 0.0f || _hitShow)
                 spriteBatch.Draw(texture,
-                    new Rectangle((int)X, 128 - 40 * Room.Y + 9, 32, 32),
+                    new Rectangle((int)X, 128 - 40 * Room.Y + 9 + cameraPosY, 32, 32),
                     _frames[(int)State][_currentFrame],
                     Color.White,
                     0.0f,
@@ -548,7 +548,7 @@ namespace GreedyKid
             if (_currentSmokeFrame >= 0)
             {
                 spriteBatch.Draw(texture,
-                new Rectangle(_smokeX, 128 - 40 * Room.Y + 9, 32, 32),
+                new Rectangle(_smokeX, 128 - 40 * Room.Y + 9 + cameraPosY, 32, 32),
                 _frames[(int)EntityState.Smoke][_currentSmokeFrame],
                 Color.White);
             }

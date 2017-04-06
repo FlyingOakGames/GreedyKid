@@ -514,20 +514,41 @@ namespace GreedyKidEditor
                 {
                     renderer.SelectedLevel = selectedItem.Level;                    
 
+                    if (selectedItem.Type == BuildingElement.Room || selectedItem.Type == BuildingElement.Floor)
+                    {
+                        int floorCount = _building.Levels[selectedItem.Level].Floors.Count;
+
+                        if (floorCount > 4)
+                        {
+                            if (selectedItem.Floor < 3) // first floors
+                                renderer.MoveCamera(0.0f);
+                            else if (selectedItem.Floor == floorCount - 1) // last floor
+                                renderer.MoveCamera((floorCount - 4) * 40.0f);
+                            else
+                                renderer.MoveCamera((selectedItem.Floor - 2) * 40.0f);
+                        }
+                        else
+                            renderer.MoveCamera(0.0f);
+                    }
+                    else
+                        renderer.MoveCamera(0.0f);
+
                     if (selectedItem.Type == BuildingElement.Room)
                     {
                         renderer.SelectedFloor = selectedItem.Floor;
                         renderer.SelectedRoom = selectedItem.Room;
 
-                        paintTextBox.Text = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].BackgroundColor.ToString();
-                        leftMarginTextBox.Text = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].LeftMargin.ToString();
-                        rightMarginTextBox.Text = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].RightMargin.ToString();
-                        leftDecorationTextBox.Text = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].LeftDecoration.ToString();
-                        rightDecorationTextBox.Text = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].RightDecoration.ToString();
-                        startCheckBox.IsChecked = (_building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].HasStart == true);
-                        exitCheckBox.IsChecked = (_building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].HasExit == true);
-                        xStart.Value = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].StartX;
-                        xExit.Value = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room].ExitX;
+                        Room room = _building.Levels[selectedItem.Level].Floors[selectedItem.Floor].Rooms[selectedItem.Room];
+
+                        paintTextBox.Text = room.BackgroundColor.ToString();
+                        leftMarginTextBox.Text = room.LeftMargin.ToString();
+                        rightMarginTextBox.Text = room.RightMargin.ToString();
+                        leftDecorationTextBox.Text = room.LeftDecoration.ToString();
+                        rightDecorationTextBox.Text = room.RightDecoration.ToString();
+                        startCheckBox.IsChecked = (room.HasStart == true);
+                        exitCheckBox.IsChecked = (room.HasExit == true);
+                        xStart.Value = room.StartX;
+                        xExit.Value = room.ExitX;
 
                         RefreshDetailListBox();
                         RefreshFloorDoorListBox();

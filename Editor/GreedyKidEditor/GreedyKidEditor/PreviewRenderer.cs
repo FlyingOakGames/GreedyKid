@@ -98,6 +98,26 @@ namespace GreedyKidEditor
 
         public static bool PreviewAnimation = false;
 
+        private float EaseOutExpo(float t, float b, float c, float d)
+        {
+            return (t == d) ? b + c : c * (-(float)Math.Pow(2, -10 * t / d) + 1) + b;
+        }
+
+        private float _cameraPositionY = 0.0f;        
+
+        // tween
+        private float _initialCameraPositionY = 0.0f;
+        private float _differenceCameraPositionY = 0.0f;        
+        private const float _totalCameraTime = 1.0f;
+        private float _currentCameraTime = _totalCameraTime;
+
+        public void MoveCamera(float targetPosition)
+        {
+            _initialCameraPositionY = _cameraPositionY;
+            _differenceCameraPositionY = targetPosition - _cameraPositionY;
+            _currentCameraTime = 0.0f;
+        }
+
         private void OnPreparingDeviceSettings(object sender, PreparingDeviceSettingsEventArgs args)
         {
             args.GraphicsDeviceInformation.PresentationParameters.DeviceWindowHandle = _handle;
@@ -275,10 +295,12 @@ namespace GreedyKidEditor
             _iconRectangle[1] = new Rectangle(36, 2024, 13, 13);
             _iconRectangle[2] = new Rectangle(49, 2024, 13, 13);
 
-            _maskRectangle = new Rectangle[3];
+            _maskRectangle = new Rectangle[5];
             _maskRectangle[0] = new Rectangle(23, 2038, 49, 10);
             _maskRectangle[1] = new Rectangle(72, 2038, 57, 10);
             _maskRectangle[2] = new Rectangle(129, 2038, 51, 10);
+            _maskRectangle[3] = new Rectangle(152, 1918, 1, 1); // 1x1
+            _maskRectangle[4] = new Rectangle(201, 1864, 328, 2);
 
             _numberRectangle = new Rectangle[12];
             for (int i = 0; i < _numberRectangle.Length; i++)
@@ -347,6 +369,16 @@ namespace GreedyKidEditor
                 _currentElevatorFrame = 0;
             }
 
+            // camera
+            if (_currentCameraTime < _totalCameraTime)
+            {
+                _currentCameraTime += elaspedSeconds;
+                _cameraPositionY = EaseOutExpo(_currentCameraTime, _initialCameraPositionY, _differenceCameraPositionY, _totalCameraTime);
+
+                if (_currentCameraTime >= _totalCameraTime)
+                    _cameraPositionY = _initialCameraPositionY + _differenceCameraPositionY;
+            }
+
             base.Update(gameTime);
         }
 
@@ -355,6 +387,8 @@ namespace GreedyKidEditor
             GraphicsDevice.Clear(_fillColor);
 
             spriteBatch.Begin(samplerState: SamplerState.PointWrap);
+
+            int cameraPosY = (int)Math.Round(_cameraPositionY);
             
             if (SelectedLevel >= 0 && SelectedLevel < _building.Levels.Count)
             {
@@ -375,7 +409,7 @@ namespace GreedyKidEditor
                         for (int s = 0; s < nbSlice; s++)
                         {
                             spriteBatch.Draw(_levelTexture,
-                                new Rectangle(startX + 8 * s, 128 - 40 * f, source.Width, source.Height),
+                                new Rectangle(startX + 8 * s, 128 - 40 * f + cameraPosY, source.Width, source.Height),
                                 source,
                                 Color.White);
                         }
@@ -384,7 +418,7 @@ namespace GreedyKidEditor
                         source = _roomRectangle[room.BackgroundColor][room.LeftDecoration][0];
 
                         spriteBatch.Draw(_levelTexture,
-                            new Rectangle(room.LeftMargin * 8, 128 - 40 * f, source.Width, source.Height),
+                            new Rectangle(room.LeftMargin * 8, 128 - 40 * f + cameraPosY, source.Width, source.Height),
                             source,
                             Color.White);
 
@@ -392,7 +426,7 @@ namespace GreedyKidEditor
                         source = _roomRectangle[room.BackgroundColor][room.RightDecoration][2];
 
                         spriteBatch.Draw(_levelTexture,
-                            new Rectangle(304 - room.RightMargin * 8, 128 - 40 * f, source.Width, source.Height),
+                            new Rectangle(304 - room.RightMargin * 8, 128 - 40 * f + cameraPosY, source.Width, source.Height),
                             source,
                             Color.White);
                     }
@@ -408,7 +442,7 @@ namespace GreedyKidEditor
                             Rectangle source = _detailRectangle[room.BackgroundColor][detail.Type];
 
                             spriteBatch.Draw(_levelTexture,
-                                new Rectangle(detail.X, 128 - 40 * f, source.Width, source.Height),
+                                new Rectangle(detail.X, 128 - 40 * f + cameraPosY, source.Width, source.Height),
                                 source,
                                 Color.White);
                         }
@@ -426,7 +460,7 @@ namespace GreedyKidEditor
                             Rectangle source = _floorDoorRectangle[room.BackgroundColor][floorDoor.Color][_floorDoorSequence[_currentFloorDoorFrame]];
 
                             spriteBatch.Draw(_levelTexture,
-                                new Rectangle(floorDoor.X, 128 - 40 * f, source.Width, source.Height),
+                                new Rectangle(floorDoor.X, 128 - 40 * f + cameraPosY, source.Width, source.Height),
                                 source,
                                 Color.White);
                         }
@@ -438,7 +472,7 @@ namespace GreedyKidEditor
                             Rectangle source = _roomDoorRectangle[room.BackgroundColor][_roomDoorSequence[_currentRoomDoorFrame]];
 
                             spriteBatch.Draw(_levelTexture,
-                                new Rectangle(roomDoor.X, 128 - 40 * f, source.Width, source.Height),
+                                new Rectangle(roomDoor.X, 128 - 40 * f + cameraPosY, source.Width, source.Height),
                                 source,
                                 Color.White);
                         }
@@ -450,7 +484,7 @@ namespace GreedyKidEditor
                             Rectangle source = _furnitureRectangle[room.BackgroundColor][furniture.Type][0];
 
                             spriteBatch.Draw(_levelTexture,
-                                new Rectangle(furniture.X, 128 - 40 * f, source.Width, source.Height),
+                                new Rectangle(furniture.X, 128 - 40 * f + cameraPosY, source.Width, source.Height),
                                 source,
                                 Color.White);
                         }
@@ -461,21 +495,21 @@ namespace GreedyKidEditor
                             Rectangle source = _elevatorRectangle[0][_elevatorSequence[_currentElevatorFrame]];
 
                             spriteBatch.Draw(_levelTexture,
-                                new Rectangle(room.StartX, 128 - 40 * f, source.Width, source.Height),
+                                new Rectangle(room.StartX, 128 - 40 * f + cameraPosY, source.Width, source.Height),
                                 source,
                                 Color.White);
 
                             source = _elevatorRectangle[1][_elevatorSequence[_currentElevatorFrame]];
 
                             spriteBatch.Draw(_levelTexture,
-                                new Rectangle(room.StartX, 128 - 40 * f, source.Width, source.Height),
+                                new Rectangle(room.StartX, 128 - 40 * f + cameraPosY, source.Width, source.Height),
                                 source,
                                 Color.White);
 
                             source = _elevatorRectangle[2][room.BackgroundColor];
 
                             spriteBatch.Draw(_levelTexture,
-                                new Rectangle(room.StartX, 128 - 40 * f, source.Width, source.Height),
+                                new Rectangle(room.StartX, 128 - 40 * f + cameraPosY, source.Width, source.Height),
                                 source,
                                 Color.White);
                         }                    
@@ -485,21 +519,21 @@ namespace GreedyKidEditor
                             Rectangle source = _elevatorRectangle[0][_elevatorSequence[_currentElevatorFrame]];
 
                             spriteBatch.Draw(_levelTexture,
-                                new Rectangle(room.ExitX, 128 - 40 * f, source.Width, source.Height),
+                                new Rectangle(room.ExitX, 128 - 40 * f + cameraPosY, source.Width, source.Height),
                                 source,
                                 Color.White);
 
                             source = _elevatorRectangle[1][_elevatorSequence[_currentElevatorFrame]];
 
                             spriteBatch.Draw(_levelTexture,
-                                new Rectangle(room.ExitX, 128 - 40 * f, source.Width, source.Height),
+                                new Rectangle(room.ExitX, 128 - 40 * f + cameraPosY, source.Width, source.Height),
                                 source,
                                 Color.White);
 
                             source = _elevatorRectangle[2][room.BackgroundColor];
 
                             spriteBatch.Draw(_levelTexture,
-                                new Rectangle(room.ExitX, 128 - 40 * f, source.Width, source.Height),
+                                new Rectangle(room.ExitX, 128 - 40 * f + cameraPosY, source.Width, source.Height),
                                 source,
                                 Color.White);
                         }
@@ -513,7 +547,7 @@ namespace GreedyKidEditor
                             Rectangle source = _retiredRectangle[retired.Type][_retiredSequence[_currentRetiredFrame]];
 
                             spriteBatch.Draw(_levelTexture,
-                                new Rectangle((int)retired.X, 128 - 40 * f + 9, 32, 32),
+                                new Rectangle((int)retired.X, 128 - 40 * f + 9 + cameraPosY, 32, 32),
                                 source,
                                 Color.White);
                         }
@@ -526,7 +560,7 @@ namespace GreedyKidEditor
                             Rectangle source = _nurseRectangle[nurse.Type][_nurseSequence[_currentNurseFrame]];
 
                             spriteBatch.Draw(_levelTexture,
-                                new Rectangle((int)nurse.X, 128 - 40 * f + 9, 32, 32),
+                                new Rectangle((int)nurse.X, 128 - 40 * f + 9 + cameraPosY, 32, 32),
                                 source,
                                 Color.White);
                         }
@@ -539,7 +573,7 @@ namespace GreedyKidEditor
                             Rectangle source = _copRectangle[cop.Type][_copSequence[_currentCopFrame]];
 
                             spriteBatch.Draw(_levelTexture,
-                                new Rectangle((int)cop.X, 128 - 40 * f + 9, 32, 32),
+                                new Rectangle((int)cop.X, 128 - 40 * f + 9 + cameraPosY, 32, 32),
                                 source,
                                 Color.White);
                         }
@@ -548,6 +582,24 @@ namespace GreedyKidEditor
             }
 
             // ****** UI ******
+
+            // floor mask
+            spriteBatch.Draw(_levelTexture,
+                new Rectangle(0, 0, Width, 14),
+                _maskRectangle[3],
+                Color.White);
+            spriteBatch.Draw(_levelTexture,
+                new Rectangle(0, 14, Width, 2),
+                _maskRectangle[4],
+                Color.White);
+            spriteBatch.Draw(_levelTexture,
+                new Rectangle(0, Height - 12, Width, 12),
+                _maskRectangle[3],
+                Color.White);
+            spriteBatch.Draw(_levelTexture,
+                new Rectangle(0, Height - 14, Width, 2),
+                _maskRectangle[4],
+                Color.White);
 
             // up
             spriteBatch.Draw(_levelTexture,

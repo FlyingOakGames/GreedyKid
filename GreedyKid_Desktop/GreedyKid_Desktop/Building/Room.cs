@@ -118,10 +118,9 @@ namespace GreedyKid
         public void AddDrop(ObjectType type, float x)
         {
             Droppable drop = new Droppable(type);
-            drop.X = x + 8.0f;
             drop.Room = this;
             Drops.Add(drop);
-            drop.Drop();
+            drop.Drop(x + 8.0f);
         }
     }
 }

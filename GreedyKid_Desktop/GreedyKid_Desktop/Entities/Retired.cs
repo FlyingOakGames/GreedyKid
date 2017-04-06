@@ -701,7 +701,7 @@ namespace GreedyKid
             _actionTime = 0.0f;
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch, int cameraPosY)
         {
             if (!_isVisible)
                 return;
@@ -709,7 +709,7 @@ namespace GreedyKid
             Texture2D texture = TextureManager.Building;
 
             spriteBatch.Draw(texture,
-                new Rectangle((int)X, 128 - 40 * Room.Y + 9, 32, 32),
+                new Rectangle((int)X, 128 - 40 * Room.Y + 9 + cameraPosY, 32, 32),
                 _frames[(int)State][Type][_currentFrame],
                 Color.White,
                 0.0f,
@@ -720,7 +720,7 @@ namespace GreedyKid
             if (Life > 0)
             {
                 spriteBatch.Draw(texture,
-                new Rectangle((int)X + 8, 128 - 40 * Room.Y + 4, 16, 16),
+                new Rectangle((int)X + 8, 128 - 40 * Room.Y + 4 + cameraPosY, 16, 16),
                 _lifeRectangles[Life - 1][_currentHeartFrame],
                 Color.White);
             }

@@ -108,7 +108,14 @@ namespace GreedyKid
         private bool _spawnEntrance = false;
         private Cop _spawningCop = null;   // to reset
         private float _currentCopArrivingTime = 0.0f;   // to reset
-        private const float _copArrivingTime = 2.0f;             
+        private const float _copArrivingTime = 2.0f;
+
+        // camera
+        private float _cameraPositionY = 0.0f;        
+        private float _initialCameraPositionY = 0.0f;
+        private float _differenceCameraPositionY = 0.0f;
+        private const float _totalCameraTime = 1.0f;
+        private float _currentCameraTime = _totalCameraTime;        
 
         public BuildingManager()
         {            
@@ -241,10 +248,12 @@ namespace GreedyKid
             _iconRectangle[1] = new Rectangle(36, 2024, 13, 13);
             _iconRectangle[2] = new Rectangle(49, 2024, 13, 13);
 
-            _maskRectangle = new Rectangle[3];
+            _maskRectangle = new Rectangle[5];
             _maskRectangle[0] = new Rectangle(23, 2038, 49, 10);
             _maskRectangle[1] = new Rectangle(72, 2038, 57, 10);
             _maskRectangle[2] = new Rectangle(129, 2038, 51, 10);
+            _maskRectangle[3] = new Rectangle(152, 1918, 1, 1); // 1x1
+            _maskRectangle[4] = new Rectangle(201, 1864, 328, 2);
 
             _numberRectangle = new Rectangle[12];
             for (int i = 0; i < _numberRectangle.Length; i++)
@@ -328,6 +337,17 @@ namespace GreedyKid
             _spawningCop = null;   // to reset
             _currentCopArrivingTime = 0.0f;   // to reset
 
+            _cameraPositionY = 0.0f;
+            _currentCameraTime = _totalCameraTime;
+
+            if (_building.CurrentLevel.Floors.Length > 4 && Player.Room.Y >= 3)
+            {
+                if (Player.Room.Y == _building.CurrentLevel.Floors.Length - 1)
+                    _cameraPositionY = (_building.CurrentLevel.Floors.Length - 4) * 40.0f; // last floor
+                else
+                    _cameraPositionY = (Player.Room.Y - 2) * 40.0f;
+            }
+
             // clean memory
             GC.Collect();
         }
@@ -368,8 +388,18 @@ namespace GreedyKid
             
             if (_building.CurrentLevel != null && Player != null && SelectedLevel >= 0 && SelectedLevel < _building.LevelCount)
             {
-
+                int prevPlayerY = Player.Room.Y;
                 Player.Update(gameTime);
+                int playerY = Player.Room.Y;
+
+                // camera handling
+                if (prevPlayerY != playerY && _building.CurrentLevel.Floors.Length > 4)
+                {               
+                    if (playerY > prevPlayerY && _cameraPositionY < (playerY - 2) * 40.0f)
+                        MoveCamera((playerY - 2) * 40.0f);
+                    else if (playerY < prevPlayerY && _cameraPositionY > (playerY - 1) * 40.0f)
+                        MoveCamera((playerY - 1) * 40.0f);                    
+                }
 
                 bool isShouting = Player.IsShouting;
                 bool isTaunting = Player.IsTaunting;
@@ -638,6 +668,16 @@ namespace GreedyKid
                 _currentShoutFrameTime -= _shoutFrameTime;
                 _currentShoutFrame++;
                 _currentShoutFrame %= Detail.AnimatedDetailFrames;
+            }
+
+            // camera
+            if (_currentCameraTime < _totalCameraTime)
+            {
+                _currentCameraTime += gameTime;
+                _cameraPositionY = EasingHelper.EaseOutExpo(_currentCameraTime, _initialCameraPositionY, _differenceCameraPositionY, _totalCameraTime);
+
+                if (_currentCameraTime >= _totalCameraTime)
+                    _cameraPositionY = _initialCameraPositionY + _differenceCameraPositionY;
             }
         }
 
@@ -911,14 +951,27 @@ namespace GreedyKid
             _currentCopArrivingTime = _copArrivingTime;
         }
 
+        private void MoveCamera(float targetPosition)
+        {
+            // limit
+            targetPosition = Math.Max(0.0f, targetPosition);
+            targetPosition = Math.Min(targetPosition, (_building.CurrentLevel.Floors.Length - 4) * 40.0f);
+
+            _initialCameraPositionY = _cameraPositionY;
+            _differenceCameraPositionY = targetPosition - _cameraPositionY;
+            _currentCameraTime = 0.0f;
+        }
+
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Begin(samplerState: SamplerState.PointWrap);
 
             Texture2D texture = TextureManager.Building;
 
+            int cameraPosY = (int)Math.Round(_cameraPositionY);
+
             if (_building.CurrentLevel != null && SelectedLevel >= 0 && SelectedLevel < _building.LevelCount)
-            {
+            {                
                 int shoutingFrame = Furniture.FurnitureFrames - 4 + _currentShoutFrame;
                 bool isShouting = Player.IsShouting;
                 int playerMiddle = (int)Player.X + 16;
@@ -940,7 +993,7 @@ namespace GreedyKid
                         for (int s = 0; s < nbSlice; s++)
                         {
                             spriteBatch.Draw(texture,
-                                new Rectangle(startX + 8 * s, 128 - 40 * f, source.Width, source.Height),
+                                new Rectangle(startX + 8 * s, 128 - 40 * f + cameraPosY, source.Width, source.Height),
                                 source,
                                 Color.White);
                         }
@@ -949,7 +1002,7 @@ namespace GreedyKid
                         source = _roomRectangle[room.BackgroundColor][room.LeftDecoration][0];
 
                         spriteBatch.Draw(texture,
-                            new Rectangle(room.LeftMargin * 8, 128 - 40 * f, source.Width, source.Height),
+                            new Rectangle(room.LeftMargin * 8, 128 - 40 * f + cameraPosY, source.Width, source.Height),
                             source,
                             Color.White);
 
@@ -957,7 +1010,7 @@ namespace GreedyKid
                         source = _roomRectangle[room.BackgroundColor][room.RightDecoration][2];
 
                         spriteBatch.Draw(texture,
-                            new Rectangle(304 - room.RightMargin * 8, 128 - 40 * f, source.Width, source.Height),
+                            new Rectangle(304 - room.RightMargin * 8, 128 - 40 * f + cameraPosY, source.Width, source.Height),
                             source,
                             Color.White);
                     }
@@ -978,7 +1031,7 @@ namespace GreedyKid
                             Rectangle source = _detailRectangle[room.BackgroundColor][detail.Type][frame];
 
                             spriteBatch.Draw(texture,
-                                new Rectangle(detail.X, 128 - 40 * f, source.Width, source.Height),
+                                new Rectangle(detail.X, 128 - 40 * f + cameraPosY, source.Width, source.Height),
                                 source,
                                 Color.White);
                         }
@@ -996,7 +1049,7 @@ namespace GreedyKid
                             Rectangle source = _floorDoorRectangle[room.BackgroundColor][floorDoor.Color][floorDoor.Frame];
 
                             spriteBatch.Draw(texture,
-                                new Rectangle(floorDoor.X, 128 - 40 * f, source.Width, source.Height),
+                                new Rectangle(floorDoor.X, 128 - 40 * f + cameraPosY, source.Width, source.Height),
                                 source,
                                 Color.White);
 
@@ -1005,7 +1058,7 @@ namespace GreedyKid
                                 source = _objectsRectangle[(int)ObjectType.Arrow][_currentArrowFrame];
 
                                 spriteBatch.Draw(texture,
-                                    new Rectangle(floorDoor.X + 8, 128 - 40 * f + 8, source.Width, source.Height),
+                                    new Rectangle(floorDoor.X + 8, 128 - 40 * f + 8 + cameraPosY, source.Width, source.Height),
                                     source,
                                     Color.White);
                             }
@@ -1023,7 +1076,7 @@ namespace GreedyKid
                             Rectangle source = _furnitureRectangle[room.BackgroundColor][furniture.Type][frame];
 
                             spriteBatch.Draw(texture,
-                                new Rectangle(furniture.X, 128 - 40 * f, source.Width, source.Height),
+                                new Rectangle(furniture.X, 128 - 40 * f + cameraPosY, source.Width, source.Height),
                                 source,
                                 Color.White);
 
@@ -1032,7 +1085,7 @@ namespace GreedyKid
                                 source = _objectsRectangle[(int)ObjectType.Arrow][_currentArrowFrame];
 
                                 spriteBatch.Draw(texture,
-                                    new Rectangle(furniture.X + 8, 128 - 40 * f + 8, source.Width, source.Height),
+                                    new Rectangle(furniture.X + 8, 128 - 40 * f + 8 + cameraPosY, source.Width, source.Height),
                                     source,
                                     Color.White);
                             }
@@ -1045,7 +1098,7 @@ namespace GreedyKid
                             Rectangle source = _roomDoorRectangle[room.BackgroundColor][roomDoor.Frame];
 
                             spriteBatch.Draw(texture,
-                                new Rectangle(roomDoor.X, 128 - 40 * f, source.Width, source.Height),
+                                new Rectangle(roomDoor.X, 128 - 40 * f + cameraPosY, source.Width, source.Height),
                                 source,
                                 Color.White);
 
@@ -1054,7 +1107,7 @@ namespace GreedyKid
                                 source = _objectsRectangle[(int)ObjectType.Arrow][_currentArrowFrame];
 
                                 spriteBatch.Draw(texture,
-                                    new Rectangle(roomDoor.X, 128 - 40 * f + 8, source.Width, source.Height),
+                                    new Rectangle(roomDoor.X, 128 - 40 * f + 8 + cameraPosY, source.Width, source.Height),
                                     source,
                                     Color.White);
                             }
@@ -1063,7 +1116,7 @@ namespace GreedyKid
                                 source = _objectsRectangle[(int)ObjectType.Arrow][_currentArrowFrame];
 
                                 spriteBatch.Draw(texture,
-                                    new Rectangle(roomDoor.X + 16, 128 - 40 * f + 8, source.Width, source.Height),
+                                    new Rectangle(roomDoor.X + 16, 128 - 40 * f + 8 + cameraPosY, source.Width, source.Height),
                                     source,
                                     Color.White);
                             }
@@ -1076,19 +1129,19 @@ namespace GreedyKid
                             Rectangle source = _elevatorRectangle[0][_currentEntranceFrame];
 
                             spriteBatch.Draw(texture,
-                                new Rectangle(room.StartX, 128 - 40 * f, source.Width, source.Height),
+                                new Rectangle(room.StartX, 128 - 40 * f + cameraPosY, source.Width, source.Height),
                                 source,
                                 Color.White);
 
                             // player
                             if (_entranceState == ElevatorState.Opening)
-                                Player.Draw(spriteBatch);
+                                Player.Draw(spriteBatch, cameraPosY);
 
                             // door
                             source = _elevatorRectangle[1][_currentEntranceFrame];
 
                             spriteBatch.Draw(texture,
-                                new Rectangle(room.StartX, 128 - 40 * f, source.Width, source.Height),
+                                new Rectangle(room.StartX, 128 - 40 * f + cameraPosY, source.Width, source.Height),
                                 source,
                                 Color.White);
 
@@ -1096,7 +1149,7 @@ namespace GreedyKid
                             source = _elevatorRectangle[2][room.BackgroundColor];
 
                             spriteBatch.Draw(texture,
-                                new Rectangle(room.StartX, 128 - 40 * f, source.Width, source.Height),
+                                new Rectangle(room.StartX, 128 - 40 * f + cameraPosY, source.Width, source.Height),
                                 source,
                                 Color.White);
                         }
@@ -1107,19 +1160,19 @@ namespace GreedyKid
                             Rectangle source = _elevatorRectangle[0][_currentExitFrame];
 
                             spriteBatch.Draw(texture,
-                                new Rectangle(room.ExitX, 128 - 40 * f, source.Width, source.Height),
+                                new Rectangle(room.ExitX, 128 - 40 * f + cameraPosY, source.Width, source.Height),
                                 source,
                                 Color.White);
 
                             // player
                             if (Player.HasEnteredElevator)
-                                Player.Draw(spriteBatch);
+                                Player.Draw(spriteBatch, cameraPosY);
 
                             // door
                             source = _elevatorRectangle[1][_currentExitFrame];
 
                             spriteBatch.Draw(texture,
-                                new Rectangle(room.ExitX, 128 - 40 * f, source.Width, source.Height),
+                                new Rectangle(room.ExitX, 128 - 40 * f + cameraPosY, source.Width, source.Height),
                                 source,
                                 Color.White);
 
@@ -1127,7 +1180,7 @@ namespace GreedyKid
                             source = _elevatorRectangle[2][room.BackgroundColor];
 
                             spriteBatch.Draw(texture,
-                                new Rectangle(room.ExitX, 128 - 40 * f, source.Width, source.Height),
+                                new Rectangle(room.ExitX, 128 - 40 * f + cameraPosY, source.Width, source.Height),
                                 source,
                                 Color.White);
 
@@ -1137,7 +1190,7 @@ namespace GreedyKid
                                 source = _objectsRectangle[(int)ObjectType.Arrow][_currentArrowFrame];
 
                                 spriteBatch.Draw(texture,
-                                    new Rectangle(room.ExitX + 12, 128 - 40 * f + 8, source.Width, source.Height),
+                                    new Rectangle(room.ExitX + 12, 128 - 40 * f + 8 + cameraPosY, source.Width, source.Height),
                                     source,
                                     Color.White);
                             }
@@ -1148,7 +1201,7 @@ namespace GreedyKid
                         {
                             Retired retired = room.Retireds[rr];
                             if (retired != null)
-                                retired.Draw(spriteBatch);
+                                retired.Draw(spriteBatch, cameraPosY);
                         }
 
                         // nurse
@@ -1156,7 +1209,7 @@ namespace GreedyKid
                         {
                             Nurse nurse = room.Nurses[n];
                             if (nurse != null)
-                                nurse.Draw(spriteBatch);
+                                nurse.Draw(spriteBatch, cameraPosY);
                         }
 
                         // cops
@@ -1164,7 +1217,7 @@ namespace GreedyKid
                         {
                             Cop cop = room.Cops[c];
                             if (cop != null)
-                                cop.Draw(spriteBatch);
+                                cop.Draw(spriteBatch, cameraPosY);
                         }
 
                         // drops
@@ -1172,7 +1225,7 @@ namespace GreedyKid
                         {
                             Droppable drop = room.Drops[d];
 
-                            drop.Draw(spriteBatch, _objectsRectangle);
+                            drop.Draw(spriteBatch, _objectsRectangle, cameraPosY);
                         }
                     }
                 }
@@ -1230,7 +1283,7 @@ namespace GreedyKid
             
 
             if (_entranceState != ElevatorState.Opening && Player != null && !Player.HasEnteredElevator)
-                Player.Draw(spriteBatch);
+                Player.Draw(spriteBatch, cameraPosY);
 
             // transition
             if (_transitionState != TransitionState.None)
@@ -1299,6 +1352,24 @@ namespace GreedyKid
             }
 
             // ****** UI ******
+
+            // floor mask
+            spriteBatch.Draw(texture,
+                new Rectangle(0, 0, GreedyKidGame.Width, 14),
+                _maskRectangle[3],
+                Color.White);
+            spriteBatch.Draw(texture,
+                new Rectangle(0, 14, GreedyKidGame.Width, 2),
+                _maskRectangle[4],
+                Color.White);
+            spriteBatch.Draw(texture,
+                new Rectangle(0, GreedyKidGame.Height - 12, GreedyKidGame.Width, 12),
+                _maskRectangle[3],
+                Color.White);
+            spriteBatch.Draw(texture,
+                new Rectangle(0, GreedyKidGame.Height - 14, GreedyKidGame.Width, 2),
+                _maskRectangle[4],
+                Color.White);
 
             // up
             spriteBatch.Draw(texture,
