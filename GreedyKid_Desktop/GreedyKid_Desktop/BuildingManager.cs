@@ -307,6 +307,10 @@ namespace GreedyKid
 
             _building.LoadLevel(SelectedLevel);
 
+            // dummy load a cop to init static fields and avoid a freeze upon cop spawning
+            Cop dummy = new Cop();
+            dummy = null;
+
             // init player
             Player = new Player();
             Player.Room = null;
