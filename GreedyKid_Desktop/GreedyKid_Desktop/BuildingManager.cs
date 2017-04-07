@@ -481,7 +481,7 @@ namespace GreedyKid
                         }
 
                         // exit                        
-                        if (room.HasExit && _exitState == ElevatorState.Open)
+                        if (Player.Room == room && room.HasExit && _exitState == ElevatorState.Open)
                         {
                             if (Player.X + 16 > room.ExitX + 11 && Player.X + 16 < room.ExitX + 27)
                                 Player.CanEnterElevator = true;
@@ -1083,7 +1083,7 @@ namespace GreedyKid
                             Detail detail = room.Details[d];
 
                             int frame = 0;
-                            if (isShouting && floor.Y == Player.Room.Y && detail.Type >= Detail.NormalDetailCount && Math.Abs(detail.X + 16 - playerMiddle) <= _shoutDistance)
+                            if (isShouting && room == Player.Room && detail.Type >= Detail.NormalDetailCount && Math.Abs(detail.X + 16 - playerMiddle) <= _shoutDistance)
                                 frame = _currentShoutFrame;
 
                             Rectangle source = _detailRectangle[room.BackgroundColor][detail.Type][frame];
@@ -1128,7 +1128,7 @@ namespace GreedyKid
                             Furniture furniture = room.Furnitures[ff];
 
                             int frame = furniture.Frame;
-                            if (isShouting && floor.Y == Player.Room.Y && Math.Abs(furniture.X + 16 - playerMiddle) <= _shoutDistance)
+                            if (isShouting && room == Player.Room && Math.Abs(furniture.X + 16 - playerMiddle) <= _shoutDistance)
                                 frame = shoutingFrame;
                             
                             Rectangle source = _furnitureRectangle[room.BackgroundColor][furniture.Type][frame];
@@ -1410,24 +1410,26 @@ namespace GreedyKid
             }
 
             // ****** UI ******
-
-            // floor mask
-            spriteBatch.Draw(texture,
-                new Rectangle(0, 0, GreedyKidGame.Width, 14),
-                _maskRectangle[3],
-                Color.White);
-            spriteBatch.Draw(texture,
-                new Rectangle(0, 14, GreedyKidGame.Width, 2),
-                _maskRectangle[4],
-                Color.White);
-            spriteBatch.Draw(texture,
-                new Rectangle(0, GreedyKidGame.Height - 12, GreedyKidGame.Width, 12),
-                _maskRectangle[3],
-                Color.White);
-            spriteBatch.Draw(texture,
-                new Rectangle(0, GreedyKidGame.Height - 14, GreedyKidGame.Width, 2),
-                _maskRectangle[4],
-                Color.White);
+            if (_building.CurrentLevel != null && SelectedLevel >= 0 && SelectedLevel < _building.LevelCount)
+            {
+                // floor mask
+                spriteBatch.Draw(texture,
+                    new Rectangle(0, 0, GreedyKidGame.Width, 14),
+                    _maskRectangle[3],
+                    Color.White);
+                spriteBatch.Draw(texture,
+                    new Rectangle(0, 14, GreedyKidGame.Width, 2),
+                    _maskRectangle[4],
+                    Color.White);
+                spriteBatch.Draw(texture,
+                    new Rectangle(0, GreedyKidGame.Height - 12, GreedyKidGame.Width, 12),
+                    _maskRectangle[3],
+                    Color.White);
+                spriteBatch.Draw(texture,
+                    new Rectangle(0, GreedyKidGame.Height - 14, GreedyKidGame.Width, 2),
+                    _maskRectangle[4],
+                    Color.White);
+            }
 
             // up
             spriteBatch.Draw(texture,
