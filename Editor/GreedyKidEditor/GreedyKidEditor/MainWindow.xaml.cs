@@ -512,7 +512,11 @@ namespace GreedyKidEditor
 
                 if (selectedItem.Type != BuildingElement.Building)
                 {
-                    renderer.SelectedLevel = selectedItem.Level;                    
+                    renderer.SelectedLevel = selectedItem.Level;
+
+                    timeBeforeCopSlider.Value = _building.Levels[selectedItem.Level].TimeBeforeCop;
+                    cop1TextBox.Text = _building.Levels[selectedItem.Level].Cop1Count.ToString();
+                    cop2TextBox.Text = _building.Levels[selectedItem.Level].Cop2Count.ToString();
 
                     if (selectedItem.Type == BuildingElement.Room || selectedItem.Type == BuildingElement.Floor)
                     {
@@ -1751,6 +1755,65 @@ namespace GreedyKidEditor
                 room.Cops[copListBox.SelectedIndex].Type--;
                 room.Cops[copListBox.SelectedIndex].Type = Math.Max(room.Cops[copListBox.SelectedIndex].Type, 0);
                 copTextBox.Text = room.Cops[copListBox.SelectedIndex].Type.ToString();
+            }
+        }
+
+        //************************ SPAWN SEQUENCES ************************\\
+
+        private void timeBeforeCopSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count)
+            {
+                Level level = _building.Levels[renderer.SelectedLevel];
+
+                level.TimeBeforeCop = (int)timeBeforeCopSlider.Value;
+                timeBeforeCopLabel.Content = level.TimeBeforeCop.ToString();
+            }
+        }
+
+        private void cop1ButtonUP_Click(object sender, RoutedEventArgs e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count)
+            {
+                Level level = _building.Levels[renderer.SelectedLevel];
+
+                level.Cop1Count++;
+                cop1TextBox.Text = level.Cop1Count.ToString();
+            }
+        }
+
+        private void cop1ButtonDown_Click(object sender, RoutedEventArgs e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count)
+            {
+                Level level = _building.Levels[renderer.SelectedLevel];
+
+                level.Cop1Count--;
+                level.Cop1Count = Math.Max(level.Cop1Count, 0);
+                cop1TextBox.Text = level.Cop1Count.ToString();
+            }
+        }
+
+        private void cop2ButtonUP_Click(object sender, RoutedEventArgs e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count)
+            {
+                Level level = _building.Levels[renderer.SelectedLevel];
+
+                level.Cop2Count++;
+                cop2TextBox.Text = level.Cop2Count.ToString();
+            }
+        }
+
+        private void cop2ButtonDown_Click(object sender, RoutedEventArgs e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count)
+            {
+                Level level = _building.Levels[renderer.SelectedLevel];
+
+                level.Cop2Count--;
+                level.Cop2Count = Math.Max(level.Cop2Count, 0);
+                cop2TextBox.Text = level.Cop2Count.ToString();
             }
         }
     }

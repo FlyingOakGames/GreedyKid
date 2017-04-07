@@ -9,6 +9,17 @@ namespace GreedyKidEditor
 
         public List<Floor> Floors = new List<Floor>();
 
+        // cop sequences
+        public int TimeBeforeCop = 0;
+        public int Cop1Count = 0;
+        public int Cop2Count = 0;
+
+        // swat
+        public int TimeBeforeSwat = 0;
+
+        // robocop
+        public int TimeBeforeRobocop = 0;
+
         public void Save(BinaryWriter writer)
         {
             writer.Write(Name);
@@ -16,6 +27,10 @@ namespace GreedyKidEditor
             writer.Write(Floors.Count);
             for (int i = 0; i < Floors.Count; i++)
                 Floors[i].Save(writer);
+
+            writer.Write(TimeBeforeCop);
+            writer.Write(Cop1Count);
+            writer.Write(Cop2Count);
         }
 
         public void Load(BinaryReader reader)
@@ -29,6 +44,10 @@ namespace GreedyKidEditor
                 r.Load(reader);
                 Floors.Add(r);
             }
+
+            TimeBeforeCop = reader.ReadInt32();
+            Cop1Count = reader.ReadInt32();
+            Cop2Count = reader.ReadInt32();
         }
 
         public int HasStart()

@@ -57,6 +57,8 @@ namespace GreedyKid
         public int Time = 0;
         private int[] _encodedTime = new int[] { 0, 0, 10, 0, 0 };
 
+        private float _currentSeconds = 0.0f;
+
         // arrow animation
         private int _currentArrowFrame = 0;
         private float _currentArrowFrameTime = 0.0f;
@@ -107,7 +109,7 @@ namespace GreedyKid
         // spawning cop
         private bool _spawnEntrance = false;
         private Cop _spawningCop = null;   // to reset
-        private float _currentCopArrivingTime = 0.0f;   // to reset
+        private float _currentCopArrivingTime = -1.0f;   // to reset
         private const float _copArrivingTime = 2.0f;
 
         // camera
@@ -305,17 +307,13 @@ namespace GreedyKid
         {
             SelectedLevel = level;
 
-            _building.LoadLevel(SelectedLevel);
-
-            // dummy load a cop to init static fields and avoid a freeze upon cop spawning
-            Cop dummy = new Cop();
-            dummy = null;
+            _building.LoadLevel(SelectedLevel);            
 
             // init player
             Player = new Player();
             Player.Room = null;
 
-            // look for start
+            // look for player start
             for (int f = 0; f < _building.CurrentLevel.Floors.Length; f++)
             {
                 for (int r = 0; r < _building.CurrentLevel.Floors[f].Rooms.Length; r++)
@@ -331,16 +329,22 @@ namespace GreedyKid
                     break;
             }            
 
+            // transition init
             _entranceState = ElevatorState.Closed;
             _exitState = ElevatorState.Closed;
-
             _transitionState = TransitionState.Hidden;
-
             AppearTransition();
 
+            // cop init            
+            Cop dummy = new Cop(); // dummy load a cop to init static fields and avoid a freeze upon cop spawning
+            dummy = null;
             _spawningCop = null;   // to reset
-            _currentCopArrivingTime = 0.0f;   // to reset
+            _currentCopArrivingTime = -1.0f;   // to reset
 
+            Time = _building.CurrentLevel.TimeBeforeCop;
+            _currentSeconds = 0.0f;
+
+            // camera init
             _cameraPositionY = 0.0f;
             _currentCameraTime = _totalCameraTime;
 
@@ -405,6 +409,27 @@ namespace GreedyKid
                         MoveCamera((playerY - 1) * 40.0f);                    
                 }
 
+                // cop spawning
+                _currentSeconds += gameTime;
+                if (_currentSeconds >= 1.0f)
+                {
+                    _currentSeconds -= 1.0f;
+
+                    if (Time > 0)
+                    {
+                        Time--;
+
+                        if (Time == (int)_copArrivingTime)
+                        {
+                            if (_building.CurrentLevel.Cop1Count > 0)
+                            {
+                                _building.CurrentLevel.Cop1Count--;
+                                SpawnCop();
+                            }
+                        }
+                    }
+                }
+
                 bool isShouting = Player.IsShouting;
                 bool isTaunting = Player.IsTaunting;
                 int playerMiddle = (int)Player.X + 16;
@@ -413,10 +438,10 @@ namespace GreedyKid
                 UpdateElevators(gameTime);
 
                 // open entrance / door for cop arriving
-                if (_currentCopArrivingTime > 0.0f)
+                if (_currentCopArrivingTime >= 0.0f)
                 {
                     _currentCopArrivingTime -= gameTime;
-                    if (_currentCopArrivingTime <= 0.0f)
+                    if (_currentCopArrivingTime < 0.0f)
                     {
                         if (_spawnEntrance)
                             OpenEntranceElevator();
@@ -589,6 +614,12 @@ namespace GreedyKid
                                                         canSeeRetired = false;
                                                 }
 
+                                                if (
+                                                    (retired.X + 16.0f < nurse.X + 16.0f && nurse.Orientation == SpriteEffects.None) ||
+                                                    (retired.X + 16.0f > nurse.X + 16.0f && nurse.Orientation != SpriteEffects.None)
+                                                    )
+                                                    canSeeRetired = false;
+
                                                 if (canSeeRetired && nurse.LastKnownKORetired == null)
                                                     nurse.LastKnownKORetired = retired;
                                                 else if (canSeeRetired && Math.Abs(nurse.X - retired.X) < Math.Abs(nurse.X - nurse.LastKnownKORetired.X))
@@ -626,7 +657,7 @@ namespace GreedyKid
                 }
 
                 // elevator
-                if (_canEscape && _exitState == ElevatorState.Closed && _currentCopArrivingTime <= 0.0f)
+                if (_canEscape && _exitState == ElevatorState.Closed && _currentCopArrivingTime < 0.0f)
                     OpenExitElevator();
                 else if (Player.HasEnteredElevator && _exitState == ElevatorState.Open)
                     CloseExitElevator();
@@ -774,7 +805,7 @@ namespace GreedyKid
                             if (_spawningCop != null && _spawnEntrance)
                             {
                                 _spawningCop.Exit();
-                                _spawningCop = null;
+                                //_spawningCop = null;
                             }
                             // pop player
                             else
@@ -788,6 +819,16 @@ namespace GreedyKid
                         {
                             _currentEntranceFrame = 0;
                             _entranceState = ElevatorState.Closed;
+
+                            if (_spawningCop != null)
+                            {
+                                _spawningCop = null;
+                                if (_building.CurrentLevel.Cop1Count > 0)
+                                {
+                                    _building.CurrentLevel.Cop1Count--;
+                                    SpawnCop(0.0f);
+                                }
+                            }
                         }
                     }
                 }
@@ -821,7 +862,7 @@ namespace GreedyKid
 
                             if (_spawningCop != null && !_spawnEntrance)
                             {                                
-                                _spawningCop = null;
+                                //_spawningCop = null;
                                 CloseExitElevator();
                             }
                         }
@@ -846,6 +887,16 @@ namespace GreedyKid
                             if (Player.HasEnteredElevator)
                             {
                                 DisappearTransition();
+                            }
+
+                            else if (_spawningCop != null)
+                            {
+                                _spawningCop = null;
+                                if (_building.CurrentLevel.Cop1Count > 0)
+                                {
+                                    _building.CurrentLevel.Cop1Count--;
+                                    SpawnCop(0.0f);
+                                }
                             }
                         }
                     }
@@ -901,8 +952,11 @@ namespace GreedyKid
             _exitState = ElevatorState.Closing;
         }
 
-        public void SpawnCop()
+        public void SpawnCop(float timeBeforeSpawn = _copArrivingTime)
         {
+            if (_currentCopArrivingTime >= 0.0f)
+                return; // cop already in queue
+
             _spawningCop = new Cop();
 
             // look for entrance or exit
@@ -952,7 +1006,7 @@ namespace GreedyKid
             }
 
             // open entrance / door
-            _currentCopArrivingTime = _copArrivingTime;
+            _currentCopArrivingTime = timeBeforeSpawn;
         }
 
         private void MoveCamera(float targetPosition)
@@ -1138,7 +1192,7 @@ namespace GreedyKid
                                 Color.White);
 
                             // player
-                            if (_entranceState == ElevatorState.Opening)
+                            if (_entranceState == ElevatorState.Opening && _spawningCop == null)
                                 Player.Draw(spriteBatch, cameraPosY);
 
                             // door
@@ -1286,7 +1340,7 @@ namespace GreedyKid
             }
             
 
-            if (_entranceState != ElevatorState.Opening && Player != null && !Player.HasEnteredElevator)
+            if ((_spawnEntrance && _spawningCop != null) || (_entranceState != ElevatorState.Opening && Player != null && !Player.HasEnteredElevator))
                 Player.Draw(spriteBatch, cameraPosY);
 
             // transition

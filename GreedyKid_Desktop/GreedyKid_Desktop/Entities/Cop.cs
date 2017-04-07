@@ -431,6 +431,11 @@ namespace GreedyKid
 
             if (LastKnownPlayerPosition < 0)
                 canSeePlayer = false;
+            else if (
+                (LastKnownPlayerPosition < X + 16.0f && Orientation == SpriteEffects.None) ||
+                (LastKnownPlayerPosition > X + 16.0f && Orientation != SpriteEffects.None)
+                )
+                canSeePlayer = false;
 
             // player in sight action
             if (_isAngry && !canSeePlayer)

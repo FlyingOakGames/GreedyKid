@@ -693,6 +693,12 @@ namespace GreedyKidEditor
             }
 
             // time
+
+            if (SelectedLevel >= 0 && SelectedLevel < _building.Levels.Count)
+            {
+                Time = _building.Levels[SelectedLevel].TimeBeforeCop;
+            }
+
             _encodedTime[0] = Time / 600;
             _encodedTime[1] = (Time - _encodedTime[0] * 600) / 60;
             int seconds = Time % 60;
@@ -711,7 +717,8 @@ namespace GreedyKidEditor
                 textX += source.Width;
             }
 
-            // score
+            // score            
+
             _encodedScore[0] = Score / 100;
             _encodedScore[1] = (Score - _encodedScore[0] * 100) / 10;
             _encodedScore[2] = Score % 10;

@@ -8,6 +8,17 @@ namespace GreedyKid
 
         public Floor[] Floors;
 
+        // cop sequences
+        public int TimeBeforeCop = 0;
+        public int Cop1Count = 0;
+        public int Cop2Count = 0;
+
+        // swat
+        public int TimeBeforeSwat = 0;
+
+        // robocop
+        public int TimeBeforeRobocop = 0;
+
         public void Load(BinaryReader reader)
         {
             Name = reader.ReadString();
@@ -20,6 +31,10 @@ namespace GreedyKid
                 Floors[i].Y = i;
                 Floors[i].Load(reader);
             }
+
+            TimeBeforeCop = reader.ReadInt32();
+            Cop1Count = reader.ReadInt32();
+            Cop2Count = reader.ReadInt32();
 
             ConnectSisterDoors();
         }
