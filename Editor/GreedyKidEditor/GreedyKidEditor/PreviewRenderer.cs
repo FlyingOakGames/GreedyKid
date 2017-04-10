@@ -266,7 +266,7 @@ namespace GreedyKidEditor
                 _nurseRectangle[t] = new Rectangle[4];
                 for (int f = 0; f < 4; f++) // idle animation
                 {
-                    _nurseRectangle[t][f] = new Rectangle(4 * 32 + f * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + 32 * Retired.RetiredCount, 32, 32);
+                    _nurseRectangle[t][f] = new Rectangle(4 * 32 + f * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + 32 * Retired.RetiredCount + t * 32, 32, 32);
                 }
             }
 
@@ -276,7 +276,7 @@ namespace GreedyKidEditor
                 _copRectangle[t] = new Rectangle[4];
                 for (int f = 0; f < 4; f++) // idle animation
                 {
-                    _copRectangle[t][f] = new Rectangle(4 * 32 + f * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + 32 * Retired.RetiredCount + 32 * Nurse.NurseCount, 32, 32);
+                    _copRectangle[t][f] = new Rectangle(4 * 32 + f * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + 32 * Retired.RetiredCount + 32 * Nurse.NurseCount + t * 32, 32, 32);
                 }
             }
 

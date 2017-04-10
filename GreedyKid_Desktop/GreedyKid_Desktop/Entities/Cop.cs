@@ -7,7 +7,7 @@ namespace GreedyKid
 {
     public sealed class Cop : IEntity
     {
-        public const int CopCount = 1;
+        public const int CopCount = 2;
 
         private const float _walkSpeed = 24.0f;
         private const float _runSpeed = 80.0f;
@@ -48,6 +48,9 @@ namespace GreedyKid
 
         // roll arriving
         private bool _shouldRoll = false;
+
+        // bullet
+        public bool HasFired = false;
 
         public Cop()
         {
@@ -507,6 +510,8 @@ namespace GreedyKid
             State = EntityState.Hit;
 
             _currentHitCooldown = _hitCooldown;
+
+            HasFired = true;
         }
 
         private void NextAction()
@@ -514,8 +519,10 @@ namespace GreedyKid
             _currentFrame = 0;
             _wantsToOpenDoor = false;
 
-            if (_isAngry)
+            if (_isAngry && Type == 0)
                 Walk();
+            else if (_isAngry)
+                Hit();
             else
             {
                 // should walk or turn

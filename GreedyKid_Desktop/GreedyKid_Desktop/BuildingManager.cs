@@ -124,8 +124,27 @@ namespace GreedyKid
         private MicrophoneVolumeHandler _microphoneHandler;
         private int _microphoneSensitivity = 5;
 
+        // bullets
+        private Bullet[] _bullets;
+        private const int _maxBullets = 10;
+        private int _bulletCount = 0;
+        private Rectangle[][] _bulletRectangle;
+
         public BuildingManager()
-        {            
+        {
+            _bullets = new Bullet[_maxBullets];
+            for (int i = 0; i < _maxBullets; i++)
+                _bullets[i] = new Bullet();
+            _bulletRectangle = new Rectangle[(int)BulletType.Count][];
+            for (int t = 0; t < (int)BulletType.Count; t++)
+            {
+                _bulletRectangle[t] = new Rectangle[4];
+                for (int f = 0; f < 4; f++)
+                {
+                    _bulletRectangle[t][f] = new Rectangle(1583 + 16 * f, 384, 16, 16);
+                }
+            }
+
             _roomRectangle = new Rectangle[Room.PaintCount][][]; // colors
             _detailRectangle = new Rectangle[Room.PaintCount][][];
             _floorDoorRectangle = new Rectangle[Room.PaintCount][][];
@@ -370,6 +389,9 @@ namespace GreedyKid
                     _cameraPositionY = (Player.Room.Y - 2) * 40.0f;
             }
 
+            // bullets
+            _bulletCount = 0;
+
             // clean memory
             GC.Collect();
         }
@@ -442,6 +464,13 @@ namespace GreedyKid
                             {
                                 _building.CurrentLevel.Cop1Count--;
                                 SpawnCop();
+                                _spawningCop.Type = 0;
+                            }
+                            else if (_building.CurrentLevel.Cop2Count > 0)
+                            {
+                                _building.CurrentLevel.Cop2Count--;
+                                SpawnCop();
+                                _spawningCop.Type = 1;
                             }
                         }
                     }
@@ -534,6 +563,12 @@ namespace GreedyKid
                                 }
 
                                 cop.Update(gameTime, boo, isTaunting);
+                                if (cop.HasFired)
+                                {
+                                    cop.HasFired = false;
+                                    BulletType type = BulletType.Taser;
+                                    FireBullet(type, cop.X, cop.Orientation, cop.Room);
+                                }
                             }
                         }
 
@@ -673,6 +708,18 @@ namespace GreedyKid
                                 room.Drops.RemoveAt(d);
                             }
                         }
+                    }
+                }
+
+                // bullets
+                for (int i = _bulletCount - 1; i >= 0; i--)
+                {
+                    if (_bullets[i].Update(gameTime, _bulletRectangle))
+                    {
+                        _bulletCount--;
+                        Bullet b = _bullets[_bulletCount];
+                        _bullets[_bulletCount] = _bullets[i];
+                        _bullets[i] = b;
                     }
                 }
 
@@ -847,6 +894,13 @@ namespace GreedyKid
                                 {
                                     _building.CurrentLevel.Cop1Count--;
                                     SpawnCop(0.0f);
+                                    _spawningCop.Type = 0;
+                                }
+                                else if (_building.CurrentLevel.Cop2Count > 0)
+                                {
+                                    _building.CurrentLevel.Cop2Count--;
+                                    SpawnCop(0.0f);
+                                    _spawningCop.Type = 1;
                                 }
                             }
                         }
@@ -916,6 +970,13 @@ namespace GreedyKid
                                 {
                                     _building.CurrentLevel.Cop1Count--;
                                     SpawnCop(0.0f);
+                                    _spawningCop.Type = 0;
+                                }
+                                else if (_building.CurrentLevel.Cop2Count > 0)
+                                {
+                                    _building.CurrentLevel.Cop2Count--;
+                                    SpawnCop(0.0f);
+                                    _spawningCop.Type = 1;
                                 }
                             }
                         }
@@ -1038,6 +1099,17 @@ namespace GreedyKid
             _initialCameraPositionY = _cameraPositionY;
             _differenceCameraPositionY = targetPosition - _cameraPositionY;
             _currentCameraTime = 0.0f;
+        }
+
+        private void FireBullet(BulletType type, float x, SpriteEffects orientation, Room room)
+        {
+            if (_bulletCount < _maxBullets)
+            {
+                if (orientation == SpriteEffects.None)
+                    x += 16.0f;
+                _bullets[_bulletCount].Fire(type, x, orientation, room);
+                _bulletCount++;
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -1307,6 +1379,10 @@ namespace GreedyKid
                         }
                     }
                 }
+
+                // bullets
+                for (int i = 0; i < _bulletCount; i++)
+                    _bullets[i].Draw(spriteBatch, _bulletRectangle, cameraPosY);
             }
             // inter level
             else
