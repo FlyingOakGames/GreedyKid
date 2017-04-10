@@ -47,6 +47,7 @@ namespace GreedyKid
         private Rectangle[] _iconRectangle;
         private Rectangle[] _maskRectangle;
         private Rectangle[] _numberRectangle;
+        private Rectangle[] _microphoneRectangle;
 
         public int SelectedLevel = 0;
 
@@ -117,7 +118,11 @@ namespace GreedyKid
         private float _initialCameraPositionY = 0.0f;
         private float _differenceCameraPositionY = 0.0f;
         private const float _totalCameraTime = 1.0f;
-        private float _currentCameraTime = _totalCameraTime;        
+        private float _currentCameraTime = _totalCameraTime;
+
+        // microphone
+        private MicrophoneVolumeHandler _microphoneHandler;
+        private int _microphoneSensitivity = 5;
 
         public BuildingManager()
         {            
@@ -265,6 +270,12 @@ namespace GreedyKid
             _numberRectangle[10].Width = 5;
             _numberRectangle[11].X = _numberRectangle[10].X + _numberRectangle[10].Width;
 
+            _microphoneRectangle = new Rectangle[10];
+            for (int i = 0; i < 10; i++)
+            {
+                _microphoneRectangle[i] = new Rectangle(0, 1900 - 4 * i, 146, 4);
+            }
+
             // transition
             _transitionRectangle = new Rectangle[4];
             _transitionRectangle[0] = new Rectangle(152, 1918, 1, 1); // 1x1
@@ -293,6 +304,9 @@ namespace GreedyKid
             {
                 _interLevelRectangle[_elevatorFrameCount + _cableFrameCount + 3 + i] = new Rectangle(613 + 32 * i, 1958, 32, 45);
             }
+
+            _microphoneHandler = new MicrophoneVolumeHandler();
+            _microphoneHandler.StartCapture();
         }
 
         public void LoadBuilding()
@@ -391,6 +405,9 @@ namespace GreedyKid
             if (InputManager.PlayerDevice != null)
                 InputManager.PlayerDevice.HandleIngameInputs(this);
 
+            // microphone
+            _microphoneHandler.Update(gameTime);
+
             // transition
             UpdateTransition(gameTime);
             
@@ -429,6 +446,9 @@ namespace GreedyKid
                         }
                     }
                 }
+
+                if (_microphoneHandler.LeveledVolume >= _microphoneSensitivity)
+                    Player.Shout();
 
                 bool isShouting = Player.IsShouting;
                 bool isTaunting = Player.IsTaunting;
@@ -1492,6 +1512,13 @@ namespace GreedyKid
                 new Rectangle(257, 0, _maskRectangle[2].Width, _maskRectangle[2].Height),
                 _maskRectangle[2],
                 Color.White);
+
+            // microphone
+            int micLevel = Math.Min(9, _microphoneHandler.LeveledVolume);
+            spriteBatch.Draw(texture,
+                new Rectangle(93, 175, _microphoneRectangle[0].Width, _microphoneRectangle[0].Height),
+                 _microphoneRectangle[micLevel],
+                 Color.White);
 
             // player life
             for (int h = 0; h < 3; h++)
