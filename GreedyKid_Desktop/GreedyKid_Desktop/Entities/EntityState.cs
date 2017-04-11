@@ -29,6 +29,7 @@ namespace GreedyKid
         BeingRessurected,
         SlamingDoor,
         HitCooldown,
+        Tased,
 
         Count
     }

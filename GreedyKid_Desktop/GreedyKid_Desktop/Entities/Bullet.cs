@@ -35,7 +35,7 @@ namespace GreedyKid
             Room = room;
         }
 
-        public bool Update(float gameTime, Rectangle[][] source)
+        public bool Update(float gameTime, Rectangle[][] source, Player player)
         {
             // animation
             _currentFrameTime += gameTime;
@@ -45,7 +45,7 @@ namespace GreedyKid
 
                 _currentFrame++;                
                 _currentFrame %= source[(int)Type].Length;                
-            }
+            }            
 
             // move
             if (_orientation == SpriteEffects.None)
@@ -77,6 +77,13 @@ namespace GreedyKid
                         return true;
                     }
                 }
+            }
+
+            // player hit
+            if (Room == player.Room && player.CanBeHit && System.Math.Abs((X + 8.0f) - (player.X + 16.0f)) < 8.0f)
+            {
+                player.Hit((_orientation == SpriteEffects.None ? SpriteEffects.FlipHorizontally : SpriteEffects.None), DamageType.Taser);
+                return true;
             }
 
             return false;

@@ -714,7 +714,7 @@ namespace GreedyKid
                 // bullets
                 for (int i = _bulletCount - 1; i >= 0; i--)
                 {
-                    if (_bullets[i].Update(gameTime, _bulletRectangle))
+                    if (_bullets[i].Update(gameTime, _bulletRectangle, Player))
                     {
                         _bulletCount--;
                         Bullet b = _bullets[_bulletCount];

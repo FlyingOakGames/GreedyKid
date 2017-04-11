@@ -4,6 +4,12 @@ using System;
 
 namespace GreedyKid
 {
+    public enum DamageType
+    {
+        Normal,
+        Taser
+    }
+
     public sealed class Player : IEntity
     {
         private const float _walkSpeed = 64.0f;
@@ -61,6 +67,7 @@ namespace GreedyKid
         private bool _hitShow = false;
         private float _currentHitShowTime = 0.0f;
         private const float _hitShowTime = 0.1f;
+        private DamageType _lastDamageType = DamageType.Normal;
 
         public Player()
         {
@@ -173,6 +180,14 @@ namespace GreedyKid
                 _frames[(int)EntityState.SlamingDoor][f] = new Rectangle(f * 32 + 49 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine, 32, 32);
             }
             _frameDuration[(int)EntityState.SlamingDoor] = 0.1f;
+
+            // tased
+            _frames[(int)EntityState.Tased] = new Rectangle[4];
+            for (int f = 0; f < _frames[(int)EntityState.Tased].Length; f++)
+            {
+                _frames[(int)EntityState.Tased][f] = new Rectangle(f * 32 + 53 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine, 32, 32);
+            }
+            _frameDuration[(int)EntityState.Tased] = 0.1f;
 
 
             // hiding before entering
@@ -424,10 +439,7 @@ namespace GreedyKid
             }
 
             // getting hit
-            if (_hitTime <= 0.0f && (State == EntityState.Shouting
-                || State == EntityState.Idle
-                || State == EntityState.Running
-                || State == EntityState.Taunting))
+            if (CanBeHit)
             {
                 for (int r = 0; r < Room.Retireds.Count; r++)
                 {
@@ -435,7 +447,7 @@ namespace GreedyKid
                     
                     if (retired.IsAngry && Math.Abs(retired.X - X) < 11.0f)
                     {
-                        Hit();
+                        Hit((retired.Orientation == SpriteEffects.None ? SpriteEffects.FlipHorizontally : SpriteEffects.None), DamageType.Normal);
                     }
                 }
 
@@ -445,7 +457,7 @@ namespace GreedyKid
 
                     if (nurse.IsAngry && Math.Abs(nurse.X - X) < 11.0f)
                     {
-                        Hit();
+                        Hit((nurse.Orientation == SpriteEffects.None ? SpriteEffects.FlipHorizontally : SpriteEffects.None), DamageType.Normal);
                     }
                 }
 
@@ -455,7 +467,7 @@ namespace GreedyKid
 
                     if (cop.IsHitting && Math.Abs(cop.X - X) <= Cop.HitRange)
                     {
-                        Hit();
+                        Hit((cop.Orientation == SpriteEffects.None ? SpriteEffects.FlipHorizontally : SpriteEffects.None), DamageType.Normal);
                     }
                 }
             }
@@ -593,8 +605,10 @@ namespace GreedyKid
             }
         }
 
-        private void Hit()
+        public void Hit(SpriteEffects orientation, DamageType damage)
         {
+            _lastDamageType = damage;
+            Orientation = orientation;
             if (Orientation == SpriteEffects.None)
                 _XWarp = (int)X - 16;
             else
@@ -621,6 +635,8 @@ namespace GreedyKid
         private void KO()
         {
             State = EntityState.Crying;
+            if (_lastDamageType == DamageType.Taser)
+                State = EntityState.Tased;
             _currentFrame = 0;
             _currentFrameTime = 0.0f;
 
@@ -726,6 +742,17 @@ namespace GreedyKid
         public bool IsVisible
         {
             get { return State != EntityState.Entering && State != EntityState.Exiting && State != EntityState.Hiding && State != EntityState.Shouting && Life > 0; }
+        }
+
+        public bool CanBeHit
+        {
+            get {
+                return _hitTime <= 0.0f && _isVisible &&
+                    (State == EntityState.Shouting
+                      || State == EntityState.Idle
+                      || State == EntityState.Running
+                      || State == EntityState.Taunting);
+            }
         }
     }
 }
