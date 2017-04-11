@@ -74,7 +74,7 @@ namespace GreedyKid
         /// </summary>
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
+            buildingManager.Dispose();
         }
 
         /// <summary>

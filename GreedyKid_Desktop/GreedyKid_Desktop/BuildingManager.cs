@@ -31,7 +31,7 @@ namespace GreedyKid
         Hidden,
     }
 
-    public sealed class BuildingManager
+    public sealed class BuildingManager : IDisposable
     {
         private Building _building;
 
@@ -1667,6 +1667,12 @@ namespace GreedyKid
                 Color.White);
 
             spriteBatch.End();
+        }
+
+        public void Dispose()
+        {
+            if (_microphoneHandler != null)
+                _microphoneHandler.StopCapture();
         }
     }
 }
