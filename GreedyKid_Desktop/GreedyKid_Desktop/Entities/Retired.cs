@@ -328,6 +328,7 @@ namespace GreedyKid
                 if (_angryTime <= 0.0f)
                 {
                     _currentFrame = 0;
+                    _currentFrameTime = 0.0f;
 
                     if (State == EntityState.Running)
                         State = EntityState.Walking;
@@ -510,6 +511,7 @@ namespace GreedyKid
             _currentHeartFrame = 0;
 
             _currentFrame = 0;
+            _currentFrameTime = 0.0f;
             _actionTime = 0.0f;
             _hasJustTurned = false;
 
@@ -555,6 +557,7 @@ namespace GreedyKid
             if (_angryTime > 0.0f || Life <= 0)
                 return;
             _currentFrame = 0;
+            _currentFrameTime = 0.0f;
             _actionTime = 0.0f;
             _hasJustTurned = false;
             _angryTime = RandomHelper.Next() * 5.0f + 3.0f;
@@ -565,6 +568,7 @@ namespace GreedyKid
         private void NextAction()
         {
             _currentFrame = 0;
+            _currentFrameTime = 0.0f;
             _wantsToOpenDoor = false;
 
             // should walk or turn
@@ -584,6 +588,7 @@ namespace GreedyKid
             _hasJustTurned = true;
             _actionTime = 0.0f;
             _currentFrame = 0;
+            _currentFrameTime = 0.0f;
 
             if (_angryTime > 0.0f)
             {
@@ -599,6 +604,7 @@ namespace GreedyKid
         private void Stun()
         {
             _currentFrame = 0;
+            _currentFrameTime = 0.0f;
             State = EntityState.Stun;
             _actionTime = RandomHelper.Next() * 2.0f + 1.0f;
             _hasJustTurned = false;
@@ -609,6 +615,7 @@ namespace GreedyKid
             _XWarp = warp;
             State = EntityState.Slam;
             _currentFrame = 0;
+            _currentFrameTime = 0.0f;
             _actionTime = 0.0f;
             _hasJustTurned = false;
             _wantsToOpenDoor = false;
@@ -617,6 +624,7 @@ namespace GreedyKid
         public void Ressurect()
         {
             _currentFrame = 0;
+            _currentFrameTime = 0.0f;
             _actionTime = 0.0f;
             _hasJustTurned = false;
             _wantsToOpenDoor = false;
@@ -629,6 +637,7 @@ namespace GreedyKid
             Life = 1;
             State = EntityState.Idle;
             _currentFrame = 0;
+            _currentFrameTime = 0.0f;
             _hasJustTurned = true;
             _wantsToOpenDoor = false;
             _actionTime = 0.0f;

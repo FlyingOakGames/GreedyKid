@@ -214,6 +214,7 @@ namespace GreedyKid
             _isVisible = false;
             State = EntityState.Idle;
             _currentFrame = 0;
+            _currentFrameTime = 0.0f;
             _actionTime = 0.0f;
             _hasJustTurned = false;
 
@@ -484,6 +485,7 @@ namespace GreedyKid
         private void Boo(bool turn = true)
         {
             _currentFrame = 0;
+            _currentFrameTime = 0.0f;
             _actionTime = 0.0f;
             _hasJustTurned = false;
 
@@ -502,6 +504,7 @@ namespace GreedyKid
         private void Hit()
         {
             _currentFrame = 0;
+            _currentFrameTime = 0.0f;
             _actionTime = 0.0f;
             _hasJustTurned = false;
 
@@ -517,6 +520,7 @@ namespace GreedyKid
         private void NextAction()
         {
             _currentFrame = 0;
+            _currentFrameTime = 0.0f;
             _wantsToOpenDoor = false;
 
             if (_isAngry && Type == 0)
@@ -543,6 +547,7 @@ namespace GreedyKid
             _hasJustTurned = true;
             _actionTime = 0.0f;
             _currentFrame = 0;
+            _currentFrameTime = 0.0f;
 
             if (_isAngry)
             {
@@ -560,6 +565,7 @@ namespace GreedyKid
             _XWarp = warp;
             State = EntityState.Slam;
             _currentFrame = 0;
+            _currentFrameTime = 0.0f;
             _actionTime = 0.0f;
             _hasJustTurned = false;
             _wantsToOpenDoor = false;
@@ -577,6 +583,7 @@ namespace GreedyKid
             _isAngry = false;
             _actionTime = 0.0f;
             _currentFrame = 0;
+            _currentFrameTime = 0.0f;
             State = EntityState.Unboo;
         }
 
@@ -614,6 +621,7 @@ namespace GreedyKid
         private void Cooldown()
         {
             _currentFrame = 0;
+            _currentFrameTime = 0.0f;
             State = EntityState.HitCooldown;
             _actionTime = _currentHitCooldown;
             _hasJustTurned = false;
