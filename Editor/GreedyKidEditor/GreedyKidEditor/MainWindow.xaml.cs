@@ -6,6 +6,8 @@ using System.Windows.Controls;
 using System.IO;
 using System.IO.Compression;
 using System.Windows.Input;
+using System.Runtime.InteropServices;
+using System.Windows.Interop;
 
 namespace GreedyKidEditor
 {
@@ -41,7 +43,7 @@ namespace GreedyKidEditor
         private PreviewRenderer renderer;
         private Thread rendererThread;
 
-        private Thread mouseThread;
+        private Thread mouseThread;        
 
         private const string _saveFile = "building";
 
@@ -79,6 +81,13 @@ namespace GreedyKidEditor
             RefreshTreeView();
         }
 
+        protected override void OnSourceInitialized(EventArgs e)
+        {
+            base.OnSourceInitialized(e);
+            HwndSource source = PresentationSource.FromVisual(this) as HwndSource;
+            source.AddHook(WndProc);
+        }
+
         private void MouseWorker()
         {
             while (true)
@@ -110,6 +119,78 @@ namespace GreedyKidEditor
                 return;
             if (_stopThread)
                 return;
+
+            try
+            {
+                Point canvasPos = wfHost.PointToScreen(new Point(0, 0));
+                Point mousePos = GetCursorPosition();
+                mousePos.X = mousePos.X - canvasPos.X;
+                mousePos.Y = mousePos.Y - canvasPos.Y;
+                // zoom handling
+                float zoomX = (float)wfHost.Width / PreviewRenderer.Width;
+                float zoomY = (float)wfHost.Height / PreviewRenderer.Height;
+                mousePos.X = mousePos.X / zoomX;
+                mousePos.Y = mousePos.Y / zoomY;
+                Microsoft.Xna.Framework.Point p = new Microsoft.Xna.Framework.Point((int)mousePos.X, (int)mousePos.Y);
+                if (renderer != null)
+                {
+                    renderer.MousePosition = p;
+                }
+
+            }
+            catch (InvalidOperationException)
+            {
+
+            }
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct POINT
+        {
+            public int X;
+            public int Y;
+
+            public static implicit operator Point(POINT point)
+            {
+                return new Point(point.X, point.Y);
+            }
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct MSLLHOOKSTRUCT
+        {
+            public Point pt;
+            public int mouseData;
+            public int flags;
+            public int time;
+            public long dwExtraInfo;
+        }
+
+        [DllImport("user32.dll")]
+        public static extern bool GetCursorPos(out POINT lpPoint);
+
+        public static Point GetCursorPosition()
+        {
+            POINT lpPoint;
+            GetCursorPos(out lpPoint);
+            //bool success = User32.GetCursorPos(out lpPoint);
+            // if (!success)
+
+            return lpPoint;
+        }
+
+        private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        {
+            // listen for messages that are meant for a hosted Win32 window.
+            if (msg == 522) // WM_MOUSEWHEEL
+            {
+                if (renderer != null)
+                    renderer.MouseWheelDelta = wParam.ToInt32() >> 16;
+
+                handled = true;   
+            }
+            return IntPtr.Zero;
+
         }
 
         private bool _11scale = false;

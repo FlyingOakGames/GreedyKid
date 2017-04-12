@@ -26,6 +26,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -36,6 +37,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework, Version=3.6.0.1114, Culture=neutral, processorArchitecture=MSIL">
@@ -100,6 +102,7 @@
     <Compile Include="Building\Detail.cs" />
     <Compile Include="Building\FloorDoor.cs" />
     <Compile Include="Building\Furniture.cs" />
+    <Compile Include="Building\IMovable.cs" />
     <Compile Include="Building\Nurse.cs" />
     <Compile Include="Building\Retired.cs" />
     <Compile Include="Building\Room.cs" />

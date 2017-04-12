@@ -2,7 +2,7 @@
 
 namespace GreedyKidEditor
 {
-    public sealed class Detail
+    public sealed class Detail : IMovable
     {
         public const int NormalDetailCount = 20;
         public const int AnimatedDetailCount = 7;
@@ -17,6 +17,11 @@ namespace GreedyKidEditor
         }
 
         public Detail(int x)
+        {
+            X = x;
+        }
+
+        public void Move(int x)
         {
             X = x;
         }

@@ -2,7 +2,7 @@
 
 namespace GreedyKidEditor
 {
-    public sealed class Nurse
+    public sealed class Nurse : IMovable
     {
         public const int NurseCount = 1;
 
@@ -17,6 +17,11 @@ namespace GreedyKidEditor
         }
 
         public Nurse(int x)
+        {
+            X = x;
+        }
+
+        public void Move(int x)
         {
             X = x;
         }

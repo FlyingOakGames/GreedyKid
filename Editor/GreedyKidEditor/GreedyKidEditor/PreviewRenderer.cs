@@ -5,6 +5,23 @@ using Microsoft.Xna.Framework.Input;
 
 namespace GreedyKidEditor
 {
+    public enum SelectionMode
+    {
+        Room,
+        Detail,        
+        RoomDoor,
+        FloorDoor,
+        Furniture,
+        Elevator,
+        Retired,
+        Nurse,
+        Cop,
+
+        Selection,
+
+        Count
+    }
+
     class PreviewRenderer : Game
     {
         GraphicsDeviceManager graphics;
@@ -34,6 +51,8 @@ namespace GreedyKidEditor
         private Rectangle[] _iconRectangle;
         private Rectangle[] _maskRectangle;
         private Rectangle[] _numberRectangle;
+
+        private Rectangle[] _editorIcons;
 
         public int Score = 0;
         private int[] _encodedScore = new int[] { 0, 0, 0 };
@@ -98,6 +117,21 @@ namespace GreedyKidEditor
 
         public static bool PreviewAnimation = false;
 
+        private MouseState _mouseState = new MouseState();
+        private MouseState _prevMouseState = new MouseState();
+        public Point MousePosition = new Point();
+        public int MouseWheelDelta = 0;
+        public SelectionMode SelectionMode = SelectionMode.Room;
+        private bool _hasRightClick = false;
+        private bool _hasLeftClick = false;
+        private bool _hasWheelUp = false;
+        private bool _hasWheelDown = false;
+
+        // dragging
+        private IMovable _lockedObject;
+
+        private Color _selectionColor = Color.White * 0.5f;
+
         private float EaseOutExpo(float t, float b, float c, float d)
         {
             return (t == d) ? b + c : c * (-(float)Math.Pow(2, -10 * t / d) + 1) + b;
@@ -136,6 +170,8 @@ namespace GreedyKidEditor
             graphics.PreferredBackBufferHeight = Width;
             graphics.PreferredBackBufferWidth = Height;
             IsMouseVisible = true;
+
+            _selectionColor.A = 255;
         }
 
         protected override void Initialize()
@@ -309,6 +345,12 @@ namespace GreedyKidEditor
             }
             _numberRectangle[10].Width = 5;
             _numberRectangle[11].X = _numberRectangle[10].X + _numberRectangle[10].Width;
+
+            _editorIcons = new Rectangle[(int)SelectionMode.Count];
+            for (int i = 0; i < (int)SelectionMode.Count; i++)
+            {
+                _editorIcons[i] = new Rectangle(0 + i * 14, 1905, 14, 14);
+            }
         }
 
         protected override void UnloadContent()
@@ -326,6 +368,37 @@ namespace GreedyKidEditor
                 graphics.ApplyChanges();                
             }
 
+            _mouseState = Mouse.GetState();
+            _mouseState = new MouseState(
+                MousePosition.X,
+                MousePosition.Y,
+                MouseWheelDelta,
+                _mouseState.LeftButton,
+                _mouseState.MiddleButton,
+                _mouseState.RightButton,
+                _mouseState.XButton1,
+                _mouseState.XButton2);
+
+            MouseWheelDelta = 0;
+
+            // mouse update
+            _hasRightClick = false;
+            _hasLeftClick = false;
+            _hasWheelUp = false;
+            _hasWheelDown = false;
+
+            if (_prevMouseState.ScrollWheelValue == 0 && _mouseState.ScrollWheelValue < _prevMouseState.ScrollWheelValue)
+                _hasWheelDown = true;
+            else if (_prevMouseState.ScrollWheelValue == 0 && _mouseState.ScrollWheelValue > _prevMouseState.ScrollWheelValue)
+                _hasWheelUp = true;
+
+            if (_prevMouseState.LeftButton == ButtonState.Released && _mouseState.LeftButton == ButtonState.Pressed)
+                _hasLeftClick = true;
+
+            if (_prevMouseState.RightButton == ButtonState.Released && _mouseState.RightButton == ButtonState.Pressed)
+                _hasRightClick = true;
+
+            _prevMouseState = _mouseState;
 
             float elaspedSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
@@ -382,6 +455,38 @@ namespace GreedyKidEditor
             base.Update(gameTime);
         }
 
+        private void RemoveStart()
+        {
+            for (int f = 0; f < _building.Levels[SelectedLevel].Floors.Count; f++)
+            {
+                Floor floor = _building.Levels[SelectedLevel].Floors[f];
+
+                // rooms
+                for (int r = 0; r < floor.Rooms.Count; r++)
+                {
+                    Room room = floor.Rooms[r];
+
+                    room.HasStart = false;
+                }
+            }
+        }
+
+        private void RemoveExit()
+        {
+            for (int f = 0; f < _building.Levels[SelectedLevel].Floors.Count; f++)
+            {
+                Floor floor = _building.Levels[SelectedLevel].Floors[f];
+
+                // rooms
+                for (int r = 0; r < floor.Rooms.Count; r++)
+                {
+                    Room room = floor.Rooms[r];
+
+                    room.HasExit = false;
+                }
+            }
+        }
+
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(_fillColor);
@@ -389,7 +494,9 @@ namespace GreedyKidEditor
             spriteBatch.Begin(samplerState: SamplerState.PointWrap);
 
             int cameraPosY = (int)Math.Round(_cameraPositionY);
-            
+            Rectangle source;
+            Rectangle destination;
+
             if (SelectedLevel >= 0 && SelectedLevel < _building.Levels.Count)
             {
                 for (int f = 0; f < _building.Levels[SelectedLevel].Floors.Count; f++)
@@ -404,47 +511,128 @@ namespace GreedyKidEditor
                         int startX = 16 + room.LeftMargin * 8;
                         int nbSlice = 37 - room.LeftMargin - room.RightMargin;
 
-                        Rectangle source = _roomRectangle[room.BackgroundColor][0][1];
+                        source = _roomRectangle[room.BackgroundColor][0][1];
+
+                        bool isAnySliceHovered = false;
 
                         for (int s = 0; s < nbSlice; s++)
                         {
+                            destination = new Rectangle(startX + 8 * s, 128 - 40 * f + cameraPosY, source.Width, source.Height);
+
+                            if (IsHover(destination))
+                                isAnySliceHovered = true;                            
+                        }
+
+                        // update
+                        if (isAnySliceHovered && SelectionMode == SelectionMode.Room && _hasWheelUp)
+                        {
+                            room.BackgroundColor++;
+                            room.BackgroundColor = Math.Min(room.BackgroundColor, Room.PaintCount - 1);
+                        }
+                        else if (isAnySliceHovered && SelectionMode == SelectionMode.Room && _hasWheelDown)
+                        {
+                            room.BackgroundColor--;
+                            room.BackgroundColor = Math.Max(room.BackgroundColor, 0);
+                        }
+
+                        for (int s = 0; s < nbSlice; s++)
+                        {
+                            destination = new Rectangle(startX + 8 * s, 128 - 40 * f + cameraPosY, source.Width, source.Height);
+
                             spriteBatch.Draw(_levelTexture,
-                                new Rectangle(startX + 8 * s, 128 - 40 * f + cameraPosY, source.Width, source.Height),
+                                destination,
                                 source,
-                                Color.White);
+                                (isAnySliceHovered && SelectionMode == SelectionMode.Room ? _selectionColor : Color.White));
                         }
 
                         // left wall
                         source = _roomRectangle[room.BackgroundColor][room.LeftDecoration][0];
+                        destination = new Rectangle(room.LeftMargin * 8, 128 - 40 * f + cameraPosY, source.Width, source.Height);
 
                         spriteBatch.Draw(_levelTexture,
-                            new Rectangle(room.LeftMargin * 8, 128 - 40 * f + cameraPosY, source.Width, source.Height),
+                            destination,
                             source,
-                            Color.White);
+                            (IsHover(destination) && SelectionMode == SelectionMode.Room ? _selectionColor : Color.White));
+
+                        // update
+                        if (IsHover(destination) && SelectionMode == SelectionMode.Room && _hasWheelUp)
+                        {
+                            room.LeftDecoration++;
+                            room.LeftDecoration = Math.Min(room.LeftDecoration, Room.DecorationCount - 1);
+                        }
+                        else if (IsHover(destination) && SelectionMode == SelectionMode.Room && _hasWheelDown)
+                        {
+                            room.LeftDecoration--;
+                            room.LeftDecoration = Math.Max(room.LeftDecoration, 0);
+                        }
 
                         // right wall
                         source = _roomRectangle[room.BackgroundColor][room.RightDecoration][2];
+                        destination = new Rectangle(304 - room.RightMargin * 8, 128 - 40 * f + cameraPosY, source.Width, source.Height);
 
                         spriteBatch.Draw(_levelTexture,
-                            new Rectangle(304 - room.RightMargin * 8, 128 - 40 * f + cameraPosY, source.Width, source.Height),
+                            destination,
                             source,
-                            Color.White);
+                            (IsHover(destination) && SelectionMode == SelectionMode.Room ? _selectionColor : Color.White));
+
+                        // update
+                        if (IsHover(destination) && SelectionMode == SelectionMode.Room && _hasWheelUp)
+                        {
+                            room.RightDecoration++;
+                            room.RightDecoration = Math.Min(room.RightDecoration, Room.DecorationCount - 1);
+                        }
+                        else if (IsHover(destination) && SelectionMode == SelectionMode.Room && _hasWheelDown)
+                        {
+                            room.RightDecoration--;
+                            room.RightDecoration = Math.Max(room.RightDecoration, 0);
+                        }
                     }
 
                     // rooms details
                     for (int r = 0; r < floor.Rooms.Count; r++)
                     {
-                        Room room = floor.Rooms[r];                        
+                        Room room = floor.Rooms[r];
+
+                        int remove = -1;
 
                         for (int d = 0; d < room.Details.Count; d++)
                         {
                             Detail detail = room.Details[d];
-                            Rectangle source = _detailRectangle[room.BackgroundColor][detail.Type];
+                            source = _detailRectangle[room.BackgroundColor][detail.Type];
+                            destination = new Rectangle(detail.X, 128 - 40 * f + cameraPosY, source.Width, source.Height);
 
                             spriteBatch.Draw(_levelTexture,
-                                new Rectangle(detail.X, 128 - 40 * f + cameraPosY, source.Width, source.Height),
+                                destination,
                                 source,
-                                Color.White);
+                                (IsHover(destination) && SelectionMode == SelectionMode.Detail ? _selectionColor : Color.White));
+
+                            // update
+                            if (IsHover(destination) && SelectionMode == SelectionMode.Detail && _hasWheelUp)
+                            {
+                                detail.Type++;
+                                detail.Type = Math.Min(detail.Type, Detail.NormalDetailCount + Detail.AnimatedDetailCount - 1);
+                            }
+                            else if (IsHover(destination) && SelectionMode == SelectionMode.Detail && _hasWheelDown)
+                            {
+                                detail.Type--;
+                                detail.Type = Math.Max(detail.Type, 0);
+                            }
+
+                            // remove
+                            if (IsHover(destination) && SelectionMode == SelectionMode.Detail && _hasRightClick && IsHover(room, f, cameraPosY))
+                            {
+                                remove = d;
+                            }
+                        }
+
+                        // add
+                        if (SelectionMode == SelectionMode.Detail && _hasLeftClick && IsHover(room, f, cameraPosY))
+                        {
+                            room.Details.Add(new Detail(_mouseState.Position.X - 16));
+                        }
+                        else if (remove >= 0)
+                        {
+                            room.Details.RemoveAt(remove);
                         }
                     }
 
@@ -453,129 +641,320 @@ namespace GreedyKidEditor
                     {
                         Room room = floor.Rooms[r];
 
+                        int remove = -1;
+
                         // floor doors
                         for (int d = 0; d < room.FloorDoors.Count; d++)
                         {
                             FloorDoor floorDoor = room.FloorDoors[d];
-                            Rectangle source = _floorDoorRectangle[room.BackgroundColor][floorDoor.Color][_floorDoorSequence[_currentFloorDoorFrame]];
+                            source = _floorDoorRectangle[room.BackgroundColor][floorDoor.Color][_floorDoorSequence[_currentFloorDoorFrame]];
+                            destination = new Rectangle(floorDoor.X, 128 - 40 * f + cameraPosY, source.Width, source.Height);
 
                             spriteBatch.Draw(_levelTexture,
-                                new Rectangle(floorDoor.X, 128 - 40 * f + cameraPosY, source.Width, source.Height),
+                                destination,
                                 source,
-                                Color.White);
+                                (IsHover(destination) && SelectionMode == SelectionMode.FloorDoor ? _selectionColor : Color.White));
+
+                            // update
+                            if (IsHover(destination) && SelectionMode == SelectionMode.FloorDoor && _hasWheelUp)
+                            {
+                                floorDoor.Color++;
+                                floorDoor.Color = Math.Min(floorDoor.Color, FloorDoor.DoorCount- 1);
+                            }
+                            else if (IsHover(destination) && SelectionMode == SelectionMode.FloorDoor && _hasWheelDown)
+                            {
+                                floorDoor.Color--;
+                                floorDoor.Color = Math.Max(floorDoor.Color, 0);
+                            }
+
+                            // remove
+                            if (IsHover(destination) && SelectionMode == SelectionMode.FloorDoor && _hasRightClick && IsHover(room, f, cameraPosY))
+                            {
+                                remove = d;
+                            }
                         }
+
+                        // add
+                        if (SelectionMode == SelectionMode.FloorDoor && _hasLeftClick && IsHover(room, f, cameraPosY))
+                        {
+                            room.FloorDoors.Add(new FloorDoor(_mouseState.Position.X - 16));
+                        }
+                        else if (remove >= 0)
+                        {
+                            room.FloorDoors.RemoveAt(remove);
+                        }
+
+                        remove = -1;
 
                         // room doors
                         for (int d = 0; d < room.RoomDoors.Count; d++)
                         {
                             RoomDoor roomDoor = room.RoomDoors[d];
-                            Rectangle source = _roomDoorRectangle[room.BackgroundColor][_roomDoorSequence[_currentRoomDoorFrame]];
+                            source = _roomDoorRectangle[room.BackgroundColor][_roomDoorSequence[_currentRoomDoorFrame]];
+                            destination = new Rectangle(roomDoor.X, 128 - 40 * f + cameraPosY, source.Width, source.Height);
 
                             spriteBatch.Draw(_levelTexture,
-                                new Rectangle(roomDoor.X, 128 - 40 * f + cameraPosY, source.Width, source.Height),
+                                destination,
                                 source,
-                                Color.White);
+                                (IsHover(destination) && SelectionMode == SelectionMode.RoomDoor ? _selectionColor : Color.White));
+
+                            // remove
+                            if (IsHover(destination) && SelectionMode == SelectionMode.RoomDoor && _hasRightClick && IsHover(room, f, cameraPosY))
+                            {
+                                remove = d;
+                            }
                         }
+
+                        // add
+                        if (SelectionMode == SelectionMode.RoomDoor && _hasLeftClick && IsHover(room, f, cameraPosY))
+                        {
+                            room.RoomDoors.Add(new RoomDoor(_mouseState.Position.X - 16));
+                        }
+                        else if (remove >= 0)
+                        {
+                            room.RoomDoors.RemoveAt(remove);
+                        }
+
+                        remove = -1;
 
                         // furniture
                         for (int ff = 0; ff < room.Furnitures.Count; ff++)
                         {
                             Furniture furniture = room.Furnitures[ff];
-                            Rectangle source = _furnitureRectangle[room.BackgroundColor][furniture.Type][0];
+                            source = _furnitureRectangle[room.BackgroundColor][furniture.Type][0];
+                            destination = new Rectangle(furniture.X, 128 - 40 * f + cameraPosY, source.Width, source.Height);
 
                             spriteBatch.Draw(_levelTexture,
-                                new Rectangle(furniture.X, 128 - 40 * f + cameraPosY, source.Width, source.Height),
+                                destination,
                                 source,
-                                Color.White);
+                                (IsHover(destination) && SelectionMode == SelectionMode.Furniture ? _selectionColor : Color.White));
+
+                            // update
+                            if (IsHover(destination) && SelectionMode == SelectionMode.Furniture && _hasWheelUp)
+                            {
+                                furniture.Type++;
+                                furniture.Type = Math.Min(furniture.Type, Furniture.FurnitureCount - 1);
+                            }
+                            else if (IsHover(destination) && SelectionMode == SelectionMode.Furniture && _hasWheelDown)
+                            {
+                                furniture.Type--;
+                                furniture.Type = Math.Max(furniture.Type, 0);
+                            }
+
+                            // remove
+                            if (IsHover(destination) && SelectionMode == SelectionMode.Furniture && _hasRightClick && IsHover(room, f, cameraPosY))
+                            {
+                                remove = ff;
+                            }
+                        }
+
+                        // add
+                        if (SelectionMode == SelectionMode.Furniture && _hasLeftClick && IsHover(room, f, cameraPosY))
+                        {
+                            room.Furnitures.Add(new Furniture(_mouseState.Position.X - 16));
+                        }
+                        else if (remove >= 0)
+                        {
+                            room.Furnitures.RemoveAt(remove);
                         }
 
                         // elevator
                         if (room.HasStart)
                         {
-                            Rectangle source = _elevatorRectangle[0][_elevatorSequence[_currentElevatorFrame]];
+                            source = _elevatorRectangle[0][_elevatorSequence[_currentElevatorFrame]];
+                            destination = new Rectangle(room.StartX, 128 - 40 * f + cameraPosY, source.Width, source.Height);
 
                             spriteBatch.Draw(_levelTexture,
-                                new Rectangle(room.StartX, 128 - 40 * f + cameraPosY, source.Width, source.Height),
+                                destination,
                                 source,
-                                Color.White);
+                                (IsHover(destination) && SelectionMode == SelectionMode.Elevator ? _selectionColor : Color.White));
 
                             source = _elevatorRectangle[1][_elevatorSequence[_currentElevatorFrame]];
 
                             spriteBatch.Draw(_levelTexture,
-                                new Rectangle(room.StartX, 128 - 40 * f + cameraPosY, source.Width, source.Height),
+                                destination,
                                 source,
-                                Color.White);
+                                (IsHover(destination) && SelectionMode == SelectionMode.Elevator ? _selectionColor : Color.White));
 
                             source = _elevatorRectangle[2][room.BackgroundColor];
 
                             spriteBatch.Draw(_levelTexture,
-                                new Rectangle(room.StartX, 128 - 40 * f + cameraPosY, source.Width, source.Height),
+                                destination,
                                 source,
-                                Color.White);
-                        }                    
+                                (IsHover(destination) && SelectionMode == SelectionMode.Elevator ? _selectionColor : Color.White));
+                        }
+
+                        // add
+                        if (SelectionMode == SelectionMode.Elevator && _hasLeftClick && IsHover(room, f, cameraPosY))
+                        {
+                            RemoveStart();
+                            room.HasStart = true;
+                            room.StartX = _mouseState.Position.X - 16;
+                        }
 
                         if (room.HasExit)
                         {
-                            Rectangle source = _elevatorRectangle[0][_elevatorSequence[_currentElevatorFrame]];
+                            source = _elevatorRectangle[0][_elevatorSequence[_currentElevatorFrame]];
+                            destination = new Rectangle(room.ExitX, 128 - 40 * f + cameraPosY, source.Width, source.Height);
 
                             spriteBatch.Draw(_levelTexture,
-                                new Rectangle(room.ExitX, 128 - 40 * f + cameraPosY, source.Width, source.Height),
+                                destination,
                                 source,
-                                Color.White);
+                                (IsHover(destination) && SelectionMode == SelectionMode.Elevator ? _selectionColor : Color.White));
 
                             source = _elevatorRectangle[1][_elevatorSequence[_currentElevatorFrame]];
 
                             spriteBatch.Draw(_levelTexture,
-                                new Rectangle(room.ExitX, 128 - 40 * f + cameraPosY, source.Width, source.Height),
+                                destination,
                                 source,
-                                Color.White);
+                                (IsHover(destination) && SelectionMode == SelectionMode.Elevator ? _selectionColor : Color.White));
 
                             source = _elevatorRectangle[2][room.BackgroundColor];
 
                             spriteBatch.Draw(_levelTexture,
-                                new Rectangle(room.ExitX, 128 - 40 * f + cameraPosY, source.Width, source.Height),
+                                destination,
                                 source,
-                                Color.White);
+                                (IsHover(destination) && SelectionMode == SelectionMode.Elevator ? _selectionColor : Color.White));
                         }
 
-                        // retired
+                        // add
+                        if (SelectionMode == SelectionMode.Elevator && _hasRightClick && IsHover(room, f, cameraPosY))
+                        {
+                            RemoveExit();
+                            room.HasExit = true;
+                            room.ExitX = _mouseState.Position.X - 16;
+                        }
 
+                        remove = -1;
+
+                        // retired
                         for (int rr = 0; rr < room.Retireds.Count; rr++)
                         {
                             Retired retired = room.Retireds[rr];
 
-                            Rectangle source = _retiredRectangle[retired.Type][_retiredSequence[_currentRetiredFrame]];
+                            source = _retiredRectangle[retired.Type][_retiredSequence[_currentRetiredFrame]];
+                            destination = new Rectangle((int)retired.X, 128 - 40 * f + 9 + cameraPosY, 32, 32);
 
                             spriteBatch.Draw(_levelTexture,
-                                new Rectangle((int)retired.X, 128 - 40 * f + 9 + cameraPosY, 32, 32),
+                                destination,
                                 source,
-                                Color.White);
+                                (IsHover(destination) && SelectionMode == SelectionMode.Retired ? _selectionColor : Color.White));
+
+                            // update
+                            if (IsHover(destination) && SelectionMode == SelectionMode.Retired && _hasWheelUp)
+                            {
+                                retired.Type++;
+                                retired.Type = Math.Min(retired.Type, Retired.RetiredCount - 1);
+                            }
+                            else if (IsHover(destination) && SelectionMode == SelectionMode.Retired && _hasWheelDown)
+                            {
+                                retired.Type--;
+                                retired.Type = Math.Max(retired.Type, 0);
+                            }
+
+                            // remove
+                            if (IsHover(destination) && SelectionMode == SelectionMode.Retired && _hasRightClick && IsHover(room, f, cameraPosY))
+                            {
+                                remove = rr;
+                            }
                         }
+
+                        // add
+                        if (SelectionMode == SelectionMode.Retired && _hasLeftClick && IsHover(room, f, cameraPosY))
+                        {
+                            room.Retireds.Add(new Retired(_mouseState.Position.X - 16));
+                        }
+                        else if (remove >= 0)
+                        {
+                            room.Retireds.RemoveAt(remove);
+                        }
+
+                        remove = -1;
 
                         // nurse
                         for (int n = 0; n < room.Nurses.Count; n++)
                         {
                             Nurse nurse = room.Nurses[n];
 
-                            Rectangle source = _nurseRectangle[nurse.Type][_nurseSequence[_currentNurseFrame]];
+                            source = _nurseRectangle[nurse.Type][_nurseSequence[_currentNurseFrame]];
+                            destination = new Rectangle((int)nurse.X, 128 - 40 * f + 9 + cameraPosY, 32, 32);
 
                             spriteBatch.Draw(_levelTexture,
-                                new Rectangle((int)nurse.X, 128 - 40 * f + 9 + cameraPosY, 32, 32),
+                                destination,
                                 source,
-                                Color.White);
+                                (IsHover(destination) && SelectionMode == SelectionMode.Nurse ? _selectionColor : Color.White));
+
+                            // update
+                            if (IsHover(destination) && SelectionMode == SelectionMode.Nurse && _hasWheelUp)
+                            {
+                                nurse.Type++;
+                                nurse.Type = Math.Min(nurse.Type, Nurse.NurseCount - 1);
+                            }
+                            else if (IsHover(destination) && SelectionMode == SelectionMode.Nurse && _hasWheelDown)
+                            {
+                                nurse.Type--;
+                                nurse.Type = Math.Max(nurse.Type, 0);
+                            }
+
+                            // remove
+                            if (IsHover(destination) && SelectionMode == SelectionMode.Nurse && _hasRightClick && IsHover(room, f, cameraPosY))
+                            {
+                                remove = n;
+                            }
                         }
+
+                        // add
+                        if (SelectionMode == SelectionMode.Nurse && _hasLeftClick && IsHover(room, f, cameraPosY))
+                        {
+                            room.Nurses.Add(new Nurse(_mouseState.Position.X - 16));
+                        }
+                        else if (remove >= 0)
+                        {
+                            room.Nurses.RemoveAt(remove);
+                        }
+
+                        remove = -1;
 
                         // cop
                         for (int c = 0; c < room.Cops.Count; c++)
                         {
                             Cop cop = room.Cops[c];
 
-                            Rectangle source = _copRectangle[cop.Type][_copSequence[_currentCopFrame]];
+                            source = _copRectangle[cop.Type][_copSequence[_currentCopFrame]];
+                            destination = new Rectangle((int)cop.X, 128 - 40 * f + 9 + cameraPosY, 32, 32);
 
                             spriteBatch.Draw(_levelTexture,
-                                new Rectangle((int)cop.X, 128 - 40 * f + 9 + cameraPosY, 32, 32),
+                                destination,
                                 source,
-                                Color.White);
+                                (IsHover(destination) && SelectionMode == SelectionMode.Cop ? _selectionColor : Color.White));
+
+                            // update
+                            if (IsHover(destination) && SelectionMode == SelectionMode.Cop && _hasWheelUp)
+                            {
+                                cop.Type++;
+                                cop.Type = Math.Min(cop.Type, Cop.CopCount - 1);
+                            }
+                            else if (IsHover(destination) && SelectionMode == SelectionMode.Cop && _hasWheelDown)
+                            {
+                                cop.Type--;
+                                cop.Type = Math.Max(cop.Type, 0);
+                            }
+
+                            // remove
+                            if (IsHover(destination) && SelectionMode == SelectionMode.Cop && _hasRightClick && IsHover(room, f, cameraPosY))
+                            {
+                                remove = c;
+                            }
+                        }
+
+                        // add
+                        if (SelectionMode == SelectionMode.Cop && _hasLeftClick && IsHover(room, f, cameraPosY))
+                        {
+                            room.Cops.Add(new Cop(_mouseState.Position.X - 16));
+                        }
+                        else if (remove >= 0)
+                        {
+                            room.Cops.RemoveAt(remove);
                         }
                     }                  
                 }
@@ -708,7 +1087,7 @@ namespace GreedyKidEditor
             int textX = 0;
             for (int t = 0; t < _encodedTime.Length; t++)
             {
-                Rectangle source = _numberRectangle[_encodedTime[t]];
+                source = _numberRectangle[_encodedTime[t]];
                 spriteBatch.Draw(_levelTexture,
                     new Rectangle(140 + textX, 0, source.Width, source.Height),
                     source,
@@ -726,7 +1105,7 @@ namespace GreedyKidEditor
             textX = 0;
             for (int s = 0; s < _encodedScore.Length; s++)
             {
-                Rectangle source = _numberRectangle[_encodedScore[s]];
+                source = _numberRectangle[_encodedScore[s]];
                 spriteBatch.Draw(_levelTexture,
                     new Rectangle(261 + textX, 0, source.Width, source.Height),
                     source,
@@ -740,9 +1119,49 @@ namespace GreedyKidEditor
                 _numberRectangle[11],
                 Color.White);
 
+            // editor UI
+            for (int i = 0; i < (int)SelectionMode.Count - 1; i++)
+            {
+                destination = new Rectangle(314, 25 + i * _editorIcons[i].Height, _editorIcons[i].Width, _editorIcons[i].Height);
+
+                spriteBatch.Draw(_levelTexture,
+                    destination,
+                    _editorIcons[i],
+                    Color.White);
+
+                if (IsHover(destination) && (_hasLeftClick || _hasRightClick))
+                    SelectionMode = (SelectionMode)i;
+
+                if (SelectionMode == (SelectionMode)i)
+                {
+                    spriteBatch.Draw(_levelTexture,
+                        destination,
+                        _editorIcons[(int)SelectionMode.Selection],
+                        Color.White);
+                }
+            }
+
             spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        public bool IsHover(Rectangle r)
+        {
+            Rectangle rr = new Rectangle(_mouseState.Position, new Point(1));
+            return r.Intersects(rr);
+        }
+
+        public bool IsHover(Room room, int f, int cameraPosY)
+        {
+            int startX = 16 + room.LeftMargin * 8;
+            int nbSlice = 37 - room.LeftMargin - room.RightMargin;
+
+            Rectangle source = _roomRectangle[room.BackgroundColor][0][1];
+            Rectangle destination = new Rectangle(startX + 8, 128 - 40 * f + cameraPosY, source.Width * nbSlice, source.Height);
+
+            Rectangle rr = new Rectangle(_mouseState.Position, new Point(1));
+            return destination.Intersects(rr);
         }
     }
 }

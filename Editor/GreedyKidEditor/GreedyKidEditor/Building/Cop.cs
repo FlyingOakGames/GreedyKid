@@ -2,7 +2,7 @@
 
 namespace GreedyKidEditor
 {
-    public sealed class Cop
+    public sealed class Cop : IMovable
     {
         public const int CopCount = 2;
 
@@ -15,6 +15,11 @@ namespace GreedyKidEditor
         }
 
         public Cop(int x)
+        {
+            X = x;
+        }
+
+        public void Move(int x)
         {
             X = x;
         }

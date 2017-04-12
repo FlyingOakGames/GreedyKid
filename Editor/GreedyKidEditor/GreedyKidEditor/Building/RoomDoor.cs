@@ -2,7 +2,7 @@
 
 namespace GreedyKidEditor
 {
-    public sealed class RoomDoor
+    public sealed class RoomDoor : IMovable
     {
         public const int DoorFrames = 18;
         public const int FramePerLine = 18;
@@ -15,6 +15,11 @@ namespace GreedyKidEditor
         }
 
         public RoomDoor(int x)
+        {
+            X = x;
+        }
+
+        public void Move(int x)
         {
             X = x;
         }

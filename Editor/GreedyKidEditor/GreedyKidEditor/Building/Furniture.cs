@@ -2,7 +2,7 @@
 
 namespace GreedyKidEditor
 {
-    public sealed class Furniture
+    public sealed class Furniture : IMovable
     {
         public const int FurnitureCount = 8;
         public const int FurnitureFrames = 14;
@@ -17,6 +17,11 @@ namespace GreedyKidEditor
         }
 
         public Furniture(int x)
+        {
+            X = x;
+        }
+
+        public void Move(int x)
         {
             X = x;
         }

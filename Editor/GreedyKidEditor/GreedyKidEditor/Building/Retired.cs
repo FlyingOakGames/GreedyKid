@@ -2,7 +2,7 @@
 
 namespace GreedyKidEditor
 {
-    public sealed class Retired
+    public sealed class Retired : IMovable
     {
         public const int RetiredCount = 4;
 
@@ -18,6 +18,11 @@ namespace GreedyKidEditor
         }
 
         public Retired(int x)
+        {
+            X = x;
+        }
+
+        public void Move(int x)
         {
             X = x;
         }
