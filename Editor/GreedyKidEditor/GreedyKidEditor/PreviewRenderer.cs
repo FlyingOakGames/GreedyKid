@@ -127,6 +127,10 @@ namespace GreedyKidEditor
         private bool _hasWheelUp = false;
         private bool _hasWheelDown = false;
 
+        public bool SpaceState = false;
+        private bool _prevSpaceState = false;
+        private bool _hasSpaceDown = false;
+
         // dragging
         private IMovable _lockedObject;
 
@@ -386,6 +390,7 @@ namespace GreedyKidEditor
             _hasLeftClick = false;
             _hasWheelUp = false;
             _hasWheelDown = false;
+            _hasSpaceDown = false;
 
             if (_prevMouseState.ScrollWheelValue == 0 && _mouseState.ScrollWheelValue < _prevMouseState.ScrollWheelValue)
                 _hasWheelDown = true;
@@ -398,7 +403,16 @@ namespace GreedyKidEditor
             if (_prevMouseState.RightButton == ButtonState.Released && _mouseState.RightButton == ButtonState.Pressed)
                 _hasRightClick = true;
 
+            if (!_prevSpaceState && SpaceState)
+                _hasSpaceDown = true;
+            else if (!SpaceState)
+                _lockedObject = null;
+
             _prevMouseState = _mouseState;
+            _prevSpaceState = SpaceState;
+
+            if (_lockedObject != null)
+                _lockedObject.Move(_mouseState.Position.X - 16);
 
             float elaspedSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
@@ -564,7 +578,7 @@ namespace GreedyKidEditor
                         {
                             room.LeftDecoration--;
                             room.LeftDecoration = Math.Max(room.LeftDecoration, 0);
-                        }
+                        }                        
 
                         // right wall
                         source = _roomRectangle[room.BackgroundColor][room.RightDecoration][2];
@@ -623,6 +637,12 @@ namespace GreedyKidEditor
                             {
                                 remove = d;
                             }
+
+                            // selection
+                            if (IsHover(destination) && SelectionMode == SelectionMode.Detail && _hasSpaceDown)
+                            {
+                                _lockedObject = detail;
+                            }
                         }
 
                         // add
@@ -672,6 +692,12 @@ namespace GreedyKidEditor
                             {
                                 remove = d;
                             }
+
+                            // selection
+                            if (IsHover(destination) && SelectionMode == SelectionMode.FloorDoor && _hasSpaceDown)
+                            {
+                                _lockedObject = floorDoor;
+                            }
                         }
 
                         // add
@@ -702,6 +728,12 @@ namespace GreedyKidEditor
                             if (IsHover(destination) && SelectionMode == SelectionMode.RoomDoor && _hasRightClick && IsHover(room, f, cameraPosY))
                             {
                                 remove = d;
+                            }
+
+                            // selection
+                            if (IsHover(destination) && SelectionMode == SelectionMode.RoomDoor && _hasSpaceDown)
+                            {
+                                _lockedObject = roomDoor;
                             }
                         }
 
@@ -745,6 +777,12 @@ namespace GreedyKidEditor
                             if (IsHover(destination) && SelectionMode == SelectionMode.Furniture && _hasRightClick && IsHover(room, f, cameraPosY))
                             {
                                 remove = ff;
+                            }
+
+                            // selection
+                            if (IsHover(destination) && SelectionMode == SelectionMode.Furniture && _hasSpaceDown)
+                            {
+                                _lockedObject = furniture;
                             }
                         }
 
@@ -857,6 +895,12 @@ namespace GreedyKidEditor
                             {
                                 remove = rr;
                             }
+
+                            // selection
+                            if (IsHover(destination) && SelectionMode == SelectionMode.Retired && _hasSpaceDown)
+                            {
+                                _lockedObject = retired;
+                            }
                         }
 
                         // add
@@ -901,6 +945,12 @@ namespace GreedyKidEditor
                             {
                                 remove = n;
                             }
+
+                            // selection
+                            if (IsHover(destination) && SelectionMode == SelectionMode.Nurse && _hasSpaceDown)
+                            {
+                                _lockedObject = nurse;
+                            }
                         }
 
                         // add
@@ -944,6 +994,12 @@ namespace GreedyKidEditor
                             if (IsHover(destination) && SelectionMode == SelectionMode.Cop && _hasRightClick && IsHover(room, f, cameraPosY))
                             {
                                 remove = c;
+                            }
+
+                            // selection
+                            if (IsHover(destination) && SelectionMode == SelectionMode.Cop && _hasSpaceDown)
+                            {
+                                _lockedObject = cop;
                             }
                         }
 

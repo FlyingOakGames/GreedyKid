@@ -179,15 +179,40 @@ namespace GreedyKidEditor
             return lpPoint;
         }
 
+        const int WM_KEYDOWN = 0x100;
+        const int WM_KEYUP = 0x101;
+        const int WM_SYSKEYDOWN = 0x104;
+        const int WM_MOUSEWHEEL = 0x20A;
+
         private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
             // listen for messages that are meant for a hosted Win32 window.
-            if (msg == 522) // WM_MOUSEWHEEL
+            if (msg == WM_MOUSEWHEEL) // WM_MOUSEWHEEL
             {
                 if (renderer != null)
                     renderer.MouseWheelDelta = wParam.ToInt32() >> 16;
 
                 handled = true;   
+            }
+            else if (msg == WM_KEYDOWN)
+            {
+                if (wParam.ToInt32() == 32) // space
+                {
+                    if (renderer != null)
+                        renderer.SpaceState = true;
+                }
+
+                handled = true;   
+            }
+            else if (msg == WM_KEYUP)
+            {
+                if (wParam.ToInt32() == 32) // space
+                {
+                    if (renderer != null)
+                        renderer.SpaceState = false;
+                }
+
+                handled = true;
             }
             return IntPtr.Zero;
 
