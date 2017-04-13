@@ -106,9 +106,7 @@ namespace GreedyKidEditor
         private void Window_Closing(object sender, CancelEventArgs e)
         {
             _stopThread = true;
-            //mouseThread.Abort();
-            //mouseThread.Join();
-            //rendererThread.Abort();
+
             renderer.Exit();
             rendererThread.Join();            
         }
@@ -156,16 +154,6 @@ namespace GreedyKidEditor
             }
         }
 
-        [StructLayout(LayoutKind.Sequential)]
-        private struct MSLLHOOKSTRUCT
-        {
-            public Point pt;
-            public int mouseData;
-            public int flags;
-            public int time;
-            public long dwExtraInfo;
-        }
-
         [DllImport("user32.dll")]
         public static extern bool GetCursorPos(out POINT lpPoint);
 
@@ -201,6 +189,26 @@ namespace GreedyKidEditor
                     if (renderer != null)
                         renderer.SpaceState = true;
                 }
+                else if (wParam.ToInt32() == 67) // c
+                {
+                    if (renderer != null)
+                        renderer.CState = true;
+                }
+                else if (wParam.ToInt32() == 86) // v
+                {
+                    if (renderer != null)
+                        renderer.VState = true;
+                }
+                else if (wParam.ToInt32() == 66) // b
+                {
+                    if (renderer != null)
+                        renderer.BState = true;
+                }
+                else if (wParam.ToInt32() == 78) // n
+                {
+                    if (renderer != null)
+                        renderer.NState = true;
+                }
 
                 handled = true;   
             }
@@ -211,11 +219,31 @@ namespace GreedyKidEditor
                     if (renderer != null)
                         renderer.SpaceState = false;
                 }
+                else if (wParam.ToInt32() == 67) // c
+                {
+                    if (renderer != null)
+                        renderer.CState = false;
+                }
+                else if (wParam.ToInt32() == 86) // v
+                {
+                    if (renderer != null)
+                        renderer.VState = false;
+                }
+                else if (wParam.ToInt32() == 66) // b
+                {
+                    if (renderer != null)
+                        renderer.BState = false;
+                }
+                else if (wParam.ToInt32() == 78) // n
+                {
+                    if (renderer != null)
+                        renderer.NState = false;
+                }
 
                 handled = true;
             }
-            return IntPtr.Zero;
 
+            return IntPtr.Zero;
         }
 
         private bool _11scale = false;

@@ -117,6 +117,7 @@ namespace GreedyKidEditor
 
         public static bool PreviewAnimation = false;
 
+        // mouse and keyboard states
         private MouseState _mouseState = new MouseState();
         private MouseState _prevMouseState = new MouseState();
         public Point MousePosition = new Point();
@@ -131,8 +132,26 @@ namespace GreedyKidEditor
         private bool _prevSpaceState = false;
         private bool _hasSpaceDown = false;
 
+        public bool CState = false;
+        private bool _prevCState = false;
+        private bool _hasCDown = false;
+
+        public bool VState = false;
+        private bool _prevVState = false;
+        private bool _hasVDown = false;
+
+        public bool BState = false;
+        private bool _prevBState = false;
+        private bool _hasBDown = false;
+
+        public bool NState = false;
+        private bool _prevNState = false;
+        private bool _hasNDown = false;
+
         // dragging
         private IMovable _lockedObject;
+        private Room _lockedRoom;
+        private bool _lockedLeft = false;        
 
         private Color _selectionColor = Color.White * 0.5f;
 
@@ -391,6 +410,10 @@ namespace GreedyKidEditor
             _hasWheelUp = false;
             _hasWheelDown = false;
             _hasSpaceDown = false;
+            _hasCDown = false;
+            _hasVDown = false;
+            _hasBDown = false;
+            _hasNDown = false;
 
             if (_prevMouseState.ScrollWheelValue == 0 && _mouseState.ScrollWheelValue < _prevMouseState.ScrollWheelValue)
                 _hasWheelDown = true;
@@ -406,13 +429,43 @@ namespace GreedyKidEditor
             if (!_prevSpaceState && SpaceState)
                 _hasSpaceDown = true;
             else if (!SpaceState)
-                _lockedObject = null;
+            {
+                _lockedObject = null;               
+                _lockedRoom = null;
+            }
+
+            if (!_prevCState && CState)
+                _hasCDown = true;
+            if (!_prevVState && VState)
+                _hasVDown = true;
+            if (!_prevBState && BState)
+                _hasBDown = true;
+            if (!_prevNState && NState)
+                _hasNDown = true;
 
             _prevMouseState = _mouseState;
             _prevSpaceState = SpaceState;
+            _prevCState = CState;
+            _prevVState = VState;
+            _prevBState = BState;
+            _prevNState = NState;
 
             if (_lockedObject != null)
                 _lockedObject.Move(_mouseState.Position.X - 16);
+
+            if (_lockedRoom != null)
+            {
+                if (_lockedLeft)
+                {
+                    _lockedRoom.LeftMargin = (_mouseState.Position.X - 12) / 8;
+                    _lockedRoom.LeftMargin = Math.Max(0, _lockedRoom.LeftMargin);
+                }
+                else
+                {
+                    _lockedRoom.RightMargin = 37 - (_mouseState.Position.X - 12) / 8;
+                    _lockedRoom.RightMargin = Math.Max(0, _lockedRoom.RightMargin);
+                }
+            }
 
             float elaspedSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
@@ -533,7 +586,7 @@ namespace GreedyKidEditor
                         {
                             destination = new Rectangle(startX + 8 * s, 128 - 40 * f + cameraPosY, source.Width, source.Height);
 
-                            if (IsHover(destination))
+                            if (s > 0 && s < nbSlice - 1 && IsHover(destination))
                                 isAnySliceHovered = true;                            
                         }
 
@@ -556,7 +609,7 @@ namespace GreedyKidEditor
                             spriteBatch.Draw(_levelTexture,
                                 destination,
                                 source,
-                                (isAnySliceHovered && SelectionMode == SelectionMode.Room ? _selectionColor : Color.White));
+                                (isAnySliceHovered && s > 0 && s < nbSlice - 1 && SelectionMode == SelectionMode.Room ? _selectionColor : Color.White));
                         }
 
                         // left wall
@@ -567,6 +620,12 @@ namespace GreedyKidEditor
                             destination,
                             source,
                             (IsHover(destination) && SelectionMode == SelectionMode.Room ? _selectionColor : Color.White));
+
+                        if (IsHover(destination) && SelectionMode == SelectionMode.Room && _hasSpaceDown)
+                        {
+                            _lockedRoom = room;
+                            _lockedLeft = true;
+                        }
 
                         // update
                         if (IsHover(destination) && SelectionMode == SelectionMode.Room && _hasWheelUp)
@@ -589,6 +648,12 @@ namespace GreedyKidEditor
                             source,
                             (IsHover(destination) && SelectionMode == SelectionMode.Room ? _selectionColor : Color.White));
 
+                        if (IsHover(destination) && SelectionMode == SelectionMode.Room && _hasSpaceDown)
+                        {
+                            _lockedRoom = room;
+                            _lockedLeft = false;
+                        }
+
                         // update
                         if (IsHover(destination) && SelectionMode == SelectionMode.Room && _hasWheelUp)
                         {
@@ -608,6 +673,8 @@ namespace GreedyKidEditor
                         Room room = floor.Rooms[r];
 
                         int remove = -1;
+                        int swap1 = -1;
+                        int swap2 = -1;
 
                         for (int d = 0; d < room.Details.Count; d++)
                         {
@@ -643,6 +710,24 @@ namespace GreedyKidEditor
                             {
                                 _lockedObject = detail;
                             }
+
+                            // swap 
+                            if (IsHover(destination) && SelectionMode == SelectionMode.Detail && _hasCDown)
+                            {
+                                if (d < room.Details.Count - 1)
+                                {
+                                    swap1 = d;
+                                    swap2 = d + 1;
+                                }
+                            }
+                            else if (IsHover(destination) && SelectionMode == SelectionMode.Detail && _hasVDown)
+                            {
+                                if (d > 0)
+                                {
+                                    swap1 = d;
+                                    swap2 = d - 1;
+                                }
+                            }
                         }
 
                         // add
@@ -654,14 +739,23 @@ namespace GreedyKidEditor
                         {
                             room.Details.RemoveAt(remove);
                         }
+
+                        // swap
+                        if (swap1 >= 0 && swap2 >= 0)
+                        {
+                            Detail d = room.Details[swap1];
+                            room.Details[swap1] = room.Details[swap2];
+                            room.Details[swap2] = d;
+                        }
                     }
 
-                    
                     for (int r = 0; r < floor.Rooms.Count; r++)
                     {
                         Room room = floor.Rooms[r];
 
                         int remove = -1;
+                        int swap1 = -1;
+                        int swap2 = -1;
 
                         // floor doors
                         for (int d = 0; d < room.FloorDoors.Count; d++)
@@ -784,6 +878,24 @@ namespace GreedyKidEditor
                             {
                                 _lockedObject = furniture;
                             }
+
+                            // swap 
+                            if (IsHover(destination) && SelectionMode == SelectionMode.Furniture && _hasCDown)
+                            {
+                                if (ff < room.Furnitures.Count - 1)
+                                {
+                                    swap1 = ff;
+                                    swap2 = ff + 1;
+                                }
+                            }
+                            else if (IsHover(destination) && SelectionMode == SelectionMode.Furniture && _hasVDown)
+                            {
+                                if (ff > 0)
+                                {
+                                    swap1 = ff;
+                                    swap2 = ff - 1;
+                                }
+                            }
                         }
 
                         // add
@@ -794,6 +906,14 @@ namespace GreedyKidEditor
                         else if (remove >= 0)
                         {
                             room.Furnitures.RemoveAt(remove);
+                        }
+
+                        // swap
+                        if (swap1 >= 0 && swap2 >= 0)
+                        {
+                            Furniture d = room.Furnitures[swap1];
+                            room.Furnitures[swap1] = room.Furnitures[swap2];
+                            room.Furnitures[swap2] = d;
                         }
 
                         // elevator
@@ -889,6 +1009,26 @@ namespace GreedyKidEditor
                                 retired.Type--;
                                 retired.Type = Math.Max(retired.Type, 0);
                             }
+                            if (IsHover(destination) && SelectionMode == SelectionMode.Retired && _hasCDown)
+                            {
+                                retired.Life++;
+                                retired.Life = Math.Min(retired.Life, 3);
+                            }
+                            else if (IsHover(destination) && SelectionMode == SelectionMode.Retired && _hasVDown)
+                            {
+                                retired.Life--;
+                                retired.Life = Math.Max(retired.Life, 1);
+                            }
+                            if (IsHover(destination) && SelectionMode == SelectionMode.Retired && _hasBDown)
+                            {
+                                retired.Money++;
+                                retired.Money = Math.Min(retired.Money, 20);
+                            }
+                            else if (IsHover(destination) && SelectionMode == SelectionMode.Retired && _hasNDown)
+                            {
+                                retired.Money--;
+                                retired.Money = Math.Max(retired.Money, 0);
+                            }
 
                             // remove
                             if (IsHover(destination) && SelectionMode == SelectionMode.Retired && _hasRightClick && IsHover(room, f, cameraPosY))
@@ -938,6 +1078,16 @@ namespace GreedyKidEditor
                             {
                                 nurse.Type--;
                                 nurse.Type = Math.Max(nurse.Type, 0);
+                            }
+                            if (IsHover(destination) && SelectionMode == SelectionMode.Nurse && _hasCDown)
+                            {
+                                nurse.Life++;
+                                nurse.Life = Math.Min(nurse.Life, 3);
+                            }
+                            else if (IsHover(destination) && SelectionMode == SelectionMode.Nurse && _hasVDown)
+                            {
+                                nurse.Life--;
+                                nurse.Life = Math.Max(nurse.Life, 1);
                             }
 
                             // remove
