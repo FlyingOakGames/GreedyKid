@@ -1006,10 +1006,14 @@ namespace GreedyKidEditor
 
                         remove = -1;
 
+                        Score = 0;
+
                         // retired
                         for (int rr = 0; rr < room.Retireds.Count; rr++)
                         {
                             Retired retired = room.Retireds[rr];
+
+                            Score += retired.Money;
 
                             source = _retiredRectangle[retired.Type][_retiredSequence[_currentRetiredFrame]];
                             destination = new Rectangle((int)retired.X, 128 - 40 * f + 9 + cameraPosY, 32, 32);
