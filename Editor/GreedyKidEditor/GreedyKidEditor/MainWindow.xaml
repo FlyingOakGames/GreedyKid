@@ -45,17 +45,12 @@
                 <ColumnDefinition Width="175" MinWidth="175"/>
                 <ColumnDefinition Width="5" />
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="5" />
-                <ColumnDefinition Width="315" MinWidth="315" />
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0" >
-                <TreeView x:Name="treeView" Margin="10,57,10,10" SelectedItemChanged="treeView_SelectedItemChanged">
-
-                </TreeView>
                 <Button x:Name="addButton" Content="+" HorizontalAlignment="Left" Margin="10,33,0,0" VerticalAlignment="Top" Width="20" Height="20" Click="addButton_Click"/>
                 <Button x:Name="removeButton" Content="-" HorizontalAlignment="Left" Margin="35,33,0,0" VerticalAlignment="Top"  Width="20" Height="20" Click="removeButton_Click"/>
                 <Button x:Name="renameButton" Content="Rename" HorizontalAlignment="Left" Margin="110,33,0,0" VerticalAlignment="Top"  Width="55" Height="20" Click="renameButton_Click"/>
-                <Label x:Name="label" Content="Building composition" Margin="10,2,0,0" VerticalAlignment="Top" FontWeight="Bold" HorizontalAlignment="Left" Width="140"/>
+                <Label x:Name="label" Content="Building composition" Margin="19,2,0,0" VerticalAlignment="Top" FontWeight="Bold" HorizontalAlignment="Left" Width="140"/>
                 <Button x:Name="upLevelButton" Content="->" HorizontalAlignment="Left" Margin="60,33,0,0" VerticalAlignment="Top"  Width="20" Height="20" Click="upLevelButton_Click" RenderTransformOrigin="0.5,0.5">
                     <Button.RenderTransform>
                         <TransformGroup>
@@ -76,6 +71,44 @@
                         </TransformGroup>
                     </Button.RenderTransform>
                 </Button>
+
+                <GroupBox x:Name="groupBox_Copy8" Header="Cops spwan" Margin="10,0,10,10" VerticalAlignment="Bottom" Height="137" FontWeight="Bold">
+                    <Grid>
+                        <Slider x:Name="timeBeforeCopSlider" Margin="10,36,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="123" Maximum="239" SmallChange="1" ValueChanged="timeBeforeCopSlider_ValueChanged"/>
+                        <Label x:Name="label1" Content="Spawn time (sec)" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" FontWeight="Normal"/>
+                        <Label x:Name="timeBeforeCopLabel" Content="0" HorizontalAlignment="Left" Margin="115,10,0,0" VerticalAlignment="Top" FontWeight="Normal" Width="30"/>
+
+                        <Grid Width="40" Height="26" Margin="91,56,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="13" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="13" />
+                                <RowDefinition Height="13" />
+                            </Grid.RowDefinitions>
+                            <TextBox Name="cop1TextBox"  Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" TextAlignment="Right" Text="0" IsEnabled="False" />
+                            <RepeatButton Name="cop1ButtonUP"  Grid.Column="1" Grid.Row="0" FontSize="8" FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="cop1ButtonUP_Click" Height="13" VerticalAlignment="Top">5</RepeatButton>
+                            <RepeatButton Name="cop1ButtonDown"  Grid.Column="1" Grid.Row="1" FontSize="8"  FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="13" VerticalAlignment="Bottom" Click="cop1ButtonDown_Click">6</RepeatButton>
+                        </Grid>
+                        <Grid Width="40" Height="26" Margin="91,87,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="13" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="13" />
+                                <RowDefinition Height="13" />
+                            </Grid.RowDefinitions>
+                            <TextBox Name="cop2TextBox"  Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" TextAlignment="Right" Text="0" IsEnabled="False" />
+                            <RepeatButton Name="cop2ButtonUP"  Grid.Column="1" Grid.Row="0" FontSize="8" FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="cop2ButtonUP_Click">5</RepeatButton>
+                            <RepeatButton Name="cop2ButtonDown"  Grid.Column="1" Grid.Row="1" FontSize="8"  FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="13" VerticalAlignment="Bottom" Click="cop2ButtonDown_Click">6</RepeatButton>
+                        </Grid>
+                        <Label x:Name="label1_Copy" Content="Cop (tonfa)" HorizontalAlignment="Left" Margin="10,56,0,0" VerticalAlignment="Top" FontWeight="Normal"/>
+                        <Label x:Name="label1_Copy1" Content="Cop (taser)" HorizontalAlignment="Left" Margin="10,87,0,0" VerticalAlignment="Top" FontWeight="Normal"/>
+                    </Grid>
+                </GroupBox>
+                <ListBox x:Name="levelListBox" Margin="10,58,10,152" SelectionChanged="levelListBox_SelectionChanged"/>
             </Grid>
             <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
             <Grid x:Name="rendererBackgroundGrid" Grid.Column="2" Background="#FF222034" SizeChanged="rendererBackgroundGrid_SizeChanged">
@@ -84,342 +117,6 @@
                 </WindowsFormsHost>
                 <CheckBox x:Name="checkBox" Content="Animations" HorizontalAlignment="Left" Margin="9,5,0,0" VerticalAlignment="Top" Foreground="White" Checked="checkBox_Checked" Unchecked="checkBox_Unchecked" Visibility="Hidden"/>
             </Grid>
-            <GridSplitter Grid.Column="3" Width="5" HorizontalAlignment="Stretch"/>
-            <TabControl Grid.Column="4">
-                <TabItem Header="Room fine tuning">
-                    <Grid>
-                        <GroupBox x:Name="groupBox" Header="Floor doors" HorizontalAlignment="Right" Margin="0,166,157,0" VerticalAlignment="Top" Height="180" Width="152" FontWeight="Bold"/>
-                        <GroupBox x:Name="groupBox_Copy" Header="Furniture" HorizontalAlignment="Right" Margin="0,345,3,0" VerticalAlignment="Top" Height="210" Width="152" FontWeight="Bold"/>
-                        <GroupBox x:Name="groupBox_Copy1" Header="Details" HorizontalAlignment="Right" Margin="0,345,157,0" VerticalAlignment="Top" Height="210" Width="152" FontWeight="Bold"/>
-                        <GroupBox x:Name="groupBox_Copy2" Header="Separation doors" HorizontalAlignment="Right" Margin="0,166,3,0" VerticalAlignment="Top" Height="180" Width="152" FontWeight="Bold"/>
-                        <GroupBox x:Name="groupBox_Copy3" Header="Room properties" HorizontalAlignment="Right" Margin="0,10,3,0" VerticalAlignment="Top" Height="156" Width="306" FontWeight="Bold"/>
-                        <Grid Width="40" Height="26" Margin="0,33,163,0" HorizontalAlignment="Right" VerticalAlignment="Top">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="13" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="13" />
-                                <RowDefinition Height="13" />
-                            </Grid.RowDefinitions>
-                            <TextBox Name="paintTextBox"  Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" TextAlignment="Right" Text="0" IsEnabled="False" />
-                            <RepeatButton Name="paintButtonUP"  Grid.Column="1" Grid.Row="0" FontSize="8" FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="paintButtonUP_Click">5</RepeatButton>
-                            <RepeatButton Name="paintButtonDown"  Grid.Column="1" Grid.Row="1" FontSize="8"  FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="13" VerticalAlignment="Bottom" Click="paintButtonDown_Click">6</RepeatButton>
-                        </Grid>
-                        <Label x:Name="label2" Content="Wall color" HorizontalAlignment="Right" Margin="0,33,221,0" VerticalAlignment="Top"/>
-
-                        <Grid Width="40" Height="26" Margin="0,33,10,0" HorizontalAlignment="Right" VerticalAlignment="Top">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="13" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="13" />
-                                <RowDefinition Height="13" />
-                            </Grid.RowDefinitions>
-                            <TextBox Name="leftMarginTextBox"  Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" TextAlignment="Right" Text="0" IsEnabled="False" />
-                            <RepeatButton Name="leftMarginButtonUP"  Grid.Column="1" Grid.Row="0" FontSize="8" FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="leftMarginButtonUP_Click">5</RepeatButton>
-                            <RepeatButton Name="leftMarginButtonDown"  Grid.Column="1" Grid.Row="1" FontSize="8"  FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="13" VerticalAlignment="Bottom" Click="leftMarginButtonDown_Click">6</RepeatButton>
-                        </Grid>
-
-                        <Grid Width="40" Height="26" Margin="0,66,10,0" HorizontalAlignment="Right" VerticalAlignment="Top">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="13" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="13" />
-                                <RowDefinition Height="13" />
-                            </Grid.RowDefinitions>
-                            <TextBox Name="rightMarginTextBox"  Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" TextAlignment="Right" Text="0" IsEnabled="False" />
-                            <RepeatButton Name="rightMarginButtonUP"  Grid.Column="1" Grid.Row="0" FontSize="8" FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="rightMarginButtonUP_Click">5</RepeatButton>
-                            <RepeatButton Name="rightMarginButtonDown"  Grid.Column="1" Grid.Row="1" FontSize="8"  FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="13" VerticalAlignment="Bottom" Click="rightMarginButtonDown_Click">6</RepeatButton>
-                        </Grid>
-
-                        <Grid Width="40" Height="26" Margin="0,99,10,0" HorizontalAlignment="Right" VerticalAlignment="Top">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="13" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="13" />
-                                <RowDefinition Height="13" />
-                            </Grid.RowDefinitions>
-                            <TextBox Name="leftDecorationTextBox"  Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" TextAlignment="Right" Text="0" IsEnabled="False" />
-                            <RepeatButton Name="leftDecorationButtonUP"  Grid.Column="1" Grid.Row="0" FontSize="8" FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="leftDecorationButtonUP_Click">5</RepeatButton>
-                            <RepeatButton Name="leftDecorationButtonDown"  Grid.Column="1" Grid.Row="1" FontSize="8"  FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="13" VerticalAlignment="Bottom" Click="leftDecorationButtonDown_Click">6</RepeatButton>
-                        </Grid>
-
-                        <Grid Width="40" Height="26" Margin="0,132,10,0" HorizontalAlignment="Right" VerticalAlignment="Top">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="13" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="13" />
-                                <RowDefinition Height="13" />
-                            </Grid.RowDefinitions>
-                            <TextBox Name="rightDecorationTextBox"  Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" TextAlignment="Right" Text="0" IsEnabled="False" />
-                            <RepeatButton Name="rightDecorationButtonUP"  Grid.Column="1" Grid.Row="0" FontSize="8" FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="rightDecorationButtonUP_Click">5</RepeatButton>
-                            <RepeatButton Name="rightDecorationButtonDown"  Grid.Column="1" Grid.Row="1" FontSize="8"  FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="13" VerticalAlignment="Bottom" Click="rightDecorationButtonDown_Click">6</RepeatButton>
-                        </Grid>
-                        <Label x:Name="label2_Copy" Content="Left margin" HorizontalAlignment="Right" Margin="0,33,61,0" VerticalAlignment="Top"/>
-                        <Label x:Name="label2_Copy1" Content="Right margin" HorizontalAlignment="Right" Margin="0,66,52,0" VerticalAlignment="Top"/>
-                        <Label x:Name="label2_Copy2" Content="Left wall" HorizontalAlignment="Right" Margin="0,99,77,0" VerticalAlignment="Top"/>
-                        <Label x:Name="label2_Copy3" Content="Right wall" HorizontalAlignment="Right" Margin="0,132,68,0" VerticalAlignment="Top"/>
-                        <ListBox x:Name="detailListBox" HorizontalAlignment="Right" Height="100" Margin="0,394,163,0" VerticalAlignment="Top" Width="140" SelectionChanged="detailListBox_SelectionChanged"/>
-                        <Button x:Name="addDetail" Content="+" HorizontalAlignment="Right" Margin="0,369,282,0" VerticalAlignment="Top" Width="20" Height="20" Click="addDetail_Click"/>
-                        <Button x:Name="removeDetail" Content="-" HorizontalAlignment="Right" Margin="0,369,257,0" VerticalAlignment="Top" Width="20" Height="20" Click="removeDetail_Click"/>
-                        <Slider x:Name="xDetail" HorizontalAlignment="Right" Margin="0,499,163,0" VerticalAlignment="Top" Width="123" SmallChange="1" Maximum="328" ValueChanged="xDetail_ValueChanged"/>
-                        <Label x:Name="label2_Copy4" Content="X" HorizontalAlignment="Right" Margin="0,494,289,0" VerticalAlignment="Top"/>
-                        <Grid Width="40" Height="26" Margin="0,523,163,0" HorizontalAlignment="Right" VerticalAlignment="Top">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="13" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="13" />
-                                <RowDefinition Height="13" />
-                            </Grid.RowDefinitions>
-                            <TextBox Name="detailTextBox"  Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" TextAlignment="Right" Text="0" IsEnabled="False" />
-                            <RepeatButton Name="detailButtonUP"  Grid.Column="1" Grid.Row="0" FontSize="8" FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="detailButtonUP_Click">5</RepeatButton>
-                            <RepeatButton Name="detailButtonDown"  Grid.Column="1" Grid.Row="1" FontSize="8"  FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="13" VerticalAlignment="Bottom" Click="detailButtonDown_Click">6</RepeatButton>
-                        </Grid>
-                        <Label x:Name="label2_Copy5" Content="Type" HorizontalAlignment="Right" Margin="0,522,205,0" VerticalAlignment="Top"/>
-                        <ListBox x:Name="floorDoorListBox" HorizontalAlignment="Right" Height="100" Margin="0,215,163,0" VerticalAlignment="Top" Width="140" SelectionChanged="floorDoorListBox_SelectionChanged"/>
-                        <Button x:Name="addFloorDoor" Content="+" HorizontalAlignment="Right" Margin="0,190,282,0" VerticalAlignment="Top" Width="20" Height="20" Click="addFloorDoor_Click"/>
-                        <Button x:Name="removeFloorDoor" Content="-" HorizontalAlignment="Right" Margin="0,190,257,0" VerticalAlignment="Top" Width="20" Height="20" Click="removeFloorDoor_Click"/>
-                        <Slider x:Name="xFloorDoor" HorizontalAlignment="Right" Margin="0,320,163,0" VerticalAlignment="Top" Width="123" SmallChange="1" Maximum="328" ValueChanged="xFloorDoor_ValueChanged"/>
-                        <Label x:Name="label2_Copy6" Content="X" HorizontalAlignment="Right" Margin="0,315,289,0" VerticalAlignment="Top"/>
-                        <Grid Width="40" Height="26" Margin="0,186,163,0" HorizontalAlignment="Right" VerticalAlignment="Top">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="13" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="13" />
-                                <RowDefinition Height="13" />
-                            </Grid.RowDefinitions>
-                            <TextBox x:Name="floorDoorTextBox"  Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" TextAlignment="Right" Text="0" IsEnabled="False" />
-                            <RepeatButton x:Name="floorDoorButtonUP"  Grid.Column="1" Grid.Row="0" FontSize="8" FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="5" Click="floorDoorButtonUP_Click"/>
-                            <RepeatButton x:Name="floorDoorButtonDown"  Grid.Column="1" Grid.Row="1" FontSize="8"  FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="13" VerticalAlignment="Bottom" Content="6" Click="floorDoorButtonDown_Click"/>
-                        </Grid>
-                        <Label x:Name="label2_Copy7" Content="Color" HorizontalAlignment="Right" Margin="0,185,205,0" VerticalAlignment="Top"/>
-                        <ListBox x:Name="roomDoorListBox" HorizontalAlignment="Right" Height="100" Margin="0,215,10,0" VerticalAlignment="Top" Width="140" SelectionChanged="roomDoorListBox_SelectionChanged"/>
-                        <Button x:Name="addRoomDoor" Content="+" HorizontalAlignment="Right" Margin="0,190,129,0" VerticalAlignment="Top" Width="20" Height="20" Click="addRoomDoor_Click"/>
-                        <Button x:Name="removeRoomDoor" Content="-" HorizontalAlignment="Right" Margin="0,190,104,0" VerticalAlignment="Top" Width="20" Height="20" Click="removeRoomDoor_Click"/>
-                        <Slider x:Name="xRoomDoor" HorizontalAlignment="Right" Margin="0,320,10,0" VerticalAlignment="Top" Width="123" SmallChange="1" Maximum="328" ValueChanged="xRoomDoor_ValueChanged"/>
-                        <Label x:Name="label2_Copy8" Content="X" HorizontalAlignment="Right" Margin="0,315,136,0" VerticalAlignment="Top"/>
-                        <CheckBox x:Name="exitCheckBox" Content="Exit" HorizontalAlignment="Right" Margin="0,116,264,0" VerticalAlignment="Top" Checked="exitCheckBox_Checked" Unchecked="exitCheckBox_Unchecked"/>
-                        <CheckBox x:Name="startCheckBox" Content="Start" HorizontalAlignment="Right" Margin="0,66,258,0" VerticalAlignment="Top" Checked="startCheckBox_Checked" Unchecked="startCheckBox_Unchecked"/>
-                        <Slider x:Name="xExit" HorizontalAlignment="Right" Margin="0,140,163,0" VerticalAlignment="Top" Width="123" SmallChange="1" Maximum="328" ValueChanged="xExit_ValueChanged"/>
-                        <Label x:Name="label2_Copy9" Content="X" HorizontalAlignment="Right" Margin="0,135,289,0" VerticalAlignment="Top"/>
-                        <Slider x:Name="xStart" HorizontalAlignment="Right" Margin="0,90,163,0" VerticalAlignment="Top" Width="122" SmallChange="1" Maximum="328" ValueChanged="xStart_ValueChanged"/>
-                        <Label x:Name="label2_Copy10" Content="X" HorizontalAlignment="Right" Margin="0,85,288,0" VerticalAlignment="Top"/>
-                        <ListBox x:Name="furnitureListBox" HorizontalAlignment="Right" Height="100" Margin="0,394,10,0" VerticalAlignment="Top" Width="140" SelectionChanged="furnitureListBox_SelectionChanged"/>
-                        <Button x:Name="addFurniture" Content="+" HorizontalAlignment="Right" Margin="0,369,129,0" VerticalAlignment="Top" Width="20" Height="20" Click="addFurniture_Click"/>
-                        <Button x:Name="removeFurniture" Content="-" HorizontalAlignment="Right" Margin="0,369,104,0" VerticalAlignment="Top" Width="20" Height="20" Click="removeFurniture_Click"/>
-                        <Slider x:Name="xFurniture" HorizontalAlignment="Right" Margin="0,499,10,0" VerticalAlignment="Top" Width="123" SmallChange="1" Maximum="328" ValueChanged="xFurniture_ValueChanged"/>
-                        <Label x:Name="label2_Copy11" Content="X" HorizontalAlignment="Right" Margin="0,494,136,0" VerticalAlignment="Top"/>
-                        <Grid Width="40" Height="26" Margin="0,523,10,0" HorizontalAlignment="Right" VerticalAlignment="Top">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="13" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="13" />
-                                <RowDefinition Height="13" />
-                            </Grid.RowDefinitions>
-                            <TextBox x:Name="furnitureTextBox"  Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" TextAlignment="Right" Text="0" IsEnabled="False" />
-                            <RepeatButton x:Name="furnitureButtonUP"  Grid.Column="1" Grid.Row="0" FontSize="8" FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="5" Click="furnitureButtonUP_Click"/>
-                            <RepeatButton x:Name="furnitureButtonDown"  Grid.Column="1" Grid.Row="1" FontSize="8"  FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="13" VerticalAlignment="Bottom" Content="6" Click="furnitureButtonDown_Click"/>
-                        </Grid>
-                        <Label x:Name="label2_Copy12" Content="Type" HorizontalAlignment="Right" Margin="0,522,52,0" VerticalAlignment="Top"/>
-                        <GroupBox x:Name="groupBox_Copy4" Header="Retireds" HorizontalAlignment="Right" Margin="0,555,157,0" VerticalAlignment="Top" Height="210" Width="152" FontWeight="Bold"/>
-                        <ListBox x:Name="retiredListBox" HorizontalAlignment="Right" Height="100" Margin="0,604,163,0" VerticalAlignment="Top" Width="140" SelectionChanged="retiredListBox_SelectionChanged"/>
-                        <Button x:Name="addRetired" Content="+" HorizontalAlignment="Right" Margin="0,579,282,0" VerticalAlignment="Top" Width="20" Height="20" Click="addRetired_Click"/>
-                        <Button x:Name="removeRetired" Content="-" HorizontalAlignment="Right" Margin="0,579,257,0" VerticalAlignment="Top" Width="20" Height="20" Click="removeRetired_Click"/>
-                        <Slider x:Name="xRetired" HorizontalAlignment="Right" Margin="0,709,163,0" VerticalAlignment="Top" Width="123" SmallChange="1" Maximum="328" ValueChanged="xRetired_ValueChanged"/>
-                        <Label x:Name="label2_Copy13" Content="X" HorizontalAlignment="Right" Margin="0,704,289,0" VerticalAlignment="Top"/>
-                        <Grid Width="30" Height="26" Margin="0,733,163,0" HorizontalAlignment="Right" VerticalAlignment="Top">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="13" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="13" />
-                                <RowDefinition Height="13" />
-                            </Grid.RowDefinitions>
-                            <TextBox x:Name="retiredTextBox"  Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" TextAlignment="Right" Text="0" IsEnabled="False" />
-                            <RepeatButton x:Name="retiredButtonUP"  Grid.Column="1" Grid.Row="0" FontSize="8" FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="5" Click="retiredButtonUP_Click"/>
-                            <RepeatButton x:Name="retiredButtonDown"  Grid.Column="1" Grid.Row="1" FontSize="8"  FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="13" VerticalAlignment="Bottom" Content="6" Click="retiredButtonDown_Click"/>
-                        </Grid>
-                        <Label x:Name="label2_Copy14" Content="Type" HorizontalAlignment="Right" Margin="0,732,193,0" VerticalAlignment="Top"/>
-                        <Grid Width="29" Height="26" Margin="0,733,248,0" HorizontalAlignment="Right" VerticalAlignment="Top">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="13" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="13" />
-                                <RowDefinition Height="13" />
-                            </Grid.RowDefinitions>
-                            <TextBox x:Name="retiredLifeTextBox"  Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" TextAlignment="Right" Text="0" IsEnabled="False" />
-                            <RepeatButton x:Name="retiredLifeButtonUP"  Grid.Column="1" Grid.Row="0" FontSize="8" FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="5" Click="retiredLifeButtonUP_Click"/>
-                            <RepeatButton x:Name="retiredLifeButtonDown"  Grid.Column="1" Grid.Row="1" FontSize="8"  FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="13" VerticalAlignment="Bottom" Content="6" Click="retiredLifeButtonDown_Click"/>
-                        </Grid>
-                        <Label x:Name="label2_Copy15" Content="Life" HorizontalAlignment="Right" Margin="0,732,278,0" VerticalAlignment="Top"/>
-                        <GroupBox x:Name="groupBox_Copy5" Header="Nurses" HorizontalAlignment="Right" Margin="0,555,3,0" VerticalAlignment="Top" Height="210" Width="152" FontWeight="Bold"/>
-                        <ListBox x:Name="nurseListBox" HorizontalAlignment="Right" Height="100" Margin="0,604,9,0" VerticalAlignment="Top" Width="140" SelectionChanged="nurseListBox_SelectionChanged"/>
-                        <Button x:Name="addNurse" Content="+" HorizontalAlignment="Right" Margin="0,579,128,0" VerticalAlignment="Top" Width="20" Height="20" Click="addNurse_Click"/>
-                        <Button x:Name="removeNurse" Content="-" HorizontalAlignment="Right" Margin="0,579,103,0" VerticalAlignment="Top" Width="20" Height="20" Click="removeNurse_Click"/>
-                        <Slider x:Name="xNurse" HorizontalAlignment="Right" Margin="0,709,9,0" VerticalAlignment="Top" Width="123" SmallChange="1" Maximum="328" ValueChanged="xNurse_ValueChanged"/>
-                        <Label x:Name="label2_Copy16" Content="X" HorizontalAlignment="Right" Margin="0,704,135,0" VerticalAlignment="Top"/>
-                        <Grid Width="30" Height="26" Margin="0,733,9,0" HorizontalAlignment="Right" VerticalAlignment="Top">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="13" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="13" />
-                                <RowDefinition Height="13" />
-                            </Grid.RowDefinitions>
-                            <TextBox x:Name="nurseTextBox"  Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" TextAlignment="Right" Text="0" IsEnabled="False" />
-                            <RepeatButton x:Name="nurseButtonUP"  Grid.Column="1" Grid.Row="0" FontSize="8" FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="5" Click="nurseButtonUP_Click"/>
-                            <RepeatButton x:Name="nurseButtonDown"  Grid.Column="1" Grid.Row="1" FontSize="8"  FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="13" VerticalAlignment="Bottom" Content="6" Click="nurseButtonDown_Click"/>
-                        </Grid>
-                        <Label x:Name="label2_Copy17" Content="Type" HorizontalAlignment="Right" Margin="0,732,39,0" VerticalAlignment="Top"/>
-                        <Grid Width="29" Height="26" Margin="0,733,94,0" HorizontalAlignment="Right" VerticalAlignment="Top">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="13" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="13" />
-                                <RowDefinition Height="13" />
-                            </Grid.RowDefinitions>
-                            <TextBox x:Name="nurseLifeTextBox"  Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" TextAlignment="Right" Text="0" IsEnabled="False" />
-                            <RepeatButton x:Name="nurseLifeButtonUP"  Grid.Column="1" Grid.Row="0" FontSize="8" FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="5" Click="nurseLifeButtonUP_Click"/>
-                            <RepeatButton x:Name="nurseLifeButtonDown"  Grid.Column="1" Grid.Row="1" FontSize="8"  FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="13" VerticalAlignment="Bottom" Content="6" Click="nurseLifeButtonDown_Click"/>
-                        </Grid>
-                        <Label x:Name="label2_Copy18" Content="Life" HorizontalAlignment="Right" Margin="0,732,124,0" VerticalAlignment="Top"/>
-                        <Grid Width="30" Height="26" Margin="0,575,163,0" HorizontalAlignment="Right" VerticalAlignment="Top">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="13" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="13" />
-                                <RowDefinition Height="13" />
-                            </Grid.RowDefinitions>
-                            <TextBox x:Name="retiredMoneyTextBox"  Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" TextAlignment="Right" Text="0" IsEnabled="False" />
-                            <RepeatButton x:Name="retiredMoneyButtonUP"  Grid.Column="1" Grid.Row="0" FontSize="8" FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="5" Click="retiredMoneyButtonUP_Click"/>
-                            <RepeatButton x:Name="retiredMoneyButtonDown"  Grid.Column="1" Grid.Row="1" FontSize="8"  FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="13" VerticalAlignment="Bottom" Content="6" Click="retiredMoneyButtonDown_Click"/>
-                        </Grid>
-                        <Label x:Name="label2_Copy19" Content="Money" HorizontalAlignment="Right" Margin="0,574,193,0" VerticalAlignment="Top"/>
-                        <Button x:Name="upDetail" Content="->" HorizontalAlignment="Right" Margin="0,369,232,0" VerticalAlignment="Top" Width="20" Height="20" RenderTransformOrigin="0.5,0.5" Click="upDetail_Click">
-                            <Button.RenderTransform>
-                                <TransformGroup>
-                                    <ScaleTransform/>
-                                    <SkewTransform/>
-                                    <RotateTransform Angle="-90"/>
-                                    <TranslateTransform/>
-                                </TransformGroup>
-                            </Button.RenderTransform>
-                        </Button>
-                        <Button x:Name="downDetail" Content="->" HorizontalAlignment="Right" Margin="0,369,206,0" VerticalAlignment="Top" Width="20" Height="20" RenderTransformOrigin="0.5,0.5" Click="downDetail_Click">
-                            <Button.RenderTransform>
-                                <TransformGroup>
-                                    <ScaleTransform/>
-                                    <SkewTransform/>
-                                    <RotateTransform Angle="90"/>
-                                    <TranslateTransform/>
-                                </TransformGroup>
-                            </Button.RenderTransform>
-                        </Button>
-                        <Button x:Name="upFurniture" Content="->" HorizontalAlignment="Right" Margin="0,369,79,0" VerticalAlignment="Top" Width="20" Height="20" RenderTransformOrigin="0.5,0.5" Click="upFurniture_Click">
-                            <Button.RenderTransform>
-                                <TransformGroup>
-                                    <ScaleTransform/>
-                                    <SkewTransform/>
-                                    <RotateTransform Angle="-90"/>
-                                    <TranslateTransform/>
-                                </TransformGroup>
-                            </Button.RenderTransform>
-                        </Button>
-                        <Button x:Name="downFurniture" Content="->" HorizontalAlignment="Right" Margin="0,369,54,0" VerticalAlignment="Top" Width="20" Height="20" RenderTransformOrigin="0.5,0.5" Click="downFurniture_Click">
-                            <Button.RenderTransform>
-                                <TransformGroup>
-                                    <ScaleTransform/>
-                                    <SkewTransform/>
-                                    <RotateTransform Angle="90"/>
-                                    <TranslateTransform/>
-                                </TransformGroup>
-                            </Button.RenderTransform>
-                        </Button>
-                        <GroupBox x:Name="groupBox_Copy6" Header="Cops" HorizontalAlignment="Right" Margin="0,764,157,0" VerticalAlignment="Top" Height="180" Width="152" FontWeight="Bold"/>
-                        <ListBox x:Name="copListBox" HorizontalAlignment="Right" Height="100" Margin="0,813,163,0" VerticalAlignment="Top" Width="140" SelectionChanged="copListBox_SelectionChanged"/>
-                        <Button x:Name="addCop" Content="+" HorizontalAlignment="Right" Margin="0,788,282,0" VerticalAlignment="Top" Width="20" Height="20" Click="addCop_Click"/>
-                        <Button x:Name="removeCop" Content="-" HorizontalAlignment="Right" Margin="0,788,257,0" VerticalAlignment="Top" Width="20" Height="20" Click="removeCop_Click"/>
-                        <Slider x:Name="xCop" HorizontalAlignment="Right" Margin="0,918,163,0" VerticalAlignment="Top" Width="123" SmallChange="1" Maximum="328" ValueChanged="xCop_ValueChanged"/>
-                        <Label x:Name="label2_Copy20" Content="X" HorizontalAlignment="Right" Margin="0,913,289,0" VerticalAlignment="Top"/>
-                        <Grid Width="40" Height="26" Margin="0,784,163,0" HorizontalAlignment="Right" VerticalAlignment="Top">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="13" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="13" />
-                                <RowDefinition Height="13" />
-                            </Grid.RowDefinitions>
-                            <TextBox x:Name="copTextBox"  Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" TextAlignment="Right" Text="0" IsEnabled="False" />
-                            <RepeatButton x:Name="copButtonUP"  Grid.Column="1" Grid.Row="0" FontSize="8" FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="5" Click="copButtonUP_Click"/>
-                            <RepeatButton x:Name="copButtonDown"  Grid.Column="1" Grid.Row="1" FontSize="8"  FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="13" VerticalAlignment="Bottom" Content="6" Click="copButtonDown_Click"/>
-                        </Grid>
-                        <Label x:Name="label2_Copy21" Content="Type" HorizontalAlignment="Right" Margin="0,783,205,0" VerticalAlignment="Top"/>
-                    </Grid>
-                </TabItem>
-                <TabItem Header="Cop sequence">
-                    <Grid>
-                        <GroupBox x:Name="groupBox_Copy8" Header="Cops spwan" HorizontalAlignment="Right" Margin="0,10,3,0" VerticalAlignment="Top" Height="107" Width="306" FontWeight="Bold">
-                            <Grid>
-                                <Slider x:Name="timeBeforeCopSlider" Margin="0,36,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="274" Maximum="239" SmallChange="1" ValueChanged="timeBeforeCopSlider_ValueChanged"/>
-                                <Label x:Name="label1" Content="Time before spawning (seconds)" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" FontWeight="Normal"/>
-                                <Label x:Name="timeBeforeCopLabel" Content="0" HorizontalAlignment="Right" Margin="0,10,10,0" VerticalAlignment="Top" FontWeight="Normal" Width="30"/>
-
-                                <Grid Width="40" Height="26" Margin="0,56,163,0" HorizontalAlignment="Right" VerticalAlignment="Top">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="13" />
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="13" />
-                                        <RowDefinition Height="13" />
-                                    </Grid.RowDefinitions>
-                                    <TextBox Name="cop1TextBox"  Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" TextAlignment="Right" Text="0" IsEnabled="False" />
-                                    <RepeatButton Name="cop1ButtonUP"  Grid.Column="1" Grid.Row="0" FontSize="8" FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="cop1ButtonUP_Click" Height="13" VerticalAlignment="Top">5</RepeatButton>
-                                    <RepeatButton Name="cop1ButtonDown"  Grid.Column="1" Grid.Row="1" FontSize="8"  FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="13" VerticalAlignment="Bottom" Click="cop1ButtonDown_Click">6</RepeatButton>
-                                </Grid>
-                                <Grid Width="40" Height="26" Margin="0,56,15,0" HorizontalAlignment="Right" VerticalAlignment="Top">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="13" />
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="13" />
-                                        <RowDefinition Height="13" />
-                                    </Grid.RowDefinitions>
-                                    <TextBox Name="cop2TextBox"  Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" TextAlignment="Right" Text="0" IsEnabled="False" />
-                                    <RepeatButton Name="cop2ButtonUP"  Grid.Column="1" Grid.Row="0" FontSize="8" FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="cop2ButtonUP_Click">5</RepeatButton>
-                                    <RepeatButton Name="cop2ButtonDown"  Grid.Column="1" Grid.Row="1" FontSize="8"  FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="13" VerticalAlignment="Bottom" Click="cop2ButtonDown_Click">6</RepeatButton>
-                                </Grid>
-                                <Label x:Name="label1_Copy" Content="Cop (tonfa)" HorizontalAlignment="Left" Margin="10,56,0,0" VerticalAlignment="Top" FontWeight="Normal"/>
-                                <Label x:Name="label1_Copy1" Content="Cop (taser)" HorizontalAlignment="Left" Margin="159,56,0,0" VerticalAlignment="Top" FontWeight="Normal"/>
-                            </Grid>
-                        </GroupBox>
-                    </Grid>
-                </TabItem>
-            </TabControl>
         </Grid>
     </Grid>
 </Window>

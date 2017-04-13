@@ -53,6 +53,7 @@ namespace GreedyKidEditor
         private Rectangle[] _numberRectangle;
 
         private Rectangle[] _editorIcons;
+        private Rectangle[] _editorHelp;
 
         public int Score = 0;
         private int[] _encodedScore = new int[] { 0, 0, 0 };
@@ -65,8 +66,6 @@ namespace GreedyKidEditor
         Building _building;
 
         public int SelectedLevel = -1;
-        public int SelectedFloor = -1;
-        public int SelectedRoom = -1;
 
         int[] _floorDoorSequence = new int[] { 
             3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 
@@ -168,7 +167,22 @@ namespace GreedyKidEditor
         private const float _totalCameraTime = 1.0f;
         private float _currentCameraTime = _totalCameraTime;
 
-        public void MoveCamera(float targetPosition)
+        private int _currentCameraFloor = 0;
+
+        public void ResetCamera()
+        {
+            MoveCameraToFloor(0);
+        }
+
+        private void MoveCameraToFloor(int f)
+        {
+            if (f < 0)
+                f = 0;
+            _currentCameraFloor = f;
+            MoveCamera(_currentCameraFloor * 40.0f);
+        }
+
+        private void MoveCamera(float targetPosition)
         {
             _initialCameraPositionY = _cameraPositionY;
             _differenceCameraPositionY = targetPosition - _cameraPositionY;
@@ -369,10 +383,17 @@ namespace GreedyKidEditor
             _numberRectangle[10].Width = 5;
             _numberRectangle[11].X = _numberRectangle[10].X + _numberRectangle[10].Width;
 
-            _editorIcons = new Rectangle[(int)SelectionMode.Count];
+            _editorIcons = new Rectangle[(int)SelectionMode.Count + 6];
+            _editorHelp = new Rectangle[(int)SelectionMode.Count];
             for (int i = 0; i < (int)SelectionMode.Count; i++)
             {
                 _editorIcons[i] = new Rectangle(0 + i * 14, 1905, 14, 14);
+                _editorHelp[i] = new Rectangle(613, 1808 + i * 13, 284, 12);
+            }
+
+            for (int i = 0; i < 6; i++)
+            {
+                _editorIcons[(int)SelectionMode.Count + i] = new Rectangle(0 + i * 14, 1920, 14, 14);
             }
         }
 
@@ -1345,6 +1366,43 @@ namespace GreedyKidEditor
                         _editorIcons[(int)SelectionMode.Selection],
                         Color.White);
                 }
+
+               
+            }
+
+            // help
+            destination = new Rectangle(22, 171, _editorHelp[(int)SelectionMode].Width, _editorHelp[(int)SelectionMode].Height);
+
+            spriteBatch.Draw(_levelTexture,
+                destination,
+                _editorHelp[(int)SelectionMode],
+                Color.White);
+
+            // camera control
+            destination = new Rectangle(0, 27, _editorIcons[(int)SelectionMode.Count].Width, _editorIcons[(int)SelectionMode.Count].Height);
+
+            spriteBatch.Draw(_levelTexture,
+                destination,
+                _editorIcons[(int)SelectionMode.Count + 3],
+                Color.White);
+
+            if (IsHover(destination) && _hasLeftClick)
+            {
+                _currentCameraFloor++;
+                MoveCameraToFloor(_currentCameraFloor);
+            }
+
+            destination = new Rectangle(0, 146, _editorIcons[(int)SelectionMode.Count].Width, _editorIcons[(int)SelectionMode.Count].Height);
+
+            spriteBatch.Draw(_levelTexture,
+                destination,
+                _editorIcons[(int)SelectionMode.Count + (_currentCameraFloor == 0 ? 0 : 2)],
+                Color.White);
+
+            if (IsHover(destination) && _hasLeftClick)
+            {
+                _currentCameraFloor--;
+                MoveCameraToFloor(_currentCameraFloor);
             }
 
             spriteBatch.End();
