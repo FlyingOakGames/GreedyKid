@@ -51,6 +51,11 @@ namespace GreedyKidEditor
         private Rectangle[] _iconRectangle;
         private Rectangle[] _maskRectangle;
         private Rectangle[] _numberRectangle;
+        private Rectangle[] _smallNumberRectangle;
+        private Rectangle[] _bubbleRectangle;
+
+        private Color _lifeColor = new Color(217, 87, 99);
+        private Color _moneyColor = new Color(153, 229, 80);
 
         private Rectangle[] _editorIcons;
         private Rectangle[] _editorHelp;
@@ -385,6 +390,18 @@ namespace GreedyKidEditor
             }
             _numberRectangle[10].Width = 5;
             _numberRectangle[11].X = _numberRectangle[10].X + _numberRectangle[10].Width;
+
+            _smallNumberRectangle = new Rectangle[10];
+            for (int i = 0; i < _smallNumberRectangle.Length; i++)
+            {
+                _smallNumberRectangle[i] = new Rectangle(0 + 4 * i, 1935, 3, 5);
+            }
+
+            _bubbleRectangle = new Rectangle[3];
+            for (int i = 0; i < _bubbleRectangle.Length; i++)
+            {
+                _bubbleRectangle[i] = new Rectangle(0, 1941 + i * 10, 29, 10);
+            }
 
             _editorIcons = new Rectangle[(int)SelectionMode.Count + 6];
             _editorHelp = new Rectangle[(int)SelectionMode.Count];
@@ -1038,6 +1055,30 @@ namespace GreedyKidEditor
                                 source,
                                 (IsHover(destination) && SelectionMode == SelectionMode.Retired ? _selectionColor : Color.White));
 
+                            // life
+                            int bubble = (retired.Money > 9 ? 2 : 1);
+                            spriteBatch.Draw(_levelTexture,
+                                new Rectangle((int)retired.X - 8, 128 - 40 * f + 9 + cameraPosY, _bubbleRectangle[0].Width, _bubbleRectangle[0].Height),
+                                _bubbleRectangle[bubble],
+                                Color.White);
+                            spriteBatch.Draw(_levelTexture,
+                                new Rectangle((int)retired.X + 10, 128 - 40 * f + 10 + cameraPosY, _smallNumberRectangle[0].Width, _smallNumberRectangle[0].Height),
+                                _smallNumberRectangle[retired.Life],
+                                _lifeColor);
+                            int digit = retired.Money % 10;
+                            spriteBatch.Draw(_levelTexture,
+                                new Rectangle((int)retired.X - 2, 128 - 40 * f + 10 + cameraPosY, _smallNumberRectangle[0].Width, _smallNumberRectangle[0].Height),
+                                _smallNumberRectangle[digit],
+                                _moneyColor);
+                            digit = retired.Money / 10;
+                            if (digit > 0)
+                            {
+                                spriteBatch.Draw(_levelTexture,
+                                new Rectangle((int)retired.X - 6, 128 - 40 * f + 10 + cameraPosY, _smallNumberRectangle[0].Width, _smallNumberRectangle[0].Height),
+                                _smallNumberRectangle[digit],
+                                _moneyColor);
+                            }
+
                             // update
                             if (IsHover(destination) && SelectionMode == SelectionMode.Retired && _hasWheelUp)
                             {
@@ -1107,6 +1148,16 @@ namespace GreedyKidEditor
                                 destination,
                                 source,
                                 (IsHover(destination) && SelectionMode == SelectionMode.Nurse ? _selectionColor : Color.White));
+
+                            // life
+                            spriteBatch.Draw(_levelTexture,
+                                new Rectangle((int)nurse.X - 8, 128 - 40 * f + 9 + cameraPosY, _bubbleRectangle[0].Width, _bubbleRectangle[0].Height),
+                                _bubbleRectangle[0],
+                                Color.White);
+                            spriteBatch.Draw(_levelTexture,
+                                new Rectangle((int)nurse.X + 10, 128 - 40 * f + 10 + cameraPosY, _smallNumberRectangle[0].Width, _smallNumberRectangle[0].Height),
+                                _smallNumberRectangle[nurse.Life],
+                                _lifeColor);
 
                             // update
                             if (IsHover(destination) && SelectionMode == SelectionMode.Nurse && _hasWheelUp)

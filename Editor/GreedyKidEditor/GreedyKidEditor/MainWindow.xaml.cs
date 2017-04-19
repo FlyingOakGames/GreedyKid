@@ -457,12 +457,30 @@ namespace GreedyKidEditor
 
         private void upLevelButton_Click(object sender, RoutedEventArgs e)
         {
-            
+            if (levelListBox.SelectedIndex > 0 && levelListBox.SelectedIndex < _building.Levels.Count)
+            {
+                Level level = _building.Levels[levelListBox.SelectedIndex];
+                _building.Levels[levelListBox.SelectedIndex] = _building.Levels[levelListBox.SelectedIndex - 1];
+                _building.Levels[levelListBox.SelectedIndex - 1] = level;
+
+                int selected = levelListBox.SelectedIndex - 1;
+                RefreshLevelListBox();
+                levelListBox.SelectedIndex = selected;
+            }
         }
 
         private void dwLevelButton_Click(object sender, RoutedEventArgs e)
         {
+            if (levelListBox.SelectedIndex >= 0 && levelListBox.SelectedIndex < _building.Levels.Count - 1)
+            {
+                Level level = _building.Levels[levelListBox.SelectedIndex];
+                _building.Levels[levelListBox.SelectedIndex] = _building.Levels[levelListBox.SelectedIndex + 1];
+                _building.Levels[levelListBox.SelectedIndex + 1] = level;
 
+                int selected = levelListBox.SelectedIndex + 1;
+                RefreshLevelListBox();
+                levelListBox.SelectedIndex = selected;
+            }
         }
 
         private void renameButton_Click(object sender, RoutedEventArgs e)
