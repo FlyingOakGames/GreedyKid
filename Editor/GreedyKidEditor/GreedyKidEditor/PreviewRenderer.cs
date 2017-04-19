@@ -169,6 +169,9 @@ namespace GreedyKidEditor
 
         private int _currentCameraFloor = 0;
 
+        public int RoomToRemove = -1;
+        public int RoomToRemoveFloor = -1;
+
         public void ResetCamera()
         {
             MoveCameraToFloor(0);
@@ -584,6 +587,9 @@ namespace GreedyKidEditor
             int cameraPosY = (int)Math.Round(_cameraPositionY);
             Rectangle source;
             Rectangle destination;
+            bool isHoverAnyRoom = false;
+
+            Score = 0;
 
             if (SelectedLevel >= 0 && SelectedLevel < _building.Levels.Count)
             {
@@ -591,7 +597,7 @@ namespace GreedyKidEditor
                 {
                     Floor floor = _building.Levels[SelectedLevel].Floors[f];
 
-                    // rooms
+                    // rooms                    
                     for (int r = 0; r < floor.Rooms.Count; r++)
                     {
                         Room room = floor.Rooms[r];
@@ -685,6 +691,17 @@ namespace GreedyKidEditor
                         {
                             room.RightDecoration--;
                             room.RightDecoration = Math.Max(room.RightDecoration, 0);
+                        }
+
+                        // remove
+                        if (IsHover(room, f, cameraPosY) && SelectionMode == SelectionMode.Room)
+                        {
+                            isHoverAnyRoom = true;
+                            if (_hasRightClick)
+                            {
+                                RoomToRemoveFloor = f;
+                                RoomToRemove = r;
+                            }
                         }
                     }
 
@@ -1004,9 +1021,7 @@ namespace GreedyKidEditor
                             room.ExitX = _mouseState.Position.X - 16;
                         }
 
-                        remove = -1;
-
-                        Score = 0;
+                        remove = -1;                        
 
                         // retired
                         for (int rr = 0; rr < room.Retireds.Count; rr++)
@@ -1188,6 +1203,47 @@ namespace GreedyKidEditor
                             room.Cops.RemoveAt(remove);
                         }
                     }                  
+                }
+
+                // room creation
+                if (!isHoverAnyRoom && SelectionMode == SelectionMode.Room && _hasLeftClick)
+                {
+                    if (_mouseState.Position.X > 0 &&
+                        _mouseState.Position.Y > 0 &&
+                        _mouseState.Position.X < Width &&
+                        _mouseState.Position.Y < Height)
+                    {
+
+                        destination = new Rectangle(0, 27, _editorIcons[(int)SelectionMode.Count].Width, _editorIcons[(int)SelectionMode.Count].Height);
+
+                        if (!IsHover(destination))
+                        {
+                            destination = new Rectangle(0, 146, _editorIcons[(int)SelectionMode.Count].Width, _editorIcons[(int)SelectionMode.Count].Height);
+
+                            if (!IsHover(destination))
+                            {
+
+                                destination = new Rectangle(314, 25, _editorIcons[0].Width, (int)SelectionMode.Count * _editorIcons[0].Height);
+
+                                if (!IsHover(destination))
+                                {
+                                    // which floor?
+                                    int floor = (160 - (_mouseState.Position.Y - 8)) / 40 + cameraPosY / 40;
+
+                                    // adding missing floors
+                                    for (int f = _building.Levels[SelectedLevel].Floors.Count - 1; f < floor + 1; f++)
+                                        _building.Levels[SelectedLevel].Floors.Add(new Floor());
+
+                                    Room room = new Room();
+                                    room.LeftMargin = (_mouseState.Position.X - 24) / 8;
+                                    room.LeftMargin = Math.Max(room.LeftMargin, 1);
+                                    room.LeftMargin = Math.Min(room.LeftMargin, 33);
+                                    room.RightMargin = 34 - room.LeftMargin;
+                                    _building.Levels[SelectedLevel].Floors[floor].Rooms.Add(room);
+                                }
+                            }
+                        }
+                    }
                 }
             }
 

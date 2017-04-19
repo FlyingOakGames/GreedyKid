@@ -8,6 +8,7 @@ using System.IO.Compression;
 using System.Windows.Input;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
+using System.Linq;
 
 namespace GreedyKidEditor
 {
@@ -91,8 +92,11 @@ namespace GreedyKidEditor
         {
             if (renderer == null)
                 return;
-            if (_stopThread)
+            if (_stopThread || !IsApplicationActive())
+            {
+                renderer.MousePosition = new Microsoft.Xna.Framework.Point();                
                 return;
+            }
 
             try
             {
@@ -116,6 +120,44 @@ namespace GreedyKidEditor
             {
 
             }
+
+            // delete stuff
+            if (renderer.SelectedLevel >= 0 && renderer.RoomToRemoveFloor >= 0 && renderer.RoomToRemove >= 0 &&
+                renderer.SelectedLevel < _building.Levels.Count && renderer.RoomToRemoveFloor < _building.Levels[renderer.SelectedLevel].Floors.Count && renderer.RoomToRemove < _building.Levels[renderer.SelectedLevel].Floors[renderer.RoomToRemoveFloor].Rooms.Count &&
+                MessageBox.Show(this, "The room and ALL of its content will be removed permanently, are you sure?", "Are you sure?", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                _building.Levels[renderer.SelectedLevel].Floors[renderer.RoomToRemoveFloor].Rooms.RemoveAt(renderer.RoomToRemove);
+
+                // empty floor above last non empty floor?
+                for (int f = _building.Levels[renderer.SelectedLevel].Floors.Count - 1; f >= 0; f--)
+                {
+                    if (_building.Levels[renderer.SelectedLevel].Floors[f].Rooms.Count == 0)
+                        _building.Levels[renderer.SelectedLevel].Floors.RemoveAt(f);
+                    else
+                        break;
+                }
+            }
+
+            renderer.RoomToRemoveFloor = -1;
+            renderer.RoomToRemove = -1;
+        }
+
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        static extern IntPtr GetForegroundWindow();
+
+        private static bool IsActive(Window wnd)
+        {
+            // workaround for minimization bug
+            // Managed .IsActive may return wrong value
+            if (wnd == null) return false;
+            return GetForegroundWindow() == new WindowInteropHelper(wnd).Handle;
+        }
+
+        private static bool IsApplicationActive()
+        {
+            foreach (var wnd in Application.Current.Windows.OfType<Window>())
+                if (IsActive(wnd)) return true;
+            return false;
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -153,7 +195,7 @@ namespace GreedyKidEditor
             // listen for messages that are meant for a hosted Win32 window.
             if (msg == WM_MOUSEWHEEL) // WM_MOUSEWHEEL
             {
-                if (renderer != null)
+                if (renderer != null && IsApplicationActive())
                     renderer.MouseWheelDelta = wParam.ToInt32() >> 16;
 
                 handled = true;   
@@ -162,27 +204,27 @@ namespace GreedyKidEditor
             {
                 if (wParam.ToInt32() == 32) // space
                 {
-                    if (renderer != null)
+                    if (renderer != null && IsApplicationActive())
                         renderer.SpaceState = true;
                 }
                 else if (wParam.ToInt32() == 67) // c
                 {
-                    if (renderer != null)
+                    if (renderer != null && IsApplicationActive())
                         renderer.CState = true;
                 }
                 else if (wParam.ToInt32() == 86) // v
                 {
-                    if (renderer != null)
+                    if (renderer != null && IsApplicationActive())
                         renderer.VState = true;
                 }
                 else if (wParam.ToInt32() == 66) // b
                 {
-                    if (renderer != null)
+                    if (renderer != null && IsApplicationActive())
                         renderer.BState = true;
                 }
                 else if (wParam.ToInt32() == 78) // n
                 {
-                    if (renderer != null)
+                    if (renderer != null && IsApplicationActive())
                         renderer.NState = true;
                 }
 
@@ -192,27 +234,27 @@ namespace GreedyKidEditor
             {
                 if (wParam.ToInt32() == 32) // space
                 {
-                    if (renderer != null)
+                    if (renderer != null && IsApplicationActive())
                         renderer.SpaceState = false;
                 }
                 else if (wParam.ToInt32() == 67) // c
                 {
-                    if (renderer != null)
+                    if (renderer != null && IsApplicationActive())
                         renderer.CState = false;
                 }
                 else if (wParam.ToInt32() == 86) // v
                 {
-                    if (renderer != null)
+                    if (renderer != null && IsApplicationActive())
                         renderer.VState = false;
                 }
                 else if (wParam.ToInt32() == 66) // b
                 {
-                    if (renderer != null)
+                    if (renderer != null && IsApplicationActive())
                         renderer.BState = false;
                 }
                 else if (wParam.ToInt32() == 78) // n
                 {
-                    if (renderer != null)
+                    if (renderer != null && IsApplicationActive())
                         renderer.NState = false;
                 }
 
