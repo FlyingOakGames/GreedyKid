@@ -7,7 +7,10 @@ namespace GreedyKid
 {
     public sealed class Cop : IEntity
     {
-        public const int CopCount = 2;
+        public const int CopCount = 3;
+        public const int NonFiringCopCount = 1;
+        public const int NormalCopCount = 2;
+        public const int SwatCopCount = 1;
 
         private const float _walkSpeed = 24.0f;
         private const float _runSpeed = 80.0f;
@@ -48,6 +51,10 @@ namespace GreedyKid
 
         // roll arriving
         private bool _shouldRoll = false;
+        private bool _isBreakingWindow = false;
+        private int _currentWindowFrame = -1;
+        private float _currentWindowFrameTime = 0.0f;
+        private int _windowX = 0;
 
         // bullet
         public bool HasFired = false;
@@ -89,6 +96,8 @@ namespace GreedyKid
                 _frames[(int)EntityState.Rolling] = new Rectangle[CopCount][];
                 // HitCooldown
                 _frames[(int)EntityState.HitCooldown] = new Rectangle[CopCount][];
+                // WindowBreak
+                _frames[(int)EntityState.WindowBreak] = new Rectangle[CopCount][];
 
                 // type
                 for (int t = 0; t < CopCount; t++)
@@ -196,6 +205,14 @@ namespace GreedyKid
                         _frames[(int)EntityState.Rolling][t][f] = new Rectangle(f * 32 + 8 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
                     }
                     _frameDuration[(int)EntityState.Rolling] = 0.1f;
+
+                    // WindowBreak (ok)
+                    _frames[(int)EntityState.WindowBreak][t] = new Rectangle[7];
+                    for (int f = 0; f < _frames[(int)EntityState.WindowBreak][t].Length; f++)
+                    {
+                        _frames[(int)EntityState.WindowBreak][t][f] = new Rectangle(f * 32 + 1391, 400, 32, 32);
+                    }
+                    _frameDuration[(int)EntityState.WindowBreak] = 0.1f;
                 }
             }
 
@@ -208,7 +225,7 @@ namespace GreedyKid
             X = reader.ReadInt32();
         }
 
-        public void Spawn(float x)
+        public void SpawnElevator(float x)
         {
             X = x;
             _isVisible = false;
@@ -220,8 +237,33 @@ namespace GreedyKid
 
             _isAngry = false;
             _shouldRoll = true;
+            _isBreakingWindow = false;
+
             if (RandomHelper.Next() < 0.5f)
                 Orientation = SpriteEffects.FlipHorizontally;
+        }
+
+        public void SpawnWindow(float x, SpriteEffects orientation)
+        {
+            X = x;
+            _isVisible = true;
+            State = EntityState.Idle;
+            _currentFrame = 0;
+            _currentFrameTime = 0.0f;
+            _actionTime = 0.0f;
+            _hasJustTurned = false;
+
+            _isAngry = false;
+            _shouldRoll = false;
+            _isBreakingWindow = true;
+
+            Orientation = orientation;
+
+            _windowX = (int)X;
+            _currentWindowFrame = 0;
+            _currentWindowFrameTime = 0.0f;
+
+            Roll();
         }
 
         public void Update(float gameTime, bool boo, bool taunted)
@@ -233,6 +275,23 @@ namespace GreedyKid
                 && State != EntityState.Exiting)
             {
                 Boo();
+            }
+
+            // window frame
+            if (_currentWindowFrame >= 0)
+            {
+                _currentWindowFrameTime += gameTime;
+
+                if (_currentWindowFrameTime > _frameDuration[(int)EntityState.WindowBreak])
+                {
+                    _currentWindowFrameTime -= _frameDuration[(int)EntityState.WindowBreak];
+                    _currentWindowFrame++;
+
+                    if (_currentWindowFrame == _frames[(int)EntityState.WindowBreak][Type].Length)
+                    {
+                        _currentWindowFrame = -1;
+                    }
+                }
             }
 
             // update state
@@ -305,6 +364,10 @@ namespace GreedyKid
                             NextAction();
                     }
                 }
+                else if (State == EntityState.Rolling && _isBreakingWindow)
+                {
+                    _isBreakingWindow = false;
+                }
             }
 
             // action
@@ -349,6 +412,9 @@ namespace GreedyKid
                     speed = _runSpeed;
                 else if (State == EntityState.Rolling)
                     speed = _rollSpeed;
+
+                if (_isBreakingWindow && _currentFrame == 0)
+                    speed = 0;
 
                 if (Orientation == SpriteEffects.None)
                     X = X + speed * gameTime;
@@ -514,7 +580,8 @@ namespace GreedyKid
 
             _currentHitCooldown = _hitCooldown;
 
-            HasFired = true;
+            if (Type >= NonFiringCopCount)
+                HasFired = true;
         }
 
         private void NextAction()
@@ -679,6 +746,18 @@ namespace GreedyKid
                 Vector2.Zero,
                 Orientation,
                 0.0f);
+
+            if (_currentWindowFrame >= 0)
+            {
+                spriteBatch.Draw(texture,
+                    new Rectangle(_windowX, 128 - 40 * Room.Y + 9 + cameraPosY, 32, 32),
+                    _frames[(int)EntityState.WindowBreak][Type][_currentWindowFrame],
+                    Color.White,
+                    0.0f,
+                    Vector2.Zero,
+                    Orientation,
+                    0.0f);
+            }
         }
 
         public bool NotFacing(int playerMiddle)

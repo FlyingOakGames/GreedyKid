@@ -30,6 +30,7 @@ namespace GreedyKid
         SlamingDoor,
         HitCooldown,
         Tased,
+        WindowBreak,
 
         Count
     }

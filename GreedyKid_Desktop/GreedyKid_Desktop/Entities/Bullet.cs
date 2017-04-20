@@ -5,7 +5,8 @@ namespace GreedyKid
 {
     public enum BulletType
     {
-        Taser,
+        Taser, // cop.Type == 1
+        Shotgun,  // cop.Type == 2
 
         Count
     }
@@ -18,7 +19,7 @@ namespace GreedyKid
         public float X = 0.0f;
         public SpriteEffects _orientation = SpriteEffects.None;
 
-        private static float[] _bulletSpeed = new float[] { 128.0f };
+        private static float[] _bulletSpeed = new float[] { 128.0f, 192.0f };
 
         // animation
         private int _currentFrame = 0;
@@ -82,7 +83,7 @@ namespace GreedyKid
             // player hit
             if (Room == player.Room && player.CanBeHit && System.Math.Abs((X + 8.0f) - (player.X + 16.0f)) < 8.0f)
             {
-                player.Hit((_orientation == SpriteEffects.None ? SpriteEffects.FlipHorizontally : SpriteEffects.None), DamageType.Taser);
+                player.Hit((_orientation == SpriteEffects.None ? SpriteEffects.FlipHorizontally : SpriteEffects.None), (DamageType)Type + 1);
                 return true;
             }
 

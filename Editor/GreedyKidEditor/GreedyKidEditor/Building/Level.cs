@@ -16,9 +16,11 @@ namespace GreedyKidEditor
 
         // swat
         public int TimeBeforeSwat = 0;
+        public int Swat1Count = 0;
 
         // robocop
         public int TimeBeforeRobocop = 0;
+        public int RobocopCount = 0;
 
         public void Save(BinaryWriter writer)
         {
@@ -31,6 +33,9 @@ namespace GreedyKidEditor
             writer.Write(TimeBeforeCop);
             writer.Write(Cop1Count);
             writer.Write(Cop2Count);
+
+            writer.Write(TimeBeforeSwat);
+            writer.Write(Swat1Count);
         }
 
         public void Load(BinaryReader reader)
@@ -48,6 +53,9 @@ namespace GreedyKidEditor
             TimeBeforeCop = reader.ReadInt32();
             Cop1Count = reader.ReadInt32();
             Cop2Count = reader.ReadInt32();
+
+            TimeBeforeSwat = reader.ReadInt32();
+            Swat1Count = reader.ReadInt32();
         }
 
         public int HasStart()

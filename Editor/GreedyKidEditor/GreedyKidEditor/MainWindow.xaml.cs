@@ -521,14 +521,19 @@ namespace GreedyKidEditor
         {
             if (levelListBox.SelectedIndex >= 0 && renderer.SelectedLevel != levelListBox.SelectedIndex)
             {
+                renderer.SelectedLevel = levelListBox.SelectedIndex;
+
                 timeBeforeCopSlider.Value = _building.Levels[levelListBox.SelectedIndex].TimeBeforeCop;
                 cop1TextBox.Text = _building.Levels[levelListBox.SelectedIndex].Cop1Count.ToString();
                 cop2TextBox.Text = _building.Levels[levelListBox.SelectedIndex].Cop2Count.ToString();
 
+                timeBeforeSwatSlider.Value = _building.Levels[levelListBox.SelectedIndex].TimeBeforeSwat;
+                swat1TextBox.Text = _building.Levels[levelListBox.SelectedIndex].Swat1Count.ToString();
+
                 renderer.ResetCamera();
             }
-
-            renderer.SelectedLevel = levelListBox.SelectedIndex;
+            else
+                renderer.SelectedLevel = levelListBox.SelectedIndex;
         }       
 
         //************************ SPAWN SEQUENCES ************************\\
@@ -588,6 +593,40 @@ namespace GreedyKidEditor
                 level.Cop2Count = Math.Max(level.Cop2Count, 0);
                 cop2TextBox.Text = level.Cop2Count.ToString();
             }
-        }        
+        }
+
+        private void timeBeforeSwatSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count)
+            {
+                Level level = _building.Levels[renderer.SelectedLevel];
+
+                level.TimeBeforeSwat = (int)timeBeforeSwatSlider.Value;
+                timeBeforeSwatLabel.Content = level.TimeBeforeSwat.ToString();
+            }
+        }
+
+        private void swat1ButtonUP_Click(object sender, RoutedEventArgs e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count)
+            {
+                Level level = _building.Levels[renderer.SelectedLevel];
+
+                level.Swat1Count++;
+                swat1TextBox.Text = level.Swat1Count.ToString();
+            }
+        }
+
+        private void swat1ButtonDown_Click(object sender, RoutedEventArgs e)
+        {
+            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count)
+            {
+                Level level = _building.Levels[renderer.SelectedLevel];
+
+                level.Swat1Count--;
+                level.Swat1Count = Math.Max(level.Swat1Count, 0);
+                swat1TextBox.Text = level.Swat1Count.ToString();
+            }
+        }
     }
 }

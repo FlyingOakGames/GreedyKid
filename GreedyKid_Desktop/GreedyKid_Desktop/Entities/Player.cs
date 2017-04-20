@@ -7,7 +7,8 @@ namespace GreedyKid
     public enum DamageType
     {
         Normal,
-        Taser
+        Taser,
+        Gun,
     }
 
     public sealed class Player : IEntity

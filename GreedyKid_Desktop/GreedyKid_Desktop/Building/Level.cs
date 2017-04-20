@@ -15,9 +15,11 @@ namespace GreedyKid
 
         // swat
         public int TimeBeforeSwat = 0;
+        public int Swat1Count = 0;
 
         // robocop
         public int TimeBeforeRobocop = 0;
+        public int RobocopCount = 0;
 
         public void Load(BinaryReader reader)
         {
@@ -35,6 +37,9 @@ namespace GreedyKid
             TimeBeforeCop = reader.ReadInt32();
             Cop1Count = reader.ReadInt32();
             Cop2Count = reader.ReadInt32();
+
+            TimeBeforeSwat = reader.ReadInt32();
+            Swat1Count = reader.ReadInt32();
 
             ConnectSisterDoors();
         }

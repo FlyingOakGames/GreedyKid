@@ -31,6 +31,13 @@ namespace GreedyKid
         Hidden,
     }
 
+    public enum TimerType
+    {
+        Cop,
+        Swat,
+        Robocop,
+    }
+
     public sealed class BuildingManager : IDisposable
     {
         private Building _building;
@@ -108,10 +115,12 @@ namespace GreedyKid
         private const float _elevatorKidFrameTime = 0.1f;
 
         // spawning cop
+        private TimerType _timerType = TimerType.Cop;
         private bool _spawnEntrance = false;
         private Cop _spawningCop = null;   // to reset
         private float _currentCopArrivingTime = -1.0f;   // to reset
         private const float _copArrivingTime = 2.0f;
+        private float _nextSwatSpawn = 0.0f;
 
         // camera
         private float _cameraPositionY = 0.0f;        
@@ -141,7 +150,7 @@ namespace GreedyKid
                 _bulletRectangle[t] = new Rectangle[4];
                 for (int f = 0; f < 4; f++)
                 {
-                    _bulletRectangle[t][f] = new Rectangle(1583 + 16 * f, 384, 16, 16);
+                    _bulletRectangle[t][f] = new Rectangle(1583 + 16 * f - t * 16 * 4, 384, 16, 16);
                 }
             }
 
@@ -375,6 +384,7 @@ namespace GreedyKid
             _currentCopArrivingTime = -1.0f;   // to reset
 
             Time = _building.CurrentLevel.TimeBeforeCop;
+            _timerType = TimerType.Cop;
             _currentSeconds = 0.0f;
 
             // camera init
@@ -458,7 +468,7 @@ namespace GreedyKid
                     {
                         Time--;
 
-                        if (Time == (int)_copArrivingTime)
+                        if (Time == (int)_copArrivingTime && _timerType == TimerType.Cop)
                         {
                             if (_building.CurrentLevel.Cop1Count > 0)
                             {
@@ -473,6 +483,38 @@ namespace GreedyKid
                                 _spawningCop.Type = 1;
                             }
                         }
+                        else if (Time == 0 && _timerType < TimerType.Robocop)
+                        {
+                            if (_timerType == TimerType.Cop && _building.CurrentLevel.TimeBeforeSwat > 0)
+                            {
+                                // start swat timer
+                                _timerType = TimerType.Swat;
+                                Time = _building.CurrentLevel.TimeBeforeSwat;
+                            }
+                            else if (_timerType == TimerType.Swat)
+                            {
+                                // spawn swat
+                                SpawnSwat();
+
+                                if (_building.CurrentLevel.TimeBeforeRobocop > 0)
+                                {
+                                    // start robocop timer
+                                    _timerType = TimerType.Robocop;
+                                    Time = _building.CurrentLevel.TimeBeforeRobocop;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // swat spawing
+                if (_nextSwatSpawn > 0.0f)
+                {
+                    _nextSwatSpawn -= gameTime;
+                    
+                    if (_nextSwatSpawn <= 0.0f)
+                    {
+                        SpawnSwat();
                     }
                 }
 
@@ -566,7 +608,7 @@ namespace GreedyKid
                                 if (cop.HasFired)
                                 {
                                     cop.HasFired = false;
-                                    BulletType type = BulletType.Taser;
+                                    BulletType type = BulletType.Taser + cop.Type - 1;
                                     FireBullet(type, cop.X, cop.Orientation, cop.Room);
                                 }
                             }
@@ -1032,6 +1074,47 @@ namespace GreedyKid
             _currentExitFrameTime = 0.0f;
             _exitState = ElevatorState.Closing;
         }
+        
+        private void SpawnSwat()
+        {
+            Cop swat = null;
+
+            if (_building.CurrentLevel.Swat1Count > 0)
+            {
+                _building.CurrentLevel.Swat1Count--;
+                swat = new Cop();
+                swat.Type = Cop.NormalCopCount;
+            }
+
+            if (swat == null)
+                return;
+
+            _nextSwatSpawn = 0.1f + RandomHelper.Next() * 0.2f;
+
+            // look for a window
+            int rFloor = RandomHelper.Next(_building.CurrentLevel.Floors.Length);
+            while (_building.CurrentLevel.Floors[rFloor].Rooms.Length == 0) // avoid empty floor
+            {
+                rFloor++;
+                rFloor %= _building.CurrentLevel.Floors.Length;
+            }
+            int rRoom = RandomHelper.Next(_building.CurrentLevel.Floors[rFloor].Rooms.Length);
+            Room room = _building.CurrentLevel.Floors[rFloor].Rooms[rRoom];
+
+            swat.Room = room;
+            room.Cops.Add(swat);
+
+            if (RandomHelper.Next() > 0.5f)
+            {
+                // spawn on left wall
+                swat.SpawnWindow(room.LeftMargin * 8 + 16, SpriteEffects.None);                
+            }
+            else
+            {
+                // spawn on right wall                
+                swat.SpawnWindow(304 - room.RightMargin * 8 + 8 - 32, SpriteEffects.FlipHorizontally);
+            }
+        }
 
         public void SpawnCop(float timeBeforeSpawn = _copArrivingTime)
         {
@@ -1058,7 +1141,7 @@ namespace GreedyKid
                         {
                             _spawningCop.Room = _building.CurrentLevel.Floors[f].Rooms[r];
                             _spawningCop.Room.Cops.Add(_spawningCop);
-                            _spawningCop.Spawn(_spawningCop.Room.StartX + 4);
+                            _spawningCop.SpawnElevator(_spawningCop.Room.StartX + 4);
                             break;
                         }
                     }
@@ -1077,7 +1160,7 @@ namespace GreedyKid
                         {
                             _spawningCop.Room = _building.CurrentLevel.Floors[f].Rooms[r];
                             _spawningCop.Room.Cops.Add(_spawningCop);
-                            _spawningCop.Spawn(_spawningCop.Room.ExitX + 4);
+                            _spawningCop.SpawnElevator(_spawningCop.Room.ExitX + 4);
                             break;
                         }
                     }
