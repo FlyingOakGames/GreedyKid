@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:GreedyKidEditor"
         xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
         mc:Ignorable="d"
-        Title="Boo! Greedy Kid Editor v1" Height="1181" Width="995" Closing="Window_Closing" WindowStartupLocation="CenterScreen" WindowState="Maximized">
+        Title="Boo! Greedy Kid Editor v1" Icon="Resources/Icon.ico" Height="1181" Width="995" Closing="Window_Closing" WindowStartupLocation="CenterScreen" WindowState="Maximized">
     <Window.Resources>
         <RoutedUICommand x:Key="SaveCmd" Text="Save">
             <RoutedUICommand.InputGestures>
@@ -47,11 +47,11 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0" >
-                <Button x:Name="addButton" Content="+" HorizontalAlignment="Left" Margin="10,33,0,0" VerticalAlignment="Top" Width="20" Height="20" Click="addButton_Click"/>
-                <Button x:Name="removeButton" Content="-" HorizontalAlignment="Left" Margin="35,33,0,0" VerticalAlignment="Top"  Width="20" Height="20" Click="removeButton_Click"/>
-                <Button x:Name="renameButton" Content="Rename" HorizontalAlignment="Left" Margin="110,33,0,0" VerticalAlignment="Top"  Width="55" Height="20" Click="renameButton_Click"/>
-                <Label x:Name="label" Content="Building composition" Margin="19,2,0,0" VerticalAlignment="Top" FontWeight="Bold" HorizontalAlignment="Left" Width="140"/>
-                <Button x:Name="upLevelButton" Content="->" HorizontalAlignment="Left" Margin="60,33,0,0" VerticalAlignment="Top"  Width="20" Height="20" Click="upLevelButton_Click" RenderTransformOrigin="0.5,0.5">
+                <Button x:Name="addButton" Content="+" HorizontalAlignment="Left" Margin="10,78,0,0" VerticalAlignment="Top" Width="20" Height="20" Click="addButton_Click"/>
+                <Button x:Name="removeButton" Content="-" HorizontalAlignment="Left" Margin="35,78,0,0" VerticalAlignment="Top"  Width="20" Height="20" Click="removeButton_Click"/>
+                <Button x:Name="renameButton" Content="Rename" HorizontalAlignment="Left" Margin="110,78,0,0" VerticalAlignment="Top"  Width="55" Height="20" Click="renameButton_Click"/>
+                <Label x:Name="label" Content="Building composition" Margin="19,52,0,0" VerticalAlignment="Top" FontWeight="Bold" HorizontalAlignment="Left" Width="140"/>
+                <Button x:Name="upLevelButton" Content="->" HorizontalAlignment="Left" Margin="60,78,0,0" VerticalAlignment="Top"  Width="20" Height="20" Click="upLevelButton_Click" RenderTransformOrigin="0.5,0.5">
                     <Button.RenderTransform>
                         <TransformGroup>
                             <ScaleTransform/>
@@ -61,7 +61,7 @@
                         </TransformGroup>
                     </Button.RenderTransform>
                 </Button>
-                <Button x:Name="dwLevelButton" Content="->" HorizontalAlignment="Left" Margin="85,33,0,0" VerticalAlignment="Top"  Width="20" Height="20" Click="dwLevelButton_Click" RenderTransformOrigin="0.5,0.5">
+                <Button x:Name="dwLevelButton" Content="->" HorizontalAlignment="Left" Margin="85,78,0,0" VerticalAlignment="Top"  Width="20" Height="20" Click="dwLevelButton_Click" RenderTransformOrigin="0.5,0.5">
                     <Button.RenderTransform>
                         <TransformGroup>
                             <ScaleTransform/>
@@ -108,7 +108,10 @@
                         <Label x:Name="label1_Copy1" Content="Cop (taser)" HorizontalAlignment="Left" Margin="10,87,0,0" VerticalAlignment="Top" FontWeight="Normal"/>
                     </Grid>
                 </GroupBox>
-                <ListBox x:Name="levelListBox" Margin="10,58,10,152" SelectionChanged="levelListBox_SelectionChanged"/>
+                <ListBox x:Name="levelListBox" Margin="10,103,10,152" SelectionChanged="levelListBox_SelectionChanged"/>
+                <Label x:Name="label_Copy" Content="Building name:" Margin="10,0,0,0" VerticalAlignment="Top" FontWeight="Bold" HorizontalAlignment="Left" Width="97"/>
+                <Label x:Name="buildingLabel" Content="Label" HorizontalAlignment="Left" Margin="10,26,0,0" VerticalAlignment="Top" Width="155"/>
+                <Button x:Name="renameBuildingButton" Content="Rename" HorizontalAlignment="Left" Margin="111,6,0,0" VerticalAlignment="Top"  Width="54" Height="20" Click="renameBuildingButton_Click"/>
             </Grid>
             <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
             <Grid x:Name="rendererBackgroundGrid" Grid.Column="2" Background="#FF222034" SizeChanged="rendererBackgroundGrid_SizeChanged">

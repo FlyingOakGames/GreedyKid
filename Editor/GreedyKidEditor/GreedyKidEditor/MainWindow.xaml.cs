@@ -55,6 +55,7 @@ namespace GreedyKidEditor
                 }
             }
 
+            buildingLabel.Content = _building.Name;
             RefreshLevelListBox();
         }
 
@@ -502,6 +503,18 @@ namespace GreedyKidEditor
                         levelListBox.Items[levelListBox.SelectedIndex] = "Level " + (levelListBox.SelectedIndex + 1);
                 }
             }            
+        }
+
+        private void renameBuildingButton_Click(object sender, RoutedEventArgs e)
+        {
+            TextInputDialog dialog = new TextInputDialog();
+            dialog.Owner = this;
+
+            if (dialog.ShowDialog() == true)
+            {
+                _building.Name = dialog.ResponseText;
+                buildingLabel.Content = _building.Name;
+            }
         }
 
         private void levelListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)

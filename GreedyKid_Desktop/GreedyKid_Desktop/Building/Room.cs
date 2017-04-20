@@ -8,8 +8,6 @@ namespace GreedyKid
         public const int PaintCount = 4;
         public const int DecorationCount = 5;
 
-        public string Name = "";
-
         public int BackgroundColor = 0;
 
         public int LeftMargin = 1;
@@ -40,8 +38,6 @@ namespace GreedyKid
 
         public void Load(BinaryReader reader)
         {
-            Name = reader.ReadString();
-
             BackgroundColor = reader.ReadInt32();
 
             LeftMargin = reader.ReadInt32();
