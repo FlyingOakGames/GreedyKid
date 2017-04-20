@@ -737,37 +737,41 @@ namespace GreedyKidEditor
                             source = _detailRectangle[room.BackgroundColor][detail.Type];
                             destination = new Rectangle(detail.X, 128 - 40 * f + cameraPosY, source.Width, source.Height);
 
+                            Rectangle selectionDestination = destination;
+                            selectionDestination.X = selectionDestination.X + 8;
+                            selectionDestination.Width = selectionDestination.Width - 16;
+
                             spriteBatch.Draw(_levelTexture,
                                 destination,
                                 source,
-                                (IsHover(destination) && SelectionMode == SelectionMode.Detail ? _selectionColor : Color.White));
+                                (IsHover(selectionDestination) && SelectionMode == SelectionMode.Detail ? _selectionColor : Color.White));
 
                             // update
-                            if (IsHover(destination) && SelectionMode == SelectionMode.Detail && _hasWheelUp)
+                            if (IsHover(selectionDestination) && SelectionMode == SelectionMode.Detail && _hasWheelUp)
                             {
                                 detail.Type++;
                                 detail.Type = Math.Min(detail.Type, Detail.NormalDetailCount + Detail.AnimatedDetailCount - 1);
                             }
-                            else if (IsHover(destination) && SelectionMode == SelectionMode.Detail && _hasWheelDown)
+                            else if (IsHover(selectionDestination) && SelectionMode == SelectionMode.Detail && _hasWheelDown)
                             {
                                 detail.Type--;
                                 detail.Type = Math.Max(detail.Type, 0);
                             }
 
                             // remove
-                            if (IsHover(destination) && SelectionMode == SelectionMode.Detail && _hasRightClick && IsHover(room, f, cameraPosY))
+                            if (IsHover(selectionDestination) && SelectionMode == SelectionMode.Detail && _hasRightClick && IsHover(room, f, cameraPosY))
                             {
                                 remove = d;
                             }
 
                             // selection
-                            if (IsHover(destination) && SelectionMode == SelectionMode.Detail && _hasSpaceDown)
+                            if (IsHover(selectionDestination) && SelectionMode == SelectionMode.Detail && _hasSpaceDown)
                             {
                                 _lockedObject = detail;
                             }
 
                             // swap 
-                            if (IsHover(destination) && SelectionMode == SelectionMode.Detail && _hasCDown)
+                            if (IsHover(selectionDestination) && SelectionMode == SelectionMode.Detail && _hasCDown)
                             {
                                 if (d < room.Details.Count - 1)
                                 {
@@ -775,7 +779,7 @@ namespace GreedyKidEditor
                                     swap2 = d + 1;
                                 }
                             }
-                            else if (IsHover(destination) && SelectionMode == SelectionMode.Detail && _hasVDown)
+                            else if (IsHover(selectionDestination) && SelectionMode == SelectionMode.Detail && _hasVDown)
                             {
                                 if (d > 0)
                                 {
@@ -846,7 +850,7 @@ namespace GreedyKidEditor
                             if (IsHover(destination) && SelectionMode == SelectionMode.FloorDoor && _hasSpaceDown)
                             {
                                 _lockedObject = floorDoor;
-                            }
+                            }                            
                         }
 
                         // add
