@@ -220,7 +220,7 @@ namespace GreedyKid
 
                     for (int f = 0; f < nbFrames; f++)
                     {
-                        _lifeRectangles[l][f] = new Rectangle(2048 - (4 + (MaxLife - 1) * 4) * 16 + f * 16, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 16, 16, 16);
+                        _lifeRectangles[l][f] = new Rectangle(BuildingManager.TextureWidth - (4 + (MaxLife - 1) * 4) * 16 + f * 16, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 16, 16, 16);
                     }
                 }
             }

@@ -106,7 +106,7 @@ namespace GreedyKid
                     _frames[(int)EntityState.Idle][t] = new Rectangle[8];
                     for (int f = 0; f < _frames[(int)EntityState.Idle][t].Length; f++)
                     {
-                        _frames[(int)EntityState.Idle][t][f] = new Rectangle(f * 32 + 38 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                        _frames[(int)EntityState.Idle][t][f] = new Rectangle(f * 32 + 35 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
                     }
                     _frameDuration[(int)EntityState.Idle] = 0.1f;
 
@@ -122,7 +122,7 @@ namespace GreedyKid
                     _frames[(int)EntityState.Turning][t] = new Rectangle[4];
                     for (int f = 0; f < _frames[(int)EntityState.Turning][t].Length; f++)
                     {
-                        _frames[(int)EntityState.Turning][t][f] = new Rectangle(f * 32 + 14 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                        _frames[(int)EntityState.Turning][t][f] = new Rectangle(f * 32 + 13 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
                     }
                     _frameDuration[(int)EntityState.Turning] = 0.1f;
 
@@ -130,7 +130,7 @@ namespace GreedyKid
                     _frames[(int)EntityState.Walking][t] = new Rectangle[8];
                     for (int f = 0; f < _frames[(int)EntityState.Walking][t].Length; f++)
                     {
-                        _frames[(int)EntityState.Walking][t][f] = new Rectangle(f * 32 + 18 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                        _frames[(int)EntityState.Walking][t][f] = new Rectangle(f * 32 + 17 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
                     }
                     _frameDuration[(int)EntityState.Walking] = 0.1f;
 
@@ -146,7 +146,7 @@ namespace GreedyKid
                     _frames[(int)EntityState.Entering][t] = new Rectangle[3];
                     for (int f = 0; f < _frames[(int)EntityState.Entering][t].Length; f++)
                     {
-                        _frames[(int)EntityState.Entering][t][f] = new Rectangle(f * 32 + 32 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                        _frames[(int)EntityState.Entering][t][f] = new Rectangle(f * 32 + 29 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
                     }
                     _frameDuration[(int)EntityState.Entering] = 0.1f;
 
@@ -154,7 +154,7 @@ namespace GreedyKid
                     _frames[(int)EntityState.Exiting][t] = new Rectangle[3];
                     for (int f = 0; f < _frames[(int)EntityState.Exiting][t].Length; f++)
                     {
-                        _frames[(int)EntityState.Exiting][t][f] = new Rectangle(f * 32 + 35 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                        _frames[(int)EntityState.Exiting][t][f] = new Rectangle(f * 32 + 32 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
                     }
                     _frameDuration[(int)EntityState.Exiting] = 0.1f;
 
@@ -162,7 +162,7 @@ namespace GreedyKid
                     _frames[(int)EntityState.Boo][t] = new Rectangle[3];
                     for (int f = 0; f < _frames[(int)EntityState.Boo][t].Length; f++)
                     {
-                        _frames[(int)EntityState.Boo][t][f] = new Rectangle(f * 32 + 49 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                        _frames[(int)EntityState.Boo][t][f] = new Rectangle(f * 32 + 46 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
                     }
                     _frameDuration[(int)EntityState.Boo] = 0.1f;
 
@@ -170,7 +170,7 @@ namespace GreedyKid
                     _frames[(int)EntityState.Unboo][t] = new Rectangle[4];
                     for (int f = 0; f < _frames[(int)EntityState.Unboo][t].Length; f++)
                     {
-                        _frames[(int)EntityState.Unboo][t][f] = new Rectangle(f * 32 + 52 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                        _frames[(int)EntityState.Unboo][t][f] = new Rectangle(f * 32 + 49 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
                     }
                     _frameDuration[(int)EntityState.Unboo] = 0.1f;
 
@@ -178,7 +178,7 @@ namespace GreedyKid
                     _frames[(int)EntityState.HitCooldown][t] = new Rectangle[4];
                     for (int f = 0; f < _frames[(int)EntityState.HitCooldown][t].Length; f++)
                     {
-                        _frames[(int)EntityState.HitCooldown][t][f] = new Rectangle(f * 32 + 56 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                        _frames[(int)EntityState.HitCooldown][t][f] = new Rectangle(f * 32 + 53 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
                     }
                     _frameDuration[(int)EntityState.HitCooldown] = 0.1f;
 
@@ -186,7 +186,7 @@ namespace GreedyKid
                     _frames[(int)EntityState.Slam][t] = new Rectangle[3];
                     for (int f = 0; f < _frames[(int)EntityState.Slam][t].Length; f++)
                     {
-                        _frames[(int)EntityState.Slam][t][f] = new Rectangle(f * 32 + 46 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                        _frames[(int)EntityState.Slam][t][f] = new Rectangle(f * 32 + 43 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
                     }
                     _frameDuration[(int)EntityState.Slam] = 0.1f;
 
@@ -194,7 +194,7 @@ namespace GreedyKid
                     _frames[(int)EntityState.Hit][t] = new Rectangle[3];
                     for (int f = 0; f < _frames[(int)EntityState.Hit][t].Length; f++)
                     {
-                        _frames[(int)EntityState.Hit][t][f] = new Rectangle(f * 32 + 28 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                        _frames[(int)EntityState.Hit][t][f] = new Rectangle(f * 32 + 25 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
                     }
                     _frameDuration[(int)EntityState.Hit] = 0.1f;
 
@@ -210,7 +210,7 @@ namespace GreedyKid
                     _frames[(int)EntityState.WindowBreak][t] = new Rectangle[7];
                     for (int f = 0; f < _frames[(int)EntityState.WindowBreak][t].Length; f++)
                     {
-                        _frames[(int)EntityState.WindowBreak][t][f] = new Rectangle(f * 32 + 1391, 400, 32, 32);
+                        _frames[(int)EntityState.WindowBreak][t][f] = new Rectangle(f * 32 + BuildingManager.TextureWidth - 657, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 16, 32, 32);
                     }
                     _frameDuration[(int)EntityState.WindowBreak] = 0.1f;
                 }

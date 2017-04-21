@@ -40,6 +40,9 @@ namespace GreedyKid
 
     public sealed class BuildingManager : IDisposable
     {
+        public const int TextureWidth = 2048;
+        public const int TextureHeight = 2048;
+
         private Building _building;
 
         private Rectangle[][][] _roomRectangle;
@@ -141,19 +144,6 @@ namespace GreedyKid
 
         public BuildingManager()
         {
-            _bullets = new Bullet[_maxBullets];
-            for (int i = 0; i < _maxBullets; i++)
-                _bullets[i] = new Bullet();
-            _bulletRectangle = new Rectangle[(int)BulletType.Count][];
-            for (int t = 0; t < (int)BulletType.Count; t++)
-            {
-                _bulletRectangle[t] = new Rectangle[4];
-                for (int f = 0; f < 4; f++)
-                {
-                    _bulletRectangle[t][f] = new Rectangle(1583 + 16 * f - t * 16 * 4, 384, 16, 16);
-                }
-            }
-
             _roomRectangle = new Rectangle[Room.PaintCount][][]; // colors
             _detailRectangle = new Rectangle[Room.PaintCount][][];
             _floorDoorRectangle = new Rectangle[Room.PaintCount][][];
@@ -263,37 +253,50 @@ namespace GreedyKid
                 for (int f = _objectsRectangle[o].Length - 1; f >= 0; f--)
                 {
                     objectFrameCount++;
-                    _objectsRectangle[o][f] = new Rectangle(2048 - objectFrameCount * 16, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine, 16, 16);
+                    _objectsRectangle[o][f] = new Rectangle(TextureWidth - objectFrameCount * 16, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine, 16, 16);
+                }
+            }
+
+            _bullets = new Bullet[_maxBullets];
+            for (int i = 0; i < _maxBullets; i++)
+                _bullets[i] = new Bullet();
+            _bulletRectangle = new Rectangle[(int)BulletType.Count][];
+            for (int t = 0; t < (int)BulletType.Count; t++)
+            {
+                _bulletRectangle[t] = new Rectangle[4];
+                for (int f = 0; f < 4; f++)
+                {
+                    _bulletRectangle[t][f] = new Rectangle(TextureWidth - objectFrameCount * 16 - 64 + 16 * f - t * 16 * 4, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine, 16, 16);
                 }
             }
 
             // UI
             _uiRectangle = new Rectangle[8];
-            _uiRectangle[0] = new Rectangle(0, 2024, 12, 13); // upper left
-            _uiRectangle[1] = new Rectangle(11, 2024, 12, 13); // upper right
-            _uiRectangle[2] = new Rectangle(0, 2036, 12, 12); // lower left
-            _uiRectangle[3] = new Rectangle(11, 2036, 12, 12); // lower right
-            _uiRectangle[4] = new Rectangle(11, 2024, 1, 9); // up
-            _uiRectangle[5] = new Rectangle(11, 2040, 1, 8); // down
-            _uiRectangle[6] = new Rectangle(0, 2036, 8, 1); // left
-            _uiRectangle[7] = new Rectangle(15, 2036, 8, 1); // right
+            _uiRectangle[0] = new Rectangle(0, TextureHeight - 24, 12, 13); // upper left
+            _uiRectangle[1] = new Rectangle(11, TextureHeight - 24, 12, 13); // upper right
+            _uiRectangle[2] = new Rectangle(0, TextureHeight - 12, 12, 12); // lower left
+            _uiRectangle[3] = new Rectangle(11, TextureHeight - 12, 12, 12); // lower right
+            _uiRectangle[4] = new Rectangle(11, TextureHeight - 24, 1, 9); // up
+            _uiRectangle[5] = new Rectangle(11, TextureHeight - 8, 1, 8); // down
+            _uiRectangle[6] = new Rectangle(0, TextureHeight - 12, 8, 1); // left
+            _uiRectangle[7] = new Rectangle(15, TextureHeight - 12, 8, 1); // right
 
             _iconRectangle = new Rectangle[3];
-            _iconRectangle[0] = new Rectangle(23, 2024, 13, 13);
-            _iconRectangle[1] = new Rectangle(36, 2024, 13, 13);
-            _iconRectangle[2] = new Rectangle(49, 2024, 13, 13);
+            _iconRectangle[0] = new Rectangle(23, TextureHeight - 24, 13, 13);
+            _iconRectangle[1] = new Rectangle(36, TextureHeight - 24, 13, 13);
+            _iconRectangle[2] = new Rectangle(49, TextureHeight - 24, 13, 13);
 
             _maskRectangle = new Rectangle[5];
-            _maskRectangle[0] = new Rectangle(23, 2038, 49, 10);
-            _maskRectangle[1] = new Rectangle(72, 2038, 57, 10);
-            _maskRectangle[2] = new Rectangle(129, 2038, 51, 10);
-            _maskRectangle[3] = new Rectangle(152, 1918, 1, 1); // 1x1
-            _maskRectangle[4] = new Rectangle(201, 1864, 328, 2);
+            _maskRectangle[0] = new Rectangle(23, TextureHeight - 10, 49, 10);
+            _maskRectangle[1] = new Rectangle(72, TextureHeight - 10, 57, 10);
+            _maskRectangle[2] = new Rectangle(129, TextureHeight - 10, 51, 10);
+            _maskRectangle[3] = new Rectangle(152, TextureHeight - 130, 1, 1); // 1x1
+            _maskRectangle[4] = new Rectangle(201, TextureHeight - 184, 328, 2);
 
             _numberRectangle = new Rectangle[12];
             for (int i = 0; i < _numberRectangle.Length; i++)
             {
-                _numberRectangle[i] = new Rectangle(74 + 11 * i, 2024, 11, 13);
+                _numberRectangle[i] = new Rectangle(74 + 11 * i, TextureHeight - 24, 11, 13);
             }
             _numberRectangle[10].Width = 5;
             _numberRectangle[11].X = _numberRectangle[10].X + _numberRectangle[10].Width;
@@ -301,36 +304,36 @@ namespace GreedyKid
             _microphoneRectangle = new Rectangle[10];
             for (int i = 0; i < 10; i++)
             {
-                _microphoneRectangle[i] = new Rectangle(0, 1900 - 4 * i, 146, 4);
+                _microphoneRectangle[i] = new Rectangle(0, TextureHeight - 148 - 4 * i, 146, 4);
             }
 
             // transition
             _transitionRectangle = new Rectangle[4];
-            _transitionRectangle[0] = new Rectangle(152, 1918, 1, 1); // 1x1
-            _transitionRectangle[2] = new Rectangle(150, 1915, 50, 50); // circle half full
-            _transitionRectangle[1] = new Rectangle(150, 1864, 50, 50); // circle empty            
-            _transitionRectangle[3] = new Rectangle(201, 1864, 328, 184); // half full
+            _transitionRectangle[0] = new Rectangle(152, TextureHeight - 130, 1, 1); // 1x1
+            _transitionRectangle[2] = new Rectangle(150, TextureHeight - 133, 50, 50); // circle half full
+            _transitionRectangle[1] = new Rectangle(150, TextureHeight - 184, 50, 50); // circle empty            
+            _transitionRectangle[3] = new Rectangle(201, TextureHeight - 184, 328, 184); // half full
 
             // inter level
             _interLevelRectangle = new Rectangle[_elevatorFrameCount + _cableFrameCount + 3 + _elevatorKidFrameCount];
             // elevator
             for (int i = 0; i < _elevatorFrameCount; i++)
             {
-                _interLevelRectangle[i] = new Rectangle(613 + 32 * i, 2003, 32, 45);
+                _interLevelRectangle[i] = new Rectangle(613 + 32 * i, TextureHeight - 45, 32, 45);
             }
             // cable
             for (int i = 0; i < _cableFrameCount; i++)
             {
-                _interLevelRectangle[_elevatorFrameCount + i] = new Rectangle(530 + 2 * i, 1888, 1, 160);
+                _interLevelRectangle[_elevatorFrameCount + i] = new Rectangle(530 + 2 * i, TextureHeight - 160, 1, 160);
             }
             // background
-            _interLevelRectangle[_elevatorFrameCount + _cableFrameCount] = new Rectangle(548, 1808, 64, 240);
-            _interLevelRectangle[_elevatorFrameCount + _cableFrameCount + 1] = new Rectangle(483, 1844, 64, 10);
-            _interLevelRectangle[_elevatorFrameCount + _cableFrameCount + 2] = new Rectangle(483, 1855, 64, 8);
+            _interLevelRectangle[_elevatorFrameCount + _cableFrameCount] = new Rectangle(548, TextureHeight - 240, 64, 240);
+            _interLevelRectangle[_elevatorFrameCount + _cableFrameCount + 1] = new Rectangle(483, TextureHeight - 204, 64, 10);
+            _interLevelRectangle[_elevatorFrameCount + _cableFrameCount + 2] = new Rectangle(483, TextureHeight - 193, 64, 8);
             // kid
             for (int i = 0; i < _elevatorKidFrameCount; i++)
             {
-                _interLevelRectangle[_elevatorFrameCount + _cableFrameCount + 3 + i] = new Rectangle(613 + 32 * i, 1958, 32, 45);
+                _interLevelRectangle[_elevatorFrameCount + _cableFrameCount + 3 + i] = new Rectangle(613 + 32 * i, TextureHeight - 90, 32, 45);
             }
 
             _microphoneHandler = new MicrophoneVolumeHandler();
