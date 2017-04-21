@@ -1431,6 +1431,18 @@ namespace GreedyKid
                                     Color.White);
                             }
                         }
+                    }
+                }
+
+                // entities
+                for (int f = 0; f < _building.CurrentLevel.Floors.Length; f++)
+                {
+                    Floor floor = _building.CurrentLevel.Floors[f];
+
+                    // rooms
+                    for (int r = 0; r < floor.Rooms.Length; r++)
+                    {
+                        Room room = floor.Rooms[r];
 
                         // retired
                         for (int rr = 0; rr < room.Retireds.Count; rr++)

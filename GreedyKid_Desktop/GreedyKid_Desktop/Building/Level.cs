@@ -42,6 +42,35 @@ namespace GreedyKid
             Swat1Count = reader.ReadInt32();
 
             ConnectSisterDoors();
+
+            // upper/lower floors for room
+            for (int f = 0; f < Floors.Length; f++)
+            {
+                Floor floor = Floors[f];
+
+                for (int r = 0; r < floor.Rooms.Length; r++)
+                {
+                    Room room = floor.Rooms[r];
+
+                    if (f > 0)
+                    {
+                        room.LowerFloor = Floors[f - 1];
+                    }
+                    else
+                    {
+                        room.LowerFloor = null;
+                    }
+
+                    if (f < floor.Rooms.Length - 1)
+                    {
+                        room.UpperFloor = Floors[f - 1];
+                    }
+                    else
+                    {
+                        room.UpperFloor = null;
+                    }
+                }
+            }
         }
 
         private void ConnectSisterDoors()

@@ -36,6 +36,9 @@ namespace GreedyKid
 
         public List<Droppable> Drops;
 
+        public Floor UpperFloor = null;
+        public Floor LowerFloor = null;
+
         public void Load(BinaryReader reader)
         {
             BackgroundColor = reader.ReadInt32();

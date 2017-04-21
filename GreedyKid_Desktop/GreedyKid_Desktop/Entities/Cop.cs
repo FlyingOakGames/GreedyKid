@@ -59,6 +59,12 @@ namespace GreedyKid
         // bullet
         public bool HasFired = false;
 
+        // SWAT hook
+        private Room _upperRoom = null;
+        private Room _lowerRoom = null;
+        private bool _wantsToHookRoom = false;
+        private Room _hookedRoom = null;
+
         public Cop()
         {
             // init once
@@ -403,6 +409,9 @@ namespace GreedyKid
                 }
                 else
                     _XWarp = -1;
+
+                _upperRoom = null;
+                _lowerRoom = null;
             }
 
             if (State == EntityState.Walking || State == EntityState.Running || State == EntityState.Rolling)
@@ -432,6 +441,9 @@ namespace GreedyKid
                     Turn();
                     X = 304 - Room.RightMargin * 8 - 16;
                 }
+
+                if (Type >= NormalCopCount && Type < NormalCopCount + SwatCopCount)
+                    LookForRoomToHook();
             }
 
 
@@ -545,6 +557,27 @@ namespace GreedyKid
                         }
                     }
                 }
+
+                // hooking to rooms
+                if (_wantsToHookRoom && (_upperRoom != null || _lowerRoom != null))
+                {
+                    if (_upperRoom != null && _lowerRoom != null)
+                    {
+                        if (RandomHelper.Next() > 0.5f)
+                            _hookedRoom = _upperRoom;
+                        else
+                            _hookedRoom = _lowerRoom;
+                    }
+                    else if (_upperRoom != null)
+                        _hookedRoom = _upperRoom;
+                    else
+                        _hookedRoom = _lowerRoom;
+
+                    if (_hookedRoom != null)
+                    {
+                        // play hook animation (up / down rope)
+                    }
+                }
             }
         }
 
@@ -589,6 +622,7 @@ namespace GreedyKid
             _currentFrame = 0;
             _currentFrameTime = 0.0f;
             _wantsToOpenDoor = false;
+            _wantsToHookRoom = false;
 
             if (_isAngry && Type == 0)
                 Walk();
@@ -636,6 +670,7 @@ namespace GreedyKid
             _actionTime = 0.0f;
             _hasJustTurned = false;
             _wantsToOpenDoor = false;
+            _wantsToHookRoom = false;
         }        
 
         private void WaitSpecial()
@@ -666,6 +701,12 @@ namespace GreedyKid
                 _wantsToOpenDoor = true;
             }
 
+            _wantsToHookRoom = false;
+            if (RandomHelper.Next() <= 0.25f)
+            {
+                _wantsToHookRoom = true;
+            }
+
             if (_isAngry)
             {
                 State = EntityState.Running;
@@ -683,6 +724,12 @@ namespace GreedyKid
             {
                 _wantsToOpenDoor = true;
             }
+
+            _wantsToHookRoom = false;
+            if (RandomHelper.Next() <= 0.25f)
+            {
+                _wantsToHookRoom = true;
+            }
         }
 
         private void Cooldown()
@@ -694,6 +741,7 @@ namespace GreedyKid
             _hasJustTurned = false;
 
             _wantsToOpenDoor = false;
+            _wantsToHookRoom = false;
         }
 
 
@@ -775,6 +823,66 @@ namespace GreedyKid
         public bool IsHitting
         {
             get { return State == EntityState.Hit; }
+        }
+
+        private Room LookForRoomToHook()
+        {
+            _upperRoom = null;
+            _lowerRoom = null;
+
+            // look if room available up
+            if (Room.UpperFloor != null)
+            {
+                for (int r = 0; r < Room.UpperFloor.Rooms.Length; r++)
+                {
+                    Room room = Room.UpperFloor.Rooms[r];
+
+                    // handle wall collisions
+                    if (X >= room.LeftMargin * 8 + 8 && X <= 304 - room.RightMargin * 8 - 16)
+                    {
+                        bool doorInTheWay = false;
+                        // check on doors
+                        for (int d = 0; d < room.RoomDoors.Length; d++)
+                        {
+                            RoomDoor door = room.RoomDoors[d];
+                            if ((X >= door.X && X <= door.X + 32) ||
+                                (X + 32 >= door.X && X + 32 <= door.X + 32))
+                                doorInTheWay = true;
+                        }
+
+                        if (!doorInTheWay)
+                            _upperRoom = room;
+                    }
+                }
+            }
+
+            // look if room available down
+            if (Room.LowerFloor != null)
+            {
+                for (int r = 0; r < Room.LowerFloor.Rooms.Length; r++)
+                {
+                    Room room = Room.LowerFloor.Rooms[r];
+
+                    // handle wall collisions
+                    if (X >= room.LeftMargin * 8 + 8 && X <= 304 - room.RightMargin * 8 - 16)
+                    {
+                        bool doorInTheWay = false;
+                        // check on doors
+                        for (int d = 0; d < room.RoomDoors.Length; d++)
+                        {
+                            RoomDoor door = room.RoomDoors[d];
+                            if ((X >= door.X && X <= door.X + 32) ||
+                                (X + 32 >= door.X && X + 32 <= door.X + 32))
+                                doorInTheWay = true;
+                        }
+
+                        if (!doorInTheWay)
+                            _lowerRoom = room;
+                    }
+                }
+            }
+
+            return null;
         }
     }
 }
