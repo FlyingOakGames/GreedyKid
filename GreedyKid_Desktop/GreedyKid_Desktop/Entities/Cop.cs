@@ -67,6 +67,14 @@ namespace GreedyKid
         private static int[] _hookingUpOffset = null;
         private static int[] _hookingDownOffset = null;
 
+        private int _currentSmokeUpFrame = -1;
+        private float _currentSmokeUpFrameTime = 0.0f;
+        private int _currentSmokeDownFrame = -1;
+        private float _currentSmokeDownFrameTime = 0.0f;
+        private int _smokeX = 0;
+        private int _smokeY = 0;
+        private SpriteEffects _smokeOrientation = SpriteEffects.None;
+
         public Cop()
         {
             // init once
@@ -114,6 +122,10 @@ namespace GreedyKid
                 _frames[(int)EntityState.RopeUp] = new Rectangle[CopCount][];
                 // RopeDown
                 _frames[(int)EntityState.RopeDown] = new Rectangle[CopCount][];
+                // SmokeUp
+                _frames[(int)EntityState.SmokeUp] = new Rectangle[CopCount][];
+                // SmokeDown
+                _frames[(int)EntityState.SmokeDown] = new Rectangle[CopCount][];
 
                 // type
                 for (int t = 0; t < CopCount; t++)
@@ -229,6 +241,22 @@ namespace GreedyKid
                         _frames[(int)EntityState.WindowBreak][t][f] = new Rectangle(f * 32 + BuildingManager.TextureWidth - 657, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 16, 32, 32);
                     }
                     _frameDuration[(int)EntityState.WindowBreak] = 0.1f;
+
+                    // SmokeUp (ok)
+                    _frames[(int)EntityState.SmokeUp][t] = new Rectangle[4];
+                    for (int f = 0; f < _frames[(int)EntityState.SmokeUp][t].Length; f++)
+                    {
+                        _frames[(int)EntityState.SmokeUp][t][f] = new Rectangle(f * 32 + BuildingManager.TextureWidth - 657 + 7 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 32, 32, 16);
+                    }
+                    _frameDuration[(int)EntityState.SmokeUp] = 0.1f;
+
+                    // SmokeDown (ok)
+                    _frames[(int)EntityState.SmokeDown][t] = new Rectangle[4];
+                    for (int f = 0; f < _frames[(int)EntityState.SmokeDown][t].Length; f++)
+                    {
+                        _frames[(int)EntityState.SmokeDown][t][f] = new Rectangle(f * 32 + BuildingManager.TextureWidth - 657 + 11 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 32, 32, 16);
+                    }
+                    _frameDuration[(int)EntityState.SmokeDown] = 0.1f;
 
                     // HookingUp (ok)
                     _frames[(int)EntityState.HookingUp][t] = new Rectangle[15];                    
@@ -372,6 +400,39 @@ namespace GreedyKid
                 }
             }
 
+            // smoke frame
+            if (_currentSmokeUpFrame >= 0)
+            {
+                _currentSmokeUpFrameTime += gameTime;
+
+                if (_currentSmokeUpFrameTime > _frameDuration[(int)EntityState.SmokeUp])
+                {
+                    _currentSmokeUpFrameTime -= _frameDuration[(int)EntityState.SmokeUp];
+                    _currentSmokeUpFrame++;
+
+                    if (_currentSmokeUpFrame == _frames[(int)EntityState.SmokeUp][Type].Length)
+                    {
+                        _currentSmokeUpFrame = -1;
+                    }
+                }
+            }
+
+            if (_currentSmokeDownFrame >= 0)
+            {
+                _currentSmokeDownFrameTime += gameTime;
+
+                if (_currentSmokeDownFrameTime > _frameDuration[(int)EntityState.SmokeDown])
+                {
+                    _currentSmokeDownFrameTime -= _frameDuration[(int)EntityState.SmokeDown];
+                    _currentSmokeDownFrame++;
+
+                    if (_currentSmokeDownFrame == _frames[(int)EntityState.SmokeDown][Type].Length)
+                    {
+                        _currentSmokeDownFrame = -1;
+                    }
+                }
+            }
+
             // update state
             _currentFrameTime += gameTime;
 
@@ -454,6 +515,34 @@ namespace GreedyKid
                 else if (State == EntityState.Rolling && _isBreakingWindow)
                 {
                     _isBreakingWindow = false;
+                }
+                else if (State == EntityState.HookingUp && _currentFrame == 7)
+                {
+                    _currentSmokeUpFrame = 0;
+                    _currentSmokeUpFrameTime = 0.0f;
+                }
+                else if (State == EntityState.HookingUp && _currentFrame == 13)
+                {
+                    _currentSmokeDownFrame = 0;
+                    _currentSmokeDownFrameTime = 0.0f;
+
+                    _smokeX = (int)X;
+                    _smokeY = 128 - 40 * Room.Y + 9 + 16 - 40;
+                    _smokeOrientation = Orientation;
+                }
+                else if (State == EntityState.HookingDown && _currentFrame == 3)
+                {
+                    _currentSmokeUpFrame = 0;
+                    _currentSmokeUpFrameTime = 0.0f;
+                }
+                else if (State == EntityState.HookingDown && _currentFrame == 9)
+                {
+                    _currentSmokeDownFrame = 0;
+                    _currentSmokeDownFrameTime = 0.0f;
+
+                    _smokeX = (int)X;
+                    _smokeY = 128 - 40 * Room.Y + 9 + 16 + 40;
+                    _smokeOrientation = Orientation;
                 }
             }
 
@@ -633,6 +722,7 @@ namespace GreedyKid
                                 floorDoor.EnterOpen();
                                 Enter(floorDoor);
                                 _wantsToOpenDoor = false;
+                                _wantsToHookRoom = false;
                                 break;
                             }
                         }
@@ -667,6 +757,7 @@ namespace GreedyKid
                     }
 
                     _wantsToHookRoom = false;
+                    _wantsToOpenDoor = false;
                     _upperRoom = null;
                     _lowerRoom = null;
                 }
@@ -963,6 +1054,30 @@ namespace GreedyKid
                 spriteBatch.Draw(texture,
                     new Rectangle(_windowX, 128 - 40 * Room.Y + 9 + cameraPosY, 32, 32),
                     _frames[(int)EntityState.WindowBreak][Type][_currentWindowFrame],
+                    Color.White,
+                    0.0f,
+                    Vector2.Zero,
+                    Orientation,
+                    0.0f);
+            }
+
+            if (_currentSmokeUpFrame >= 0)
+            {
+                spriteBatch.Draw(texture,
+                    new Rectangle((int)X, 128 - 40 * Room.Y + 9 + cameraPosY + 16, 32, 16),
+                    _frames[(int)EntityState.SmokeUp][Type][_currentSmokeUpFrame],
+                    Color.White,
+                    0.0f,
+                    Vector2.Zero,
+                    Orientation,
+                    0.0f);
+            }
+
+            if (_currentSmokeDownFrame >= 0)
+            {
+                spriteBatch.Draw(texture,
+                    new Rectangle(_smokeX, _smokeY + cameraPosY, 32, 16),
+                    _frames[(int)EntityState.SmokeDown][Type][_currentSmokeDownFrame],
                     Color.White,
                     0.0f,
                     Vector2.Zero,

@@ -28,13 +28,17 @@ namespace GreedyKid
         Ressurecting,
         BeingRessurected,
         SlamingDoor,
+        // cops
         HitCooldown,
         Tased,
+        // SWAT
         WindowBreak,
         HookingUp,
         HookingDown,
         RopeUp,
         RopeDown,
+        SmokeUp,
+        SmokeDown,
 
         Count
     }
