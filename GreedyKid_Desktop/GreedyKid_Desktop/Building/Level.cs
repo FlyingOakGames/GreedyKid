@@ -61,9 +61,9 @@ namespace GreedyKid
                         room.LowerFloor = null;
                     }
 
-                    if (f < floor.Rooms.Length - 1)
+                    if (f < Floors.Length - 1)
                     {
-                        room.UpperFloor = Floors[f - 1];
+                        room.UpperFloor = Floors[f + 1];
                     }
                     else
                     {

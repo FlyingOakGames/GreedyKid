@@ -31,6 +31,10 @@ namespace GreedyKid
         HitCooldown,
         Tased,
         WindowBreak,
+        HookingUp,
+        HookingDown,
+        RopeUp,
+        RopeDown,
 
         Count
     }

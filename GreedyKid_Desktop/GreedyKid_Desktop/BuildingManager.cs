@@ -1434,7 +1434,7 @@ namespace GreedyKid
                     }
                 }
 
-                // entities
+                // retireds & nurses
                 for (int f = 0; f < _building.CurrentLevel.Floors.Length; f++)
                 {
                     Floor floor = _building.CurrentLevel.Floors[f];
@@ -1459,8 +1459,20 @@ namespace GreedyKid
                             if (nurse != null)
                                 nurse.Draw(spriteBatch, cameraPosY);
                         }
+                    }
+                }
 
-                        // cops
+                // cops & drops
+                for (int f = 0; f < _building.CurrentLevel.Floors.Length; f++)
+                {
+                    Floor floor = _building.CurrentLevel.Floors[f];
+
+                    // rooms
+                    for (int r = 0; r < floor.Rooms.Length; r++)
+                    {
+                        Room room = floor.Rooms[r];
+
+                         // cops
                         for (int c = 0; c < room.Cops.Count; c++)
                         {
                             Cop cop = room.Cops[c];

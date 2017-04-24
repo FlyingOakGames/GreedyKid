@@ -64,6 +64,8 @@ namespace GreedyKid
         private Room _lowerRoom = null;
         private bool _wantsToHookRoom = false;
         private Room _hookedRoom = null;
+        private static int[] _hookingUpOffset = null;
+        private static int[] _hookingDownOffset = null;
 
         public Cop()
         {
@@ -104,6 +106,14 @@ namespace GreedyKid
                 _frames[(int)EntityState.HitCooldown] = new Rectangle[CopCount][];
                 // WindowBreak
                 _frames[(int)EntityState.WindowBreak] = new Rectangle[CopCount][];
+                // HookingDown
+                _frames[(int)EntityState.HookingDown] = new Rectangle[CopCount][];
+                // HookingUp
+                _frames[(int)EntityState.HookingUp] = new Rectangle[CopCount][];
+                // RopeUp
+                _frames[(int)EntityState.RopeUp] = new Rectangle[CopCount][];
+                // RopeDown
+                _frames[(int)EntityState.RopeDown] = new Rectangle[CopCount][];
 
                 // type
                 for (int t = 0; t < CopCount; t++)
@@ -219,6 +229,68 @@ namespace GreedyKid
                         _frames[(int)EntityState.WindowBreak][t][f] = new Rectangle(f * 32 + BuildingManager.TextureWidth - 657, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 16, 32, 32);
                     }
                     _frameDuration[(int)EntityState.WindowBreak] = 0.1f;
+
+                    // HookingUp (ok)
+                    _frames[(int)EntityState.HookingUp][t] = new Rectangle[15];                    
+                    _frames[(int)EntityState.HookingUp][t][0] = new Rectangle(0 * 32 + 57 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                    _frames[(int)EntityState.HookingUp][t][1] = new Rectangle(1 * 32 + 57 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                    _frames[(int)EntityState.HookingUp][t][2] = new Rectangle(2 * 32 + 57 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                    _frames[(int)EntityState.HookingUp][t][3] = new Rectangle(1 * 32 + 57 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                    _frames[(int)EntityState.HookingUp][t][4] = new Rectangle(2 * 32 + 57 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                    _frames[(int)EntityState.HookingUp][t][5] = new Rectangle(1 * 32 + 57 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                    _frames[(int)EntityState.HookingUp][t][6] = new Rectangle(2 * 32 + 57 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                    _frames[(int)EntityState.HookingUp][t][7] = new Rectangle(3 * 32 + 57 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                    _frames[(int)EntityState.HookingUp][t][8] = new Rectangle(3 * 32 + 57 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                    _frames[(int)EntityState.HookingUp][t][9] = new Rectangle(3 * 32 + 57 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                    _frames[(int)EntityState.HookingUp][t][10] = new Rectangle(3 * 32 + 57 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                    _frames[(int)EntityState.HookingUp][t][11] = new Rectangle(3 * 32 + 57 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                    _frames[(int)EntityState.HookingUp][t][12] = new Rectangle(3 * 32 + 57 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                    _frames[(int)EntityState.HookingUp][t][13] = new Rectangle(1 * 32 + 57 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                    _frames[(int)EntityState.HookingUp][t][14] = new Rectangle(0 * 32 + 57 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);                    
+                    _frameDuration[(int)EntityState.HookingUp] = 0.1f;
+
+                    _hookingUpOffset = new int[]
+                    {
+                        0, 0, 0, 0, 0, 0, 0, -4, -15, -33, -42, -43, -42, -40, -40
+                    };
+
+                    _frames[(int)EntityState.RopeUp][t] = new Rectangle[15];
+                    for (int f = 0; f < _frames[(int)EntityState.RopeUp][t].Length; f++)
+                    {
+                        _frames[(int)EntityState.RopeUp][t][f] = new Rectangle(904 + f * 32, 1814, 32, 49);
+                    }
+                    _frameDuration[(int)EntityState.RopeUp] = 0.1f;
+
+                    // HookingDown (ok)
+                    _frames[(int)EntityState.HookingDown][t] = new Rectangle[15];
+                    _frames[(int)EntityState.HookingDown][t][0] = new Rectangle(0 * 32 + 57 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                    _frames[(int)EntityState.HookingDown][t][1] = new Rectangle(1 * 32 + 57 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                    _frames[(int)EntityState.HookingDown][t][2] = new Rectangle(2 * 32 + 57 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                    _frames[(int)EntityState.HookingDown][t][3] = new Rectangle(3 * 32 + 57 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                    _frames[(int)EntityState.HookingDown][t][4] = new Rectangle(3 * 32 + 57 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                    _frames[(int)EntityState.HookingDown][t][5] = new Rectangle(3 * 32 + 57 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                    _frames[(int)EntityState.HookingDown][t][6] = new Rectangle(3 * 32 + 57 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                    _frames[(int)EntityState.HookingDown][t][7] = new Rectangle(3 * 32 + 57 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                    _frames[(int)EntityState.HookingDown][t][8] = new Rectangle(3 * 32 + 57 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                    _frames[(int)EntityState.HookingDown][t][9] = new Rectangle(2 * 32 + 57 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                    _frames[(int)EntityState.HookingDown][t][10] = new Rectangle(1 * 32 + 57 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                    _frames[(int)EntityState.HookingDown][t][11] = new Rectangle(2 * 32 + 57 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                    _frames[(int)EntityState.HookingDown][t][12] = new Rectangle(1 * 32 + 57 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                    _frames[(int)EntityState.HookingDown][t][13] = new Rectangle(2 * 32 + 57 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                    _frames[(int)EntityState.HookingDown][t][14] = new Rectangle(0 * 32 + 57 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);                    
+                    _frameDuration[(int)EntityState.HookingDown] = 0.1f;
+
+                    _hookingDownOffset = new int[]
+                    {
+                        0, 0, 0, -2, -3, -1, 5, 19, 36, 40, 40, 40, 40, 40, 40
+                    };
+
+                    _frames[(int)EntityState.RopeDown][t] = new Rectangle[15];
+                    for (int f = 0; f < _frames[(int)EntityState.RopeDown][t].Length; f++)
+                    {
+                        _frames[(int)EntityState.RopeDown][t][f] = new Rectangle(904 + f * 32, 1870, 32, 49);
+                    }
+                    _frameDuration[(int)EntityState.RopeDown] = 0.1f;
                 }
             }
 
@@ -345,6 +417,15 @@ namespace GreedyKid
                     }
                     else if (State == EntityState.Rolling)
                     {
+                        NextAction();
+                    }
+                    else if (State == EntityState.HookingUp || State == EntityState.HookingDown)
+                    {
+                        Room.Cops.Remove(this);
+                        Room = _hookedRoom;
+                        _hookedRoom = null;
+                        Room.Cops.Add(this);
+
                         NextAction();
                     }
                     // entering doors
@@ -525,7 +606,7 @@ namespace GreedyKid
                 // lost player             
                 Unboo();                
             }
-            else if (_isVisible && !_isAngry && canSeePlayer && _currentHitCooldown <= 0.0f && State != EntityState.Rolling && State != EntityState.Exiting)
+            else if (_isVisible && !_isAngry && canSeePlayer && _currentHitCooldown <= 0.0f && State != EntityState.Rolling && State != EntityState.Exiting && State != EntityState.HookingDown && State != EntityState.HookingUp)
             {
                 // caught player
                 Boo(false);
@@ -564,21 +645,62 @@ namespace GreedyKid
                     if (_upperRoom != null && _lowerRoom != null)
                     {
                         if (RandomHelper.Next() > 0.5f)
+                        {
                             _hookedRoom = _upperRoom;
+                            HookingUp();
+                        }
                         else
+                        {
                             _hookedRoom = _lowerRoom;
+                            HookingDown();
+                        }
                     }
                     else if (_upperRoom != null)
-                        _hookedRoom = _upperRoom;
-                    else
-                        _hookedRoom = _lowerRoom;
-
-                    if (_hookedRoom != null)
                     {
-                        // play hook animation (up / down rope)
+                        _hookedRoom = _upperRoom;
+                        HookingUp();
                     }
+                    else
+                    {
+                        _hookedRoom = _lowerRoom;
+                        HookingDown();
+                    }
+
+                    _wantsToHookRoom = false;
+                    _upperRoom = null;
+                    _lowerRoom = null;
                 }
             }
+        }
+
+        private void HookingUp()
+        {
+            _currentFrame = 0;
+            _currentFrameTime = 0.0f;
+            _actionTime = 0.0f;
+            _hasJustTurned = false;
+
+            _wantsToOpenDoor = false;
+            _wantsToHookRoom = false;
+
+            _isAngry = false;
+
+            State = EntityState.HookingUp;
+        }
+
+        private void HookingDown()
+        {
+            _currentFrame = 0;
+            _currentFrameTime = 0.0f;
+            _actionTime = 0.0f;
+            _hasJustTurned = false;
+
+            _wantsToOpenDoor = false;
+            _wantsToHookRoom = false;
+
+            _isAngry = false;
+
+            State = EntityState.HookingDown;
         }
 
         private void Boo(bool turn = true)
@@ -786,14 +908,55 @@ namespace GreedyKid
 
             Texture2D texture = TextureManager.Building;
 
-            spriteBatch.Draw(texture,
-                new Rectangle((int)X, 128 - 40 * Room.Y + 9 + cameraPosY, 32, 32),
-                _frames[(int)State][Type][_currentFrame],
-                Color.White,
-                0.0f,
-                Vector2.Zero,
-                Orientation,
-                0.0f);
+            if (State != EntityState.HookingDown && State != EntityState.HookingUp)
+            {
+                spriteBatch.Draw(texture,
+                    new Rectangle((int)X, 128 - 40 * Room.Y + 9 + cameraPosY, 32, 32),
+                    _frames[(int)State][Type][_currentFrame],
+                    Color.White,
+                    0.0f,
+                    Vector2.Zero,
+                    Orientation,
+                    0.0f);
+            }
+            else if (State == EntityState.HookingUp)
+            {
+                spriteBatch.Draw(texture,
+                    new Rectangle((int)X, 128 - 40 * Room.Y + 9 + cameraPosY - 42, 32, 49),
+                    _frames[(int)EntityState.RopeUp][Type][_currentFrame],
+                    Color.White,
+                    0.0f,
+                    Vector2.Zero,
+                    Orientation,
+                    0.0f);
+                spriteBatch.Draw(texture,
+                    new Rectangle((int)X, 128 - 40 * Room.Y + 9 + cameraPosY + _hookingUpOffset[_currentFrame], 32, 32),
+                    _frames[(int)State][Type][_currentFrame],
+                    Color.White,
+                    0.0f,
+                    Vector2.Zero,
+                    Orientation,
+                    0.0f);
+            }
+            else if (State == EntityState.HookingDown)
+            {
+                spriteBatch.Draw(texture,
+                    new Rectangle((int)X, 128 - 40 * Room.Y + 9 + cameraPosY - 2, 32, 49),
+                    _frames[(int)EntityState.RopeDown][Type][_currentFrame],
+                    Color.White,
+                    0.0f,
+                    Vector2.Zero,
+                    Orientation,
+                    0.0f);
+                spriteBatch.Draw(texture,
+                    new Rectangle((int)X, 128 - 40 * Room.Y + 9 + cameraPosY + _hookingDownOffset[_currentFrame], 32, 32),
+                    _frames[(int)State][Type][_currentFrame],
+                    Color.White,
+                    0.0f,
+                    Vector2.Zero,
+                    Orientation,
+                    0.0f);
+            }
 
             if (_currentWindowFrame >= 0)
             {
