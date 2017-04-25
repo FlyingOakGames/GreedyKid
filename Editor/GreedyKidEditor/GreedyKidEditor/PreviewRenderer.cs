@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.IO;
 
 namespace GreedyKidEditor
 {
@@ -26,7 +27,7 @@ namespace GreedyKidEditor
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-
+        
         IntPtr _handle;
         MainWindow _w;
 
@@ -243,11 +244,17 @@ namespace GreedyKidEditor
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            using (System.IO.FileStream file = System.IO.File.OpenRead("Content\\Textures\\level.png"))
+            if (File.Exists("Content\\Textures\\level.png")) // devmode only
             {
-                _levelTexture = Texture2D.FromStream(this.GraphicsDevice, file);
+                using (System.IO.FileStream file = System.IO.File.OpenRead("Content\\Textures\\level.png"))
+                {
+                    _levelTexture = Texture2D.FromStream(this.GraphicsDevice, file);
+                }
             }
-
+            else
+            {
+                _levelTexture = Content.Load<Texture2D>("Textures\\level");
+            }
 
 
             _roomRectangle = new Rectangle[Room.PaintCount][][]; // colors
