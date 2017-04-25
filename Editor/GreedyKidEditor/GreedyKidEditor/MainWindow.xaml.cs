@@ -131,17 +131,17 @@ namespace GreedyKidEditor
             }
 
             // delete stuff
-            if (renderer.SelectedLevel >= 0 && renderer.RoomToRemoveFloor >= 0 && renderer.RoomToRemove >= 0 &&
-                renderer.SelectedLevel < _building.Levels.Count && renderer.RoomToRemoveFloor < _building.Levels[renderer.SelectedLevel].Floors.Count && renderer.RoomToRemove < _building.Levels[renderer.SelectedLevel].Floors[renderer.RoomToRemoveFloor].Rooms.Count &&
+            if (PreviewRenderer.SelectedLevel >= 0 && renderer.RoomToRemoveFloor >= 0 && renderer.RoomToRemove >= 0 &&
+                PreviewRenderer.SelectedLevel < _building.Levels.Count && renderer.RoomToRemoveFloor < _building.Levels[PreviewRenderer.SelectedLevel].Floors.Count && renderer.RoomToRemove < _building.Levels[PreviewRenderer.SelectedLevel].Floors[renderer.RoomToRemoveFloor].Rooms.Count &&
                 MessageBox.Show(this, "The room and ALL of its content will be removed permanently, are you sure?", "Are you sure?", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                _building.Levels[renderer.SelectedLevel].Floors[renderer.RoomToRemoveFloor].Rooms.RemoveAt(renderer.RoomToRemove);
+                _building.Levels[PreviewRenderer.SelectedLevel].Floors[renderer.RoomToRemoveFloor].Rooms.RemoveAt(renderer.RoomToRemove);
 
                 // empty floor above last non empty floor?
-                for (int f = _building.Levels[renderer.SelectedLevel].Floors.Count - 1; f >= 0; f--)
+                for (int f = _building.Levels[PreviewRenderer.SelectedLevel].Floors.Count - 1; f >= 0; f--)
                 {
-                    if (_building.Levels[renderer.SelectedLevel].Floors[f].Rooms.Count == 0)
-                        _building.Levels[renderer.SelectedLevel].Floors.RemoveAt(f);
+                    if (_building.Levels[PreviewRenderer.SelectedLevel].Floors[f].Rooms.Count == 0)
+                        _building.Levels[PreviewRenderer.SelectedLevel].Floors.RemoveAt(f);
                     else
                         break;
                 }
@@ -723,11 +723,9 @@ namespace GreedyKidEditor
 
         private void levelListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (renderer == null)
-                return;
-            if (levelListBox.SelectedIndex >= 0 && renderer.SelectedLevel != levelListBox.SelectedIndex)
+            if (levelListBox.SelectedIndex >= 0 && PreviewRenderer.SelectedLevel != levelListBox.SelectedIndex)
             {
-                renderer.SelectedLevel = levelListBox.SelectedIndex;
+                PreviewRenderer.SelectedLevel = levelListBox.SelectedIndex;
 
                 timeBeforeCopSlider.Value = _building.Levels[levelListBox.SelectedIndex].TimeBeforeCop;
                 cop1TextBox.Text = _building.Levels[levelListBox.SelectedIndex].Cop1Count.ToString();
@@ -736,19 +734,20 @@ namespace GreedyKidEditor
                 timeBeforeSwatSlider.Value = _building.Levels[levelListBox.SelectedIndex].TimeBeforeSwat;
                 swat1TextBox.Text = _building.Levels[levelListBox.SelectedIndex].Swat1Count.ToString();
 
-                renderer.ResetCamera();
+                if (renderer != null)
+                    renderer.ResetCamera();
             }
             else
-                renderer.SelectedLevel = levelListBox.SelectedIndex;
+                PreviewRenderer.SelectedLevel = levelListBox.SelectedIndex;
         }       
 
         //************************ SPAWN SEQUENCES ************************\\
 
         private void timeBeforeCopSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (renderer != null && renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count)
+            if (PreviewRenderer.SelectedLevel >= 0 && PreviewRenderer.SelectedLevel < _building.Levels.Count)
             {
-                Level level = _building.Levels[renderer.SelectedLevel];
+                Level level = _building.Levels[PreviewRenderer.SelectedLevel];
 
                 level.TimeBeforeCop = (int)timeBeforeCopSlider.Value;
                 timeBeforeCopLabel.Content = level.TimeBeforeCop.ToString();
@@ -757,9 +756,9 @@ namespace GreedyKidEditor
 
         private void cop1ButtonUP_Click(object sender, RoutedEventArgs e)
         {
-            if (renderer != null && renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count)
+            if (PreviewRenderer.SelectedLevel >= 0 && PreviewRenderer.SelectedLevel < _building.Levels.Count)
             {
-                Level level = _building.Levels[renderer.SelectedLevel];
+                Level level = _building.Levels[PreviewRenderer.SelectedLevel];
 
                 level.Cop1Count++;
                 cop1TextBox.Text = level.Cop1Count.ToString();
@@ -768,9 +767,9 @@ namespace GreedyKidEditor
 
         private void cop1ButtonDown_Click(object sender, RoutedEventArgs e)
         {
-            if (renderer != null && renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count)
+            if (PreviewRenderer.SelectedLevel >= 0 && PreviewRenderer.SelectedLevel < _building.Levels.Count)
             {
-                Level level = _building.Levels[renderer.SelectedLevel];
+                Level level = _building.Levels[PreviewRenderer.SelectedLevel];
 
                 level.Cop1Count--;
                 level.Cop1Count = Math.Max(level.Cop1Count, 0);
@@ -780,9 +779,9 @@ namespace GreedyKidEditor
 
         private void cop2ButtonUP_Click(object sender, RoutedEventArgs e)
         {
-            if (renderer != null && renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count)
+            if (PreviewRenderer.SelectedLevel >= 0 && PreviewRenderer.SelectedLevel < _building.Levels.Count)
             {
-                Level level = _building.Levels[renderer.SelectedLevel];
+                Level level = _building.Levels[PreviewRenderer.SelectedLevel];
 
                 level.Cop2Count++;
                 cop2TextBox.Text = level.Cop2Count.ToString();
@@ -791,9 +790,9 @@ namespace GreedyKidEditor
 
         private void cop2ButtonDown_Click(object sender, RoutedEventArgs e)
         {
-            if (renderer != null && renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count)
+            if (PreviewRenderer.SelectedLevel >= 0 && PreviewRenderer.SelectedLevel < _building.Levels.Count)
             {
-                Level level = _building.Levels[renderer.SelectedLevel];
+                Level level = _building.Levels[PreviewRenderer.SelectedLevel];
 
                 level.Cop2Count--;
                 level.Cop2Count = Math.Max(level.Cop2Count, 0);
@@ -803,9 +802,9 @@ namespace GreedyKidEditor
 
         private void timeBeforeSwatSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (renderer != null && renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count)
+            if (PreviewRenderer.SelectedLevel >= 0 && PreviewRenderer.SelectedLevel < _building.Levels.Count)
             {
-                Level level = _building.Levels[renderer.SelectedLevel];
+                Level level = _building.Levels[PreviewRenderer.SelectedLevel];
 
                 level.TimeBeforeSwat = (int)timeBeforeSwatSlider.Value;
                 timeBeforeSwatLabel.Content = level.TimeBeforeSwat.ToString();
@@ -814,9 +813,9 @@ namespace GreedyKidEditor
 
         private void swat1ButtonUP_Click(object sender, RoutedEventArgs e)
         {
-            if (renderer != null && renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count)
+            if (PreviewRenderer.SelectedLevel >= 0 && PreviewRenderer.SelectedLevel < _building.Levels.Count)
             {
-                Level level = _building.Levels[renderer.SelectedLevel];
+                Level level = _building.Levels[PreviewRenderer.SelectedLevel];
 
                 level.Swat1Count++;
                 swat1TextBox.Text = level.Swat1Count.ToString();
@@ -825,9 +824,9 @@ namespace GreedyKidEditor
 
         private void swat1ButtonDown_Click(object sender, RoutedEventArgs e)
         {
-            if (renderer != null && renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count)
+            if (PreviewRenderer.SelectedLevel >= 0 && PreviewRenderer.SelectedLevel < _building.Levels.Count)
             {
-                Level level = _building.Levels[renderer.SelectedLevel];
+                Level level = _building.Levels[PreviewRenderer.SelectedLevel];
 
                 level.Swat1Count--;
                 level.Swat1Count = Math.Max(level.Swat1Count, 0);

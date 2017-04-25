@@ -71,7 +71,7 @@ namespace GreedyKidEditor
 
         private static Building _building;
 
-        public int SelectedLevel = -1;
+        public static int SelectedLevel = -1;
 
         int[] _floorDoorSequence = new int[] { 
             3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 
@@ -101,22 +101,28 @@ namespace GreedyKidEditor
 
         int[] _retiredSequence = new int[]
         {
+            /*
             2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-            3, 0, 1, 2,
+            3, 0, 1, 2,*/
+            0, 1, 2, 3, 4, 5, 6, 7,
         };
         int _currentRetiredFrame = 0;
 
         int[] _nurseSequence = new int[]
         {
+            /*
             2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-            3, 0, 1, 2,
+            3, 0, 1, 2,*/
+            0, 1, 2, 3, 4, 5, 6, 7,
         };
         int _currentNurseFrame = 0;
 
         int[] _copSequence = new int[]
         {
+            /*
             2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-            3, 0, 1, 2,
+            3, 0, 1, 2,*/
+            0, 1, 2, 3, 4, 5, 6, 7,
         };
         int _currentCopFrame = 0;
 
@@ -349,30 +355,30 @@ namespace GreedyKidEditor
             _retiredRectangle = new Rectangle[Retired.RetiredCount][];
             for (int t = 0; t < Retired.RetiredCount; t++)
             {
-                _retiredRectangle[t] = new Rectangle[4];
-                for (int f = 0; f < 4; f++) // idle animation
+                _retiredRectangle[t] = new Rectangle[8];
+                for (int f = 0; f < 8; f++) // idle animation
                 {
-                    _retiredRectangle[t][f] = new Rectangle(4 * 32 + f * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32, 32, 32);
+                    _retiredRectangle[t][f] = new Rectangle(38 * 32 + f * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32, 32, 32);
                 }
             }
 
             _nurseRectangle = new Rectangle[Nurse.NurseCount][];
             for (int t = 0; t < Nurse.NurseCount; t++)
             {
-                _nurseRectangle[t] = new Rectangle[4];
-                for (int f = 0; f < 4; f++) // idle animation
+                _nurseRectangle[t] = new Rectangle[8];
+                for (int f = 0; f < 8; f++) // idle animation
                 {
-                    _nurseRectangle[t][f] = new Rectangle(4 * 32 + f * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + 32 * Retired.RetiredCount + t * 32, 32, 32);
+                    _nurseRectangle[t][f] = new Rectangle(38 * 32 + f * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + 32 * Retired.RetiredCount + t * 32, 32, 32);
                 }
             }
 
             _copRectangle = new Rectangle[Cop.CopCount][];
             for (int t = 0; t < Cop.CopCount; t++)
             {
-                _copRectangle[t] = new Rectangle[4];
-                for (int f = 0; f < 4; f++) // idle animation
+                _copRectangle[t] = new Rectangle[8];
+                for (int f = 0; f < 8; f++) // idle animation
                 {
-                    _copRectangle[t][f] = new Rectangle(4 * 32 + f * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + 32 * Retired.RetiredCount + 32 * Nurse.NurseCount + t * 32, 32, 32);
+                    _copRectangle[t][f] = new Rectangle(35 * 32 + f * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + 32 * Retired.RetiredCount + 32 * Nurse.NurseCount + t * 32, 32, 32);
                 }
             }
 
