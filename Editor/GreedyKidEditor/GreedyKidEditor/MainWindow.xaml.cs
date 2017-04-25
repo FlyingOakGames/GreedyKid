@@ -54,7 +54,17 @@ namespace GreedyKidEditor
                 }
             }
 
-            Load();            
+            Load();
+
+            if (!File.Exists("Content\\Textures\\level.png")) // devmode 
+            {
+                exportMenu.Visibility = Visibility.Collapsed;
+                exportSeparator.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                this.Title = this.Title + " - DEV MODE";
+            }
         }
 
         protected override void OnSourceInitialized(EventArgs e)

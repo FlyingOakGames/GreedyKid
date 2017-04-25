@@ -36,12 +36,12 @@
                 </MenuItem>
                 <MenuItem Header="Save as" Click="MenuItem_Click_3" />
                 <Separator/>
-                <MenuItem Header="_Export (dev mode)" InputGestureText="Crtl+E" Command="{StaticResource ExportCmd}">
+                <MenuItem x:Name="exportMenu" Header="_Export (dev mode)" InputGestureText="Crtl+E" Command="{StaticResource ExportCmd}">
                     <MenuItem.InputBindings>
                         <KeyBinding Key="E" Modifiers="control"/>
                     </MenuItem.InputBindings>
                 </MenuItem>
-                <Separator/>
+                <Separator x:Name="exportSeparator"/>
                 <MenuItem Header="Exit" Click="MenuItem_Click"/>
             </MenuItem>
         </Menu>
