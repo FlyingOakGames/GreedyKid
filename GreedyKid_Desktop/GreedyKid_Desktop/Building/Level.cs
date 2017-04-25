@@ -103,12 +103,12 @@ namespace GreedyKid
                                 {
                                     FloorDoor floorDoor2 = room2.FloorDoors[ff2];
 
-                                    if (floorDoor.Color > 0 && floorDoor2.Color == floorDoor.Color)
+                                    if (floorDoor != floorDoor2 && floorDoor.Color > 0 && floorDoor2.Color == floorDoor.Color)
                                     {
                                         floorDoor.SisterDoor = floorDoor2;
                                         floorDoor2.SisterDoor = floorDoor;
                                     }
-                                    else if (floorDoor.Color == 0 && floorDoor2.Color == floorDoor.Color && floorDoor2.X == floorDoor.X)
+                                    else if (floorDoor != floorDoor2 && floorDoor.Color == 0 && floorDoor2.Color == floorDoor.Color && floorDoor2.X == floorDoor.X)
                                     {
                                         floorDoor.SisterDoor = floorDoor2;
                                         floorDoor2.SisterDoor = floorDoor;

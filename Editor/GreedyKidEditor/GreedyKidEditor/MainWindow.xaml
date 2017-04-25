@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:GreedyKidEditor"
         xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
         mc:Ignorable="d"
-        Title="Boo! Greedy Kid Editor v1" Icon="Resources/Icon.ico" Height="1181" Width="995" Closing="Window_Closing" WindowStartupLocation="CenterScreen" WindowState="Maximized">
+        Title="Boo! Greedy Kid - Editor v1" Icon="Resources/Icon.ico" Height="1181" Width="995" Closing="Window_Closing" WindowStartupLocation="CenterScreen" WindowState="Maximized">
     <Window.Resources>
         <RoutedUICommand x:Key="SaveCmd" Text="Save">
             <RoutedUICommand.InputGestures>

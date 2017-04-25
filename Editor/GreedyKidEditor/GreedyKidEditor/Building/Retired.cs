@@ -27,6 +27,11 @@ namespace GreedyKidEditor
             X = x;
         }
 
+        public int GetX()
+        {
+            return X;
+        }
+
         public void Save(BinaryWriter writer)
         {
             writer.Write(Type);

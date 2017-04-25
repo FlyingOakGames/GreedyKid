@@ -29,6 +29,11 @@ namespace GreedyKidEditor
             writer.Write(X);
         }
 
+        public int GetX()
+        {
+            return X;
+        }
+
         public void Load(BinaryReader reader)
         {
             X = reader.ReadInt32();

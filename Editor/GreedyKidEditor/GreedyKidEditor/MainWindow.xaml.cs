@@ -468,7 +468,7 @@ namespace GreedyKidEditor
             // export
             if (result == System.Windows.Forms.DialogResult.OK)
             {
-                using (FileStream fs = new FileStream(dialog.SelectedPath + "\\" + _saveFile, FileMode.OpenOrCreate))
+                using (FileStream fs = new FileStream(dialog.SelectedPath + "\\building", FileMode.OpenOrCreate))
                 {
                     using (GZipStream gzipStream = new GZipStream(fs, CompressionMode.Compress))
                     {
@@ -503,6 +503,7 @@ namespace GreedyKidEditor
             {
                 MessageBox.Show("Warning: There is no level.");
             }
+            // entrance / exit
             for (int i = 0; i < _building.Levels.Count; i++)
             {
                 int start = _building.Levels[i].HasStart();
@@ -518,6 +519,80 @@ namespace GreedyKidEditor
                     MessageBox.Show("Warning: Level " + (i + 1) + " has too many exits.");
                 else if (exit == 0)
                     MessageBox.Show("Warning: Level " + (i + 1) + " has no exit.");
+            }
+            // door connections
+            for (int i = 0; i < _building.Levels.Count; i++)
+            {
+                Level level = _building.Levels[i];
+
+                bool warn1 = false;
+                bool warn2 = false;
+                bool warn3 = false;
+                bool warn4 = false;
+
+                for (int f = 0; f < level.Floors.Count; f++)
+                {
+                    Floor floor = level.Floors[f];
+
+                    for (int r = 0; r < floor.Rooms.Count; r++)
+                    {
+                        Room room = floor.Rooms[r];
+
+                        for (int ff = 0; ff < room.FloorDoors.Count; ff++)
+                        {
+                            FloorDoor floorDoor = room.FloorDoors[ff];
+
+                            int connections = 0;
+                            bool greyDoor = (floorDoor.Color == 0);
+
+                            for (int f2 = 0; f2 < level.Floors.Count; f2++)
+                            {
+                                Floor floor2 = level.Floors[f2];
+
+                                for (int r2 = 0; r2 < floor2.Rooms.Count; r2++)
+                                {
+                                    Room room2 = floor2.Rooms[r2];
+
+                                    for (int ff2 = 0; ff2 < room2.FloorDoors.Count; ff2++)
+                                    {
+                                        FloorDoor floorDoor2 = room2.FloorDoors[ff2];
+
+                                        if (floorDoor != floorDoor2 && floorDoor.Color > 0 && floorDoor2.Color == floorDoor.Color)
+                                        {
+                                            connections++;
+                                        }
+                                        else if (floorDoor != floorDoor2 && floorDoor.Color == 0 && floorDoor2.Color == floorDoor.Color && floorDoor2.X == floorDoor.X)
+                                        {
+                                            connections++;
+                                        }
+                                    }
+                                }
+                            }
+
+
+                            if (connections == 0 && greyDoor && !warn1)
+                            {
+                                warn1 = true;
+                                MessageBox.Show("Warning: Level " + (i + 1) + " has non-connected grey doors.");
+                            }
+                            else if (connections == 0 && !warn2)
+                            {
+                                warn2 = true;
+                                MessageBox.Show("Warning: Level " + (i + 1) + " has non-connected doors.");
+                            }
+                            if (connections > 1 && greyDoor && !warn3)
+                            {
+                                warn3 = true;
+                                MessageBox.Show("Warning: Level " + (i + 1) + " has grey doors with too many connections.");
+                            }
+                            else if (connections > 1 && !warn4)
+                            {
+                                warn4 = true;
+                                MessageBox.Show("Warning: Level " + (i + 1) + " has doors with too many conenctions.");
+                            }
+                        }
+                    }
+                }
             }
         }
 
