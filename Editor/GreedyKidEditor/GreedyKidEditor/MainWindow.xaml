@@ -15,7 +15,7 @@
         </RoutedUICommand>
         <RoutedUICommand x:Key="ExportCmd" Text="Export">
             <RoutedUICommand.InputGestures>
-                <KeyGesture>CTRL+S</KeyGesture>
+                <KeyGesture>CTRL+E</KeyGesture>
             </RoutedUICommand.InputGestures>
         </RoutedUICommand>
     </Window.Resources>
@@ -26,12 +26,17 @@
     <Grid>
         <Menu Height="23" VerticalAlignment="Top">
             <MenuItem Header="_File">
+                <MenuItem Header="New" Click="MenuItem_Click_5" />
+                <MenuItem Header="Open" Click="MenuItem_Click_4" />
+                <Separator/>
                 <MenuItem Header="_Save" InputGestureText="Crtl+S" Command="{StaticResource SaveCmd}">
                     <MenuItem.InputBindings>
                         <KeyBinding Key="S" Modifiers="control"/>
                     </MenuItem.InputBindings>
                 </MenuItem>
-                <MenuItem Header="_Export" InputGestureText="Crtl+E" Command="{StaticResource ExportCmd}">
+                <MenuItem Header="Save as" Click="MenuItem_Click_3" />
+                <Separator/>
+                <MenuItem Header="_Export (dev mode)" InputGestureText="Crtl+E" Command="{StaticResource ExportCmd}">
                     <MenuItem.InputBindings>
                         <KeyBinding Key="E" Modifiers="control"/>
                     </MenuItem.InputBindings>
@@ -40,7 +45,7 @@
                 <MenuItem Header="Exit" Click="MenuItem_Click"/>
             </MenuItem>
         </Menu>
-        <Grid Margin="0,23,0,0">
+        <Grid Margin="0,23,0,23">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="175" MinWidth="175"/>
                 <ColumnDefinition Width="5" />
@@ -143,5 +148,10 @@
                 <CheckBox x:Name="checkBox" Content="Animations" HorizontalAlignment="Left" Margin="9,5,0,0" VerticalAlignment="Top" Foreground="White" Checked="checkBox_Checked" Unchecked="checkBox_Unchecked" Visibility="Hidden"/>
             </Grid>
         </Grid>
+        <StatusBar Height="23" Margin="0,0,0,0" VerticalAlignment="Bottom">
+            <StatusBarItem>
+                <TextBlock Name="loadedFile" />
+            </StatusBarItem>
+        </StatusBar>
     </Grid>
 </Window>

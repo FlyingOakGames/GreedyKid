@@ -22,7 +22,9 @@ namespace GreedyKidEditor
 
         private Thread mouseThread;        
 
-        private const string _saveFile = "building";
+        private string _saveFile = "";
+
+        private const string _latestSave = "latest";
 
         private Building _building = new Building("New building");
 
@@ -37,26 +39,22 @@ namespace GreedyKidEditor
             mouseThread.Start();
 
             IntPtr handle = monoGameRenderPanel.Handle;
-            rendererThread = new Thread(new ThreadStart(() => { renderer = new PreviewRenderer(handle, this, _building); renderer.Run(); }));
+            rendererThread = new Thread(new ThreadStart(() => { renderer = new PreviewRenderer(handle, this); renderer.Run(); }));
             rendererThread.Start();
 
-            // load
-            if (File.Exists(_saveFile))
+            // check for last saved file
+            if (File.Exists(_latestSave))
             {
-                using (FileStream fs = new FileStream(_saveFile, FileMode.Open))
+                using (FileStream fs = new FileStream(_latestSave, FileMode.Open))
                 {
-                    using (GZipStream gzipStream = new GZipStream(fs, CompressionMode.Decompress))
+                    using (BinaryReader reader = new BinaryReader(fs))
                     {
-                        using (BinaryReader reader = new BinaryReader(gzipStream))
-                        {                            
-                            _building.Load(reader);
-                        }
+                        _saveFile = reader.ReadString();
                     }
                 }
             }
 
-            buildingLabel.Content = _building.Name;
-            RefreshLevelListBox();
+            Load();            
         }
 
         protected override void OnSourceInitialized(EventArgs e)
@@ -336,6 +334,37 @@ namespace GreedyKidEditor
 
         private void MenuItem_Click_1(object sender, ExecutedRoutedEventArgs e)
         {
+            if (_saveFile == String.Empty)
+            {
+                System.Windows.Forms.SaveFileDialog saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+                saveFileDialog.Filter = "Building file (*.gdk)|*.gdk";
+                if (saveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    _saveFile = saveFileDialog.FileName;
+                }
+                else
+                    return;
+            }
+
+            Save();
+        }
+
+        private void MenuItem_Click_3(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Forms.SaveFileDialog saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+            saveFileDialog.Filter = "Building file (*.gdk)|*.gdk";
+            if (saveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                _saveFile = saveFileDialog.FileName;
+
+                Save();
+            }
+            else
+                return;
+        }
+
+        private void Save()
+        {
             using (FileStream fs = new FileStream(_saveFile, FileMode.OpenOrCreate))
             {
                 using (GZipStream gzipStream = new GZipStream(fs, CompressionMode.Compress))
@@ -347,7 +376,84 @@ namespace GreedyKidEditor
                 }
             }
 
+            using (FileStream fs = new FileStream(_latestSave, FileMode.OpenOrCreate))
+            {
+                using (BinaryWriter writer = new BinaryWriter(fs))
+                {
+                    writer.Write(_saveFile);
+                }
+            }
+
+            loadedFile.Text = DateTime.Now.ToString("HH:mm") + ": Saved " + _building.Name + " (path to file: " + _saveFile + ")";
+
             System.Media.SystemSounds.Beep.Play();
+        }
+
+        private void MenuItem_Click_4(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            openFileDialog.Filter = "Building file (*.gdk)|*.gdk|All files|*";
+            if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                if (File.Exists(openFileDialog.FileName))
+                {
+                    _saveFile = openFileDialog.FileName;
+
+                    Load();
+
+                    using (FileStream fs = new FileStream(_latestSave, FileMode.OpenOrCreate))
+                    {
+                        using (BinaryWriter writer = new BinaryWriter(fs))
+                        {
+                            writer.Write(_saveFile);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void Load()
+        {
+            // load
+            _building = new Building("New building");
+            if (File.Exists(_saveFile))
+            {
+                using (FileStream fs = new FileStream(_saveFile, FileMode.Open))
+                {
+                    using (GZipStream gzipStream = new GZipStream(fs, CompressionMode.Decompress))
+                    {
+                        using (BinaryReader reader = new BinaryReader(gzipStream))
+                        {
+                            _building.Load(reader);
+                        }
+                    }
+                }
+
+                loadedFile.Text = DateTime.Now.ToString("HH:mm") + ": Loaded " + _building.Name + " (path to file: " + _saveFile + ")";
+            }
+            else if (_saveFile != String.Empty)
+            {
+                loadedFile.Text = DateTime.Now.ToString("HH:mm") + ": Failed loading your last building (path to file: " + _saveFile + ")";
+            }
+            else
+            {
+                loadedFile.Text = DateTime.Now.ToString("HH:mm") + ": New building";
+            }
+
+            buildingLabel.Content = _building.Name;
+            RefreshLevelListBox();
+
+            PreviewRenderer.Building = _building;
+        }
+
+        private void MenuItem_Click_5(object sender, RoutedEventArgs e)
+        {
+            _saveFile = String.Empty;
+            _building = new Building("New building");
+            buildingLabel.Content = _building.Name;
+            RefreshLevelListBox();
+
+            PreviewRenderer.Building = _building;
         }
 
         private void MenuItem_Click_2(object sender, ExecutedRoutedEventArgs e)
@@ -387,6 +493,8 @@ namespace GreedyKidEditor
                     }
                 }
             }
+
+            loadedFile.Text = DateTime.Now.ToString("HH:mm") + ": Exported " + _building.Name + " (path to file: " + dialog.SelectedPath + ")";
 
             System.Media.SystemSounds.Beep.Play();
 

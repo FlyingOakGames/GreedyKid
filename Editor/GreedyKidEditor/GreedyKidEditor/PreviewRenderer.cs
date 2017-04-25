@@ -68,7 +68,7 @@ namespace GreedyKidEditor
 
         Color _fillColor = new Color(34, 32, 52);
 
-        Building _building;
+        private static Building _building;
 
         public int SelectedLevel = -1;
 
@@ -202,9 +202,8 @@ namespace GreedyKidEditor
             args.GraphicsDeviceInformation.PresentationParameters.DeviceWindowHandle = _handle;
         }
 
-        public PreviewRenderer(IntPtr handle, MainWindow w, Building b)
+        public PreviewRenderer(IntPtr handle, MainWindow w)
         {
-            _building = b;
             _w = w;
             _handle = handle;
             graphics = new GraphicsDeviceManager(this);
@@ -217,6 +216,11 @@ namespace GreedyKidEditor
             IsMouseVisible = true;
 
             _selectionColor.A = 255;
+        }
+
+        public static Building Building
+        {
+            set { _building = value; }
         }
 
         protected override void Initialize()
@@ -608,7 +612,7 @@ namespace GreedyKidEditor
 
             Score = 0;
 
-            if (SelectedLevel >= 0 && SelectedLevel < _building.Levels.Count)
+            if (_building != null && SelectedLevel >= 0 && SelectedLevel < _building.Levels.Count)
             {
                 for (int f = 0; f < _building.Levels[SelectedLevel].Floors.Count; f++)
                 {
@@ -1415,7 +1419,7 @@ namespace GreedyKidEditor
 
             // time
 
-            if (SelectedLevel >= 0 && SelectedLevel < _building.Levels.Count)
+            if (_building != null && SelectedLevel >= 0 && SelectedLevel < _building.Levels.Count)
             {
                 Time = _building.Levels[SelectedLevel].TimeBeforeCop;
             }
