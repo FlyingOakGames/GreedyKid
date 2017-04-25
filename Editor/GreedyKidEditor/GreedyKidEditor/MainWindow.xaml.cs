@@ -452,8 +452,11 @@ namespace GreedyKidEditor
 
             buildingLabel.Content = _building.Name;
             RefreshLevelListBox();
-
+            
             PreviewRenderer.Building = _building;
+
+            if (levelListBox.Items.Count > 0)
+                levelListBox.SelectedIndex = 0;
         }
 
         private void MenuItem_Click_5(object sender, RoutedEventArgs e)
@@ -464,6 +467,9 @@ namespace GreedyKidEditor
             RefreshLevelListBox();
 
             PreviewRenderer.Building = _building;
+
+            if (levelListBox.Items.Count > 0)
+                levelListBox.SelectedIndex = 0;
         }
 
         private void MenuItem_Click_2(object sender, ExecutedRoutedEventArgs e)
@@ -471,6 +477,8 @@ namespace GreedyKidEditor
             System.Windows.Forms.FolderBrowserDialog dialog = new System.Windows.Forms.FolderBrowserDialog();
             if (Directory.Exists(@"D:\Projects\GreedyKid\GreedyKid_Desktop\GreedyKid_Desktop\Content"))
                 dialog.SelectedPath = @"D:\Projects\GreedyKid\GreedyKid_Desktop\GreedyKid_Desktop\Content";
+            if (Directory.Exists(@"C:\Projects\GreedyKid\GreedyKid_Desktop\GreedyKid_Desktop\Content"))
+                dialog.SelectedPath = @"C:\Projects\GreedyKid\GreedyKid_Desktop\GreedyKid_Desktop\Content";
             else if (Directory.Exists(@"D:\FlyingOak\GreedyKid\GreedyKid_Desktop\GreedyKid_Desktop\Content"))
                 dialog.SelectedPath = @"D:\FlyingOak\GreedyKid\GreedyKid_Desktop\GreedyKid_Desktop\Content";
             System.Windows.Forms.DialogResult result = dialog.ShowDialog();
@@ -518,16 +526,12 @@ namespace GreedyKidEditor
             {
                 int start = _building.Levels[i].HasStart();
 
-                if (start > 1)
-                    MessageBox.Show("Warning: Level " + (i + 1) + " has too many starts.");
-                else if (start == 0)
+                if (start == 0)
                     MessageBox.Show("Warning: Level " + (i + 1) + " has no start.");
 
                 int exit = _building.Levels[i].HasExit();
 
-                if (exit > 1)
-                    MessageBox.Show("Warning: Level " + (i + 1) + " has too many exits.");
-                else if (exit == 0)
+                if (exit == 0)
                     MessageBox.Show("Warning: Level " + (i + 1) + " has no exit.");
             }
             // door connections
@@ -540,6 +544,8 @@ namespace GreedyKidEditor
                 bool warn3 = false;
                 bool warn4 = false;
 
+                int retiredCount = 0;
+
                 for (int f = 0; f < level.Floors.Count; f++)
                 {
                     Floor floor = level.Floors[f];
@@ -547,6 +553,8 @@ namespace GreedyKidEditor
                     for (int r = 0; r < floor.Rooms.Count; r++)
                     {
                         Room room = floor.Rooms[r];
+
+                        retiredCount += room.Retireds.Count;
 
                         for (int ff = 0; ff < room.FloorDoors.Count; ff++)
                         {
@@ -603,6 +611,9 @@ namespace GreedyKidEditor
                         }
                     }
                 }
+
+                if (retiredCount == 0)
+                    MessageBox.Show("Warning: Level " + (i + 1) + " has no retiree.");
             }
         }
 
@@ -712,6 +723,8 @@ namespace GreedyKidEditor
 
         private void levelListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (renderer == null)
+                return;
             if (levelListBox.SelectedIndex >= 0 && renderer.SelectedLevel != levelListBox.SelectedIndex)
             {
                 renderer.SelectedLevel = levelListBox.SelectedIndex;
@@ -733,7 +746,7 @@ namespace GreedyKidEditor
 
         private void timeBeforeCopSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count)
+            if (renderer != null && renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count)
             {
                 Level level = _building.Levels[renderer.SelectedLevel];
 
@@ -744,7 +757,7 @@ namespace GreedyKidEditor
 
         private void cop1ButtonUP_Click(object sender, RoutedEventArgs e)
         {
-            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count)
+            if (renderer != null && renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count)
             {
                 Level level = _building.Levels[renderer.SelectedLevel];
 
@@ -755,7 +768,7 @@ namespace GreedyKidEditor
 
         private void cop1ButtonDown_Click(object sender, RoutedEventArgs e)
         {
-            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count)
+            if (renderer != null && renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count)
             {
                 Level level = _building.Levels[renderer.SelectedLevel];
 
@@ -767,7 +780,7 @@ namespace GreedyKidEditor
 
         private void cop2ButtonUP_Click(object sender, RoutedEventArgs e)
         {
-            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count)
+            if (renderer != null && renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count)
             {
                 Level level = _building.Levels[renderer.SelectedLevel];
 
@@ -778,7 +791,7 @@ namespace GreedyKidEditor
 
         private void cop2ButtonDown_Click(object sender, RoutedEventArgs e)
         {
-            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count)
+            if (renderer != null && renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count)
             {
                 Level level = _building.Levels[renderer.SelectedLevel];
 
@@ -790,7 +803,7 @@ namespace GreedyKidEditor
 
         private void timeBeforeSwatSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count)
+            if (renderer != null && renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count)
             {
                 Level level = _building.Levels[renderer.SelectedLevel];
 
@@ -801,7 +814,7 @@ namespace GreedyKidEditor
 
         private void swat1ButtonUP_Click(object sender, RoutedEventArgs e)
         {
-            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count)
+            if (renderer != null && renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count)
             {
                 Level level = _building.Levels[renderer.SelectedLevel];
 
@@ -812,7 +825,7 @@ namespace GreedyKidEditor
 
         private void swat1ButtonDown_Click(object sender, RoutedEventArgs e)
         {
-            if (renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count)
+            if (renderer != null && renderer.SelectedLevel >= 0 && renderer.SelectedLevel < _building.Levels.Count)
             {
                 Level level = _building.Levels[renderer.SelectedLevel];
 

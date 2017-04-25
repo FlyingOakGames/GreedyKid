@@ -17,6 +17,7 @@ namespace GreedyKidEditor
         public Building(string name)
         {
             Name = name;
+            Levels.Add(new Level());
         }
 
         public void Save(BinaryWriter writer, bool export = false)
@@ -34,6 +35,8 @@ namespace GreedyKidEditor
 
         public void Load(BinaryReader reader)
         {
+            Levels.Clear();
+
             Name = reader.ReadString();
 
             int n = reader.ReadInt32();
