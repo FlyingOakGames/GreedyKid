@@ -69,5 +69,27 @@ namespace GreedyKid
             PlayerDevice = null;
             return false;
         }
+
+        public static bool CheckKeypress()
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                GamePadState gamePadState = GamePad.GetState((PlayerIndex)i);
+
+                if (gamePadState.Buttons.Start == ButtonState.Pressed || gamePadState.Buttons.A == ButtonState.Pressed)
+                {
+                    return true;
+                }
+            }
+
+            KeyboardState keyboardState = Keyboard.GetState();
+
+            if (keyboardState.IsKeyDown(Keys.Enter))
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
 }

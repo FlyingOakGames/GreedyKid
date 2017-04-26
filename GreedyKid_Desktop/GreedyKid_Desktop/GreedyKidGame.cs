@@ -4,25 +4,36 @@ using Microsoft.Xna.Framework.Input;
 
 namespace GreedyKid
 {
+    public enum GameState
+    {
+        None,
+        Splash,
+        Title,
+        Ingame,
+    }
+
     /// <summary>
     /// This is the main type for your game.
     /// </summary>
     public class GreedyKidGame : Game
     {
-
+        // virtual resolution
         public const int Width = 328; // 312
         public const int Height = 184; // 176
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        RenderTarget2D renderTarget;
 
-        Color fillColor = new Color(34, 32, 52);
+        private GameState _state = GameState.None;
+        
+        // gameplay
+        private BuildingManager _buildingManager;
 
-        BuildingManager buildingManager;
-
-        Rectangle destination = new Rectangle();
+        // viewport handling
+        private Rectangle _destination = new Rectangle();
+        private RenderTarget2D _renderTarget;
+        private Color _fillColor = new Color(34, 32, 52);
 
 #if DEBUG
         KeyboardState previousKeyboardState;
@@ -58,14 +69,16 @@ namespace GreedyKid
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+            spriteBatch = new SpriteBatch(GraphicsDevice);            
 
-            buildingManager = new BuildingManager();
-            buildingManager.LoadBuilding();
+            _renderTarget = new RenderTarget2D(GraphicsDevice, Width, Height);
 
-            renderTarget = new RenderTarget2D(GraphicsDevice, Width, Height);
+
+            _buildingManager = new BuildingManager();
+            _buildingManager.LoadBuilding();
 
             TextureManager.LoadBuilding(Content);
+            TextureManager.LoadSplash(Content);
         }
 
         /// <summary>
@@ -74,7 +87,8 @@ namespace GreedyKid
         /// </summary>
         protected override void UnloadContent()
         {
-            buildingManager.Dispose();
+            if (_buildingManager != null)
+                _buildingManager.Dispose();
         }
 
         /// <summary>
@@ -90,16 +104,19 @@ namespace GreedyKid
 #if DEBUG
             KeyboardState keyboardState = Keyboard.GetState();
 
-            if (keyboardState.IsKeyDown(Keys.R) && previousKeyboardState.IsKeyUp(Keys.R))
-                buildingManager.ResetLevel();
+            if (_state == GameState.Ingame && _buildingManager != null)
+            {
+                if (keyboardState.IsKeyDown(Keys.R) && previousKeyboardState.IsKeyUp(Keys.R))
+                    _buildingManager.ResetLevel();
 
-            if (keyboardState.IsKeyDown(Keys.V) && previousKeyboardState.IsKeyUp(Keys.V))
-                buildingManager.NextLevel();
-            if (keyboardState.IsKeyDown(Keys.C) && previousKeyboardState.IsKeyUp(Keys.C))
-                buildingManager.PreviousLevel();
+                if (keyboardState.IsKeyDown(Keys.V) && previousKeyboardState.IsKeyUp(Keys.V))
+                    _buildingManager.NextLevel();
+                if (keyboardState.IsKeyDown(Keys.C) && previousKeyboardState.IsKeyUp(Keys.C))
+                    _buildingManager.PreviousLevel();
 
-            if (keyboardState.IsKeyDown(Keys.S) && previousKeyboardState.IsKeyUp(Keys.S))
-                buildingManager.SpawnCop();
+                if (keyboardState.IsKeyDown(Keys.S) && previousKeyboardState.IsKeyUp(Keys.S))
+                    _buildingManager.SpawnCop();
+            }
 
             previousKeyboardState = keyboardState;
 #endif
@@ -110,7 +127,7 @@ namespace GreedyKid
                 InputManager.CheckEngagement();
 
             if (InputManager.PlayerDevice != null)
-                buildingManager.Update(gameTimeF);
+                _buildingManager.Update(gameTimeF);
 
             base.Update(gameTime);
         }
@@ -123,21 +140,21 @@ namespace GreedyKid
         {
             GraphicsDevice.Clear(Color.Black);
 
-            GraphicsDevice.SetRenderTarget(renderTarget);
-            GraphicsDevice.Clear(fillColor);
+            GraphicsDevice.SetRenderTarget(_renderTarget);
+            GraphicsDevice.Clear(_fillColor);
 
 
 
 
             // do all the rendering here
 
-            buildingManager.Draw(spriteBatch);
+            _buildingManager.Draw(spriteBatch);
 
 
 
 
 
-
+            // final rendering
             GraphicsDevice.SetRenderTarget(null);
             GraphicsDevice.Clear(Color.Black);
 
@@ -149,25 +166,25 @@ namespace GreedyKid
             if (gameRatio > targetRatio)
             {
                 // black border width
-                destination.Width = (int)(GraphicsDevice.Viewport.Bounds.Height * targetRatio);
-                destination.Height = GraphicsDevice.Viewport.Bounds.Height;
-                destination.X = (GraphicsDevice.Viewport.Bounds.Width - destination.Width) / 2;
-                destination.Y = 0;                
+                _destination.Width = (int)(GraphicsDevice.Viewport.Bounds.Height * targetRatio);
+                _destination.Height = GraphicsDevice.Viewport.Bounds.Height;
+                _destination.X = (GraphicsDevice.Viewport.Bounds.Width - _destination.Width) / 2;
+                _destination.Y = 0;                
             }
             else if (gameRatio < targetRatio)
             {
                 // black border height
-                destination.Width = GraphicsDevice.Viewport.Bounds.Width;
-                destination.Height = (int)(GraphicsDevice.Viewport.Bounds.Width / targetRatio);
-                destination.X = 0;
-                destination.Y = (GraphicsDevice.Viewport.Bounds.Height - destination.Height) / 2;
+                _destination.Width = GraphicsDevice.Viewport.Bounds.Width;
+                _destination.Height = (int)(GraphicsDevice.Viewport.Bounds.Width / targetRatio);
+                _destination.X = 0;
+                _destination.Y = (GraphicsDevice.Viewport.Bounds.Height - _destination.Height) / 2;
             }
             else
             {
-                destination = GraphicsDevice.Viewport.Bounds;
+                _destination = GraphicsDevice.Viewport.Bounds;
             }
 
-            spriteBatch.Draw(renderTarget, destination, Color.White);
+            spriteBatch.Draw(_renderTarget, _destination, Color.White);
 
             spriteBatch.End();
 
