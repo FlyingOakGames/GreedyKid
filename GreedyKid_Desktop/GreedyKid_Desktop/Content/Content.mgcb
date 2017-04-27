@@ -37,3 +37,10 @@
 /processorParam:TextureFormat=Color
 /build:Textures/splash.png
 
+#begin Fonts/japanese.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Color
+/build:Fonts/japanese.spritefont
+
