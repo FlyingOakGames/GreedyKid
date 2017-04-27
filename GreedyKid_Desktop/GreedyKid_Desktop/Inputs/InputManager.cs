@@ -18,8 +18,13 @@ namespace GreedyKid
         public static bool HasGamepad = false;
         public static bool HasKeyboard = false;
 
+        private static bool _previousKeyPress = false;
+
         public static bool CheckEngagement()
         {
+            if (!CheckKeypress())
+                return false;
+
             HasGamepad = false;
             HasKeyboard = false;
 
@@ -72,24 +77,31 @@ namespace GreedyKid
 
         public static bool CheckKeypress()
         {
+            bool keypress = false;
+
             for (int i = 0; i < 4; i++)
             {
                 GamePadState gamePadState = GamePad.GetState((PlayerIndex)i);
 
                 if (gamePadState.Buttons.Start == ButtonState.Pressed || gamePadState.Buttons.A == ButtonState.Pressed)
                 {
-                    return true;
+                    keypress = true;
+                    break;
                 }
             }
 
             KeyboardState keyboardState = Keyboard.GetState();
 
-            if (keyboardState.IsKeyDown(Keys.Enter))
+            if (!keypress && keyboardState.IsKeyDown(Keys.Enter))
             {
-                return true;
+                keypress = true;
             }
 
-            return false;
+            bool ret = (!_previousKeyPress && keypress);
+
+            _previousKeyPress = keypress;
+
+            return ret;
         }
     }
 }

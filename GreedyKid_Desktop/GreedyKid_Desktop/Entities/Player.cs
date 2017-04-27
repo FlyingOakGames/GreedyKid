@@ -546,7 +546,7 @@ namespace GreedyKid
             if (!_isVisible)
                 return;
 
-            Texture2D texture = TextureManager.Building;
+            Texture2D texture = TextureManager.Gameplay;
 
             if (_hitTime <= 0.0f || _hitShow)
                 spriteBatch.Draw(texture,

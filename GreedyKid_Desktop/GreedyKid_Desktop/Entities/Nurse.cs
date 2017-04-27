@@ -220,7 +220,7 @@ namespace GreedyKid
 
                     for (int f = 0; f < nbFrames; f++)
                     {
-                        _lifeRectangles[l][f] = new Rectangle(BuildingManager.TextureWidth - (4 + (MaxLife - 1) * 4) * 16 + f * 16, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 16, 16, 16);
+                        _lifeRectangles[l][f] = new Rectangle(TextureManager.GameplayWidth - (4 + (MaxLife - 1) * 4) * 16 + f * 16, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 16, 16, 16);
                     }
                 }
             }
@@ -753,7 +753,7 @@ namespace GreedyKid
             if (!_isVisible)
                 return;
 
-            Texture2D texture = TextureManager.Building;
+            Texture2D texture = TextureManager.Gameplay;
 
             spriteBatch.Draw(texture,
                 new Rectangle((int)X, 128 - 40 * Room.Y + 9 + cameraPosY, 32, 32),

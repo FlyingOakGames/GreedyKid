@@ -10,7 +10,9 @@
 
     public interface IInputsHandler
     {
-        void HandleIngameInputs(BuildingManager manager);        
+        void HandleIngameInputs(GameplayManager manager);
+
+        void HandleTitleInputs(TitleScreenManager manager);
 
         InputsHandlerTypes InputType { get; }
 

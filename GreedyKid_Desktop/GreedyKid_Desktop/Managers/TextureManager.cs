@@ -5,12 +5,15 @@ namespace GreedyKid
 {
     public static class TextureManager
     {
-        public static Texture2D Building;
+        public const int GameplayWidth = 2048;
+        public const int GameplayHeight = 2048;
+
+        public static Texture2D Gameplay;
         public static Texture2D Splash;
 
-        public static void LoadBuilding(ContentManager content)
+        public static void LoadGameplay(ContentManager content)
         {
-            Building = content.Load<Texture2D>(@"Textures/level");
+            Gameplay = content.Load<Texture2D>(@"Textures/level");
         }
 
         public static void LoadSplash(ContentManager content)

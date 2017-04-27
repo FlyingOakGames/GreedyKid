@@ -38,11 +38,8 @@ namespace GreedyKid
         Robocop,
     }
 
-    public sealed class BuildingManager : IDisposable
+    public sealed class GameplayManager : IDisposable
     {
-        public const int TextureWidth = 2048;
-        public const int TextureHeight = 2048;
-
         private Building _building;
 
         private Rectangle[][][] _roomRectangle;
@@ -142,7 +139,7 @@ namespace GreedyKid
         private int _bulletCount = 0;
         private Rectangle[][] _bulletRectangle;
 
-        public BuildingManager()
+        public GameplayManager()
         {
             _roomRectangle = new Rectangle[Room.PaintCount][][]; // colors
             _detailRectangle = new Rectangle[Room.PaintCount][][];
@@ -253,7 +250,7 @@ namespace GreedyKid
                 for (int f = _objectsRectangle[o].Length - 1; f >= 0; f--)
                 {
                     objectFrameCount++;
-                    _objectsRectangle[o][f] = new Rectangle(TextureWidth - objectFrameCount * 16, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine, 16, 16);
+                    _objectsRectangle[o][f] = new Rectangle(TextureManager.GameplayWidth - objectFrameCount * 16, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine, 16, 16);
                 }
             }
 
@@ -266,37 +263,37 @@ namespace GreedyKid
                 _bulletRectangle[t] = new Rectangle[4];
                 for (int f = 0; f < 4; f++)
                 {
-                    _bulletRectangle[t][f] = new Rectangle(TextureWidth - objectFrameCount * 16 - 64 + 16 * f - t * 16 * 4, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine, 16, 16);
+                    _bulletRectangle[t][f] = new Rectangle(TextureManager.GameplayWidth - objectFrameCount * 16 - 64 + 16 * f - t * 16 * 4, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine, 16, 16);
                 }
             }
 
             // UI
             _uiRectangle = new Rectangle[8];
-            _uiRectangle[0] = new Rectangle(0, TextureHeight - 24, 12, 13); // upper left
-            _uiRectangle[1] = new Rectangle(11, TextureHeight - 24, 12, 13); // upper right
-            _uiRectangle[2] = new Rectangle(0, TextureHeight - 12, 12, 12); // lower left
-            _uiRectangle[3] = new Rectangle(11, TextureHeight - 12, 12, 12); // lower right
-            _uiRectangle[4] = new Rectangle(11, TextureHeight - 24, 1, 9); // up
-            _uiRectangle[5] = new Rectangle(11, TextureHeight - 8, 1, 8); // down
-            _uiRectangle[6] = new Rectangle(0, TextureHeight - 12, 8, 1); // left
-            _uiRectangle[7] = new Rectangle(15, TextureHeight - 12, 8, 1); // right
+            _uiRectangle[0] = new Rectangle(0, TextureManager.GameplayHeight - 24, 12, 13); // upper left
+            _uiRectangle[1] = new Rectangle(11, TextureManager.GameplayHeight - 24, 12, 13); // upper right
+            _uiRectangle[2] = new Rectangle(0, TextureManager.GameplayHeight - 12, 12, 12); // lower left
+            _uiRectangle[3] = new Rectangle(11, TextureManager.GameplayHeight - 12, 12, 12); // lower right
+            _uiRectangle[4] = new Rectangle(11, TextureManager.GameplayHeight - 24, 1, 9); // up
+            _uiRectangle[5] = new Rectangle(11, TextureManager.GameplayHeight - 8, 1, 8); // down
+            _uiRectangle[6] = new Rectangle(0, TextureManager.GameplayHeight - 12, 8, 1); // left
+            _uiRectangle[7] = new Rectangle(15, TextureManager.GameplayHeight - 12, 8, 1); // right
 
             _iconRectangle = new Rectangle[3];
-            _iconRectangle[0] = new Rectangle(23, TextureHeight - 24, 13, 13);
-            _iconRectangle[1] = new Rectangle(36, TextureHeight - 24, 13, 13);
-            _iconRectangle[2] = new Rectangle(49, TextureHeight - 24, 13, 13);
+            _iconRectangle[0] = new Rectangle(23, TextureManager.GameplayHeight - 24, 13, 13);
+            _iconRectangle[1] = new Rectangle(36, TextureManager.GameplayHeight - 24, 13, 13);
+            _iconRectangle[2] = new Rectangle(49, TextureManager.GameplayHeight - 24, 13, 13);
 
             _maskRectangle = new Rectangle[5];
-            _maskRectangle[0] = new Rectangle(23, TextureHeight - 10, 49, 10);
-            _maskRectangle[1] = new Rectangle(72, TextureHeight - 10, 57, 10);
-            _maskRectangle[2] = new Rectangle(129, TextureHeight - 10, 51, 10);
-            _maskRectangle[3] = new Rectangle(152, TextureHeight - 130, 1, 1); // 1x1
-            _maskRectangle[4] = new Rectangle(201, TextureHeight - 184, 328, 2);
+            _maskRectangle[0] = new Rectangle(23, TextureManager.GameplayHeight - 10, 49, 10);
+            _maskRectangle[1] = new Rectangle(72, TextureManager.GameplayHeight - 10, 57, 10);
+            _maskRectangle[2] = new Rectangle(129, TextureManager.GameplayHeight - 10, 51, 10);
+            _maskRectangle[3] = new Rectangle(152, TextureManager.GameplayHeight - 130, 1, 1); // 1x1
+            _maskRectangle[4] = new Rectangle(201, TextureManager.GameplayHeight - 184, 328, 2);
 
             _numberRectangle = new Rectangle[12];
             for (int i = 0; i < _numberRectangle.Length; i++)
             {
-                _numberRectangle[i] = new Rectangle(74 + 11 * i, TextureHeight - 24, 11, 13);
+                _numberRectangle[i] = new Rectangle(74 + 11 * i, TextureManager.GameplayHeight - 24, 11, 13);
             }
             _numberRectangle[10].Width = 5;
             _numberRectangle[11].X = _numberRectangle[10].X + _numberRectangle[10].Width;
@@ -304,36 +301,36 @@ namespace GreedyKid
             _microphoneRectangle = new Rectangle[10];
             for (int i = 0; i < 10; i++)
             {
-                _microphoneRectangle[i] = new Rectangle(0, TextureHeight - 148 - 4 * i, 146, 4);
+                _microphoneRectangle[i] = new Rectangle(0, TextureManager.GameplayHeight - 148 - 4 * i, 146, 4);
             }
 
             // transition
             _transitionRectangle = new Rectangle[4];
-            _transitionRectangle[0] = new Rectangle(152, TextureHeight - 130, 1, 1); // 1x1
-            _transitionRectangle[2] = new Rectangle(150, TextureHeight - 133, 50, 50); // circle half full
-            _transitionRectangle[1] = new Rectangle(150, TextureHeight - 184, 50, 50); // circle empty            
-            _transitionRectangle[3] = new Rectangle(201, TextureHeight - 184, 328, 184); // half full
+            _transitionRectangle[0] = new Rectangle(152, TextureManager.GameplayHeight - 130, 1, 1); // 1x1
+            _transitionRectangle[2] = new Rectangle(150, TextureManager.GameplayHeight - 133, 50, 50); // circle half full
+            _transitionRectangle[1] = new Rectangle(150, TextureManager.GameplayHeight - 184, 50, 50); // circle empty            
+            _transitionRectangle[3] = new Rectangle(201, TextureManager.GameplayHeight - 184, 328, 184); // half full
 
             // inter level
             _interLevelRectangle = new Rectangle[_elevatorFrameCount + _cableFrameCount + 3 + _elevatorKidFrameCount];
             // elevator
             for (int i = 0; i < _elevatorFrameCount; i++)
             {
-                _interLevelRectangle[i] = new Rectangle(613 + 32 * i, TextureHeight - 45, 32, 45);
+                _interLevelRectangle[i] = new Rectangle(613 + 32 * i, TextureManager.GameplayHeight - 45, 32, 45);
             }
             // cable
             for (int i = 0; i < _cableFrameCount; i++)
             {
-                _interLevelRectangle[_elevatorFrameCount + i] = new Rectangle(530 + 2 * i, TextureHeight - 160, 1, 160);
+                _interLevelRectangle[_elevatorFrameCount + i] = new Rectangle(530 + 2 * i, TextureManager.GameplayHeight - 160, 1, 160);
             }
             // background
-            _interLevelRectangle[_elevatorFrameCount + _cableFrameCount] = new Rectangle(548, TextureHeight - 240, 64, 240);
-            _interLevelRectangle[_elevatorFrameCount + _cableFrameCount + 1] = new Rectangle(483, TextureHeight - 204, 64, 10);
-            _interLevelRectangle[_elevatorFrameCount + _cableFrameCount + 2] = new Rectangle(483, TextureHeight - 193, 64, 8);
+            _interLevelRectangle[_elevatorFrameCount + _cableFrameCount] = new Rectangle(548, TextureManager.GameplayHeight - 240, 64, 240);
+            _interLevelRectangle[_elevatorFrameCount + _cableFrameCount + 1] = new Rectangle(483, TextureManager.GameplayHeight - 204, 64, 10);
+            _interLevelRectangle[_elevatorFrameCount + _cableFrameCount + 2] = new Rectangle(483, TextureManager.GameplayHeight - 193, 64, 8);
             // kid
             for (int i = 0; i < _elevatorKidFrameCount; i++)
             {
-                _interLevelRectangle[_elevatorFrameCount + _cableFrameCount + 3 + i] = new Rectangle(613 + 32 * i, TextureHeight - 90, 32, 45);
+                _interLevelRectangle[_elevatorFrameCount + _cableFrameCount + 3 + i] = new Rectangle(613 + 32 * i, TextureManager.GameplayHeight - 90, 32, 45);
             }
 
             _microphoneHandler = new MicrophoneVolumeHandler();
@@ -1202,7 +1199,7 @@ namespace GreedyKid
         {
             spriteBatch.Begin(samplerState: SamplerState.PointWrap);
 
-            Texture2D texture = TextureManager.Building;
+            Texture2D texture = TextureManager.Gameplay;
 
             int cameraPosY = (int)Math.Round(_cameraPositionY);
 

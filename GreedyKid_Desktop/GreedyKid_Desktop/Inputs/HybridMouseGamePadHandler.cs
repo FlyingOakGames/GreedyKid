@@ -25,7 +25,13 @@ namespace GreedyKid
             get { return _gamepadHandler.IsConnected; }
         }
 
-        public void HandleIngameInputs(BuildingManager manager)
+        public void HandleTitleInputs(TitleScreenManager manager)
+        {
+            _keyboardHandler.HandleTitleInputs(manager);
+            _gamepadHandler.HandleTitleInputs(manager);
+        }
+
+        public void HandleIngameInputs(GameplayManager manager)
         {
             _keyboardHandler.HandleIngameInputs(manager);
             _gamepadHandler.HandleIngameInputs(manager);

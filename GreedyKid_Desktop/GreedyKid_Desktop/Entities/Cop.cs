@@ -238,7 +238,7 @@ namespace GreedyKid
                     _frames[(int)EntityState.WindowBreak][t] = new Rectangle[7];
                     for (int f = 0; f < _frames[(int)EntityState.WindowBreak][t].Length; f++)
                     {
-                        _frames[(int)EntityState.WindowBreak][t][f] = new Rectangle(f * 32 + BuildingManager.TextureWidth - 657, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 16, 32, 32);
+                        _frames[(int)EntityState.WindowBreak][t][f] = new Rectangle(f * 32 + TextureManager.GameplayWidth - 657, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 16, 32, 32);
                     }
                     _frameDuration[(int)EntityState.WindowBreak] = 0.1f;
 
@@ -246,7 +246,7 @@ namespace GreedyKid
                     _frames[(int)EntityState.SmokeUp][t] = new Rectangle[4];
                     for (int f = 0; f < _frames[(int)EntityState.SmokeUp][t].Length; f++)
                     {
-                        _frames[(int)EntityState.SmokeUp][t][f] = new Rectangle(f * 32 + BuildingManager.TextureWidth - 657 + 7 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 32, 32, 16);
+                        _frames[(int)EntityState.SmokeUp][t][f] = new Rectangle(f * 32 + TextureManager.GameplayWidth - 657 + 7 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 32, 32, 16);
                     }
                     _frameDuration[(int)EntityState.SmokeUp] = 0.1f;
 
@@ -254,7 +254,7 @@ namespace GreedyKid
                     _frames[(int)EntityState.SmokeDown][t] = new Rectangle[4];
                     for (int f = 0; f < _frames[(int)EntityState.SmokeDown][t].Length; f++)
                     {
-                        _frames[(int)EntityState.SmokeDown][t][f] = new Rectangle(f * 32 + BuildingManager.TextureWidth - 657 + 11 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 32, 32, 16);
+                        _frames[(int)EntityState.SmokeDown][t][f] = new Rectangle(f * 32 + TextureManager.GameplayWidth - 657 + 11 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 32, 32, 16);
                     }
                     _frameDuration[(int)EntityState.SmokeDown] = 0.1f;
 
@@ -316,7 +316,7 @@ namespace GreedyKid
                     _frames[(int)EntityState.RopeDown][t] = new Rectangle[15];
                     for (int f = 0; f < _frames[(int)EntityState.RopeDown][t].Length; f++)
                     {
-                        _frames[(int)EntityState.RopeDown][t][f] = new Rectangle(904 + f * 32, 1870, 32, 49);
+                        _frames[(int)EntityState.RopeDown][t][f] = new Rectangle(904 + f * 32 + 15 * 32, 1814, 32, 49);
                     }
                     _frameDuration[(int)EntityState.RopeDown] = 0.1f;
                 }
@@ -997,7 +997,7 @@ namespace GreedyKid
             if (!_isVisible)
                 return;
 
-            Texture2D texture = TextureManager.Building;
+            Texture2D texture = TextureManager.Gameplay;
 
             if (State != EntityState.HookingDown && State != EntityState.HookingUp)
             {

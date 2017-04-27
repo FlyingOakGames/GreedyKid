@@ -93,7 +93,7 @@ namespace GreedyKid
 
         public void Draw(SpriteBatch spriteBatch, Rectangle[][] source, int cameraPosY)
         {
-            Texture2D texture = TextureManager.Building;
+            Texture2D texture = TextureManager.Gameplay;
 
             spriteBatch.Draw(texture,
                 new Rectangle(

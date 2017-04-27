@@ -26,7 +26,18 @@ namespace GreedyKid
             get { return true; }
         }
 
-        public void HandleIngameInputs(BuildingManager manager)
+        public void HandleTitleInputs(TitleScreenManager manager)
+        {
+            MouseState mouseState = Mouse.GetState();
+            KeyboardState keyboardState = Keyboard.GetState();
+
+            // inputs
+
+            _previousKeyboardState = keyboardState;
+            _previousMouseState = mouseState;
+        }
+
+        public void HandleIngameInputs(GameplayManager manager)
         {
             MouseState mouseState = Mouse.GetState();
             KeyboardState keyboardState = Keyboard.GetState();

@@ -42,7 +42,19 @@ namespace GreedyKid
             get { return _isConnected; }
         }
 
-        public void HandleIngameInputs(BuildingManager manager)
+        public void HandleTitleInputs(TitleScreenManager manager)
+        {
+            GamePadState currentState = GamePad.GetState(_playerIndex, GamePadDeadZone.IndependentAxes);
+            _isConnected = currentState.IsConnected;
+
+            if ((currentState.Buttons.A == ButtonState.Pressed && _previousGamePadState.Buttons.A == ButtonState.Released) ||
+                (currentState.Buttons.Start == ButtonState.Pressed && _previousGamePadState.Buttons.Start == ButtonState.Released))
+                manager.PushStart();
+
+            _previousGamePadState = currentState;
+        }
+
+        public void HandleIngameInputs(GameplayManager manager)
         {
             GamePadState currentState = GamePad.GetState(_playerIndex, GamePadDeadZone.IndependentAxes);
             _isConnected = currentState.IsConnected;

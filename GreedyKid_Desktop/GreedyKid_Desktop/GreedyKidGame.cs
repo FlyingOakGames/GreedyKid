@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace GreedyKid
 {
@@ -24,11 +25,12 @@ namespace GreedyKid
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-
         private GameState _state = GameState.None;
-        
-        // gameplay
-        private BuildingManager _buildingManager;
+
+        // managers
+        private SplashScreenManager _splashScreenManager;
+        private TitleScreenManager _titleScreenManager;
+        private GameplayManager _gameplayManager;
 
         // viewport handling
         private Rectangle _destination = new Rectangle();
@@ -72,13 +74,6 @@ namespace GreedyKid
             spriteBatch = new SpriteBatch(GraphicsDevice);            
 
             _renderTarget = new RenderTarget2D(GraphicsDevice, Width, Height);
-
-
-            _buildingManager = new BuildingManager();
-            _buildingManager.LoadBuilding();
-
-            TextureManager.LoadBuilding(Content);
-            TextureManager.LoadSplash(Content);
         }
 
         /// <summary>
@@ -87,8 +82,8 @@ namespace GreedyKid
         /// </summary>
         protected override void UnloadContent()
         {
-            if (_buildingManager != null)
-                _buildingManager.Dispose();
+            if (_gameplayManager != null)
+                _gameplayManager.Dispose();
         }
 
         /// <summary>
@@ -98,24 +93,25 @@ namespace GreedyKid
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+#if DEBUG
             // should remove once menus are in
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-#if DEBUG
+
             KeyboardState keyboardState = Keyboard.GetState();
 
-            if (_state == GameState.Ingame && _buildingManager != null)
+            if (_state == GameState.Ingame && _gameplayManager != null)
             {
                 if (keyboardState.IsKeyDown(Keys.R) && previousKeyboardState.IsKeyUp(Keys.R))
-                    _buildingManager.ResetLevel();
+                    _gameplayManager.ResetLevel();
 
                 if (keyboardState.IsKeyDown(Keys.V) && previousKeyboardState.IsKeyUp(Keys.V))
-                    _buildingManager.NextLevel();
+                    _gameplayManager.NextLevel();
                 if (keyboardState.IsKeyDown(Keys.C) && previousKeyboardState.IsKeyUp(Keys.C))
-                    _buildingManager.PreviousLevel();
+                    _gameplayManager.PreviousLevel();
 
                 if (keyboardState.IsKeyDown(Keys.S) && previousKeyboardState.IsKeyUp(Keys.S))
-                    _buildingManager.SpawnCop();
+                    _gameplayManager.SpawnCop();
             }
 
             previousKeyboardState = keyboardState;
@@ -123,11 +119,58 @@ namespace GreedyKid
 
             float gameTimeF = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (InputManager.PlayerDevice == null)
-                InputManager.CheckEngagement();
+            switch (_state)
+            {
+                case GameState.None:
 
-            if (InputManager.PlayerDevice != null)
-                _buildingManager.Update(gameTimeF);
+                    _splashScreenManager = new SplashScreenManager(Content);
+
+                    _state = GameState.Splash;
+
+                    break;
+                case GameState.Splash:
+
+                    _splashScreenManager.Update(gameTimeF);
+
+                    if (_splashScreenManager.SkipToTitle)
+                    {
+                        Content.Unload();
+
+                        TextureManager.LoadGameplay(Content);
+
+                        _titleScreenManager = new TitleScreenManager();
+
+                        _state = GameState.Title;
+
+                        _splashScreenManager = null;
+
+                        GC.Collect();
+                    }
+
+                    break;
+                case GameState.Title:
+
+                    _titleScreenManager.Update(gameTimeF);
+
+                    if (_titleScreenManager.StartGame)
+                    {
+                        _gameplayManager = new GameplayManager();
+                        _gameplayManager.LoadBuilding();
+
+                        _titleScreenManager = null;
+
+                        _state = GameState.Ingame;
+
+                        GC.Collect();
+                    }
+
+                    break;
+                case GameState.Ingame:
+
+                    _gameplayManager.Update(gameTimeF);
+
+                    break;
+            }
 
             base.Update(gameTime);
         }
@@ -142,21 +185,24 @@ namespace GreedyKid
 
             GraphicsDevice.SetRenderTarget(_renderTarget);
             GraphicsDevice.Clear(_fillColor);
-
-
-
-
-            // do all the rendering here
-
-            _buildingManager.Draw(spriteBatch);
-
-
-
-
+       
+            // do all the rendering here            
+            switch (_state)
+            {
+                case GameState.Splash:
+                    _splashScreenManager.Draw(spriteBatch);
+                    break;
+                case GameState.Title:
+                    _titleScreenManager.Draw(spriteBatch);
+                    break;
+                case GameState.Ingame:
+                    _gameplayManager.Draw(spriteBatch);
+                    break;
+            }
 
             // final rendering
             GraphicsDevice.SetRenderTarget(null);
-            GraphicsDevice.Clear(Color.Black);
+            GraphicsDevice.Clear(_fillColor);
 
             spriteBatch.Begin(samplerState: SamplerState.PointWrap);
 

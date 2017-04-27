@@ -43,7 +43,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="BuildingManager.cs" />
+    <Compile Include="Managers\GameplayManager.cs" />
     <Compile Include="Building\Building.cs" />
     <Compile Include="Building\Detail.cs" />
     <Compile Include="Building\Floor.cs" />
@@ -79,9 +79,11 @@
     <Compile Include="Inputs\InputManager.cs" />
     <Compile Include="Inputs\MicrophoneVolumeHandler.cs" />
     <Compile Include="Inputs\MouseKeyboardInputsHandler.cs" />
+    <Compile Include="Managers\SplashScreenManager.cs" />
+    <Compile Include="Managers\TitleScreenManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TextureManager.cs" />
+    <Compile Include="Managers\TextureManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
