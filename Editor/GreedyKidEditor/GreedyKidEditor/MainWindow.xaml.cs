@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace GreedyKidEditor
 {
@@ -534,9 +535,14 @@ namespace GreedyKidEditor
                 if (exit == 0)
                     MessageBox.Show("Warning: Level " + (i + 1) + " has no exit.");
             }
+
+            List<Room> _reachableRooms = new List<Room>();
+
             // door connections
             for (int i = 0; i < _building.Levels.Count; i++)
             {
+                _reachableRooms.Clear();
+
                 Level level = _building.Levels[i];
 
                 bool warn1 = false;
@@ -553,6 +559,9 @@ namespace GreedyKidEditor
                     for (int r = 0; r < floor.Rooms.Count; r++)
                     {
                         Room room = floor.Rooms[r];
+
+                        if (room.HasStart)
+                            _reachableRooms.Add(room);
 
                         retiredCount += room.Retireds.Count;
 
@@ -614,7 +623,78 @@ namespace GreedyKidEditor
 
                 if (retiredCount == 0)
                     MessageBox.Show("Warning: Level " + (i + 1) + " has no retiree.");
+
+                // check reachability
+                if (_reachableRooms.Count == 0)
+                    continue;
+
+                bool canExit = false;
+                int reachableRetired = 0;
+
+                int currentRoom = -1;
+                while (currentRoom < _reachableRooms.Count - 1)
+                {
+                    currentRoom++;
+
+                    if (_reachableRooms[currentRoom].HasExit)
+                        canExit = true;
+                    reachableRetired += _reachableRooms[currentRoom].Retireds.Count;
+
+                    List<Room> newRooms = GetReachableRooms(_reachableRooms[currentRoom], level);
+
+                    for (int n = 0; n < newRooms.Count; n++)
+                    {
+                        if (!_reachableRooms.Contains(newRooms[n]))
+                            _reachableRooms.Add(newRooms[n]);
+                    }
+                }
+
+                if (retiredCount != reachableRetired)
+                    MessageBox.Show("Warning: Level " + (i + 1) + " can't be completed because some retiree are not reachable.");
+                else if (!canExit)
+                    MessageBox.Show("Warning: Level " + (i + 1) + " can't be completed because the exit is not reachable.");
             }
+        }
+
+        private List<Room> GetReachableRooms(Room start, Level level)
+        {
+            List<Room> rooms = new List<Room>();
+
+            for (int i = 0; i < start.FloorDoors.Count; i++)
+            {
+                FloorDoor floorDoor = start.FloorDoors[i];
+
+                // for each doors, go through levels to find connected door
+                for (int f = 0; f < level.Floors.Count; f++)
+                {
+                    Floor floor = level.Floors[f];
+
+                    for (int r = 0; r < floor.Rooms.Count; r++)
+                    {
+                        Room room = floor.Rooms[r];
+
+                        for (int ff = 0; ff < room.FloorDoors.Count; ff++)
+                        {
+                            FloorDoor floorDoor2 = room.FloorDoors[ff];
+                            
+                            bool greyDoor = (floorDoor.Color == 0);
+                           
+                            if (floorDoor != floorDoor2 && floorDoor.Color > 0 && floorDoor2.Color == floorDoor.Color)
+                            {
+                                if (!rooms.Contains(room))
+                                    rooms.Add(room);
+                            }
+                            else if (floorDoor != floorDoor2 && floorDoor.Color == 0 && floorDoor2.Color == floorDoor.Color && floorDoor2.X == floorDoor.X)
+                            {
+                                if (!rooms.Contains(room))
+                                    rooms.Add(room);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return rooms;
         }
 
         private void checkBox_Checked(object sender, RoutedEventArgs e)
