@@ -8,9 +8,9 @@ namespace GreedyKid
     {
         public bool SkipToTitle = false;
 
-        public SplashScreenManager(ContentManager content)
+        public SplashScreenManager()
         {
-            TextureManager.LoadSplash(content);
+            TextureManager.LoadSplash();
         }
 
         public void Update(float gameTime)

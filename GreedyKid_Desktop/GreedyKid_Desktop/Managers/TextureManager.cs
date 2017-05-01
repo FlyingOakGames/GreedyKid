@@ -11,14 +11,38 @@ namespace GreedyKid
         public static Texture2D Gameplay;
         public static Texture2D Splash;
 
-        public static void LoadGameplay(ContentManager content)
+        public static SpriteFont LatinFont;
+
+        public static ContentManager Content
         {
-            Gameplay = content.Load<Texture2D>(@"Textures/level");
+            get;
+            set;
         }
 
-        public static void LoadSplash(ContentManager content)
+        public static void LoadGameplay()
         {
-            Splash = content.Load<Texture2D>(@"Textures/splash");
+            if (Content != null)
+                Gameplay = Content.Load<Texture2D>(@"Textures/level");
+        }
+
+        public static void LoadSplash()
+        {
+            if (Content != null)
+                Splash = Content.Load<Texture2D>(@"Textures/splash");
+        }
+
+        public static void LoadLatinFont()
+        {
+            if (Content != null)
+            {
+                LatinFont = Content.Load<SpriteFont>(@"Fonts/latin");
+                LatinFont.Spacing = -1.0f;
+            }
+        }
+
+        public static void LoadFont()
+        {
+            LoadLatinFont();
         }
     }
 }

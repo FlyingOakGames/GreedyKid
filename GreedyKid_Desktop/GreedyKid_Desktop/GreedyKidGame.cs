@@ -74,6 +74,8 @@ namespace GreedyKid
             spriteBatch = new SpriteBatch(GraphicsDevice);            
 
             _renderTarget = new RenderTarget2D(GraphicsDevice, Width, Height);
+
+            TextureManager.Content = Content;
         }
 
         /// <summary>
@@ -123,7 +125,7 @@ namespace GreedyKid
             {
                 case GameState.None:
 
-                    _splashScreenManager = new SplashScreenManager(Content);
+                    _splashScreenManager = new SplashScreenManager();
 
                     _state = GameState.Splash;
 
@@ -136,7 +138,8 @@ namespace GreedyKid
                     {
                         Content.Unload();
 
-                        TextureManager.LoadGameplay(Content);
+                        TextureManager.LoadGameplay();
+                        TextureManager.LoadFont();
 
                         _titleScreenManager = new TitleScreenManager();
 

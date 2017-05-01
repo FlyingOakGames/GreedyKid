@@ -35,7 +35,7 @@ namespace GreedyKid
                     break;
                 }
             }
-            if (_microphone == null)
+            if (_microphone == null && Microphone.Default != null)
             {
                 _microphone = Microphone.Default;
                 _microphone.BufferDuration = _bufferDuration;
