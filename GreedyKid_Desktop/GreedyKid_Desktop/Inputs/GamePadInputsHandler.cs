@@ -47,9 +47,17 @@ namespace GreedyKid
             GamePadState currentState = GamePad.GetState(_playerIndex, GamePadDeadZone.IndependentAxes);
             _isConnected = currentState.IsConnected;
 
-            if ((currentState.Buttons.A == ButtonState.Pressed && _previousGamePadState.Buttons.A == ButtonState.Released) ||
-                (currentState.Buttons.Start == ButtonState.Pressed && _previousGamePadState.Buttons.Start == ButtonState.Released))
-                manager.PushStart();
+            if (currentState.Buttons.A == ButtonState.Pressed && _previousGamePadState.Buttons.A == ButtonState.Released)
+                manager.PushSelect();
+            else if (currentState.Buttons.B == ButtonState.Pressed && _previousGamePadState.Buttons.B == ButtonState.Released)
+                manager.PushBack();
+
+            if ((currentState.DPad.Up == ButtonState.Pressed && _previousGamePadState.DPad.Up == ButtonState.Released) ||
+                (currentState.ThumbSticks.Left.Y >= _stickDZ && _previousGamePadState.ThumbSticks.Left.Y < _stickDZ))
+                manager.PushUp();
+            else if ((currentState.DPad.Down == ButtonState.Pressed && _previousGamePadState.DPad.Down == ButtonState.Released) ||
+                (currentState.ThumbSticks.Left.Y <= -_stickDZ && _previousGamePadState.ThumbSticks.Left.Y > -_stickDZ))
+                manager.PushDown();
 
             _previousGamePadState = currentState;
         }

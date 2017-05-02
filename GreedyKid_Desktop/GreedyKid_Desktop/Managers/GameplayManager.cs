@@ -1543,7 +1543,7 @@ namespace GreedyKid
             }
             
 
-            if ((_spawnEntrance && _spawningCop != null) || (_entranceState != ElevatorState.Opening && Player != null && !Player.HasEnteredElevator))
+            if ((Player != null && _spawnEntrance && _spawningCop != null) || (_entranceState != ElevatorState.Opening && Player != null && !Player.HasEnteredElevator))
                 Player.Draw(spriteBatch, cameraPosY);
 
             // transition

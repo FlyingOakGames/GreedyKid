@@ -36,7 +36,7 @@ namespace GreedyKid
             if (Content != null)
             {
                 LatinFont = Content.Load<SpriteFont>(@"Fonts/latin");
-                LatinFont.Spacing = -1.0f;
+                LatinFont.Spacing = 1.0f;
             }
         }
 

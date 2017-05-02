@@ -18,6 +18,8 @@ namespace GreedyKid
     /// </summary>
     public class GreedyKidGame : Game
     {
+        public static bool ShouldExit = false;
+
         // virtual resolution
         public const int Width = 328; // 312
         public const int Height = 184; // 176
@@ -43,6 +45,9 @@ namespace GreedyKid
 
         public GreedyKidGame()
         {
+            // settings init
+            SettingsManager SettingsManager = SettingsManager.Instance;
+
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
@@ -95,6 +100,8 @@ namespace GreedyKid
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            if (ShouldExit)
+                Exit();
 #if DEBUG
             // should remove once menus are in
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
