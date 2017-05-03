@@ -494,7 +494,7 @@ namespace GreedyKid
             DrawRightAlignedText(spriteBatch, fullScreenMode, 23 + 30, 2);
 
             spriteBatch.Draw(texture,
-                new Rectangle(27, 73, _dashRectangle.Width, _dashRectangle.Height),
+                new Rectangle(27, 72, _dashRectangle.Width, _dashRectangle.Height),
                 _dashRectangle,
                 Color.White);
 
@@ -502,7 +502,7 @@ namespace GreedyKid
             string buttons = "XBOX";
             if (GamePadInputsHandler.PreferredButtonType == ButtonType.PlayStation)
                 buttons = "PLAYSTATION";
-            DrawRightAlignedText(spriteBatch, buttons, 23 + 32 + 24, 3, true);
+            DrawRightAlignedText(spriteBatch, buttons, 23 + 30 + 24, 3, true);
 
             DrawLeftAlignedText(spriteBatch, TextManager.Instance.Keyboard, 23 + 30 + 24 + 15, 4);
             DrawRightAlignedText(spriteBatch, TextManager.Instance.Remap, 23 + 30 + 24 + 15, 4, false, true);

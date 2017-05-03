@@ -26,6 +26,7 @@ namespace GreedyKid
 
         private int _selectionOption = 0;
         private Color _selectionColor = new Color(217, 87, 99);
+        private Color _notSelectedColor = new Color(132, 126, 135);
 
         public TitleScreenManager()
         {
@@ -212,7 +213,10 @@ namespace GreedyKid
             SpriteFont font = TextManager.Instance.Font;
 
             int textWidth = (int)font.MeasureString(text).X;
-            spriteBatch.DrawString(font, text, new Vector2(GreedyKidGame.Width / 2 - textWidth / 2, yPos), Color.White);
+            spriteBatch.DrawString(font,
+                text,
+                new Vector2(GreedyKidGame.Width / 2 - textWidth / 2, yPos),
+                (_selectionOption == option ? Color.White : _notSelectedColor));
 
             if (_selectionOption == option)
             {
