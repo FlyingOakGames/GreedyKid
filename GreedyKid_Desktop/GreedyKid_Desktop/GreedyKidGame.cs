@@ -19,6 +19,7 @@ namespace GreedyKid
     public class GreedyKidGame : Game
     {
         public static bool ShouldExit = false;
+        public static bool ShouldApplyChanges = false;
 
         // virtual resolution
         public const int Width = 328; // 312
@@ -45,17 +46,37 @@ namespace GreedyKid
 
         public GreedyKidGame()
         {
+            // text init (default language)
+            TextManager textManager = TextManager.Instance;
             // settings init
-            SettingsManager SettingsManager = SettingsManager.Instance;
+            SettingsManager settingsManager = SettingsManager.Instance;
 
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
+#if DESKTOP
+            settingsManager.Load();
+
             Window.AllowUserResizing = true;
 
-            graphics.PreferredBackBufferWidth = 1280;
-            graphics.PreferredBackBufferHeight = 720;
+            if (settingsManager.ResolutionX == -1 || settingsManager.ResolutionY == -1)
+            {
+                settingsManager.SetResolution(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
+            }
+
+            graphics.PreferredBackBufferWidth = settingsManager.ResolutionX;
+            graphics.PreferredBackBufferHeight = settingsManager.ResolutionY;
+            switch(settingsManager.FullScreenMode)
+            {
+                case FullScreenMode.No: graphics.IsFullScreen = false; graphics.HardwareModeSwitch = false; break;
+                case FullScreenMode.Bordeless: graphics.HardwareModeSwitch = false; graphics.IsFullScreen = true; break;
+                case FullScreenMode.Real: graphics.HardwareModeSwitch = true; graphics.IsFullScreen = true; break;
+            }
+
             graphics.ApplyChanges();
+
+            ShouldApplyChanges = false;
+#endif
         }
 
         /// <summary>
@@ -102,6 +123,29 @@ namespace GreedyKid
         {
             if (ShouldExit)
                 Exit();
+
+            if (ShouldApplyChanges)
+            {
+                ShouldApplyChanges = false;
+#if DESKTOP
+                SettingsManager settingsManager = SettingsManager.Instance;
+                if (settingsManager.ResolutionX != graphics.PreferredBackBufferWidth ||
+                    settingsManager.ResolutionY != graphics.PreferredBackBufferHeight ||
+                    graphics.IsFullScreen != (settingsManager.FullScreenMode != FullScreenMode.No) ||
+                    graphics.HardwareModeSwitch != (settingsManager.FullScreenMode == FullScreenMode.Real))
+                {
+                    graphics.PreferredBackBufferWidth = settingsManager.ResolutionX;
+                    graphics.PreferredBackBufferHeight = settingsManager.ResolutionY;
+                    switch (settingsManager.FullScreenMode)
+                    {
+                        case FullScreenMode.No: graphics.IsFullScreen = false; graphics.HardwareModeSwitch = false; break;
+                        case FullScreenMode.Bordeless: graphics.HardwareModeSwitch = false; graphics.IsFullScreen = true; break;
+                        case FullScreenMode.Real: graphics.HardwareModeSwitch = true; graphics.IsFullScreen = true; break;
+                    }
+                    graphics.ApplyChanges();
+                }
+#endif
+            }
 #if DEBUG
             // should remove once menus are in
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))

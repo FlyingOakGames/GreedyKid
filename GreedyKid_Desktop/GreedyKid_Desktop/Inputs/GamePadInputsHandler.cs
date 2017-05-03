@@ -59,6 +59,13 @@ namespace GreedyKid
                 (currentState.ThumbSticks.Left.Y <= -_stickDZ && _previousGamePadState.ThumbSticks.Left.Y > -_stickDZ))
                 manager.PushDown();
 
+            if ((currentState.DPad.Right == ButtonState.Pressed && _previousGamePadState.DPad.Right == ButtonState.Released) ||
+                (currentState.ThumbSticks.Left.X >= _stickDZ && _previousGamePadState.ThumbSticks.Left.X < _stickDZ))
+                manager.PushRight();
+            else if ((currentState.DPad.Left == ButtonState.Pressed && _previousGamePadState.DPad.Left == ButtonState.Released) ||
+                (currentState.ThumbSticks.Left.X <= -_stickDZ && _previousGamePadState.ThumbSticks.Left.X > -_stickDZ))
+                manager.PushLeft();
+
             _previousGamePadState = currentState;
         }
 

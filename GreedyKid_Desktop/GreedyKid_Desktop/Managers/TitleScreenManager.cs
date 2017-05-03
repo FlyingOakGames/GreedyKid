@@ -97,7 +97,7 @@ namespace GreedyKid
             {
                 case TitleScreenState.Title: break;
                 case TitleScreenState.Main: _state = TitleScreenState.Title; break;
-                case TitleScreenState.Settings: _selectionOption = 1; _state = TitleScreenState.Main; break;
+                case TitleScreenState.Settings: _selectionOption = 1; _state = TitleScreenState.Main; SettingsManager.Instance.Save(); break;
                 case TitleScreenState.Play: _state = TitleScreenState.Main; break;
                 case TitleScreenState.LevelSelection: _state = TitleScreenState.Play; break;
                 case TitleScreenState.SteamWorkshop: _selectionOption = 1; _state = TitleScreenState.Play; break;
@@ -133,6 +133,18 @@ namespace GreedyKid
                 case TitleScreenState.LevelSelection: break;
                 case TitleScreenState.SteamWorkshop: break;
             }
+        }
+
+        public void PushLeft()
+        {
+            if (_state == TitleScreenState.Settings)
+                SettingsManager.Instance.PushLeft();
+        }
+
+        public void PushRight()
+        {
+            if (_state == TitleScreenState.Settings)
+                SettingsManager.Instance.PushRight();
         }
 
         public void Draw(SpriteBatch spriteBatch)

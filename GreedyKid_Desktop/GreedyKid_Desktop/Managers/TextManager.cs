@@ -6,7 +6,7 @@ using System.Text;
 
 namespace GreedyKid
 {
-    public enum AvailableLanguage
+    public enum Language
     {
         EN,
         FR,
@@ -22,11 +22,11 @@ namespace GreedyKid
     public sealed class TextManager
     {
         private static TextManager _instance;
-        private AvailableLanguage _selectedLanguage = AvailableLanguage.EN;
+        private Language _language = Language.EN;
 
         private TextManager()
         {
-
+            DetectStartingLanguage();
         }
 
         public static TextManager Instance
@@ -37,6 +37,38 @@ namespace GreedyKid
                     _instance = new TextManager();
                 return _instance; 
             }
+        }
+
+        public void DetectStartingLanguage()
+        {
+#if DESKTOP || PLAYSTATION4
+            switch (System.Globalization.CultureInfo.InstalledUICulture.TwoLetterISOLanguageName)
+            {
+                case "en": _language = Language.EN; break;
+                case "fr": _language = Language.FR; break;
+                case "de": _language = Language.DE; break;
+                case "ru": _language = Language.RU; break;
+                case "es": _language = Language.SP; break;
+                case "pt":
+                    if (System.Globalization.CultureInfo.InstalledUICulture.LCID == 1046)
+                    {
+                        _language = Language.BR;
+                    }
+                    break;
+                case "it": _language = Language.IT; break;
+            }
+#elif XBOXONE
+            switch (PlatformHelper.XboxOne.GetDefaultLocale())
+            {
+                case 0: _language = Language.EN; break;
+                case 1: _language = Language.FR; break;
+                case 2: _language = Language.DE; break;
+                case 3: _language = Language.RU; break;
+                case 4: _language = Language.SP; break;
+                case 5: _language = Language.BR; break;
+                case 6: _language = Language.IT; break;
+            }
+#endif
         }
 
         public SpriteFont Font
@@ -55,66 +87,78 @@ namespace GreedyKid
             }
         }
 
+        public Language Language
+        {
+            get { return _language; }
+            set {
+                _language = value;
+                if (_language == Language.Count)
+                    _language = Language.Count - 1;
+                else if (_language < 0)
+                    _language = Language.EN;
+            }
+        }
+
         // *********************** MAIN SCREEN ***********************
 
         // 100%
 
         private string[] _play = new string[] { "PLAY", "JOUER", "SPIELEN", "ИГРАТЬ", "JUGAR", "JOGAR", "GIOCA" };
-        public string Play { get { return _play[(int)_selectedLanguage]; } }
+        public string Play { get { return _play[(int)_language]; } }
 
         private string[] _settings = new string[] { "SETTINGS", "PARAMÈTRES", "OPTIONEN", "НАСТРОЙКИ", "AJUSTES", "AJUSTES", "IMPOSTAZIONI" };
-        public string Settings { get { return _settings[(int)_selectedLanguage]; } }
+        public string Settings { get { return _settings[(int)_language]; } }
 
         private string[] _quit = new string[] { "QUIT", "QUITTER", "ENDE", "ВЫХОД", "SALIR", "SAIR", "ESCI" };
-        public string Quit { get { return _quit[(int)_selectedLanguage]; } }
+        public string Quit { get { return _quit[(int)_language]; } }
 
         // *********************** PLAY SCREEN ***********************
 
         // 33% campaign, workshop
 
         private string[] _campaign = new string[] { "MAIN CAMPAIGN", "CAMPAGNE PRINCIPALE", "SPIELEN", "ИГРАТЬ", "JUGAR", "JOGAR", "GIOCA" };
-        public string Campaign { get { return _campaign[(int)_selectedLanguage]; } }
+        public string Campaign { get { return _campaign[(int)_language]; } }
 
         private string[] _workshop = new string[] { "STEAM WORKSHOP", "WORKSHOP STEAM", "SPIELEN", "ИГРАТЬ", "JUGAR", "JOGAR", "GIOCA" };
-        public string Workshop { get { return _workshop[(int)_selectedLanguage]; } }
+        public string Workshop { get { return _workshop[(int)_language]; } }
 
         private string[] _back = new string[] { "BACK", "RETOUR", "ZURÜCK", "НАЗАД", "VOLVER", "RETORNAR", "INDIETRO" };
-        public string Back { get { return _back[(int)_selectedLanguage]; } }
+        public string Back { get { return _back[(int)_language]; } }
 
         // *********************** SETTINGS SCREEN ***********************
 
         // 95% microphone
 
-        private string[] _language = new string[] { "LANGUAGE", "LANGUE", "SPRACHE", "ЯЗЫК", "IDIOMA", "IDIOMA", "LINGUA" };
-        public string Language { get { return _language[(int)_selectedLanguage]; } }
+        private string[] _languageTitle = new string[] { "LANGUAGE", "LANGUE", "SPRACHE", "ЯЗЫК", "IDIOMA", "IDIOMA", "LINGUA" };
+        public string LanguageTitle { get { return _languageTitle[(int)_language]; } }
         private string[] _languageValue = new string[] { "ENGLISH", "FRANÇAIS", "DEUTSCH", "РУССКИЙ", "ESPAÑOL", "PORTUGUÊS BRASILEIRO", "ITALIANO" };
-        public string LanguageValue { get { return _languageValue[(int)_selectedLanguage]; } }
+        public string LanguageValue { get { return _languageValue[(int)_language]; } }
 
         private string[] _resolution = new string[] { "RESOLUTION", "RÉSOLUTION", "AUFLÖSUNG", "РАЗРЕШЕНИЕ ЭКРАНА", "RESOLUCIÓN", "RESOLUÇÃO", "RISOLUZIONE" };
-        public string Resolution { get { return _resolution[(int)_selectedLanguage]; } }
+        public string Resolution { get { return _resolution[(int)_language]; } }
         private string[] _fullscreen = new string[] { "FULLSCREEN", "PLEIN ÉCRAN", "VOLLBILD", "ВО ВЕСЬ ЭКРАН", "PANTALLA COMPLETA", "TELA CHEIA", "SCHERMO INTERO" };
-        public string Fullscreen { get { return _fullscreen[(int)_selectedLanguage]; } }
+        public string Fullscreen { get { return _fullscreen[(int)_language]; } }
 
         private string[] _no = new string[] { "NO", "NON", "NEIN", "НЕТ", "NO", "NÃO", "NO" };
-        public string No { get { return _no[(int)_selectedLanguage]; } }
+        public string No { get { return _no[(int)_language]; } }
         private string[] _borderless = new string[] { "YES (BORDERLESS)", "OUI (SANS BORD)", "JA (BORDERLESS)", "ДА (БЕЗ РАМОК)", "SÍ (SIN MARCOS)", "SIM (SEM MARCA", "SÌ (SENZA BORDI)" };
-        public string Borderless { get { return _borderless[(int)_selectedLanguage]; } }
+        public string Borderless { get { return _borderless[(int)_language]; } }
         private string[] _real = new string[] { "YES (REAL)", "OUI (COMPLET)", "JA (VOLLBILD)", "ДА (СТАНДАРТНЫЙ)", "SÍ (REAL)", "SIM (REAL)", "SÌ (REALE)" };
-        public string Real { get { return _real[(int)_selectedLanguage]; } }
+        public string Real { get { return _real[(int)_language]; } }
 
         private string[] _buttons = new string[] { "PREFERRED BUTTONS", "PRÉFÉRENCE DE BOUTONS", "BEVORZUGTE TASTENBELEGUNG", "ПРЕДПОЧТИТЕЛЬНЫЕ КНОПКИ", "PREFERENCIAS DE BOTONES", "PREFERÊNCIAS DE BOTÕES", "TASTI PREFERITI" };
-        public string Buttons { get { return _buttons[(int)_selectedLanguage]; } }
+        public string Buttons { get { return _buttons[(int)_language]; } }
         private string[] _keyboard = new string[] { "KEYBOARD", "CLAVIER", "KEYBOARD", "КЛАВИАТУРА", "TECLADO", "TECLADO", "TASTIERA" };
-        public string Keyboard { get { return _keyboard[(int)_selectedLanguage]; } }
+        public string Keyboard { get { return _keyboard[(int)_language]; } }
         private string[] _remap = new string[] { "CHANGE MAPPING", "PERSONALISER", "BELEGUNG ÄNDERN", "ИЗМЕНИТЬ НАЗНАЧЕНИЯ", "PERSONALIZAR", "PERSONALIZAR", "CAMBIA MAPPA" };
-        public string Remap { get { return _remap[(int)_selectedLanguage]; } }
+        public string Remap { get { return _remap[(int)_language]; } }
         private string[] _microphone = new string[] { "MICROPHONE", "MICROPHONE", "BELEGUNG ÄNDERN", "ИЗМЕНИТЬ НАЗНАЧЕНИЯ", "PERSONALIZAR", "PERSONALIZAR", "CAMBIA MAPPA" };
-        public string Microphone { get { return _microphone[(int)_selectedLanguage]; } }
+        public string Microphone { get { return _microphone[(int)_language]; } }
 
         private string[] _music = new string[] { "MUSIC VOLUME", "VOLUME DES MUSIQUES", "MUSIKLAUTSTÄRKE", "ГРОМКОСТЬ МУЗЫКИ", "VOLUMEN DE MÚSICA", "VOLUME DA MÚSICA", "VOLUME MUSICA" };
-        public string Music { get { return _music[(int)_selectedLanguage]; } }
+        public string Music { get { return _music[(int)_language]; } }
         private string[] _sfx = new string[] { "SFX VOLUME", "VOLUME DES EFFETS", "EFFEKTLAUTSTÄRKE", "ГРОМКОСТЬ ЗВУКОВЫХ ЭФФЕКТОВ", "VOLUMEN DE EFECTOS", "VOLUME DOS EFEITOS", "VOLUME EFFETTI SONORI" };
-        public string Sfx { get { return _sfx[(int)_selectedLanguage]; } }
+        public string Sfx { get { return _sfx[(int)_language]; } }
 
     }
 }
