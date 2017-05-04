@@ -30,14 +30,17 @@ namespace GreedyKid
 
         private int _selectedResolution = 0;
 
-        private int _selectedMicrophone = -1;
+        public int SelectedMicrophone = -1;
 
         private Rectangle _selectionRectangle;
         private Rectangle _dashRectangle;
         private Rectangle _volumeRectangle;
+        private Rectangle _backgroundRectangle;
+        private Rectangle _1x1Rectangle;
         private Color _selectionColor = new Color(217, 87, 99);
         private Color _notSelectedColor = new Color(132, 126, 135);
         private Color _volumeColor = new Color(89, 86, 82);
+        private Color _backgroundColor = new Color(34, 32, 52);
 
         private int _selectionOption = 0;
 
@@ -50,6 +53,8 @@ namespace GreedyKid
             _selectionRectangle = new Rectangle(142, TextureManager.GameplayHeight - 140, 4, 7);
             _dashRectangle = new Rectangle(617, TextureManager.GameplayHeight - 121, 274, 1);
             _volumeRectangle = new Rectangle(30, TextureManager.GameplayHeight - 107, 4, 7);
+            _backgroundRectangle = new Rectangle(1506, TextureManager.GameplayHeight - GreedyKidGame.Height, 112, 146);
+            _1x1Rectangle = new Rectangle(1, 1963, 1, 1);
 
 #if DESKTOP
             string userHome = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
@@ -127,7 +132,7 @@ namespace GreedyKid
                         for (int i = 0; i < Microsoft.Xna.Framework.Audio.Microphone.All.Count; i++)
                         {
                             if (elem[1] == Microsoft.Xna.Framework.Audio.Microphone.All[i].Name)
-                                _selectedMicrophone = i;
+                                SelectedMicrophone = i;
                         }
                         break;
                     case "PreferredButtonType":
@@ -290,8 +295,8 @@ namespace GreedyKid
 
                 writer.Write("Language=" + TextManager.Instance.Language + writer.NewLine);
 
-                if (_selectedMicrophone >= 0)
-                    writer.Write("Language=" + Microsoft.Xna.Framework.Audio.Microphone.All[_selectedMicrophone].Name + writer.NewLine);
+                if (SelectedMicrophone >= 0)
+                    writer.Write("Language=" + Microsoft.Xna.Framework.Audio.Microphone.All[SelectedMicrophone].Name + writer.NewLine);
                 else
                     writer.Write("Language=disabled" + writer.NewLine);
 
@@ -356,8 +361,8 @@ namespace GreedyKid
                         GamePadInputsHandler.PreferredButtonType = ButtonType.PlayStation;
                     break;
                 case 5:
-                    _selectedMicrophone++;
-                    _selectedMicrophone = Math.Min(_selectedMicrophone, _microphoneName.Count - 1);
+                    SelectedMicrophone++;
+                    SelectedMicrophone = Math.Min(SelectedMicrophone, _microphoneName.Count - 1);
                     break;
                 case 6: MusicVolumeDown(); break;
                 case 7: SfxVolumeDown(); break;
@@ -387,8 +392,8 @@ namespace GreedyKid
                         GamePadInputsHandler.PreferredButtonType = ButtonType.Xbox;
                     break;
                 case 5:
-                    _selectedMicrophone--;
-                    _selectedMicrophone = Math.Max(_selectedMicrophone, -1);
+                    SelectedMicrophone--;
+                    SelectedMicrophone = Math.Max(SelectedMicrophone, -1);
                     break;
                 case 6: MusicVolumeUp(); break;
                 case 7: SfxVolumeUp(); break;
@@ -452,7 +457,7 @@ namespace GreedyKid
                 case 3:
                     return GamePadInputsHandler.PreferredButtonType == ButtonType.PlayStation;
                 case 5:
-                    return _selectedMicrophone == _microphoneName.Count - 1;
+                    return SelectedMicrophone == _microphoneName.Count - 1;
             }
             return false;
         }
@@ -470,7 +475,7 @@ namespace GreedyKid
                 case 3:
                     return GamePadInputsHandler.PreferredButtonType == ButtonType.Xbox;
                 case 5:
-                    return _selectedMicrophone == -1;
+                    return SelectedMicrophone == -1;
             }
             return false;
         }
@@ -478,6 +483,14 @@ namespace GreedyKid
         public void Draw(SpriteBatch spriteBatch)
         {
             Texture2D texture = TextureManager.Gameplay;
+
+            // background
+            spriteBatch.Draw(texture,
+                new Rectangle(GreedyKidGame.Width / 2 - _backgroundRectangle.Width / 2, 21, _backgroundRectangle.Width, _backgroundRectangle.Height),
+                _backgroundRectangle,
+                Color.White);
+
+            DrawTitle(spriteBatch, TextManager.Instance.Settings);
 
             DrawLeftAlignedText(spriteBatch, TextManager.Instance.LanguageTitle, 23, 0);
             DrawRightAlignedText(spriteBatch, TextManager.Instance.LanguageValue, 23, 0);
@@ -508,10 +521,10 @@ namespace GreedyKid
             DrawRightAlignedText(spriteBatch, TextManager.Instance.Remap, 23 + 30 + 24 + 15, 4, false, true);
 
             DrawLeftAlignedText(spriteBatch, TextManager.Instance.Microphone, 23 + 30 + 24 + 30, 5);
-            if (_selectedMicrophone == -1)
+            if (SelectedMicrophone == -1)
                 DrawRightAlignedText(spriteBatch, TextManager.Instance.No, 23 + 30 + 24 + 30, 5);
             else
-                DrawRightAlignedText(spriteBatch, _microphoneName[_selectedMicrophone], 23 + 30 + 24 + 30, 5, true);
+                DrawRightAlignedText(spriteBatch, _microphoneName[SelectedMicrophone], 23 + 30 + 24 + 30, 5, true);
 
             spriteBatch.Draw(texture,
                 new Rectangle(27, 126, _dashRectangle.Width, _dashRectangle.Height),
@@ -613,6 +626,40 @@ namespace GreedyKid
                         (invertedSelection ? SpriteEffects.FlipHorizontally : SpriteEffects.None),
                         0.0f);
             }
+        }
+
+        private void DrawTitle(SpriteBatch spriteBatch, string text)
+        {
+            SpriteFont font = TextManager.Instance.Font;
+            Texture2D texture = TextureManager.Gameplay;
+
+            int textWidth = (int)font.MeasureString(text).X;
+
+            // mask
+            spriteBatch.Draw(texture,
+                new Rectangle(GreedyKidGame.Width / 2 - textWidth / 2 - 8 + 1, 7, textWidth + 15, 1),
+                _1x1Rectangle,
+                _backgroundColor);
+            spriteBatch.Draw(texture,
+                new Rectangle(GreedyKidGame.Width / 2 - textWidth / 2 - 8, 8, textWidth + 15, 1),
+                _1x1Rectangle,
+                _backgroundColor);
+
+            // highlight
+            spriteBatch.Draw(texture,
+                new Rectangle(GreedyKidGame.Width / 2 - textWidth / 2 - 4, 4, textWidth + 8, 9),
+                _1x1Rectangle,
+                _selectionColor);
+            spriteBatch.Draw(texture,
+                new Rectangle(GreedyKidGame.Width / 2 - textWidth / 2 - 3, 3, textWidth + 6, 11),
+                _1x1Rectangle,
+                _selectionColor);
+
+            // text
+            spriteBatch.DrawString(font,
+                text,
+                new Vector2(GreedyKidGame.Width / 2 - textWidth / 2, 1),
+                Color.White);
         }
 
         private List<int> _compatibleXResolution = new List<int>();
