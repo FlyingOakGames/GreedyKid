@@ -126,8 +126,8 @@ namespace GreedyKid
                     case TitleScreenState.Title: _selectionOption = 0; break;
                     case TitleScreenState.Main: _selectionOption = (Program.RunningOnConsole ? 1 : 2); break;
                     case TitleScreenState.Settings: SettingsManager.Instance.PushUp(); break;
-                    case TitleScreenState.Play: break;
-                    case TitleScreenState.LevelSelection: break;
+                    case TitleScreenState.Play: _selectionOption = 2; break;
+                    case TitleScreenState.LevelSelection: _selectionOption = 0; break;
                     case TitleScreenState.SteamWorkshop: break;
                 }
         }
@@ -141,8 +141,8 @@ namespace GreedyKid
                 case TitleScreenState.Title: _selectionOption = 0; break;
                 case TitleScreenState.Main: _selectionOption %= (Program.RunningOnConsole ? 2 : 3); break;
                 case TitleScreenState.Settings: SettingsManager.Instance.PushDown(); break;
-                case TitleScreenState.Play: break;
-                case TitleScreenState.LevelSelection: break;
+                case TitleScreenState.Play: _selectionOption %= 3; break;
+                case TitleScreenState.LevelSelection: _selectionOption %= 1; break;
                 case TitleScreenState.SteamWorkshop: break;
             }
         }
@@ -222,7 +222,7 @@ namespace GreedyKid
                     _backgroundRectangles[0],
                     Color.White);
             }
-            else if (_state == TitleScreenState.Main)
+            else if (_state == TitleScreenState.Main || _state == TitleScreenState.Play)
             {
                  spriteBatch.Draw(texture,
                     new Rectangle(4, 3, _backgroundRectangles[1].Width, _backgroundRectangles[1].Height),
@@ -274,6 +274,12 @@ namespace GreedyKid
             else if (_state == TitleScreenState.Settings)
             {
                 SettingsManager.Instance.Draw(spriteBatch);
+            }
+            else if (_state == TitleScreenState.LevelSelection)
+            {
+                yStart = 115;
+
+                DrawCenteredText(spriteBatch, "NOTHING HERE YET, JUST PRESS A", yStart, 0);
             }
 
             spriteBatch.End();
