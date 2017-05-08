@@ -162,7 +162,15 @@ namespace GreedyKid
 
         // *********************** PAUSE SCREEN ***********************
 
+        // 33% pause, restart
+
         private string[] _pause = new string[] { "PAUSE", "PAUSE", "PAUSE", "PAUSE", "PAUSE", "PAUSE", "PAUSE" };
         public string Pause { get { return _pause[(int)_language]; } }
+
+        private string[] _restart = new string[] { "RESTART", "RESTART", "RESTART", "RESTART", "RESTART", "RESTART", "RESTART" };
+        public string Restart { get { return _restart[(int)_language]; } }
+
+        private string[] _resume = new string[] { "RESUME", "REPRENDRE", "WEITER", "ПРОДОЛЖИТЬ", "REANUDAR", "RETOMAR", "RIPRENDI" };
+        public string Resume { get { return _resume[(int)_language]; } }
     }
 }

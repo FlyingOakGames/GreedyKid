@@ -50,11 +50,9 @@ namespace GreedyKid
         private Rectangle[][][] _furnitureRectangle;
         private Rectangle[][] _objectsRectangle;
 
-        private Rectangle[] _uiRectangle;
         private Rectangle[] _iconRectangle;
         private Rectangle[] _maskRectangle;
         private Rectangle[] _numberRectangle;
-        private Rectangle[] _microphoneRectangle;
 
         public int SelectedLevel = 0;
 
@@ -142,12 +140,7 @@ namespace GreedyKid
         private bool _pause = false;
         private int _pauseOption = 0;
         private bool _inSettings = false;
-        private Rectangle _selectionRectangle;
-        private Rectangle _1x1Rectangle;
         private Rectangle[] _pauseBackgroundRectangles;
-        private Color _backgroundColor = new Color(34, 32, 52);
-        private Color _selectionColor = new Color(217, 87, 99);
-        private Color _notSelectedColor = new Color(132, 126, 135);
 
         public bool ReturnToLevelSelection = false;
 
@@ -280,16 +273,6 @@ namespace GreedyKid
             }
 
             // UI
-            _uiRectangle = new Rectangle[8];
-            _uiRectangle[0] = new Rectangle(0, TextureManager.GameplayHeight - 24, 12, 13); // upper left
-            _uiRectangle[1] = new Rectangle(11, TextureManager.GameplayHeight - 24, 12, 13); // upper right
-            _uiRectangle[2] = new Rectangle(0, TextureManager.GameplayHeight - 12, 12, 12); // lower left
-            _uiRectangle[3] = new Rectangle(11, TextureManager.GameplayHeight - 12, 12, 12); // lower right
-            _uiRectangle[4] = new Rectangle(11, TextureManager.GameplayHeight - 24, 1, 9); // up
-            _uiRectangle[5] = new Rectangle(11, TextureManager.GameplayHeight - 8, 1, 8); // down
-            _uiRectangle[6] = new Rectangle(0, TextureManager.GameplayHeight - 12, 8, 1); // left
-            _uiRectangle[7] = new Rectangle(15, TextureManager.GameplayHeight - 12, 8, 1); // right
-
             _iconRectangle = new Rectangle[3];
             _iconRectangle[0] = new Rectangle(23, TextureManager.GameplayHeight - 24, 13, 13);
             _iconRectangle[1] = new Rectangle(36, TextureManager.GameplayHeight - 24, 13, 13);
@@ -309,12 +292,6 @@ namespace GreedyKid
             }
             _numberRectangle[10].Width = 5;
             _numberRectangle[11].X = _numberRectangle[10].X + _numberRectangle[10].Width;
-
-            _microphoneRectangle = new Rectangle[10];
-            for (int i = 0; i < 10; i++)
-            {
-                _microphoneRectangle[i] = new Rectangle(0, TextureManager.GameplayHeight - 148 - 4 * i, 146, 4);
-            }
 
             // transition
             _transitionRectangle = new Rectangle[4];
@@ -346,8 +323,6 @@ namespace GreedyKid
             }
 
             // pause
-            _selectionRectangle = new Rectangle(142, TextureManager.GameplayHeight - 140, 4, 7);
-            _1x1Rectangle = new Rectangle(1, 1963, 1, 1);
             _pauseBackgroundRectangles = new Rectangle[2];
             _pauseBackgroundRectangles[0] = new Rectangle(1619, TextureManager.GameplayHeight - 184, 111, 153);
             _pauseBackgroundRectangles[1] = new Rectangle(1731, TextureManager.GameplayHeight - 184, 137, 153);
@@ -1653,10 +1628,10 @@ namespace GreedyKid
                     // text
                     int yStart = 70;
 
-                    DrawCenteredText(spriteBatch, "RESUME", yStart, 0);
-                    DrawCenteredText(spriteBatch, "SETTINGS", yStart + 15, 1);
-                    DrawCenteredText(spriteBatch, "RESTART", yStart + 30, 2);
-                    DrawCenteredText(spriteBatch, "QUIT", yStart + 45, 3);
+                    UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.Resume, yStart, 0, _pauseOption);
+                    UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.Settings, yStart + 15, 1, _pauseOption);
+                    UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.Restart, yStart + 30, 2, _pauseOption);
+                    UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.Quit, yStart + 45, 3, _pauseOption);
                 }
                 else
                 {
@@ -1756,53 +1731,7 @@ namespace GreedyKid
                     Color.White);
             }
 
-            // up
-            spriteBatch.Draw(texture,
-                new Rectangle(0, 0, GreedyKidGame.Width, _uiRectangle[4].Height),
-                _uiRectangle[4],
-                Color.White);
-
-            // down
-            spriteBatch.Draw(texture,
-                new Rectangle(0, GreedyKidGame.Height - _uiRectangle[5].Height, GreedyKidGame.Width, _uiRectangle[5].Height),
-                _uiRectangle[5],
-                Color.White);
-
-            // left
-            spriteBatch.Draw(texture,
-                new Rectangle(0, 0, _uiRectangle[6].Width, GreedyKidGame.Height),
-                _uiRectangle[6],
-                Color.White);
-
-            // right
-            spriteBatch.Draw(texture,
-                new Rectangle(GreedyKidGame.Width - _uiRectangle[7].Width, 0, _uiRectangle[6].Width, GreedyKidGame.Height),
-                _uiRectangle[7],
-                Color.White);
-
-            // upper left
-            spriteBatch.Draw(texture,
-                new Rectangle(0, 0, _uiRectangle[0].Width, _uiRectangle[0].Height),
-                _uiRectangle[0],
-                Color.White);
-
-            // upper right
-            spriteBatch.Draw(texture,
-                new Rectangle(GreedyKidGame.Width - _uiRectangle[1].Width, 0, _uiRectangle[1].Width, _uiRectangle[1].Height),
-                _uiRectangle[1],
-                Color.White);
-
-            // lower left
-            spriteBatch.Draw(texture,
-                new Rectangle(0, GreedyKidGame.Height - _uiRectangle[2].Height, _uiRectangle[2].Width, _uiRectangle[2].Height),
-                _uiRectangle[2],
-                Color.White);
-
-            // lower right
-            spriteBatch.Draw(texture,
-                new Rectangle(GreedyKidGame.Width - _uiRectangle[3].Width, GreedyKidGame.Height - _uiRectangle[3].Height, _uiRectangle[3].Width, _uiRectangle[3].Height),
-                _uiRectangle[3],
-                Color.White);
+            UIHelper.Instance.DrawBorders(spriteBatch);
 
             // masks
             spriteBatch.Draw(texture,
@@ -1821,15 +1750,7 @@ namespace GreedyKid
                 _maskRectangle[2],
                 Color.White);
 
-            if (MicrophoneManager.Instance.Working)
-            {
-                // microphone
-                int micLevel = Math.Min(9, MicrophoneManager.Instance.LeveledVolume);
-                spriteBatch.Draw(texture,
-                    new Rectangle(93, 175, _microphoneRectangle[0].Width, _microphoneRectangle[0].Height),
-                     _microphoneRectangle[micLevel],
-                     Color.White);
-            }
+            UIHelper.Instance.DrawMicrophoneVolume(spriteBatch);
 
             // player life
             for (int h = 0; h < 3; h++)
@@ -1885,11 +1806,11 @@ namespace GreedyKid
             }
             else if (!_inSettings)
             {
-                DrawTitle(spriteBatch, TextManager.Instance.Pause);
+                UIHelper.Instance.DrawTitle(spriteBatch, TextManager.Instance.Pause);
             }
             else
             {
-                DrawTitle(spriteBatch, TextManager.Instance.Settings);
+                UIHelper.Instance.DrawTitle(spriteBatch, TextManager.Instance.Settings);
             }
 
             // score
@@ -1915,60 +1836,6 @@ namespace GreedyKid
                 Color.White);
 
             spriteBatch.End();
-        }
-
-        private void DrawCenteredText(SpriteBatch spriteBatch, string text, int yPos, int option)
-        {
-            SpriteFont font = TextManager.Instance.Font;
-
-            int textWidth = (int)font.MeasureString(text).X;
-            spriteBatch.DrawString(font,
-                text,
-                new Vector2(GreedyKidGame.Width / 2 - textWidth / 2, yPos),
-                (_pauseOption == option ? Color.White : _notSelectedColor));
-
-            if (_pauseOption == option)
-            {
-                Texture2D texture = TextureManager.Gameplay;
-                spriteBatch.Draw(texture,
-                    new Rectangle(GreedyKidGame.Width / 2 - textWidth / 2 - _selectionRectangle.Width - 2, yPos + 4, _selectionRectangle.Width, _selectionRectangle.Height),
-                    _selectionRectangle,
-                    _selectionColor);
-            }
-        }
-
-        private void DrawTitle(SpriteBatch spriteBatch, string text)
-        {
-            SpriteFont font = TextManager.Instance.Font;
-            Texture2D texture = TextureManager.Gameplay;
-
-            int textWidth = (int)font.MeasureString(text).X;
-
-            // mask
-            spriteBatch.Draw(texture,
-                new Rectangle(GreedyKidGame.Width / 2 - textWidth / 2 - 8 + 1, 7, textWidth + 15, 1),
-                _1x1Rectangle,
-                _backgroundColor);
-            spriteBatch.Draw(texture,
-                new Rectangle(GreedyKidGame.Width / 2 - textWidth / 2 - 8, 8, textWidth + 15, 1),
-                _1x1Rectangle,
-                _backgroundColor);
-
-            // highlight
-            spriteBatch.Draw(texture,
-                new Rectangle(GreedyKidGame.Width / 2 - textWidth / 2 - 4, 4, textWidth + 8, 9),
-                _1x1Rectangle,
-                _selectionColor);
-            spriteBatch.Draw(texture,
-                new Rectangle(GreedyKidGame.Width / 2 - textWidth / 2 - 3, 3, textWidth + 6, 11),
-                _1x1Rectangle,
-                _selectionColor);
-
-            // text
-            spriteBatch.DrawString(font,
-                text,
-                new Vector2(GreedyKidGame.Width / 2 - textWidth / 2, 1),
-                Color.White);
-        }
+        }        
     }
 }

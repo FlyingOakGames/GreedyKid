@@ -50,6 +50,8 @@ namespace GreedyKid
             TextManager textManager = TextManager.Instance;
             // settings init
             SettingsManager settingsManager = SettingsManager.Instance;
+            // init UI helper
+            UIHelper uiHelper = UIHelper.Instance;
 
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";

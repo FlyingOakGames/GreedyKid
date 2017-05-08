@@ -21,15 +21,10 @@ namespace GreedyKid
         private Rectangle _viewport;
         private Rectangle[] _backgroundRectangles;
         private Rectangle _titleRectangle;
-        private Rectangle _selectionRectangle;
-        private Rectangle[] _bordersRectangle;
-        private Rectangle[] _microphoneRectangle;
 
         private TitleScreenState _state = TitleScreenState.Title;
 
         private int _selectionOption = 0;
-        private Color _selectionColor = new Color(217, 87, 99);
-        private Color _notSelectedColor = new Color(132, 126, 135);
 
         public TitleScreenManager()
         {
@@ -42,23 +37,6 @@ namespace GreedyKid
             _backgroundRectangles[1] = new Rectangle(898 + _backgroundRectangles[0].Width + 1, TextureManager.GameplayHeight - GreedyKidGame.Height, 308 , 165);
 
             _titleRectangle = new Rectangle(TextureManager.GameplayWidth - 95, TextureManager.GameplayHeight - 81, 95, 81);
-            _selectionRectangle = new Rectangle(142, TextureManager.GameplayHeight - 140, 4, 7);
-
-            _bordersRectangle = new Rectangle[8];
-            _bordersRectangle[0] = new Rectangle(0, TextureManager.GameplayHeight - 24, 12, 13); // upper left
-            _bordersRectangle[1] = new Rectangle(11, TextureManager.GameplayHeight - 24, 12, 13); // upper right
-            _bordersRectangle[2] = new Rectangle(0, TextureManager.GameplayHeight - 12, 12, 12); // lower left
-            _bordersRectangle[3] = new Rectangle(11, TextureManager.GameplayHeight - 12, 12, 12); // lower right
-            _bordersRectangle[4] = new Rectangle(11, TextureManager.GameplayHeight - 24, 1, 9); // up
-            _bordersRectangle[5] = new Rectangle(11, TextureManager.GameplayHeight - 8, 1, 8); // down
-            _bordersRectangle[6] = new Rectangle(0, TextureManager.GameplayHeight - 12, 8, 1); // left
-            _bordersRectangle[7] = new Rectangle(15, TextureManager.GameplayHeight - 12, 8, 1); // right
-
-            _microphoneRectangle = new Rectangle[10];
-            for (int i = 0; i < 10; i++)
-            {
-                _microphoneRectangle[i] = new Rectangle(0, TextureManager.GameplayHeight - 148 - 4 * i, 146, 4);
-            }
         }
 
         public void SetState(TitleScreenState state)
@@ -181,54 +159,7 @@ namespace GreedyKid
 
             Texture2D texture = TextureManager.Gameplay;
 
-            // ****** BORDERS ******
-            // up
-            spriteBatch.Draw(texture,
-                new Rectangle(0, 0, GreedyKidGame.Width, _bordersRectangle[4].Height),
-                _bordersRectangle[4],
-                Color.White);
-
-            // down
-            spriteBatch.Draw(texture,
-                new Rectangle(0, GreedyKidGame.Height - _bordersRectangle[5].Height, GreedyKidGame.Width, _bordersRectangle[5].Height),
-                _bordersRectangle[5],
-                Color.White);
-
-            // left
-            spriteBatch.Draw(texture,
-                new Rectangle(0, 0, _bordersRectangle[6].Width, GreedyKidGame.Height),
-                _bordersRectangle[6],
-                Color.White);
-
-            // right
-            spriteBatch.Draw(texture,
-                new Rectangle(GreedyKidGame.Width - _bordersRectangle[7].Width, 0, _bordersRectangle[6].Width, GreedyKidGame.Height),
-                _bordersRectangle[7],
-                Color.White);
-
-            // upper left
-            spriteBatch.Draw(texture,
-                new Rectangle(0, 0, _bordersRectangle[0].Width, _bordersRectangle[0].Height),
-                _bordersRectangle[0],
-                Color.White);
-
-            // upper right
-            spriteBatch.Draw(texture,
-                new Rectangle(GreedyKidGame.Width - _bordersRectangle[1].Width, 0, _bordersRectangle[1].Width, _bordersRectangle[1].Height),
-                _bordersRectangle[1],
-                Color.White);
-
-            // lower left
-            spriteBatch.Draw(texture,
-                new Rectangle(0, GreedyKidGame.Height - _bordersRectangle[2].Height, _bordersRectangle[2].Width, _bordersRectangle[2].Height),
-                _bordersRectangle[2],
-                Color.White);
-
-            // lower right
-            spriteBatch.Draw(texture,
-                new Rectangle(GreedyKidGame.Width - _bordersRectangle[3].Width, GreedyKidGame.Height - _bordersRectangle[3].Height, _bordersRectangle[3].Width, _bordersRectangle[3].Height),
-                _bordersRectangle[3],
-                Color.White);
+            UIHelper.Instance.DrawBorders(spriteBatch);
 
             // background
             if (_state == TitleScreenState.Title)
@@ -274,18 +205,18 @@ namespace GreedyKid
             {
                 yStart = 115;
 
-                DrawCenteredText(spriteBatch, TextManager.Instance.Play, yStart, 0);
-                DrawCenteredText(spriteBatch, TextManager.Instance.Settings, yStart + 15, 1);
+                UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.Play, yStart, 0, _selectionOption);
+                UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.Settings, yStart + 15, 1, _selectionOption);
                 if (!Program.RunningOnConsole)
-                    DrawCenteredText(spriteBatch, TextManager.Instance.Quit, yStart + 30, 2);
+                    UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.Quit, yStart + 30, 2, _selectionOption);
             }
             else if (_state == TitleScreenState.Play)
             {
                 yStart = 115;
 
-                DrawCenteredText(spriteBatch, TextManager.Instance.Campaign, yStart, 0);
-                DrawCenteredText(spriteBatch, TextManager.Instance.Workshop, yStart + 15, 1);
-                DrawCenteredText(spriteBatch, TextManager.Instance.Back, yStart + 30, 2);
+                UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.Campaign, yStart, 0, _selectionOption);
+                UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.Workshop, yStart + 15, 1, _selectionOption);
+                UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.Back, yStart + 30, 2, _selectionOption);
             }            
             else if (_state == TitleScreenState.Settings)
             {
@@ -295,43 +226,15 @@ namespace GreedyKid
             {
                 yStart = 115;
 
-                DrawCenteredText(spriteBatch, "NOTHING HERE YET, JUST PRESS A", yStart, 0);
+                UIHelper.Instance.DrawCenteredText(spriteBatch, "NOTHING HERE YET, JUST PRESS A", yStart, 0, _selectionOption);
             }
 
             if (_state != TitleScreenState.Title)
             {
-                if (MicrophoneManager.Instance.Working)
-                {
-                    // microphone
-                    int micLevel = Math.Min(9, MicrophoneManager.Instance.LeveledVolume);
-                    spriteBatch.Draw(texture,
-                        new Rectangle(93, 175, _microphoneRectangle[0].Width, _microphoneRectangle[0].Height),
-                         _microphoneRectangle[micLevel],
-                         Color.White);
-                }
+                UIHelper.Instance.DrawMicrophoneVolume(spriteBatch);
             }
 
             spriteBatch.End();
-        }
-
-        private void DrawCenteredText(SpriteBatch spriteBatch, string text, int yPos, int option)
-        {
-            SpriteFont font = TextManager.Instance.Font;
-
-            int textWidth = (int)font.MeasureString(text).X;
-            spriteBatch.DrawString(font,
-                text,
-                new Vector2(GreedyKidGame.Width / 2 - textWidth / 2, yPos),
-                (_selectionOption == option ? Color.White : _notSelectedColor));
-
-            if (_selectionOption == option)
-            {
-                Texture2D texture = TextureManager.Gameplay;
-                spriteBatch.Draw(texture,
-                    new Rectangle(GreedyKidGame.Width / 2 - textWidth / 2 - _selectionRectangle.Width - 2, yPos + 4, _selectionRectangle.Width, _selectionRectangle.Height),
-                    _selectionRectangle,
-                    _selectionColor);
-            }
         }
     }
 }
