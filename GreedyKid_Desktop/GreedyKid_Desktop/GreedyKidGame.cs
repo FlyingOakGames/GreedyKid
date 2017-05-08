@@ -223,6 +223,18 @@ namespace GreedyKid
 
                     _gameplayManager.Update(gameTimeF);
 
+                    if (_gameplayManager.ReturnToLevelSelection)
+                    {
+                        _titleScreenManager = new TitleScreenManager();
+                        _titleScreenManager.SetState(TitleScreenState.LevelSelection);
+
+                        _gameplayManager = null;
+
+                        _state = GameState.Title;
+
+                        GC.Collect();
+                    }
+
                     break;
             }
 

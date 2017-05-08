@@ -90,6 +90,11 @@ namespace GreedyKid
             }
         }
 
+        public void Reset()
+        {
+            _selectionOption = 0;
+        }
+
         private void ParseLine(string line)
         {
             if (line.Length == 0)

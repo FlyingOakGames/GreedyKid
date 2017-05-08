@@ -159,5 +159,10 @@ namespace GreedyKid
         public string Music { get { return _music[(int)_language]; } }
         private string[] _sfx = new string[] { "SFX VOLUME", "VOLUME DES EFFETS", "EFFEKTLAUTSTÄRKE", "ГРОМКОСТЬ ЗВУКОВЫХ ЭФФЕКТОВ", "VOLUMEN DE EFECTOS", "VOLUME DOS EFEITOS", "VOLUME EFFETTI SONORI" };
         public string Sfx { get { return _sfx[(int)_language]; } }
+
+        // *********************** PAUSE SCREEN ***********************
+
+        private string[] _pause = new string[] { "PAUSE", "PAUSE", "PAUSE", "PAUSE", "PAUSE", "PAUSE", "PAUSE" };
+        public string Pause { get { return _pause[(int)_language]; } }
     }
 }

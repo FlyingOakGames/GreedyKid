@@ -53,6 +53,11 @@ namespace GreedyKid
             _bordersRectangle[7] = new Rectangle(15, TextureManager.GameplayHeight - 12, 8, 1); // right
         }
 
+        public void SetState(TitleScreenState state)
+        {
+            _state = state;
+        }
+
         public void Update(float gameTime)
         {
             if (_state == TitleScreenState.Title && InputManager.CheckEngagement())
@@ -79,7 +84,10 @@ namespace GreedyKid
                     if (_selectionOption == 0)
                         _state = TitleScreenState.Play;
                     else if (_selectionOption == 1)
+                    {
                         _state = TitleScreenState.Settings;
+                        SettingsManager.Instance.Reset();
+                    }
                     else if (_selectionOption == 2)
                         GreedyKidGame.ShouldExit = true;
                     break;

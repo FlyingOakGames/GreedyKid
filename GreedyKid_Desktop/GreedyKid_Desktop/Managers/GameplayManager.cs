@@ -139,6 +139,19 @@ namespace GreedyKid
         private int _bulletCount = 0;
         private Rectangle[][] _bulletRectangle;
 
+        // pause
+        private bool _pause = false;
+        private int _pauseOption = 0;
+        private bool _inSettings = false;
+        private Rectangle _selectionRectangle;
+        private Rectangle _1x1Rectangle;
+        private Rectangle[] _pauseBackgroundRectangles;
+        private Color _backgroundColor = new Color(34, 32, 52);
+        private Color _selectionColor = new Color(217, 87, 99);
+        private Color _notSelectedColor = new Color(132, 126, 135);
+
+        public bool ReturnToLevelSelection = false;
+
         public GameplayManager()
         {
             _roomRectangle = new Rectangle[Room.PaintCount][][]; // colors
@@ -333,6 +346,13 @@ namespace GreedyKid
                 _interLevelRectangle[_elevatorFrameCount + _cableFrameCount + 3 + i] = new Rectangle(613 + 32 * i, TextureManager.GameplayHeight - 90, 32, 45);
             }
 
+            // pause
+            _selectionRectangle = new Rectangle(142, TextureManager.GameplayHeight - 140, 4, 7);
+            _1x1Rectangle = new Rectangle(1, 1963, 1, 1);
+            _pauseBackgroundRectangles = new Rectangle[2];
+            _pauseBackgroundRectangles[0] = new Rectangle(1619, TextureManager.GameplayHeight - 184, 111, 153);
+            _pauseBackgroundRectangles[1] = new Rectangle(1731, TextureManager.GameplayHeight - 184, 137, 153);
+
             _microphoneHandler = new MicrophoneVolumeHandler();
             _microphoneHandler.StartCapture();
         }
@@ -432,6 +452,84 @@ namespace GreedyKid
             LoadLevel(SelectedLevel);
         }
 
+        public void RequestPause()
+        {
+            _pause = true;
+            _pauseOption = 0;
+            _inSettings = false;
+        }
+
+        public void PauseUp()
+        {
+            if (_inSettings)
+                SettingsManager.Instance.PushUp();
+            else
+            {
+                _pauseOption--;
+                if (_pauseOption < 0)
+                    _pauseOption = 3;
+            }
+        }
+
+        public void PauseDown()
+        {
+            if (_inSettings)
+                SettingsManager.Instance.PushDown();
+            else
+            {
+                _pauseOption++;
+                _pauseOption %= 4;
+            }
+        }
+
+        public void PauseLeft()
+        {
+            if (_inSettings)
+                SettingsManager.Instance.PushLeft();            
+        }
+
+        public void PauseRight()
+        {
+            if (_inSettings)
+                SettingsManager.Instance.PushRight();            
+        }
+
+        public void PauseSelect()
+        {
+            if (_inSettings)
+            {
+
+            }
+            else
+            {
+                switch (_pauseOption)
+                {
+                    case 0: _pause = false; break;
+                    case 1: _inSettings = true; SettingsManager.Instance.Reset(); break;
+                    case 2: ResetLevel(); _pause = false; break;
+                    case 3: ReturnToLevelSelection = true; break;
+                }
+            }
+        }
+
+        public void PauseCancel()
+        {
+            if (_inSettings)
+            {
+                _inSettings = false;
+                SettingsManager.Instance.Save();
+            }
+            else
+            {
+                _pause = false;
+            }
+        }
+
+        public bool Pause
+        {
+            get { return _pause; }
+        }
+
         public void Update(float gameTime)
         {
             if (InputManager.PlayerDevice != null)
@@ -439,6 +537,9 @@ namespace GreedyKid
 
             // microphone
             _microphoneHandler.Update(gameTime);
+
+            if (_pause)
+                return;
 
             // transition
             UpdateTransition(gameTime);
@@ -1203,7 +1304,7 @@ namespace GreedyKid
 
             int cameraPosY = (int)Math.Round(_cameraPositionY);
 
-            if (_building.CurrentLevel != null && SelectedLevel >= 0 && SelectedLevel < _building.LevelCount)
+            if (!_pause && _building.CurrentLevel != null && SelectedLevel >= 0 && SelectedLevel < _building.LevelCount)
             {                
                 int shoutingFrame = Furniture.FurnitureFrames - 4 + _currentShoutFrame;
                 bool isShouting = Player.IsShouting;
@@ -1492,7 +1593,7 @@ namespace GreedyKid
                     _bullets[i].Draw(spriteBatch, _bulletRectangle, cameraPosY);
             }
             // inter level
-            else
+            else if (!_pause)
             {
                 // background
                 Rectangle backgroundSource1 = _interLevelRectangle[_elevatorFrameCount + _cableFrameCount];
@@ -1541,13 +1642,41 @@ namespace GreedyKid
                     _interLevelRectangle[_elevatorFrameCount + _cableFrameCount + 3 + _currentElevatorKidFrame],
                     Color.White);
             }
-            
+            // pause
+            else
+            {
+                if (!_inSettings)
+                {
+                    // background
+                    spriteBatch.Draw(texture,
+                        new Rectangle(20, 17, _pauseBackgroundRectangles[0].Width, _pauseBackgroundRectangles[0].Height),
+                        _pauseBackgroundRectangles[0],
+                        Color.White);
+                    spriteBatch.Draw(texture,
+                        new Rectangle(180, 17, _pauseBackgroundRectangles[1].Width, _pauseBackgroundRectangles[1].Height),
+                        _pauseBackgroundRectangles[1],
+                        Color.White);
 
-            if ((Player != null && _spawnEntrance && _spawningCop != null) || (_entranceState != ElevatorState.Opening && Player != null && !Player.HasEnteredElevator))
-                Player.Draw(spriteBatch, cameraPosY);
+                    // text
+                    int yStart = 70;
+
+                    DrawCenteredText(spriteBatch, "RESUME", yStart, 0);
+                    DrawCenteredText(spriteBatch, "SETTINGS", yStart + 15, 1);
+                    DrawCenteredText(spriteBatch, "RESTART", yStart + 30, 2);
+                    DrawCenteredText(spriteBatch, "QUIT", yStart + 45, 3);
+                }
+                else
+                {
+                    SettingsManager.Instance.Draw(spriteBatch);
+                }
+            }
+
+            if (!_pause)
+                if ((Player != null && _spawnEntrance && _spawningCop != null) || (_entranceState != ElevatorState.Opening && Player != null && !Player.HasEnteredElevator))
+                    Player.Draw(spriteBatch, cameraPosY);
 
             // transition
-            if (_transitionState != TransitionState.None)
+            if (_transitionState != TransitionState.None && !_pause)
             {
                 if (_currentTransitionFrame == 2) // full
                 {
@@ -1687,10 +1816,13 @@ namespace GreedyKid
                 new Rectangle(19, 0, _maskRectangle[0].Width, _maskRectangle[0].Height),
                 _maskRectangle[0],
                 Color.White);
-            spriteBatch.Draw(texture,
-                new Rectangle(136, 0, _maskRectangle[1].Width, _maskRectangle[1].Height),
-                _maskRectangle[1],
-                Color.White);
+            if (!_pause)
+            {
+                spriteBatch.Draw(texture,
+                    new Rectangle(136, 0, _maskRectangle[1].Width, _maskRectangle[1].Height),
+                    _maskRectangle[1],
+                    Color.White);
+            }
             spriteBatch.Draw(texture,
                 new Rectangle(257, 0, _maskRectangle[2].Width, _maskRectangle[2].Height),
                 _maskRectangle[2],
@@ -1732,23 +1864,36 @@ namespace GreedyKid
                 }
             }
 
-            // time
-            _encodedTime[0] = Time / 600;
-            _encodedTime[1] = (Time - _encodedTime[0] * 600) / 60;
-            int seconds = Time % 60;
-            _encodedTime[3] = seconds / 10;
-            _encodedTime[4] = seconds % 10;
-
             int textX = 0;
-            for (int t = 0; t < _encodedTime.Length; t++)
-            {
-                Rectangle source = _numberRectangle[_encodedTime[t]];
-                spriteBatch.Draw(texture,
-                    new Rectangle(140 + textX, 0, source.Width, source.Height),
-                    source,
-                    Color.White);
 
-                textX += source.Width;
+            if (!_pause)
+            {
+                // time
+                _encodedTime[0] = Time / 600;
+                _encodedTime[1] = (Time - _encodedTime[0] * 600) / 60;
+                int seconds = Time % 60;
+                _encodedTime[3] = seconds / 10;
+                _encodedTime[4] = seconds % 10;
+
+                
+                for (int t = 0; t < _encodedTime.Length; t++)
+                {
+                    Rectangle source = _numberRectangle[_encodedTime[t]];
+                    spriteBatch.Draw(texture,
+                        new Rectangle(140 + textX, 0, source.Width, source.Height),
+                        source,
+                        Color.White);
+
+                    textX += source.Width;
+                }
+            }
+            else if (!_inSettings)
+            {
+                DrawTitle(spriteBatch, TextManager.Instance.Pause);
+            }
+            else
+            {
+                DrawTitle(spriteBatch, TextManager.Instance.Settings);
             }
 
             // score
@@ -1774,6 +1919,60 @@ namespace GreedyKid
                 Color.White);
 
             spriteBatch.End();
+        }
+
+        private void DrawCenteredText(SpriteBatch spriteBatch, string text, int yPos, int option)
+        {
+            SpriteFont font = TextManager.Instance.Font;
+
+            int textWidth = (int)font.MeasureString(text).X;
+            spriteBatch.DrawString(font,
+                text,
+                new Vector2(GreedyKidGame.Width / 2 - textWidth / 2, yPos),
+                (_pauseOption == option ? Color.White : _notSelectedColor));
+
+            if (_pauseOption == option)
+            {
+                Texture2D texture = TextureManager.Gameplay;
+                spriteBatch.Draw(texture,
+                    new Rectangle(GreedyKidGame.Width / 2 - textWidth / 2 - _selectionRectangle.Width - 2, yPos + 4, _selectionRectangle.Width, _selectionRectangle.Height),
+                    _selectionRectangle,
+                    _selectionColor);
+            }
+        }
+
+        private void DrawTitle(SpriteBatch spriteBatch, string text)
+        {
+            SpriteFont font = TextManager.Instance.Font;
+            Texture2D texture = TextureManager.Gameplay;
+
+            int textWidth = (int)font.MeasureString(text).X;
+
+            // mask
+            spriteBatch.Draw(texture,
+                new Rectangle(GreedyKidGame.Width / 2 - textWidth / 2 - 8 + 1, 7, textWidth + 15, 1),
+                _1x1Rectangle,
+                _backgroundColor);
+            spriteBatch.Draw(texture,
+                new Rectangle(GreedyKidGame.Width / 2 - textWidth / 2 - 8, 8, textWidth + 15, 1),
+                _1x1Rectangle,
+                _backgroundColor);
+
+            // highlight
+            spriteBatch.Draw(texture,
+                new Rectangle(GreedyKidGame.Width / 2 - textWidth / 2 - 4, 4, textWidth + 8, 9),
+                _1x1Rectangle,
+                _selectionColor);
+            spriteBatch.Draw(texture,
+                new Rectangle(GreedyKidGame.Width / 2 - textWidth / 2 - 3, 3, textWidth + 6, 11),
+                _1x1Rectangle,
+                _selectionColor);
+
+            // text
+            spriteBatch.DrawString(font,
+                text,
+                new Vector2(GreedyKidGame.Width / 2 - textWidth / 2, 1),
+                Color.White);
         }
 
         public void Dispose()
