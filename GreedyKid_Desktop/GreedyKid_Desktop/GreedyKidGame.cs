@@ -87,6 +87,8 @@ namespace GreedyKid
         /// </summary>
         protected override void Initialize()
         {
+            MicrophoneManager.Instance.SetMicrophone(SettingsManager.Instance.SelectedMicrophone);
+
             base.Initialize();
         }
 
@@ -110,8 +112,7 @@ namespace GreedyKid
         /// </summary>
         protected override void UnloadContent()
         {
-            if (_gameplayManager != null)
-                _gameplayManager.Dispose();
+            MicrophoneManager.Instance.Dispose();
         }
 
         /// <summary>
@@ -171,6 +172,8 @@ namespace GreedyKid
 #endif
 
             float gameTimeF = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            MicrophoneManager.Instance.Update(gameTimeF);
 
             switch (_state)
             {

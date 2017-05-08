@@ -78,7 +78,7 @@
     <Compile Include="Inputs\HybridMouseGamePadHandler.cs" />
     <Compile Include="Inputs\IInputsHandler.cs" />
     <Compile Include="Inputs\InputManager.cs" />
-    <Compile Include="Inputs\MicrophoneVolumeHandler.cs" />
+    <Compile Include="Managers\MicrophoneManager.cs" />
     <Compile Include="Inputs\MouseKeyboardInputsHandler.cs" />
     <Compile Include="Managers\SettingsManager.cs" />
     <Compile Include="Managers\SplashScreenManager.cs" />

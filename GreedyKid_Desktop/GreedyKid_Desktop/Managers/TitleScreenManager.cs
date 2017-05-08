@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace GreedyKid
 {
@@ -22,6 +23,7 @@ namespace GreedyKid
         private Rectangle _titleRectangle;
         private Rectangle _selectionRectangle;
         private Rectangle[] _bordersRectangle;
+        private Rectangle[] _microphoneRectangle;
 
         private TitleScreenState _state = TitleScreenState.Title;
 
@@ -51,6 +53,12 @@ namespace GreedyKid
             _bordersRectangle[5] = new Rectangle(11, TextureManager.GameplayHeight - 8, 1, 8); // down
             _bordersRectangle[6] = new Rectangle(0, TextureManager.GameplayHeight - 12, 8, 1); // left
             _bordersRectangle[7] = new Rectangle(15, TextureManager.GameplayHeight - 12, 8, 1); // right
+
+            _microphoneRectangle = new Rectangle[10];
+            for (int i = 0; i < 10; i++)
+            {
+                _microphoneRectangle[i] = new Rectangle(0, TextureManager.GameplayHeight - 148 - 4 * i, 146, 4);
+            }
         }
 
         public void SetState(TitleScreenState state)
@@ -288,6 +296,19 @@ namespace GreedyKid
                 yStart = 115;
 
                 DrawCenteredText(spriteBatch, "NOTHING HERE YET, JUST PRESS A", yStart, 0);
+            }
+
+            if (_state != TitleScreenState.Title)
+            {
+                if (MicrophoneManager.Instance.Working)
+                {
+                    // microphone
+                    int micLevel = Math.Min(9, MicrophoneManager.Instance.LeveledVolume);
+                    spriteBatch.Draw(texture,
+                        new Rectangle(93, 175, _microphoneRectangle[0].Width, _microphoneRectangle[0].Height),
+                         _microphoneRectangle[micLevel],
+                         Color.White);
+                }
             }
 
             spriteBatch.End();

@@ -95,6 +95,15 @@ namespace GreedyKid
             _selectionOption = 0;
         }
 
+        private void DefaultMicrophone()
+        {
+            for (int i = 0; i < Microsoft.Xna.Framework.Audio.Microphone.All.Count; i++)
+            {
+                if (Microsoft.Xna.Framework.Audio.Microphone.Default == Microsoft.Xna.Framework.Audio.Microphone.All[i])
+                    SelectedMicrophone = i;
+            }
+        }
+
         private void ParseLine(string line)
         {
             if (line.Length == 0)
@@ -215,6 +224,7 @@ namespace GreedyKid
                 try
                 {
                     // load
+                    DefaultMicrophone();
                     using (TextReader reader = File.OpenText(path))
                     {
                         string line;
@@ -301,9 +311,9 @@ namespace GreedyKid
                 writer.Write("Language=" + TextManager.Instance.Language + writer.NewLine);
 
                 if (SelectedMicrophone >= 0)
-                    writer.Write("Language=" + Microsoft.Xna.Framework.Audio.Microphone.All[SelectedMicrophone].Name + writer.NewLine);
+                    writer.Write("Microphone=" + Microsoft.Xna.Framework.Audio.Microphone.All[SelectedMicrophone].Name + writer.NewLine);
                 else
-                    writer.Write("Language=disabled" + writer.NewLine);
+                    writer.Write("Microphone=disabled" + writer.NewLine);
 
                 writer.Flush();
             }
@@ -368,6 +378,7 @@ namespace GreedyKid
                 case 5:
                     SelectedMicrophone++;
                     SelectedMicrophone = Math.Min(SelectedMicrophone, _microphoneName.Count - 1);
+                    MicrophoneManager.Instance.SetMicrophone(SelectedMicrophone);
                     break;
                 case 6: MusicVolumeDown(); break;
                 case 7: SfxVolumeDown(); break;
@@ -399,6 +410,7 @@ namespace GreedyKid
                 case 5:
                     SelectedMicrophone--;
                     SelectedMicrophone = Math.Max(SelectedMicrophone, -1);
+                    MicrophoneManager.Instance.SetMicrophone(SelectedMicrophone);
                     break;
                 case 6: MusicVolumeUp(); break;
                 case 7: SfxVolumeUp(); break;

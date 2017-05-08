@@ -38,7 +38,7 @@ namespace GreedyKid
         Robocop,
     }
 
-    public sealed class GameplayManager : IDisposable
+    public sealed class GameplayManager
     {
         private Building _building;
 
@@ -130,7 +130,6 @@ namespace GreedyKid
         private float _currentCameraTime = _totalCameraTime;
 
         // microphone
-        private MicrophoneVolumeHandler _microphoneHandler;
         private int _microphoneSensitivity = 5;
 
         // bullets
@@ -352,9 +351,6 @@ namespace GreedyKid
             _pauseBackgroundRectangles = new Rectangle[2];
             _pauseBackgroundRectangles[0] = new Rectangle(1619, TextureManager.GameplayHeight - 184, 111, 153);
             _pauseBackgroundRectangles[1] = new Rectangle(1731, TextureManager.GameplayHeight - 184, 137, 153);
-
-            _microphoneHandler = new MicrophoneVolumeHandler();
-            _microphoneHandler.StartCapture();
         }
 
         public void LoadBuilding()
@@ -535,9 +531,6 @@ namespace GreedyKid
             if (InputManager.PlayerDevice != null)
                 InputManager.PlayerDevice.HandleIngameInputs(this);
 
-            // microphone
-            _microphoneHandler.Update(gameTime);
-
             if (_pause)
                 return;
 
@@ -619,7 +612,7 @@ namespace GreedyKid
                     }
                 }
 
-                if (_microphoneHandler.LeveledVolume >= _microphoneSensitivity)
+                if (MicrophoneManager.Instance.LeveledVolume >= _microphoneSensitivity)
                     Player.Shout();
 
                 bool isShouting = Player.IsShouting;
@@ -1828,12 +1821,15 @@ namespace GreedyKid
                 _maskRectangle[2],
                 Color.White);
 
-            // microphone
-            int micLevel = Math.Min(9, _microphoneHandler.LeveledVolume);
-            spriteBatch.Draw(texture,
-                new Rectangle(93, 175, _microphoneRectangle[0].Width, _microphoneRectangle[0].Height),
-                 _microphoneRectangle[micLevel],
-                 Color.White);
+            if (MicrophoneManager.Instance.Working)
+            {
+                // microphone
+                int micLevel = Math.Min(9, MicrophoneManager.Instance.LeveledVolume);
+                spriteBatch.Draw(texture,
+                    new Rectangle(93, 175, _microphoneRectangle[0].Width, _microphoneRectangle[0].Height),
+                     _microphoneRectangle[micLevel],
+                     Color.White);
+            }
 
             // player life
             for (int h = 0; h < 3; h++)
@@ -1973,12 +1969,6 @@ namespace GreedyKid
                 text,
                 new Vector2(GreedyKidGame.Width / 2 - textWidth / 2, 1),
                 Color.White);
-        }
-
-        public void Dispose()
-        {
-            if (_microphoneHandler != null)
-                _microphoneHandler.StopCapture();
         }
     }
 }

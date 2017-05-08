@@ -7,8 +7,10 @@ using Microsoft.Xna.Framework.Audio;
 
 namespace GreedyKid
 {
-    public sealed class MicrophoneVolumeHandler
+    public sealed class MicrophoneManager : IDisposable
     {
+        private static MicrophoneManager _instance;
+
         private Microphone _microphone = null;
         private TimeSpan _bufferDuration = TimeSpan.FromMilliseconds(100.0);
         private byte[] _buffer;
@@ -25,23 +27,53 @@ namespace GreedyKid
 
         private float _adjustedVolume = 0.0f;
 
-        public MicrophoneVolumeHandler(string preferredMicrophone = null)
+        private bool _started = false;
+
+        public static MicrophoneManager Instance
         {
-            for (int i = 0; i < Microphone.All.Count; i++)
+            get
             {
-                if (Microphone.All[i].Name == preferredMicrophone)
+                if (_instance == null)
+                    _instance = new MicrophoneManager();
+                return _instance;
+            }
+        }
+
+        private MicrophoneManager()
+        {
+            
+        }
+
+        public bool Working
+        {
+            get { return _started; }
+        }
+
+        public void SetMicrophone(int selected)
+        {
+            try
+            {
+                if (_microphone != null)
                 {
-                    _microphone = Microphone.All[i];
-                    break;
+                    StopCapture();
+                    _microphone.BufferReady -= BufferReady;
+                }
+
+                _started = false;
+
+                if (selected >= 0)
+                {
+                    _microphone = Microphone.All[selected];
+                    _microphone.BufferDuration = _bufferDuration;
+                    _buffer = new byte[_microphone.GetSampleSizeInBytes(_bufferDuration)];
+                    _meanSamples = _microphone.GetSampleSizeInBytes(TimeSpan.FromSeconds(2.0));
+                    _microphone.BufferReady += BufferReady;
+                    StartCapture();
                 }
             }
-            if (_microphone == null && Microphone.Default != null)
+            catch (Exception)
             {
-                _microphone = Microphone.Default;
-                _microphone.BufferDuration = _bufferDuration;
-                _buffer = new byte[_microphone.GetSampleSizeInBytes(_bufferDuration)];
-                _meanSamples = _microphone.GetSampleSizeInBytes(TimeSpan.FromSeconds(2.0));
-                _microphone.BufferReady += BufferReady;
+                _started = false;
             }
         }
 
@@ -65,24 +97,44 @@ namespace GreedyKid
             get { return _microphone != null && _microphone.State == MicrophoneState.Started; }
         }
 
-        public void StartCapture()
+        private void StartCapture()
         {
-            if (_microphone != null)
-                _microphone.Start();
+            _measuredVolume = 0.0f;
+            _adjustedVolume = 0.0f;
+
+            try
+            {
+                if (_microphone != null)
+                    _microphone.Start();
+                _started = true;
+            }
+            catch (Exception)
+            {
+                _started = false;
+            }
         }
 
-        public void StopCapture()
+        private void StopCapture()
         {
-            if (_microphone != null)
-                _microphone.Stop();
+            _measuredVolume = 0.0f;
+            _adjustedVolume = 0.0f;
+
+            try
+            {
+                if (_microphone != null)
+                    _microphone.Stop();
+                _started = false;
+            }
+            catch (Exception)
+            {
+                _started = false;
+            }
         }
 
         public void Update(float gameTime)
         {            
             _adjustedVolume = (_measuredVolume - _currentMean) / (100.0f - _currentMean);
             _adjustedVolume = Math.Max(0, _adjustedVolume * 100.0f);
-
-            //Console.WriteLine(_adjustedVolume);
         }
 
         private void BufferReady(object sender, EventArgs e)
@@ -127,6 +179,13 @@ namespace GreedyKid
                 _volumeMeasures = 0;
                 _accumulatedVolume = 0.0f;
             }
+        }
+
+        public void Dispose()
+        {
+            if (_instance != null)
+                _instance.StopCapture();
+            _instance = null;
         }
     }
 }
