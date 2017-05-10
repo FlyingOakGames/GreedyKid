@@ -7,6 +7,13 @@ using System.Text;
 
 namespace GreedyKid
 {
+    public enum CommandType
+    {
+        None,
+        Select,
+        Back,
+    }
+
     public sealed class UIHelper
     {
         private static UIHelper _instance;
@@ -18,6 +25,7 @@ namespace GreedyKid
         private Color _backgroundColor = new Color(34, 32, 52);
         private Color _selectedColor = new Color(217, 87, 99);
         private Color _notSelectedColor = new Color(132, 126, 135);
+        private Color _commandColor = new Color(91, 110, 225);
 
         public Rectangle SelectionRectangle
         {
@@ -187,6 +195,93 @@ namespace GreedyKid
                 text,
                 new Vector2(GreedyKidGame.Width / 2 - textWidth / 2, 1),
                 Color.White);
+        }
+
+
+        public void DrawCommand(SpriteBatch spriteBatch, string text, CommandType type, bool isLeft = false)
+        {
+            const int margin = 24;
+
+            SpriteFont font = TextManager.Instance.Font;
+            SpriteFont genericFont = TextManager.Instance.GenericFont;
+            Texture2D texture = TextureManager.Gameplay;
+
+            // command text
+            string desktopCommand = (type == CommandType.Select ? "d" : "e");
+            string consoleCommand = desktopCommand;
+            if (GamePadInputsHandler.PreferredButtonType == ButtonType.Xbox)
+                consoleCommand = (type == CommandType.Select ? "`" : "a");
+            else
+                consoleCommand = (type == CommandType.Select ? "b" : "c");
+
+            // sizing
+            int textWidth = (int)font.MeasureString(text).X;
+
+            int fullWidth = textWidth;
+            if (type != CommandType.None)
+            {
+                fullWidth = textWidth + 3;
+
+                if (!Program.RunningOnConsole)
+                {
+                    if (InputManager.HasGamepad)
+                    {
+                        fullWidth += (int)genericFont.MeasureString(consoleCommand).X;
+                        fullWidth += (int)genericFont.MeasureString(" | ").X;
+                        fullWidth += (int)genericFont.MeasureString(desktopCommand).X;
+                    }
+                    else
+                    {
+                        fullWidth += (int)genericFont.MeasureString(desktopCommand).X;
+                    }
+                }
+                else
+                {
+                    fullWidth += (int)genericFont.MeasureString(consoleCommand).X;
+                }
+            }
+
+            int startX = (isLeft ? margin : GreedyKidGame.Width - margin - fullWidth);
+
+            // background
+            spriteBatch.Draw(texture,
+                new Rectangle(startX - 4, GreedyKidGame.Height - 8, fullWidth + 7, 1),
+                _1x1Rectangle,
+                _backgroundColor);
+            spriteBatch.Draw(texture,
+                new Rectangle(startX - 3, GreedyKidGame.Height - 7, fullWidth + 7, 1),
+                _1x1Rectangle,
+                _backgroundColor);
+
+            // text
+            spriteBatch.DrawString(font, text, new Vector2(startX, GreedyKidGame.Height - 15), _commandColor);
+            
+            // command
+            if (type != CommandType.None)
+            {
+                int currentX = startX + textWidth + 3;
+
+                if (!Program.RunningOnConsole)
+                {
+                    if (InputManager.HasGamepad)
+                    {
+                        spriteBatch.DrawString(genericFont, consoleCommand, new Vector2(currentX, GreedyKidGame.Height - 15), _commandColor);
+                        currentX += (int)genericFont.MeasureString(consoleCommand).X;
+                        spriteBatch.DrawString(genericFont, " | ", new Vector2(currentX, GreedyKidGame.Height - 15), _commandColor);
+                        currentX += (int)genericFont.MeasureString(" | ").X;
+                        spriteBatch.DrawString(genericFont, desktopCommand, new Vector2(currentX, GreedyKidGame.Height - 15), _commandColor);
+                    }
+                    else
+                    {
+                        fullWidth += (int)genericFont.MeasureString(desktopCommand).X;
+                        spriteBatch.DrawString(genericFont, desktopCommand, new Vector2(currentX, GreedyKidGame.Height - 15), _commandColor);
+                    }
+                }
+                else
+                {
+                    spriteBatch.DrawString(genericFont, consoleCommand, new Vector2(currentX, GreedyKidGame.Height - 15), _commandColor);
+                }
+            }
         }
     }
 }

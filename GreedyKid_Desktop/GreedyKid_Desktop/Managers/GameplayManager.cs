@@ -1813,6 +1813,12 @@ namespace GreedyKid
                 UIHelper.Instance.DrawTitle(spriteBatch, TextManager.Instance.Settings);
             }
 
+            if (_pause)
+            {
+                UIHelper.Instance.DrawCommand(spriteBatch, TextManager.Instance.Select, CommandType.Select);
+                UIHelper.Instance.DrawCommand(spriteBatch, TextManager.Instance.Back, CommandType.Back, true);
+            }
+
             // score
             _encodedScore[0] = Score / 100;
             _encodedScore[1] = (Score - _encodedScore[0] * 100) / 10;

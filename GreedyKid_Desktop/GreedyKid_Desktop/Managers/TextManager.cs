@@ -101,7 +101,7 @@ namespace GreedyKid
 
         // *********************** MAIN SCREEN ***********************
 
-        // 100%
+        // 85%
 
         private string[] _play = new string[] { "PLAY", "JOUER", "SPIELEN", "ИГРАТЬ", "JUGAR", "JOGAR", "GIOCA" };
         public string Play { get { return _play[(int)_language]; } }
@@ -112,18 +112,24 @@ namespace GreedyKid
         private string[] _quit = new string[] { "QUIT", "QUITTER", "ENDE", "ВЫХОД", "SALIR", "SAIR", "ESCI" };
         public string Quit { get { return _quit[(int)_language]; } }
 
+        private string[] _select = new string[] { "SELECT", "VALIDER", "WÄHLEN", "ВЫБРАТЬ", "SELECCIONAR", "SELECIONAR", "SELEZIONA" };
+        public string Select { get { return _select[(int)_language]; } }
+
+        private string[] _back = new string[] { "BACK", "RETOUR", "ZURÜCK", "НАЗАД", "VOLVER", "RETORNAR", "INDIETRO" };
+        public string Back { get { return _back[(int)_language]; } }
+
+        private string[] _press = new string[] { "PRESS", "APPUYER", "ZURÜCK", "НАЗАД", "VOLVER", "RETORNAR", "INDIETRO" };
+        public string Press { get { return _press[(int)_language]; } }
+
         // *********************** PLAY SCREEN ***********************
 
-        // 33% campaign, workshop
+        // 0% campaign, workshop
 
         private string[] _campaign = new string[] { "MAIN CAMPAIGN", "CAMPAGNE PRINCIPALE", "SPIELEN", "ИГРАТЬ", "JUGAR", "JOGAR", "GIOCA" };
         public string Campaign { get { return _campaign[(int)_language]; } }
 
         private string[] _workshop = new string[] { "STEAM WORKSHOP", "WORKSHOP STEAM", "SPIELEN", "ИГРАТЬ", "JUGAR", "JOGAR", "GIOCA" };
-        public string Workshop { get { return _workshop[(int)_language]; } }
-
-        private string[] _back = new string[] { "BACK", "RETOUR", "ZURÜCK", "НАЗАД", "VOLVER", "RETORNAR", "INDIETRO" };
-        public string Back { get { return _back[(int)_language]; } }
+        public string Workshop { get { return _workshop[(int)_language]; } }        
 
         // *********************** SETTINGS SCREEN ***********************
 

@@ -159,7 +159,7 @@ namespace GreedyKid
 
             Texture2D texture = TextureManager.Gameplay;
 
-            UIHelper.Instance.DrawBorders(spriteBatch);
+            UIHelper.Instance.DrawBorders(spriteBatch);            
 
             // background
             if (_state == TitleScreenState.Title)
@@ -233,6 +233,22 @@ namespace GreedyKid
             {
                 UIHelper.Instance.DrawMicrophoneVolume(spriteBatch);
             }
+
+            // commands
+            if (_state == TitleScreenState.Title)
+            {
+                UIHelper.Instance.DrawCommand(spriteBatch, GreedyKidGame.Version, CommandType.None, true);
+                UIHelper.Instance.DrawCommand(spriteBatch, TextManager.Instance.Press, CommandType.Select);
+            }
+            else
+            {
+                UIHelper.Instance.DrawCommand(spriteBatch, TextManager.Instance.Select, CommandType.Select);
+            }
+
+            if (_state != TitleScreenState.Title && _state != TitleScreenState.Main)
+            {
+                UIHelper.Instance.DrawCommand(spriteBatch, TextManager.Instance.Back, CommandType.Back, true);
+            }            
 
             spriteBatch.End();
         }
