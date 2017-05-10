@@ -54,7 +54,7 @@ namespace GreedyKid
 #if DESKTOP
             string userHome = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
-            if (Environment.OSVersion.Platform == PlatformID.MacOSX || (Environment.OSVersion.Platform == PlatformID.Unix && SystemHelper.IsRunningOnMac))
+            if (Environment.OSVersion.Platform == PlatformID.MacOSX || (Environment.OSVersion.Platform == PlatformID.Unix && SystemHelper.IsMac))
                 SaveDirectory = Path.Combine(userHome, "Library/Application Support/Flying Oak Games/Boo! Greedy Kid");
             else if (Environment.OSVersion.Platform == PlatformID.Unix)
                 SaveDirectory = Path.Combine(userHome, ".greedykid");
@@ -260,6 +260,14 @@ namespace GreedyKid
 #endif
                 Save();
             }
+        }
+
+        public void Delete()
+        {
+#if DESKTOP
+            if (File.Exists(_settingsPath))
+                File.Delete(_settingsPath);
+#endif
         }
 
         public void SetResolution(int width, int height, bool save = true)

@@ -89,6 +89,7 @@ namespace GreedyKid
         /// </summary>
         protected override void Initialize()
         {
+            // microphone init
             MicrophoneManager.Instance.SetMicrophone(SettingsManager.Instance.SelectedMicrophone);
 
             base.Initialize();

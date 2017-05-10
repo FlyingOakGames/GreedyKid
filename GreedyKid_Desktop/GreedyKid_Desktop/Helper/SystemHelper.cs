@@ -1,38 +1,119 @@
 ﻿using System;
-using System.Runtime.InteropServices;
+using System.Diagnostics;
+using System.IO;
 
 namespace GreedyKid
 {
     public static class SystemHelper
     {
-        [DllImport("libc")]
-        static extern int uname(IntPtr buf);
+        public static bool IsWindows { get; private set; }
+        public static bool IsUnix { get; private set; }
+        public static bool IsMac { get; private set; }
+        public static bool IsLinux { get; private set; }
+        public static bool IsUnknown { get; private set; }
+        public static string Name { get; private set; }
 
-        public static bool IsRunningOnMac
+        static SystemHelper()
         {
-            get
+            IsWindows = Path.DirectorySeparatorChar == '\\';
+            if (IsWindows)
             {
-                IntPtr buf = IntPtr.Zero;
-                try
+                Name = Environment.OSVersion.VersionString;
+
+                Name = Name.Replace("  ", " ");
+                Name = Name.Trim();
+
+                if (Name.Contains("NT 5.1"))
+                    Name = "Windows XP";
+                else if (Name.Contains("NT 5.2"))
+                    Name = "Windows XP 64 Bits";
+                else if (Name.Contains("NT 6.0"))
+                    Name = "Windows Vista";
+                else if (Name.Contains("NT 6.1"))
+                    Name = "Windows 7";
+                else if (Name.Contains("NT 6.2"))
+                    Name = "Windows 8";
+                else if (Name.Contains("NT 6.3"))
+                    Name = "Windows 8.1";
+                else if (Name.Contains("NT 10.0"))
                 {
-                    buf = Marshal.AllocHGlobal(8192);
-                    // This is a hacktastic way of getting sysname from uname ()
-                    if (uname(buf) == 0)
-                    {
-                        string os = Marshal.PtrToStringAnsi(buf);
-                        if (os == "Darwin")
-                            return true;
-                    }
+                    Name = "Windows 10";
+                    if (Name.Contains("10.0.105"))
+                        Name = Name + " (November 2015 Update)";
+                    else if (Name.Contains("10.0.14"))
+                        Name = Name + " (Anniversary Update)";
+                    else if (Name.Contains("10.0.15"))
+                        Name = Name + " (Creators Update)";
+                    else if (Name.Contains("10.0.16"))
+                        Name = Name + " (Redstone 3)";
                 }
-                catch
+
+                if (Name.Contains("Service Pack 1"))
+                    Name = Name + " (SP1)";
+                else if (Name.Contains("Service Pack 2"))
+                    Name = Name + " (SP2)";
+                else if (Name.Contains("Service Pack 3"))
+                    Name = Name + " (SP3)";
+            }
+            else
+            {
+                string UnixName = ReadProcessOutput("uname");
+                if (UnixName.Contains("Darwin"))
                 {
+                    IsUnix = true;
+                    IsMac = true;
+
+                    Name = "MacOS X " + ReadProcessOutput("sw_vers", "-productVersion");
+                    Name = Name.Trim();
                 }
-                finally
+                else if (UnixName.Contains("Linux"))
                 {
-                    if (buf != IntPtr.Zero)
-                        Marshal.FreeHGlobal(buf);
+                    IsUnix = true;
+                    IsLinux = true;
+
+                    Name = ReadProcessOutput("lsb_release", "-d");
+                    Name = Name.Substring(Name.IndexOf(":") + 1);
+                    Name = Name.Trim();
                 }
-                return false;
+                else if (UnixName != "")
+                {
+                    IsUnix = true;
+                }
+                else
+                {
+                    IsUnknown = true;
+                }
+            }
+        }
+
+        private static string ReadProcessOutput(string name)
+        {
+            return ReadProcessOutput(name, null);
+        }
+
+        private static string ReadProcessOutput(string name, string args)
+        {
+            try
+            {
+                Process p = new Process();
+                p.StartInfo.UseShellExecute = false;
+                p.StartInfo.RedirectStandardOutput = true;
+                if (args != null && args != "") p.StartInfo.Arguments = " " + args;
+                p.StartInfo.FileName = name;
+                p.Start();
+                // Do not wait for the child process to exit before
+                // reading to the end of its redirected stream.
+                // p.WaitForExit();
+                // Read the output stream first and then wait.
+                string output = p.StandardOutput.ReadToEnd();
+                p.WaitForExit();
+                if (output == null) output = "";
+                output = output.Trim();
+                return output;
+            }
+            catch
+            {
+                return "";
             }
         }
     }

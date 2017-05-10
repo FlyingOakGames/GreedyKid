@@ -12,7 +12,7 @@ namespace GreedyKid
 
     public sealed class GamePadInputsHandler : IInputsHandler
     {
-        private const float _stickDZ = 0.8f;
+        private const float _stickDZ = 0.5f;
 
         private PlayerIndex _playerIndex;
         private bool _isConnected = false;
