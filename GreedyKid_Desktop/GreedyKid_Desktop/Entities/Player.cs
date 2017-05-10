@@ -103,7 +103,7 @@ namespace GreedyKid
             _frameDuration[(int)EntityState.Running] = 0.1f;
 
             // rolling
-            _frames[(int)EntityState.Rolling] = new Rectangle[7];
+            _frames[(int)EntityState.Rolling] = new Rectangle[5];
             for (int f = 0; f < _frames[(int)EntityState.Rolling].Length; f++)
             {
                 _frames[(int)EntityState.Rolling][f] = new Rectangle(f * 32 + 12 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine, 32, 32);
