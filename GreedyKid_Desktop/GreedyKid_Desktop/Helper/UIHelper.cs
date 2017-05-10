@@ -148,16 +148,29 @@ namespace GreedyKid
             SpriteFont font = TextManager.Instance.Font;
 
             int textWidth = (int)font.MeasureString(text).X;
+
+            Texture2D texture = TextureManager.Gameplay;
+
+            // mask
+            spriteBatch.Draw(texture,
+                new Rectangle(GreedyKidGame.Width / 2 - textWidth / 2 - 2, yPos + 3 - (selectedOption == option ? 1 : 0), textWidth + 4, 9),
+                _1x1Rectangle,
+                _backgroundColor);
+            spriteBatch.Draw(texture,
+                new Rectangle(GreedyKidGame.Width / 2 - textWidth / 2 - 1, yPos + 2 - (selectedOption == option ? 1 : 0), textWidth + 2, 11),
+                _1x1Rectangle,
+                _backgroundColor);
+
+
             spriteBatch.DrawString(font,
                 text,
-                new Vector2(GreedyKidGame.Width / 2 - textWidth / 2, yPos),
+                new Vector2(GreedyKidGame.Width / 2 - textWidth / 2, yPos - (selectedOption == option ? 1 : 0)),
                 (selectedOption == option ? Color.White : _notSelectedColor));
 
             if (selectedOption == option)
             {
-                Texture2D texture = TextureManager.Gameplay;
                 spriteBatch.Draw(texture,
-                    new Rectangle(GreedyKidGame.Width / 2 - textWidth / 2 - _selectionRectangle.Width - 2, yPos + 4, _selectionRectangle.Width, _selectionRectangle.Height),
+                    new Rectangle(GreedyKidGame.Width / 2 - textWidth / 2 - _selectionRectangle.Width - 2, yPos + 3, _selectionRectangle.Width, _selectionRectangle.Height),
                     _selectionRectangle,
                     _selectedColor);
             }

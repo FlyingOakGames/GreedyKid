@@ -112,14 +112,17 @@ namespace GreedyKid
 
         public void PushUp()
         {
-            _selectionOption--;
+            if (_state != TitleScreenState.Settings)
+                _selectionOption--;   
+            else
+                SettingsManager.Instance.PushUp();
 
             if (_selectionOption < 0)
                 switch (_state)
                 {
                     case TitleScreenState.Title: _selectionOption = 0; break;
                     case TitleScreenState.Main: _selectionOption = (Program.RunningOnConsole ? 1 : 2); break;
-                    case TitleScreenState.Settings: SettingsManager.Instance.PushUp(); break;
+                    case TitleScreenState.Settings: break;
                     case TitleScreenState.Play: _selectionOption = 2; break;
                     case TitleScreenState.LevelSelection: _selectionOption = 0; break;
                     case TitleScreenState.SteamWorkshop: break;
@@ -128,7 +131,8 @@ namespace GreedyKid
 
         public void PushDown()
         {
-            _selectionOption++;
+            if (_state != TitleScreenState.Settings)
+                _selectionOption++;
 
             switch (_state)
             {
