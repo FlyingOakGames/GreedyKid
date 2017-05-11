@@ -168,6 +168,31 @@ namespace GreedyKid
 
         // *********************** PAUSE SCREEN ***********************
 
+        // 55% shout, interact, roll, taunt        
+
+        private string[] _up = new string[] { "UP", "HAUT", "HOCH", "ВВЕРХ", "ARRIBA", "PARA CIMA", "SU" };
+        public string Up { get { return _up[(int)_language]; } }
+        private string[] _down = new string[] { "DOWN", "BAS", "RUNTER", "ВНИЗ", "ABAJO", "PARA BAIXO", "GIÙ" };
+        public string Down { get { return _down[(int)_language]; } }
+        private string[] _left = new string[] { "LEFT", "GAUCHE", "LINKS", "ВЛЕВО", "IZQUIERDA", "ESQUERDA", "SINISTRA" };
+        public string Left { get { return _left[(int)_language]; } }
+        private string[] _right = new string[] { "RIGHT", "DROITE", "RECHTS", "ВПРАВО", "DERECHA", "DIREITA", "DESTRA" };
+        public string Right { get { return _right[(int)_language]; } }
+
+        private string[] _shout = new string[] { "SHOUT", "CRIER", "HOCH", "ВВЕРХ", "ARRIBA", "PARA CIMA", "SU" };
+        public string Shout { get { return _shout[(int)_language]; } }
+        private string[] _interact = new string[] { "INTERACT", "INTERAGIR", "RUNTER", "ВНИЗ", "ABAJO", "PARA BAIXO", "GIÙ" };
+        public string Interact { get { return _interact[(int)_language]; } }
+        private string[] _roll = new string[] { "DODGE ROLL", "ROULADE", "LINKS", "ВЛЕВО", "IZQUIERDA", "ESQUERDA", "SINISTRA" };
+        public string Roll { get { return _roll[(int)_language]; } }
+        private string[] _taunt = new string[] { "TAUNT", "PROVOQUER", "RECHTS", "ВПРАВО", "DERECHA", "DIREITA", "DESTRA" };
+        public string Taunt { get { return _taunt[(int)_language]; } }
+
+        private string[] _restore = new string[] { "RESTORE DEFAULT", "RÉ-INITIALISER", "STANDARD WIEDERHERSTELLEN", "ВОCСТАНОВИТЬ ПО УМОЛЧАНИЮ", "REINICIALIZAR", "REINICIALIZAR", "RIPRISTINA IMPOSTAZIONI PREDEFINITE" };
+        public string Restore { get { return _restore[(int)_language]; } }
+
+        // *********************** PAUSE SCREEN ***********************
+
         // 33% pause, restart
 
         private string[] _pause = new string[] { "PAUSE", "PAUSE", "PAUSE", "PAUSE", "PAUSE", "PAUSE", "PAUSE" };

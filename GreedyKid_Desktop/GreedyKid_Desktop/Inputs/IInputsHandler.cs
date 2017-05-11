@@ -17,5 +17,7 @@
         InputsHandlerTypes InputType { get; }
 
         bool IsConnected { get; }
+
+        bool DetectKeyPress(out Microsoft.Xna.Framework.Input.Keys key, out MouseKeyboardInputsHandler.MouseButton mouseButton, out MouseKeyboardInputsHandler.MappingType type);
     }
 }

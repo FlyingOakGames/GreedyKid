@@ -20,6 +20,25 @@ namespace GreedyKid
 
         private static bool _previousKeyPress = false;
 
+        public static void CheckNewGamepad()
+        {            
+            // check if new gamepad
+            if (PlayerDevice != null && !HasGamepad)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    GamePadState gamePadState = GamePad.GetState((PlayerIndex)i);
+
+                    if (gamePadState.IsConnected)
+                    {
+                        HasGamepad = true;
+                        HasKeyboard = true;
+                        PlayerDevice = new HybridMouseGamePadHandler((PlayerIndex)i);
+                    }
+                }
+            }            
+        }
+
         public static bool CheckEngagement()
         {
             if (!CheckKeypress())

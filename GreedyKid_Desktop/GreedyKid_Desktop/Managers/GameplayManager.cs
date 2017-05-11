@@ -469,7 +469,7 @@ namespace GreedyKid
         {
             if (_inSettings)
             {
-
+                SettingsManager.Instance.PushSelect();
             }
             else
             {
@@ -487,8 +487,11 @@ namespace GreedyKid
         {
             if (_inSettings)
             {
-                _inSettings = false;
-                SettingsManager.Instance.Save();
+                if (!SettingsManager.Instance.PushCancel())
+                {
+                    _inSettings = false;
+                    SettingsManager.Instance.Save();
+                }
             }
             else
             {

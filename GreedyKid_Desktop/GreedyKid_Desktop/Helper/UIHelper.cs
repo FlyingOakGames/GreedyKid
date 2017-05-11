@@ -32,6 +32,11 @@ namespace GreedyKid
             get { return _selectionRectangle; }
         }
 
+        public Rectangle PixelRectangle
+        {
+            get { return _1x1Rectangle; }
+        }
+
         public Color SelectedColor
         {
             get { return _selectedColor; }
@@ -40,6 +45,11 @@ namespace GreedyKid
         public Color NotSelectedColor
         {
             get { return _notSelectedColor; }
+        }
+
+        public Color BackgroundColor
+        {
+            get { return _backgroundColor; }
         }
 
         private UIHelper()

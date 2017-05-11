@@ -153,10 +153,6 @@ namespace GreedyKid
 #endif
             }
 #if DEBUG
-            // should remove once menus are in
-            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
-
             KeyboardState keyboardState = Keyboard.GetState();
 
             if (_state == GameState.Ingame && _gameplayManager != null)
@@ -179,6 +175,10 @@ namespace GreedyKid
             float gameTimeF = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             MicrophoneManager.Instance.Update(gameTimeF);
+
+#if DESKTOP
+            InputManager.CheckNewGamepad();
+#endif
 
             switch (_state)
             {

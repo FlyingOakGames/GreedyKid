@@ -37,6 +37,9 @@ namespace GreedyKid
             _gamepadHandler.HandleIngameInputs(manager);
         }
 
-
+        public bool DetectKeyPress(out Microsoft.Xna.Framework.Input.Keys key, out MouseKeyboardInputsHandler.MouseButton mouseButton, out MouseKeyboardInputsHandler.MappingType type)
+        {
+            return _keyboardHandler.DetectKeyPress(out key, out mouseButton, out type);
+        }
     }
 }

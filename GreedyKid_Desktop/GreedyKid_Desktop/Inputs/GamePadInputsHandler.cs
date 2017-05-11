@@ -12,7 +12,7 @@ namespace GreedyKid
 
     public sealed class GamePadInputsHandler : IInputsHandler
     {
-        private const float _stickDZ = 0.5f;
+        private const float _stickDZ = 0.8f;
 
         private PlayerIndex _playerIndex;
         private bool _isConnected = false;
@@ -131,6 +131,14 @@ namespace GreedyKid
             }
 
             _previousGamePadState = currentState;
+        }
+
+        public bool DetectKeyPress(out Microsoft.Xna.Framework.Input.Keys key, out MouseKeyboardInputsHandler.MouseButton mouseButton, out MouseKeyboardInputsHandler.MappingType type)
+        {
+            key = Keys.A;
+            mouseButton = MouseKeyboardInputsHandler.MouseButton.LeftButton;
+            type = MouseKeyboardInputsHandler.MappingType.Keyboard;
+            return false;
         }
     }
 }

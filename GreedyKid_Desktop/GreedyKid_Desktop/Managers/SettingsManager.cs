@@ -37,6 +37,7 @@ namespace GreedyKid
         private Rectangle _backgroundRectangle;
 
         private Color _volumeColor = new Color(89, 86, 82);
+        private Color _backgroundColor = new Color(132, 126, 135);
 
 
         private int _selectionOption = 0;
@@ -44,6 +45,9 @@ namespace GreedyKid
         private static SettingsManager _instance;
 
         private List<string> _microphoneName = new List<string>();
+
+        private bool _isRemapping = false;
+        private bool _waitingForInput = false;
 
         private SettingsManager()
         {
@@ -88,6 +92,8 @@ namespace GreedyKid
         public void Reset()
         {
             _selectionOption = 0;
+            _isRemapping = false;
+            _waitingForInput = false;
         }
 
         private void DefaultMicrophone()
@@ -343,17 +349,62 @@ namespace GreedyKid
 #endif
         }
 
+        public void PushSelect()
+        {
+            if (_waitingForInput)
+                return;
+
+            if (!_isRemapping && _selectionOption == 4)
+            {
+                _isRemapping = true;
+                _selectionOption = 0;
+            }
+            else if (_isRemapping)
+            {
+                if (_selectionOption == 8)
+                {
+                    MouseKeyboardInputsHandler.RestoreDefault();
+                }
+                else
+                {
+                    _waitingForInput = true;
+                }
+            }
+        }
+
+        public bool PushCancel()
+        {
+            if (_waitingForInput)
+                return false;
+
+            if (_isRemapping)
+            {
+                _isRemapping = false;
+                _selectionOption = 4;
+                _waitingForInput = false;
+                MouseKeyboardInputsHandler.SaveMapping();
+                return true;
+            }
+            return false;
+        }
+
         public void PushUp()
         {
+            if (_waitingForInput)
+                return;
+
             _selectionOption--;
             if (_selectionOption < 0)
-                _selectionOption = 7;
+                _selectionOption = (_isRemapping ? 8 : 7);
         }
 
         public void PushDown()
         {
+            if (_waitingForInput)
+                return;
+
             _selectionOption++;
-            _selectionOption %= 8;
+            _selectionOption %= (_isRemapping ? 9 : 8);
         }
 
         public void PushRight()
@@ -500,6 +551,60 @@ namespace GreedyKid
             return false;
         }
 
+        private void Rebind(Microsoft.Xna.Framework.Input.Keys key, MouseKeyboardInputsHandler.MouseButton mouseButton, MouseKeyboardInputsHandler.MappingType type)
+        {
+            if (_waitingForInput)
+            {
+                if (type == MouseKeyboardInputsHandler.MappingType.Mouse)
+                {
+                    switch (_selectionOption)
+                    {
+                        case 0: MouseKeyboardInputsHandler.UpKey = new MouseKeyboardInputsHandler.Mapping(mouseButton); break;
+                        case 1: MouseKeyboardInputsHandler.DownKey = new MouseKeyboardInputsHandler.Mapping(mouseButton); break;
+                        case 2: MouseKeyboardInputsHandler.LeftKey = new MouseKeyboardInputsHandler.Mapping(mouseButton); break;
+                        case 3: MouseKeyboardInputsHandler.RightKey = new MouseKeyboardInputsHandler.Mapping(mouseButton); break;
+                        case 4: MouseKeyboardInputsHandler.ShoutKey = new MouseKeyboardInputsHandler.Mapping(mouseButton); break;
+                        case 5: MouseKeyboardInputsHandler.ActionKey = new MouseKeyboardInputsHandler.Mapping(mouseButton); break;
+                        case 6: MouseKeyboardInputsHandler.RollKey = new MouseKeyboardInputsHandler.Mapping(mouseButton); break;
+                        case 7: MouseKeyboardInputsHandler.TauntKey = new MouseKeyboardInputsHandler.Mapping(mouseButton); break;
+                    }
+                }
+                else
+                {
+                    switch (_selectionOption)
+                    {
+                        case 0: MouseKeyboardInputsHandler.UpKey = new MouseKeyboardInputsHandler.Mapping(key); break;
+                        case 1: MouseKeyboardInputsHandler.DownKey = new MouseKeyboardInputsHandler.Mapping(key); break;
+                        case 2: MouseKeyboardInputsHandler.LeftKey = new MouseKeyboardInputsHandler.Mapping(key); break;
+                        case 3: MouseKeyboardInputsHandler.RightKey = new MouseKeyboardInputsHandler.Mapping(key); break;
+                        case 4: MouseKeyboardInputsHandler.ShoutKey = new MouseKeyboardInputsHandler.Mapping(key); break;
+                        case 5: MouseKeyboardInputsHandler.ActionKey = new MouseKeyboardInputsHandler.Mapping(key); break;
+                        case 6: MouseKeyboardInputsHandler.RollKey = new MouseKeyboardInputsHandler.Mapping(key); break;
+                        case 7: MouseKeyboardInputsHandler.TauntKey = new MouseKeyboardInputsHandler.Mapping(key); break;                        
+                    }
+                }
+
+                _waitingForInput = false;
+            }
+        }
+
+        public void Update(float gameTime)
+        {
+            if (_waitingForInput)
+            {
+                Microsoft.Xna.Framework.Input.Keys key;
+                MouseKeyboardInputsHandler.MouseButton mouseButton;
+                MouseKeyboardInputsHandler.MappingType type;
+                if (InputManager.PlayerDevice.DetectKeyPress(out key, out mouseButton, out type))
+                {
+                    if (type == MouseKeyboardInputsHandler.MappingType.Keyboard && key == Microsoft.Xna.Framework.Input.Keys.Escape)
+                        _waitingForInput = false;
+                    else
+                        Rebind(key, mouseButton, type);
+                }
+            }
+        }
+
         public void Draw(SpriteBatch spriteBatch)
         {
             Texture2D texture = TextureManager.Gameplay;
@@ -510,54 +615,81 @@ namespace GreedyKid
                 _backgroundRectangle,
                 Color.White);
 
-            UIHelper.Instance.DrawTitle(spriteBatch, TextManager.Instance.Settings);
+            if (_isRemapping)
+            {
+                UIHelper.Instance.DrawTitle(spriteBatch, TextManager.Instance.Remap);
 
-            DrawLeftAlignedText(spriteBatch, TextManager.Instance.LanguageTitle, 23, 0);
-            DrawRightAlignedText(spriteBatch, TextManager.Instance.LanguageValue, 23, 0);
+                DrawLeftAlignedText(spriteBatch, TextManager.Instance.Up, 23, 0);
+                DrawRightAlignedText(spriteBatch, MouseKeyboardInputsHandler.UpKey.Name, 23, 0, true);
+                DrawLeftAlignedText(spriteBatch, TextManager.Instance.Down, 23 + 15, 1);
+                DrawRightAlignedText(spriteBatch, MouseKeyboardInputsHandler.DownKey.Name, 23 + 15, 1, true);
+                DrawLeftAlignedText(spriteBatch, TextManager.Instance.Left, 23 + 30, 2);
+                DrawRightAlignedText(spriteBatch, MouseKeyboardInputsHandler.LeftKey.Name, 23 + 30, 2, true);
+                DrawLeftAlignedText(spriteBatch, TextManager.Instance.Right, 23 + 45, 3);
+                DrawRightAlignedText(spriteBatch, MouseKeyboardInputsHandler.RightKey.Name, 23 + 45, 3, true);
 
-            DrawLeftAlignedText(spriteBatch, TextManager.Instance.Resolution, 23 + 15, 1);
-            DrawRightAlignedText(spriteBatch, _compatibleResolutionName[_selectedResolution], 23 + 15, 1, true);
+                DrawLeftAlignedText(spriteBatch, TextManager.Instance.Shout, 23 + 60, 4);
+                DrawRightAlignedText(spriteBatch, MouseKeyboardInputsHandler.ShoutKey.Name, 23 + 60, 4, true);
+                DrawLeftAlignedText(spriteBatch, TextManager.Instance.Interact, 23 + 75, 5);
+                DrawRightAlignedText(spriteBatch, MouseKeyboardInputsHandler.ActionKey.Name, 23 + 75, 5, true);
+                DrawLeftAlignedText(spriteBatch, TextManager.Instance.Roll, 23 + 90, 6);
+                DrawRightAlignedText(spriteBatch, MouseKeyboardInputsHandler.RollKey.Name, 23 + 90, 6, true);
+                DrawLeftAlignedText(spriteBatch, TextManager.Instance.Taunt, 23 + 105, 7);
+                DrawRightAlignedText(spriteBatch, MouseKeyboardInputsHandler.TauntKey.Name, 23 + 105, 7, true);
 
-            DrawLeftAlignedText(spriteBatch, TextManager.Instance.Fullscreen, 23 + 30, 2);
-            string fullScreenMode = TextManager.Instance.No;
-            if (FullScreenMode == FullScreenMode.Bordeless)
-                fullScreenMode = TextManager.Instance.Borderless;
-            else if (FullScreenMode == FullScreenMode.Real)
-                fullScreenMode = TextManager.Instance.Real;
-            DrawRightAlignedText(spriteBatch, fullScreenMode, 23 + 30, 2);
-
-            spriteBatch.Draw(texture,
-                new Rectangle(27, 72, _dashRectangle.Width, _dashRectangle.Height),
-                _dashRectangle,
-                Color.White);
-
-            DrawLeftAlignedText(spriteBatch, TextManager.Instance.Buttons, 23 + 30 + 24, 3);
-            string buttons = "XBOX";
-            if (GamePadInputsHandler.PreferredButtonType == ButtonType.PlayStation)
-                buttons = "PLAYSTATION";
-            DrawRightAlignedText(spriteBatch, buttons, 23 + 30 + 24, 3, true);
-
-            DrawLeftAlignedText(spriteBatch, TextManager.Instance.Keyboard, 23 + 30 + 24 + 15, 4);
-            DrawRightAlignedText(spriteBatch, TextManager.Instance.Remap, 23 + 30 + 24 + 15, 4, false, true);
-
-            DrawLeftAlignedText(spriteBatch, TextManager.Instance.Microphone, 23 + 30 + 24 + 30, 5);
-            if (SelectedMicrophone == -1)
-                DrawRightAlignedText(spriteBatch, TextManager.Instance.No, 23 + 30 + 24 + 30, 5);
+                DrawCenteredText(spriteBatch, TextManager.Instance.Restore, 23 + 120, 8);
+            }
             else
-                DrawRightAlignedText(spriteBatch, _microphoneName[SelectedMicrophone], 23 + 30 + 24 + 30, 5, true);
+            {
+                UIHelper.Instance.DrawTitle(spriteBatch, TextManager.Instance.Settings);
 
-            spriteBatch.Draw(texture,
-                new Rectangle(27, 126, _dashRectangle.Width, _dashRectangle.Height),
-                _dashRectangle,
-                Color.White);
+                DrawLeftAlignedText(spriteBatch, TextManager.Instance.LanguageTitle, 23, 0);
+                DrawRightAlignedText(spriteBatch, TextManager.Instance.LanguageValue, 23, 0);
 
-            DrawLeftAlignedText(spriteBatch, TextManager.Instance.Music, 23 + 30 + 24 + 30 + 24, 6);
-            int musicVolume = (int)Math.Round(MusicVolume * 10);
-            DrawVolume(spriteBatch, musicVolume, 135, 6);
+                DrawLeftAlignedText(spriteBatch, TextManager.Instance.Resolution, 23 + 15, 1);
+                DrawRightAlignedText(spriteBatch, _compatibleResolutionName[_selectedResolution], 23 + 15, 1, true);
 
-            DrawLeftAlignedText(spriteBatch, TextManager.Instance.Sfx, 23 + 30 + 24 + 30 + 24 + 15, 7);
-            int sfxVolume = (int)Math.Round(SfxVolume * 10);
-            DrawVolume(spriteBatch, sfxVolume, 150, 7);
+                DrawLeftAlignedText(spriteBatch, TextManager.Instance.Fullscreen, 23 + 30, 2);
+                string fullScreenMode = TextManager.Instance.No;
+                if (FullScreenMode == FullScreenMode.Bordeless)
+                    fullScreenMode = TextManager.Instance.Borderless;
+                else if (FullScreenMode == FullScreenMode.Real)
+                    fullScreenMode = TextManager.Instance.Real;
+                DrawRightAlignedText(spriteBatch, fullScreenMode, 23 + 30, 2);
+
+                spriteBatch.Draw(texture,
+                    new Rectangle(27, 72, _dashRectangle.Width, _dashRectangle.Height),
+                    _dashRectangle,
+                    Color.White);
+
+                DrawLeftAlignedText(spriteBatch, TextManager.Instance.Buttons, 23 + 30 + 24, 3);
+                string buttons = "XBOX";
+                if (GamePadInputsHandler.PreferredButtonType == ButtonType.PlayStation)
+                    buttons = "PLAYSTATION";
+                DrawRightAlignedText(spriteBatch, buttons, 23 + 30 + 24, 3, true);
+
+                DrawLeftAlignedText(spriteBatch, TextManager.Instance.Keyboard, 23 + 30 + 24 + 15, 4);
+                DrawRightAlignedText(spriteBatch, TextManager.Instance.Remap, 23 + 30 + 24 + 15, 4, false, true);
+
+                DrawLeftAlignedText(spriteBatch, TextManager.Instance.Microphone, 23 + 30 + 24 + 30, 5);
+                if (SelectedMicrophone == -1)
+                    DrawRightAlignedText(spriteBatch, TextManager.Instance.No, 23 + 30 + 24 + 30, 5);
+                else
+                    DrawRightAlignedText(spriteBatch, _microphoneName[SelectedMicrophone], 23 + 30 + 24 + 30, 5, true);
+
+                spriteBatch.Draw(texture,
+                    new Rectangle(27, 126, _dashRectangle.Width, _dashRectangle.Height),
+                    _dashRectangle,
+                    Color.White);
+
+                DrawLeftAlignedText(spriteBatch, TextManager.Instance.Music, 23 + 30 + 24 + 30 + 24, 6);
+                int musicVolume = (int)Math.Round(MusicVolume * 10);
+                DrawVolume(spriteBatch, musicVolume, 135, 6);
+
+                DrawLeftAlignedText(spriteBatch, TextManager.Instance.Sfx, 23 + 30 + 24 + 30 + 24 + 15, 7);
+                int sfxVolume = (int)Math.Round(SfxVolume * 10);
+                DrawVolume(spriteBatch, sfxVolume, 150, 7);
+            }
         }
 
         private void DrawVolume(SpriteBatch spriteBatch, int volume, int yPos, int option)
@@ -620,13 +752,33 @@ namespace GreedyKid
         private void DrawRightAlignedText(SpriteBatch spriteBatch, string text, int yPos, int option, bool genericFont = false, bool invertedSelection = false)
         {
             SpriteFont font = (genericFont ? TextManager.Instance.GenericFont : TextManager.Instance.Font);
+            Texture2D texture = TextureManager.Gameplay;
+
+            if (_isRemapping && _waitingForInput && _selectionOption == option)
+                text = "???";
 
             int textWidth = (int)font.MeasureString(text).X;
-            spriteBatch.DrawString(font, text, new Vector2(GreedyKidGame.Width - 35 - textWidth, yPos), (_selectionOption == option ? Color.White : UIHelper.Instance.NotSelectedColor));
 
-            if (_selectionOption == option)
+            if (_isRemapping)
             {
-                Texture2D texture = TextureManager.Gameplay;
+                // mask
+                spriteBatch.Draw(texture,
+                    new Rectangle(GreedyKidGame.Width - 35 - textWidth - 2, yPos + 3, textWidth + 4, 9),
+                    UIHelper.Instance.PixelRectangle,
+                    (_selectionOption == option ? UIHelper.Instance.SelectedColor : _backgroundColor));
+                spriteBatch.Draw(texture,
+                    new Rectangle(GreedyKidGame.Width - 35 - textWidth - 1, yPos + 2, textWidth + 2, 11),
+                    UIHelper.Instance.PixelRectangle,
+                    (_selectionOption == option ? UIHelper.Instance.SelectedColor : _backgroundColor));                
+            }
+
+            Color notSelected = UIHelper.Instance.NotSelectedColor;
+            if (_isRemapping)
+                notSelected = Color.White;
+            spriteBatch.DrawString(font, text, new Vector2(GreedyKidGame.Width - 35 - textWidth, yPos), (_selectionOption == option ? Color.White : notSelected));
+
+            if (_selectionOption == option && !_isRemapping)
+            {               
                 if (!OptionMin())
                     spriteBatch.Draw(texture,
                         new Rectangle(GreedyKidGame.Width - 35 - textWidth - UIHelper.Instance.SelectionRectangle.Width - 2, yPos + 4, UIHelper.Instance.SelectionRectangle.Width, UIHelper.Instance.SelectionRectangle.Height),
@@ -644,9 +796,55 @@ namespace GreedyKid
                         0.0f,
                         Vector2.Zero,
                         (invertedSelection ? SpriteEffects.FlipHorizontally : SpriteEffects.None),
-                        0.0f);
+                        0.0f);                
             }
-        }        
+        }
+
+        public void DrawCenteredText(SpriteBatch spriteBatch, string text, int yPos, int option)
+        {
+            SpriteFont font = TextManager.Instance.Font;
+
+            int textWidth = (int)font.MeasureString(text).X;
+
+            Texture2D texture = TextureManager.Gameplay;
+
+            // mask
+            spriteBatch.Draw(texture,
+                new Rectangle(GreedyKidGame.Width / 2 - textWidth / 2 - 2, yPos + 3, textWidth + 4, 9),
+                UIHelper.Instance.PixelRectangle,
+                UIHelper.Instance.BackgroundColor);
+            spriteBatch.Draw(texture,
+                new Rectangle(GreedyKidGame.Width / 2 - textWidth / 2 - 1, yPos + 2, textWidth + 2, 11),
+                UIHelper.Instance.PixelRectangle,
+                UIHelper.Instance.BackgroundColor);
+
+
+            spriteBatch.DrawString(font,
+                text,
+                new Vector2(GreedyKidGame.Width / 2 - textWidth / 2, yPos),
+                (_selectionOption == option ? Color.White : UIHelper.Instance.NotSelectedColor));
+
+            if (_selectionOption == option)
+            {
+                spriteBatch.Draw(texture,
+                    new Rectangle(GreedyKidGame.Width / 2 - textWidth / 2 - UIHelper.Instance.SelectionRectangle.Width - 2, yPos + 4, UIHelper.Instance.SelectionRectangle.Width, UIHelper.Instance.SelectionRectangle.Height),
+                    UIHelper.Instance.SelectionRectangle,
+                    UIHelper.Instance.SelectedColor,
+                    0.0f,
+                    Vector2.Zero,
+                    SpriteEffects.None,
+                    0.0f);
+
+                spriteBatch.Draw(texture,
+                    new Rectangle(GreedyKidGame.Width / 2 - textWidth / 2 + textWidth + 2, yPos + 4, UIHelper.Instance.SelectionRectangle.Width, UIHelper.Instance.SelectionRectangle.Height),
+                    UIHelper.Instance.SelectionRectangle,
+                    UIHelper.Instance.SelectedColor,
+                    0.0f,
+                    Vector2.Zero,
+                    SpriteEffects.FlipHorizontally,
+                    0.0f);
+            }
+        }
 
         private List<int> _compatibleXResolution = new List<int>();
         private List<int> _compatibleYResolution = new List<int>();

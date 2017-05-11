@@ -51,8 +51,12 @@ namespace GreedyKid
                 _state = TitleScreenState.Main;
             }
             else if (InputManager.PlayerDevice != null && _state != TitleScreenState.Title)
-            {
+            {                
                 InputManager.PlayerDevice.HandleTitleInputs(this);
+                if (_state == TitleScreenState.Settings)
+                {
+                    SettingsManager.Instance.Update(gameTime);
+                }
             }            
         }
 
@@ -77,7 +81,7 @@ namespace GreedyKid
                     else if (_selectionOption == 2)
                         GreedyKidGame.ShouldExit = true;
                     break;
-                case TitleScreenState.Settings: break;
+                case TitleScreenState.Settings: SettingsManager.Instance.PushSelect(); break;
                 case TitleScreenState.Play:
                     if (_selectionOption == 0)
                         _state = TitleScreenState.LevelSelection;
@@ -102,8 +106,15 @@ namespace GreedyKid
             switch (_state)
             {
                 case TitleScreenState.Title: break;
-                case TitleScreenState.Main: _state = TitleScreenState.Title; break;
-                case TitleScreenState.Settings: _selectionOption = 1; _state = TitleScreenState.Main; SettingsManager.Instance.Save(); break;
+                case TitleScreenState.Main: _state = TitleScreenState.Title; InputManager.PlayerDevice = null; break;
+                case TitleScreenState.Settings:
+                    if (!SettingsManager.Instance.PushCancel())
+                    {
+                        _selectionOption = 1;
+                        _state = TitleScreenState.Main;
+                        SettingsManager.Instance.Save();
+                    }
+                    break;
                 case TitleScreenState.Play: _state = TitleScreenState.Main; break;
                 case TitleScreenState.LevelSelection: _state = TitleScreenState.Play; break;
                 case TitleScreenState.SteamWorkshop: _selectionOption = 1; _state = TitleScreenState.Play; break;
