@@ -41,5 +41,10 @@ namespace GreedyKid
         {
             return _keyboardHandler.DetectKeyPress(out key, out mouseButton, out type);
         }
+
+        public void ClearKeyPress()
+        {
+            _keyboardHandler.ClearKeyPress();
+        }
     }
 }

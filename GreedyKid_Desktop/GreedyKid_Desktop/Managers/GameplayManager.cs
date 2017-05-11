@@ -510,7 +510,11 @@ namespace GreedyKid
                 InputManager.PlayerDevice.HandleIngameInputs(this);
 
             if (_pause)
+            {
+                if (_inSettings)
+                    SettingsManager.Instance.Update(gameTime);
                 return;
+            }
 
             // transition
             UpdateTransition(gameTime);

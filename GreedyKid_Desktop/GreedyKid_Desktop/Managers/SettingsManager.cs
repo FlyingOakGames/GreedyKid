@@ -409,6 +409,9 @@ namespace GreedyKid
 
         public void PushRight()
         {
+            if (_isRemapping)
+                return;
+
             switch (_selectionOption)
             {
                 case 0:
@@ -441,6 +444,9 @@ namespace GreedyKid
 
         public void PushLeft()
         {
+            if (_isRemapping)
+                return;
+
             switch (_selectionOption)
             {
                 case 0:

@@ -293,7 +293,24 @@ namespace GreedyKid
             MouseState mouseState = Mouse.GetState();
             KeyboardState keyboardState = Keyboard.GetState();
 
-            // inputs
+            if (keyboardState.IsKeyDown(Keys.Enter) && _previousKeyboardState.IsKeyUp(Keys.Enter))
+                manager.PushSelect();
+            else if (keyboardState.IsKeyDown(Keys.Escape) && _previousKeyboardState.IsKeyUp(Keys.Escape))
+                manager.PushBack();
+
+            if (keyboardState.IsKeyDown(Keys.Up) && _previousKeyboardState.IsKeyUp(Keys.Up) ||
+                UpKey.IsPressed(mouseState, keyboardState) && UpKey.IsReleased(_previousMouseState, _previousKeyboardState))
+                manager.PushUp();
+            else if (keyboardState.IsKeyDown(Keys.Down) && _previousKeyboardState.IsKeyUp(Keys.Down) ||
+                DownKey.IsPressed(mouseState, keyboardState) && DownKey.IsReleased(_previousMouseState, _previousKeyboardState))
+                manager.PushDown();
+
+            if (keyboardState.IsKeyDown(Keys.Left) && _previousKeyboardState.IsKeyUp(Keys.Left) ||
+                LeftKey.IsPressed(mouseState, keyboardState) && LeftKey.IsReleased(_previousMouseState, _previousKeyboardState))
+                manager.PushRight();
+            else if (keyboardState.IsKeyDown(Keys.Right) && _previousKeyboardState.IsKeyUp(Keys.Right) ||
+                RightKey.IsPressed(mouseState, keyboardState) && RightKey.IsReleased(_previousMouseState, _previousKeyboardState))
+                manager.PushLeft();
 
             _previousKeyboardState = keyboardState;
             _previousMouseState = mouseState;
@@ -304,7 +321,62 @@ namespace GreedyKid
             MouseState mouseState = Mouse.GetState();
             KeyboardState keyboardState = Keyboard.GetState();
 
-            // inputs
+            if (manager.Player != null && !manager.Pause)
+            {
+                // moving
+                if (LeftKey.IsPressed(mouseState, keyboardState))
+                    manager.Player.MoveLeft();
+                else if (RightKey.IsPressed(mouseState, keyboardState))
+                    manager.Player.MoveRight();
+
+                // rolling
+                if (RollKey.IsPressed(mouseState, keyboardState) && RollKey.IsReleased(_previousMouseState, _previousKeyboardState))
+                    manager.Player.Roll();
+
+                // action
+                if (ActionKey.IsPressed(mouseState, keyboardState) && ActionKey.IsReleased(_previousMouseState, _previousKeyboardState))
+                    manager.Player.Action();
+
+                // shouting
+                if (ShoutKey.IsPressed(mouseState, keyboardState))
+                    manager.Player.Shout();
+
+                // taunting
+                if (TauntKey.IsPressed(mouseState, keyboardState))
+                    manager.Player.Taunt();
+
+                // pause
+                if (keyboardState.IsKeyDown(Keys.Escape) && _previousKeyboardState.IsKeyUp(Keys.Escape))
+                    manager.RequestPause();
+            }
+            else if (manager.Player != null && manager.Pause)
+            {
+                if (ActionKey.IsPressed(mouseState, keyboardState) && ActionKey.IsReleased(_previousMouseState, _previousKeyboardState))
+                    manager.PauseSelect();
+                else if (keyboardState.IsKeyDown(Keys.Escape) && _previousKeyboardState.IsKeyUp(Keys.Escape))
+                    manager.PauseCancel();
+
+                if (keyboardState.IsKeyDown(Keys.Up) && _previousKeyboardState.IsKeyUp(Keys.Up) ||
+                    UpKey.IsPressed(mouseState, keyboardState) && UpKey.IsReleased(_previousMouseState, _previousKeyboardState))
+                    manager.PauseUp();
+                else if (keyboardState.IsKeyDown(Keys.Down) && _previousKeyboardState.IsKeyUp(Keys.Down) ||
+                    DownKey.IsPressed(mouseState, keyboardState) && DownKey.IsReleased(_previousMouseState, _previousKeyboardState))
+                    manager.PauseDown();
+
+                if (keyboardState.IsKeyDown(Keys.Left) && _previousKeyboardState.IsKeyUp(Keys.Left) ||
+                    LeftKey.IsPressed(mouseState, keyboardState) && LeftKey.IsReleased(_previousMouseState, _previousKeyboardState))
+                    manager.PauseRight();
+                else if (keyboardState.IsKeyDown(Keys.Right) && _previousKeyboardState.IsKeyUp(Keys.Right) ||
+                    RightKey.IsPressed(mouseState, keyboardState) && RightKey.IsReleased(_previousMouseState, _previousKeyboardState))
+                    manager.PauseLeft();
+            }
+            else
+            {
+                // go
+                if (ActionKey.IsPressed(mouseState, keyboardState) && ActionKey.IsReleased(_previousMouseState, _previousKeyboardState) ||
+                    keyboardState.IsKeyDown(Keys.Enter) && _previousKeyboardState.IsKeyUp(Keys.Enter))
+                    manager.DisappearTransition();
+            }
 
             _previousKeyboardState = keyboardState;
             _previousMouseState = mouseState;
@@ -378,6 +450,12 @@ namespace GreedyKid
             _previousRebindMouseState = mouseState;
 
             return keyDetected;
+        }
+
+        public void ClearKeyPress()
+        {
+            _previousRebindKeyboardState = Keyboard.GetState();
+            _previousRebindMouseState = Mouse.GetState();
         }
     }
 }

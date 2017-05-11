@@ -140,5 +140,10 @@ namespace GreedyKid
             type = MouseKeyboardInputsHandler.MappingType.Keyboard;
             return false;
         }
+
+        public void ClearKeyPress()
+        {
+
+        }
     }
 }
