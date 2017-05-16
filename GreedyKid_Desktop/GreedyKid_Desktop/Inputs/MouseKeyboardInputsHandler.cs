@@ -307,10 +307,10 @@ namespace GreedyKid
 
             if (keyboardState.IsKeyDown(Keys.Left) && _previousKeyboardState.IsKeyUp(Keys.Left) ||
                 LeftKey.IsPressed(mouseState, keyboardState) && LeftKey.IsReleased(_previousMouseState, _previousKeyboardState))
-                manager.PushRight();
+                manager.PushLeft();
             else if (keyboardState.IsKeyDown(Keys.Right) && _previousKeyboardState.IsKeyUp(Keys.Right) ||
                 RightKey.IsPressed(mouseState, keyboardState) && RightKey.IsReleased(_previousMouseState, _previousKeyboardState))
-                manager.PushLeft();
+                manager.PushRight();
 
             _previousKeyboardState = keyboardState;
             _previousMouseState = mouseState;
@@ -365,10 +365,10 @@ namespace GreedyKid
 
                 if (keyboardState.IsKeyDown(Keys.Left) && _previousKeyboardState.IsKeyUp(Keys.Left) ||
                     LeftKey.IsPressed(mouseState, keyboardState) && LeftKey.IsReleased(_previousMouseState, _previousKeyboardState))
-                    manager.PauseRight();
+                    manager.PauseLeft();
                 else if (keyboardState.IsKeyDown(Keys.Right) && _previousKeyboardState.IsKeyUp(Keys.Right) ||
                     RightKey.IsPressed(mouseState, keyboardState) && RightKey.IsReleased(_previousMouseState, _previousKeyboardState))
-                    manager.PauseLeft();
+                    manager.PauseRight();
             }
             else
             {

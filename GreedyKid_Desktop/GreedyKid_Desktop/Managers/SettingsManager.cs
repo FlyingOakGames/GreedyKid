@@ -359,6 +359,10 @@ namespace GreedyKid
                 _isRemapping = true;
                 _selectionOption = 0;
             }
+            else if (!_isRemapping && (_selectionOption == 1 || _selectionOption == 2))
+            {
+                GreedyKidGame.ShouldApplyChanges = true;
+            }
             else if (_isRemapping)
             {
                 if (_selectionOption == 8)
@@ -368,6 +372,7 @@ namespace GreedyKid
                 else
                 {
                     _waitingForInput = true;
+                    InputManager.PlayerDevice.ClearKeyPress();
                 }
             }
         }
