@@ -111,10 +111,10 @@ namespace GreedyKid
             _frameDuration[(int)EntityState.Rolling] = 0.1f;
 
             // shouting
-            _frames[(int)EntityState.Shouting] = new Rectangle[5];
+            _frames[(int)EntityState.Shouting] = new Rectangle[4];
             for (int f = 0; f < _frames[(int)EntityState.Shouting].Length; f++)
             {
-                _frames[(int)EntityState.Shouting][f] = new Rectangle(f * 32 + 19 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine, 32, 32);
+                _frames[(int)EntityState.Shouting][f] = new Rectangle(f * 32 + 20 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine, 32, 32);
             }
             _frameDuration[(int)EntityState.Shouting] = 0.05f;
 

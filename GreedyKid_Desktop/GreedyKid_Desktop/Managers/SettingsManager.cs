@@ -144,6 +144,7 @@ namespace GreedyKid
                         break;
 
                     case "Microphone":
+                        SelectedMicrophone = -1;
                         for (int i = 0; i < Microsoft.Xna.Framework.Audio.Microphone.All.Count; i++)
                         {
                             if (elem[1] == Microsoft.Xna.Framework.Audio.Microphone.All[i].Name)
