@@ -17,11 +17,21 @@ namespace GreedyKid
         private Rectangle _scoreDestination;
         private Rectangle _titleDestination;
 
+        private Rectangle _1x1;
+
         private int _backgroundFrame = 0;
         private int _oakFrame = 0;
         private float _currentFrameTime = 0.0f;
         private const float _frameTime = 0.067f;
         private int _scoreFrame = -1;
+
+        private const float _timeBeforeRendering = 1.0f;
+        private float _currentTimeBeforeRendering = 0.0f;
+        private float _fadeInTime = 0.0f;
+        private const float _fadeTime = 0.35f;
+        private const float _maxSplashTime = 3.5f;
+        private float _currentSplashTime = 0.0f;
+        private float _fadeOutTime = -1.0f;
 
         public SplashScreenManager()
         {
@@ -81,13 +91,42 @@ namespace GreedyKid
                 _backgroundRectangles[0].Width * 2,
                 _backgroundRectangles[0].Height * 2
                 );
+
+            _1x1 = new Rectangle(215, 22, 1, 1);
         }
 
         public void Update(float gameTime)
         {
-            if (InputManager.CheckKeypress())
-                SkipToTitle = true;
+            if (_currentTimeBeforeRendering < _timeBeforeRendering)
+            {
+                _currentTimeBeforeRendering += gameTime;
+                return;
+            }
 
+            _currentSplashTime += gameTime;
+
+            // fade in/out
+            if (_fadeInTime < _fadeTime)
+            {
+                _fadeInTime += gameTime;
+            }
+            if (_fadeOutTime >= 0.0f)
+            {
+                _fadeOutTime -= gameTime;
+
+                if (_fadeOutTime < 0.0f)
+                {
+                    _fadeOutTime = 0.0f; // force one full frame                    
+                }
+            }
+
+            // skip
+            if ((InputManager.CheckKeypress() || _currentSplashTime >= _maxSplashTime) && _fadeOutTime < 0.0f && SkipToTitle == false)
+            {
+                _fadeOutTime = _fadeTime;
+            }
+
+            // animation
             _currentFrameTime += gameTime;
             if (_currentFrameTime > _frameTime)
             {
@@ -115,6 +154,11 @@ namespace GreedyKid
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            if (_currentTimeBeforeRendering < _timeBeforeRendering)
+            {
+                return;
+            }
+
             spriteBatch.Begin(samplerState: SamplerState.PointWrap);
 
             Texture2D texture = TextureManager.Splash;
@@ -139,6 +183,30 @@ namespace GreedyKid
                 _titleDestination,
                 _titleRectangle,
                 Color.White);
+
+            // fade in
+            if (_fadeInTime < _fadeTime)
+            {
+                float amount = 1.0f - _fadeInTime / _fadeTime;
+
+                spriteBatch.Draw(texture,
+                    new Rectangle(0, 0, GreedyKidGame.Width, GreedyKidGame.Height),
+                    _1x1,
+                    Color.White * amount);
+            }
+            // fade out
+            if (_fadeOutTime >= 0.0f)
+            {
+                float amount = 1.0f - _fadeOutTime / _fadeTime;
+
+                spriteBatch.Draw(texture,
+                    new Rectangle(0, 0, GreedyKidGame.Width, GreedyKidGame.Height),
+                    _1x1,
+                    Color.White * amount);
+
+                if (_fadeOutTime == 0.0f)
+                    SkipToTitle = true;
+            }
 
             spriteBatch.End();
         }
