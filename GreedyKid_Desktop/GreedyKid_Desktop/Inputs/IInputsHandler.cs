@@ -1,4 +1,6 @@
-﻿namespace GreedyKid
+﻿using Microsoft.Xna.Framework.Graphics;
+
+namespace GreedyKid
 {
     public enum InputsHandlerTypes
     {
@@ -21,5 +23,7 @@
         bool DetectKeyPress(out Microsoft.Xna.Framework.Input.Keys key, out MouseKeyboardInputsHandler.MouseButton mouseButton, out MouseKeyboardInputsHandler.MappingType type);
 
         void ClearKeyPress();
+
+        void Draw(SpriteBatch spriteBatch);
     }
 }

@@ -263,7 +263,10 @@ namespace GreedyKid
             if (_state != TitleScreenState.Title && _state != TitleScreenState.Main)
             {
                 UIHelper.Instance.DrawCommand(spriteBatch, TextManager.Instance.Back, CommandType.Back, true);
-            }            
+            }
+
+            if (InputManager.PlayerDevice != null)
+                InputManager.PlayerDevice.Draw(spriteBatch);
 
             spriteBatch.End();
         }

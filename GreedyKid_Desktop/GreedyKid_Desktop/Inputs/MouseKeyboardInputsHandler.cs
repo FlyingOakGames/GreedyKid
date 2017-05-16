@@ -1,5 +1,6 @@
 ﻿using Ionic.Zlib;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.IO;
@@ -165,6 +166,9 @@ namespace GreedyKid
         private const Keys _defaultShoutKey = Keys.Space;
         private const Keys _defaultRollKey = Keys.Q;
         private const Keys _defaultTauntKey = Keys.LeftShift;
+
+        private Rectangle _mouseRectangle = new Rectangle(85, 1921, 11, 11);
+        private Vector2 _mouseCenter = new Vector2(5.0f, 5.0f);
 
         public static void RestoreDefault()
         {
@@ -456,6 +460,24 @@ namespace GreedyKid
         {
             _previousRebindKeyboardState = Keyboard.GetState();
             _previousRebindMouseState = Mouse.GetState();
+        }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            Texture2D texture = TextureManager.Gameplay;
+
+            spriteBatch.Draw(texture,
+                new Rectangle(
+                    (int)((_previousMouseState.Position.X - GreedyKidGame.Viewport.X) * (GreedyKidGame.Width / (float)GreedyKidGame.Viewport.Width)),
+                    (int)((_previousMouseState.Position.Y - GreedyKidGame.Viewport.Y) * (GreedyKidGame.Height / (float)GreedyKidGame.Viewport.Height)),
+                    _mouseRectangle.Width,
+                    _mouseRectangle.Height),
+                _mouseRectangle,
+                Color.White,
+                0.0f,
+                _mouseCenter,
+                SpriteEffects.None,
+                0.0f);
         }
     }
 }

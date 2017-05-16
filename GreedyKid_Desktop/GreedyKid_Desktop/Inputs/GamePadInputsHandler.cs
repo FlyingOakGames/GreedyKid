@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 
@@ -142,6 +143,11 @@ namespace GreedyKid
         }
 
         public void ClearKeyPress()
+        {
+
+        }
+
+        public void Draw(SpriteBatch spriteBatch)
         {
 
         }

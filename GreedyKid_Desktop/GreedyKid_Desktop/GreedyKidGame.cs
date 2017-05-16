@@ -38,7 +38,7 @@ namespace GreedyKid
         private GameplayManager _gameplayManager;
 
         // viewport handling
-        private Rectangle _destination = new Rectangle();
+        public static Rectangle Viewport = new Rectangle();
         private RenderTarget2D _renderTarget;
         private Color _fillColor = new Color(34, 32, 52);
 
@@ -286,25 +286,25 @@ namespace GreedyKid
             if (gameRatio > targetRatio)
             {
                 // black border width
-                _destination.Width = (int)(GraphicsDevice.Viewport.Bounds.Height * targetRatio);
-                _destination.Height = GraphicsDevice.Viewport.Bounds.Height;
-                _destination.X = (GraphicsDevice.Viewport.Bounds.Width - _destination.Width) / 2;
-                _destination.Y = 0;                
+                Viewport.Width = (int)(GraphicsDevice.Viewport.Bounds.Height * targetRatio);
+                Viewport.Height = GraphicsDevice.Viewport.Bounds.Height;
+                Viewport.X = (GraphicsDevice.Viewport.Bounds.Width - Viewport.Width) / 2;
+                Viewport.Y = 0;                
             }
             else if (gameRatio < targetRatio)
             {
                 // black border height
-                _destination.Width = GraphicsDevice.Viewport.Bounds.Width;
-                _destination.Height = (int)(GraphicsDevice.Viewport.Bounds.Width / targetRatio);
-                _destination.X = 0;
-                _destination.Y = (GraphicsDevice.Viewport.Bounds.Height - _destination.Height) / 2;
+                Viewport.Width = GraphicsDevice.Viewport.Bounds.Width;
+                Viewport.Height = (int)(GraphicsDevice.Viewport.Bounds.Width / targetRatio);
+                Viewport.X = 0;
+                Viewport.Y = (GraphicsDevice.Viewport.Bounds.Height - Viewport.Height) / 2;
             }
             else
             {
-                _destination = GraphicsDevice.Viewport.Bounds;
+                Viewport = GraphicsDevice.Viewport.Bounds;
             }
 
-            spriteBatch.Draw(_renderTarget, _destination, Color.White);
+            spriteBatch.Draw(_renderTarget, Viewport, Color.White);
 
             spriteBatch.End();
 

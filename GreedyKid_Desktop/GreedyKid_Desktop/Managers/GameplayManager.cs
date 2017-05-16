@@ -1824,6 +1824,9 @@ namespace GreedyKid
             {
                 UIHelper.Instance.DrawCommand(spriteBatch, TextManager.Instance.Select, CommandType.Select);
                 UIHelper.Instance.DrawCommand(spriteBatch, TextManager.Instance.Back, CommandType.Back, true);
+
+                if (InputManager.PlayerDevice != null)
+                    InputManager.PlayerDevice.Draw(spriteBatch);
             }
 
             // score

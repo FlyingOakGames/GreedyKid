@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace GreedyKid
 {
@@ -45,6 +46,12 @@ namespace GreedyKid
         public void ClearKeyPress()
         {
             _keyboardHandler.ClearKeyPress();
+        }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            _keyboardHandler.Draw(spriteBatch);
+            _gamepadHandler.Draw(spriteBatch);
         }
     }
 }
