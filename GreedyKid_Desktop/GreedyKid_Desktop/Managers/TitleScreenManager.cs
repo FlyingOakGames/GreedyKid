@@ -60,12 +60,52 @@ namespace GreedyKid
             }            
         }
 
-        public void PushStart()
+        public void UpdateMouseSelection(int x, int y)
         {
-            StartGame = true;
+            switch (_state)
+            {
+                case TitleScreenState.Title: break;
+                case TitleScreenState.Main:
+                    if (y >= 115 && y < 130)
+                    {
+                        _selectionOption = 0;
+                    }
+                    else if (y >= 130 && y < 145)
+                    {
+                        _selectionOption = 1;
+                    }
+                    else if (!Program.RunningOnConsole && y >= 145 && y < 160)
+                    {
+                        _selectionOption = 2;
+                    }
+                    break;
+                case TitleScreenState.Settings:
+                    SettingsManager.Instance.UpdateMouseSelection(x, y);
+                    break;
+                case TitleScreenState.Play:
+                    if (y >= 115 && y < 130)
+                    {
+                        _selectionOption = 0;
+                    }
+                    else if (y >= 130 && y < 145)
+                    {
+                        _selectionOption = 1;
+                    }
+                    else if (y >= 145 && y < 160)
+                    {
+                        _selectionOption = 2;
+                    }
+                    break;
+                case TitleScreenState.LevelSelection:
+                    // todo
+                    break;
+                case TitleScreenState.SteamWorkshop:
+                    // todo
+                    break;
+            }
         }
 
-        public void PushSelect()
+        public void PushSelect(bool fromMouse = false, int mouseX = 0)
         {
             switch (_state)
             {
@@ -81,14 +121,16 @@ namespace GreedyKid
                     else if (_selectionOption == 2)
                         GreedyKidGame.ShouldExit = true;
                     break;
-                case TitleScreenState.Settings: SettingsManager.Instance.PushSelect(); break;
+                case TitleScreenState.Settings:
+                    SettingsManager.Instance.PushSelect(fromMouse, mouseX);
+                    break;
                 case TitleScreenState.Play:
                     if (_selectionOption == 0)
                         _state = TitleScreenState.LevelSelection;
                     //else if (_selectionOption == 1)
                     //    _state = TitleScreenState.SteamWorkshop;
                     else if (_selectionOption == 2)
-                        PushBack();
+                        PushBack(fromMouse);
                     break;
                 case TitleScreenState.LevelSelection:
                     StartGame = true;
@@ -97,9 +139,12 @@ namespace GreedyKid
                     StartGame = true;
                     break;
             }
+
+            if (fromMouse)
+                MouseKeyboardInputsHandler.ShouldUpdateMouse = true;
         }
 
-        public void PushBack()
+        public void PushBack(bool fromMouse = false)
         {
             _selectionOption = 0;
 
@@ -108,7 +153,7 @@ namespace GreedyKid
                 case TitleScreenState.Title: break;
                 case TitleScreenState.Main: _state = TitleScreenState.Title; InputManager.PlayerDevice = null; break;
                 case TitleScreenState.Settings:
-                    if (!SettingsManager.Instance.PushCancel())
+                    if (!SettingsManager.Instance.PushCancel(fromMouse))
                     {
                         _selectionOption = 1;
                         _state = TitleScreenState.Main;
@@ -119,6 +164,9 @@ namespace GreedyKid
                 case TitleScreenState.LevelSelection: _state = TitleScreenState.Play; break;
                 case TitleScreenState.SteamWorkshop: _selectionOption = 1; _state = TitleScreenState.Play; break;
             }
+
+            if (fromMouse)
+                MouseKeyboardInputsHandler.ShouldUpdateMouse = true;
         }
 
         public void PushUp()

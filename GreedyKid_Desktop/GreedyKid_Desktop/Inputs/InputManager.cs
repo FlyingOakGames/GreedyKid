@@ -70,8 +70,9 @@ namespace GreedyKid
             }
 
             KeyboardState keyboardState = Keyboard.GetState();
+            MouseState mouseState = Mouse.GetState();
 
-            if (keyboardState.IsKeyDown(Keys.Enter))
+            if (keyboardState.IsKeyDown(Keys.Enter) || mouseState.LeftButton == ButtonState.Pressed)
             {
                 HasKeyboard = true;
 
@@ -110,8 +111,9 @@ namespace GreedyKid
             }
 
             KeyboardState keyboardState = Keyboard.GetState();
+            MouseState mouseState = Mouse.GetState();
 
-            if (!keypress && keyboardState.IsKeyDown(Keys.Enter))
+            if (!keypress && (keyboardState.IsKeyDown(Keys.Enter) || mouseState.LeftButton == ButtonState.Pressed))
             {
                 keypress = true;
             }

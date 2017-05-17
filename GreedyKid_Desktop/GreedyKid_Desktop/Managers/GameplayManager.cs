@@ -397,6 +397,33 @@ namespace GreedyKid
             GC.Collect();
         }
 
+        public void UpdateMouseSelection(int x, int y)
+        {
+            if (_inSettings)
+            {
+                SettingsManager.Instance.UpdateMouseSelection(x, y);
+            }
+            else
+            {
+                if (y >= 70 && y < 85)
+                {
+                    _pauseOption = 0;
+                }
+                else if (y >= 85 && y < 100)
+                {
+                    _pauseOption = 1;
+                }
+                else if (y >= 100 && y < 115)
+                {
+                    _pauseOption = 2;
+                }
+                else if (y >= 115 && y < 130)
+                {
+                    _pauseOption = 3;
+                }
+            }
+        }
+
         public void ResetLevel()
         {
             LoadLevel(SelectedLevel);
@@ -465,11 +492,11 @@ namespace GreedyKid
                 SettingsManager.Instance.PushRight();            
         }
 
-        public void PauseSelect()
+        public void PauseSelect(bool fromMouse = false, int mouseX = 0)
         {
             if (_inSettings)
             {
-                SettingsManager.Instance.PushSelect();
+                SettingsManager.Instance.PushSelect(fromMouse, mouseX);
             }
             else
             {
@@ -480,17 +507,23 @@ namespace GreedyKid
                     case 2: ResetLevel(); _pause = false; break;
                     case 3: ReturnToLevelSelection = true; break;
                 }
+
+                if (fromMouse)
+                    MouseKeyboardInputsHandler.ShouldUpdateMouse = true;
             }
         }
 
-        public void PauseCancel()
+        public void PauseCancel(bool fromMouse = false)
         {
             if (_inSettings)
             {
-                if (!SettingsManager.Instance.PushCancel())
+                if (!SettingsManager.Instance.PushCancel(fromMouse))
                 {
                     _inSettings = false;
                     SettingsManager.Instance.Save();
+
+                    if (fromMouse)
+                        MouseKeyboardInputsHandler.ShouldUpdateMouse = true;
                 }
             }
             else

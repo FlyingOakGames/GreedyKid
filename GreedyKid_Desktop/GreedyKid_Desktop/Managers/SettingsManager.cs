@@ -350,17 +350,104 @@ namespace GreedyKid
 #endif
         }
 
-        public void PushSelect()
+        public void UpdateMouseSelection(int x, int y)
+        {
+            if (_isRemapping)
+            {
+                if (y >= 23 && y < 23 + 15)
+                {
+                    _selectionOption = 0;
+                }
+                else if (y >= 23 + 15 && y < 23 + 30)
+                {
+                    _selectionOption = 1;
+                }
+                else if (y >= 23 + 30 && y < 23 + 45)
+                {
+                    _selectionOption = 2;
+                }
+                else if (y >= 23 + 45 && y < 23 + 60)
+                {
+                    _selectionOption = 3;
+                }
+                else if (y >= 23 + 60 && y < 23 + 75)
+                {
+                    _selectionOption = 4;
+                }
+                else if (y >= 23 + 75 && y < 23 + 90)
+                {
+                    _selectionOption = 5;
+                }
+                else if (y >= 23 + 90 && y < 23 + 105)
+                {
+                    _selectionOption = 6;
+                }
+                else if (y >= 23 + 105 && y < 23 + 120)
+                {
+                    _selectionOption = 7;
+                }
+                else if (y >= 23 + 120 && y < 23 + 135)
+                {
+                    _selectionOption = 8;
+                }
+            }
+            else
+            {
+                if (y >= 23 && y < 23 + 15)
+                {
+                    _selectionOption = 0;
+                }
+                else if (y >= 23 + 15 && y < 23 + 30)
+                {
+                    _selectionOption = 1;
+                }
+                else if (y >= 23 + 30 && y < 23 + 45)
+                {
+                    _selectionOption = 2;
+                }
+                else if (y >= 23 + 30 + 24 && y < 23 + 30 + 24 + 15)
+                {
+                    _selectionOption = 3;
+                }
+                else if (y >= 23 + 30 + 24 + 15 && y < 23 + 30 + 24 + 30)
+                {
+                    _selectionOption = 4;
+                }
+                else if (y >= 23 + 30 + 24 + 30 && y < 23 + 30 + 24 + 45)
+                {
+                    _selectionOption = 5;
+                }
+                else if (y >= 23 + 30 + 24 + 30 + 24 && y < 23 + 30 + 24 + 30 + 24 + 15)
+                {
+                    _selectionOption = 6;
+                }
+                else if (y >= 23 + 30 + 24 + 30 + 24 + 15 && y < 23 + 30 + 24 + 30 + 24 + 30)
+                {
+                    _selectionOption = 7;
+                }
+            }
+        }
+
+        public void PushSelect(bool fromMouse, int mouseX)
         {
             if (_waitingForInput)
                 return;
 
-            if (!_isRemapping && _selectionOption == 4)
+            if (!_isRemapping && fromMouse && _selectionOption != 4)
+            {
+                if (mouseX > 285)
+                    PushRight();
+                else
+                    PushLeft();
+            }
+            else if (!_isRemapping && _selectionOption == 4)
             {
                 _isRemapping = true;
                 _selectionOption = 0;
+                if (fromMouse)
+                    MouseKeyboardInputsHandler.ShouldUpdateMouse = true;
             }
-            else if (!_isRemapping && (_selectionOption == 1 || _selectionOption == 2))
+            else if (!_isRemapping && !fromMouse && (_selectionOption == 1 || _selectionOption == 2))
             {
                 GreedyKidGame.ShouldApplyChanges = true;
             }
@@ -378,7 +465,7 @@ namespace GreedyKid
             }
         }
 
-        public bool PushCancel()
+        public bool PushCancel(bool fromMouse)
         {
             if (_waitingForInput)
                 return false;
@@ -389,6 +476,8 @@ namespace GreedyKid
                 _selectionOption = 4;
                 _waitingForInput = false;
                 MouseKeyboardInputsHandler.SaveMapping();
+                if (fromMouse)
+                    MouseKeyboardInputsHandler.ShouldUpdateMouse = true;
                 return true;
             }
             return false;
