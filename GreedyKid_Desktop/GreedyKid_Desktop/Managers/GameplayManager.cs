@@ -544,6 +544,7 @@ namespace GreedyKid
 
             if (_pause)
             {
+                InputManager.PlayerDevice.Update(gameTime);
                 if (_inSettings)
                     SettingsManager.Instance.Update(gameTime);
                 return;

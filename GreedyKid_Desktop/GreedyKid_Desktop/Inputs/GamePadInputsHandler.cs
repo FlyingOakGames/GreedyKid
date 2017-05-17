@@ -147,6 +147,11 @@ namespace GreedyKid
 
         }
 
+        public void Update(float gameTime)
+        {
+
+        }
+
         public void Draw(SpriteBatch spriteBatch)
         {
 

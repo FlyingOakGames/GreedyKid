@@ -48,6 +48,11 @@ namespace GreedyKid
             _keyboardHandler.ClearKeyPress();
         }
 
+        public void Update(float gameTime)
+        {
+            _keyboardHandler.Update(gameTime);
+        }
+
         public void Draw(SpriteBatch spriteBatch)
         {
             _keyboardHandler.Draw(spriteBatch);

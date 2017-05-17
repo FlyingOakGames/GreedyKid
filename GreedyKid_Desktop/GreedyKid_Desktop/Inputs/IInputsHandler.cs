@@ -24,6 +24,8 @@ namespace GreedyKid
 
         void ClearKeyPress();
 
+        void Update(float gameTime);
+
         void Draw(SpriteBatch spriteBatch);
     }
 }

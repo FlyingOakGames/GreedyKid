@@ -318,11 +318,18 @@ namespace GreedyKid
 
         public static bool ShouldUpdateMouse = false;
 
-        private Rectangle _mouseRectangle = new Rectangle(85, 1921, 11, 11);
-        private Vector2 _mouseCenter = new Vector2(5.0f, 5.0f);
+        private Rectangle[] _mouseRectangle;
+        private Vector2 _mouseCenter = new Vector2(6.0f, 6.0f);
+        private int _mouseCursorFrame = 0;
+        private float _currentMouseTime = 0.0f;
+        private const float _mouseFrameTime = 0.1f;
 
         public MouseKeyboardInputsHandler(PlayerIndex playerIndex)
         {
+            _mouseRectangle = new Rectangle[4];
+            for (int i = 0; i < _mouseRectangle.Length; i++)
+                _mouseRectangle[i] = new Rectangle(85 + 14 * i, 1920, 13, 13);
+
             _playerIndex = playerIndex;
             _previousMouseState = Mouse.GetState();
             _previousKeyboardState = Keyboard.GetState();
@@ -496,6 +503,17 @@ namespace GreedyKid
             _previousMouseState = mouseState;
         }        
 
+        public void Update(float gameTime)
+        {
+            _currentMouseTime += gameTime;
+            if (_currentMouseTime >= _mouseFrameTime)
+            {
+                _currentMouseTime -= _mouseFrameTime;
+                _mouseCursorFrame++;
+                _mouseCursorFrame %= _mouseRectangle.Length;
+            }
+        }
+
         public void Draw(SpriteBatch spriteBatch)
         {
             Texture2D texture = TextureManager.Gameplay;
@@ -504,9 +522,9 @@ namespace GreedyKid
                 new Rectangle(
                     (int)((_previousMouseState.Position.X - GreedyKidGame.Viewport.X) * (GreedyKidGame.Width / (float)GreedyKidGame.Viewport.Width)),
                     (int)((_previousMouseState.Position.Y - GreedyKidGame.Viewport.Y) * (GreedyKidGame.Height / (float)GreedyKidGame.Viewport.Height)),
-                    _mouseRectangle.Width,
-                    _mouseRectangle.Height),
-                _mouseRectangle,
+                    _mouseRectangle[0].Width,
+                    _mouseRectangle[0].Height),
+                _mouseRectangle[_mouseCursorFrame],
                 Color.White,
                 0.0f,
                 _mouseCenter,

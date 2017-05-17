@@ -51,8 +51,10 @@ namespace GreedyKid
                 _state = TitleScreenState.Main;
             }
             else if (InputManager.PlayerDevice != null && _state != TitleScreenState.Title)
-            {                
+            {
+                InputManager.PlayerDevice.Update(gameTime);
                 InputManager.PlayerDevice.HandleTitleInputs(this);
+                
                 if (_state == TitleScreenState.Settings)
                 {
                     SettingsManager.Instance.Update(gameTime);
