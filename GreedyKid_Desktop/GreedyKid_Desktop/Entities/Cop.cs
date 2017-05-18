@@ -909,7 +909,7 @@ namespace GreedyKid
             _hasJustTurned = false;
 
             _wantsToOpenDoor = false;
-            if (!_isAngry && RandomHelper.Next() <= 0.25f)
+            if (!_isAngry && RandomHelper.Next() <= 0.25f && Type < NormalCopCount + SwatCopCount)
             {
                 _wantsToOpenDoor = true;
             }
@@ -933,7 +933,7 @@ namespace GreedyKid
             _hasJustTurned = false;
 
             _wantsToOpenDoor = false;
-            if (RandomHelper.Next() <= 0.25f)
+            if (RandomHelper.Next() <= 0.25f && Type < NormalCopCount + SwatCopCount)
             {
                 _wantsToOpenDoor = true;
             }
