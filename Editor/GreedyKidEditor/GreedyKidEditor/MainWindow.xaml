@@ -77,7 +77,7 @@
                     </Button.RenderTransform>
                 </Button>
 
-                <GroupBox x:Name="groupBox_Copy8" Header="Cops spwan" Margin="10,0,10,122" VerticalAlignment="Bottom" Height="137" FontWeight="Bold">
+                <GroupBox x:Name="groupBox_Copy8" Header="Cops spwan" Margin="10,0,10,234" VerticalAlignment="Bottom" Height="137" FontWeight="Bold">
                     <Grid>
                         <Slider x:Name="timeBeforeCopSlider" Margin="10,36,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="123" Maximum="239" SmallChange="1" ValueChanged="timeBeforeCopSlider_ValueChanged"/>
                         <Label x:Name="label1" Content="Spawn time (sec)" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" FontWeight="Normal"/>
@@ -109,11 +109,11 @@
                             <RepeatButton Name="cop2ButtonUP"  Grid.Column="1" Grid.Row="0" FontSize="8" FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="cop2ButtonUP_Click">5</RepeatButton>
                             <RepeatButton Name="cop2ButtonDown"  Grid.Column="1" Grid.Row="1" FontSize="8"  FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="13" VerticalAlignment="Bottom" Click="cop2ButtonDown_Click">6</RepeatButton>
                         </Grid>
-                        <Label x:Name="label1_Copy" Content="Cop (tonfa)" HorizontalAlignment="Left" Margin="10,56,0,0" VerticalAlignment="Top" FontWeight="Normal"/>
-                        <Label x:Name="label1_Copy1" Content="Cop (taser)" HorizontalAlignment="Left" Margin="10,87,0,0" VerticalAlignment="Top" FontWeight="Normal"/>
+                        <Label x:Name="label1_Copy" Content="Cops (tonfa)" HorizontalAlignment="Left" Margin="10,56,0,0" VerticalAlignment="Top" FontWeight="Normal"/>
+                        <Label x:Name="label1_Copy1" Content="Cops (taser)" HorizontalAlignment="Left" Margin="10,87,0,0" VerticalAlignment="Top" FontWeight="Normal"/>
                     </Grid>
                 </GroupBox>
-                <GroupBox x:Name="groupBox_Copy9" Header="SWAT spwan" Margin="10,0,10,10" VerticalAlignment="Bottom" Height="107" FontWeight="Bold">
+                <GroupBox x:Name="groupBox_Copy9" Header="Tactical Cops spwan" Margin="10,0,10,122" VerticalAlignment="Bottom" Height="107" FontWeight="Bold">
                     <Grid>
                         <Slider x:Name="timeBeforeSwatSlider" Margin="10,36,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="123" Maximum="239" SmallChange="1" ValueChanged="timeBeforeSwatSlider_ValueChanged"/>
                         <Label x:Name="label2" Content="Spawn time (sec)" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" FontWeight="Normal"/>
@@ -132,10 +132,32 @@
                             <RepeatButton Name="swat1ButtonUP"  Grid.Column="1" Grid.Row="0" FontSize="8" FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="swat1ButtonUP_Click" Height="13" VerticalAlignment="Top">5</RepeatButton>
                             <RepeatButton Name="swat1ButtonDown"  Grid.Column="1" Grid.Row="1" FontSize="8"  FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="13" VerticalAlignment="Bottom" Click="swat1ButtonDown_Click">6</RepeatButton>
                         </Grid>
-                        <Label x:Name="label1_Copy2" Content="SWAT" HorizontalAlignment="Left" Margin="10,56,0,0" VerticalAlignment="Top" FontWeight="Normal"/>
+                        <Label x:Name="label1_Copy2" Content="Tactical cops" HorizontalAlignment="Left" Margin="10,56,0,0" VerticalAlignment="Top" FontWeight="Normal"/>
                     </Grid>
                 </GroupBox>
-                <ListBox x:Name="levelListBox" Margin="10,103,10,264" SelectionChanged="levelListBox_SelectionChanged"/>
+                <GroupBox x:Name="groupBox_Copy10" Header="Robot-Cop spwan" Margin="10,0,10,10" VerticalAlignment="Bottom" Height="107" FontWeight="Bold">
+                    <Grid>
+                        <Slider x:Name="timeBeforeRobocopSlider" Margin="10,36,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="123" Maximum="239" SmallChange="1" ValueChanged="timeBeforeRobocopSlider_ValueChanged"/>
+                        <Label x:Name="label3" Content="Spawn time (sec)" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" FontWeight="Normal"/>
+                        <Label x:Name="timeBeforeRobocopLabel" Content="0" HorizontalAlignment="Left" Margin="115,10,0,0" VerticalAlignment="Top" FontWeight="Normal" Width="30"/>
+
+                        <Grid Width="40" Height="26" Margin="91,56,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="13" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="13" />
+                                <RowDefinition Height="13" />
+                            </Grid.RowDefinitions>
+                            <TextBox Name="robocopTextBox"  Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" TextAlignment="Right" Text="0" IsEnabled="False" />
+                            <RepeatButton Name="robocopButtonUP"  Grid.Column="1" Grid.Row="0" FontSize="8" FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="robocopButtonUP_Click" Height="13" VerticalAlignment="Top">5</RepeatButton>
+                            <RepeatButton Name="robocopButtonDown"  Grid.Column="1" Grid.Row="1" FontSize="8"  FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="13" VerticalAlignment="Bottom" Click="robocopButtonDown_Click">6</RepeatButton>
+                        </Grid>
+                        <Label x:Name="label1_Copy3" Content="Robot-Cop" HorizontalAlignment="Left" Margin="10,56,0,0" VerticalAlignment="Top" FontWeight="Normal"/>
+                    </Grid>
+                </GroupBox>
+                <ListBox x:Name="levelListBox" Margin="10,103,10,376" SelectionChanged="levelListBox_SelectionChanged"/>
                 <Label x:Name="label_Copy" Content="Building name:" Margin="10,0,0,0" VerticalAlignment="Top" FontWeight="Bold" HorizontalAlignment="Left" Width="97"/>
                 <Label x:Name="buildingLabel" Content="Label" HorizontalAlignment="Left" Margin="10,26,0,0" VerticalAlignment="Top" Width="155"/>
                 <Button x:Name="renameBuildingButton" Content="Rename" HorizontalAlignment="Left" Margin="111,6,0,0" VerticalAlignment="Top"  Width="54" Height="20" Click="renameBuildingButton_Click"/>

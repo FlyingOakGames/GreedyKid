@@ -41,6 +41,9 @@ namespace GreedyKid
             TimeBeforeSwat = reader.ReadInt32();
             Swat1Count = reader.ReadInt32();
 
+            TimeBeforeRobocop = reader.ReadInt32();
+            RobocopCount = reader.ReadInt32();
+
             ConnectSisterDoors();
 
             // upper/lower floors for room

@@ -814,6 +814,9 @@ namespace GreedyKidEditor
                 timeBeforeSwatSlider.Value = _building.Levels[levelListBox.SelectedIndex].TimeBeforeSwat;
                 swat1TextBox.Text = _building.Levels[levelListBox.SelectedIndex].Swat1Count.ToString();
 
+                timeBeforeRobocopSlider.Value = _building.Levels[levelListBox.SelectedIndex].TimeBeforeRobocop;
+                robocopTextBox.Text = _building.Levels[levelListBox.SelectedIndex].RobocopCount.ToString();
+
                 if (renderer != null)
                     renderer.ResetCamera();
             }
@@ -911,6 +914,40 @@ namespace GreedyKidEditor
                 level.Swat1Count--;
                 level.Swat1Count = Math.Max(level.Swat1Count, 0);
                 swat1TextBox.Text = level.Swat1Count.ToString();
+            }
+        }
+
+        private void timeBeforeRobocopSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (PreviewRenderer.SelectedLevel >= 0 && PreviewRenderer.SelectedLevel < _building.Levels.Count)
+            {
+                Level level = _building.Levels[PreviewRenderer.SelectedLevel];
+
+                level.TimeBeforeRobocop = (int)timeBeforeRobocopSlider.Value;
+                timeBeforeRobocopLabel.Content = level.TimeBeforeRobocop.ToString();
+            }
+        }
+
+        private void robocopButtonUP_Click(object sender, RoutedEventArgs e)
+        {
+            if (PreviewRenderer.SelectedLevel >= 0 && PreviewRenderer.SelectedLevel < _building.Levels.Count)
+            {
+                Level level = _building.Levels[PreviewRenderer.SelectedLevel];
+
+                level.RobocopCount++;
+                robocopTextBox.Text = level.RobocopCount.ToString();
+            }
+        }
+
+        private void robocopButtonDown_Click(object sender, RoutedEventArgs e)
+        {
+            if (PreviewRenderer.SelectedLevel >= 0 && PreviewRenderer.SelectedLevel < _building.Levels.Count)
+            {
+                Level level = _building.Levels[PreviewRenderer.SelectedLevel];
+
+                level.RobocopCount--;
+                level.RobocopCount = Math.Max(level.RobocopCount, 0);
+                robocopTextBox.Text = level.RobocopCount.ToString();
             }
         }
     }

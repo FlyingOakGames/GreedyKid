@@ -4,7 +4,7 @@ namespace GreedyKidEditor
 {
     public sealed class Cop : IMovable
     {
-        public const int CopCount = 3;
+        public const int CopCount = 4;
 
         public int Type = 0;
         public int X = 0;
