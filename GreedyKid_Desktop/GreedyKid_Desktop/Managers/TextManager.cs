@@ -1,8 +1,4 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace GreedyKid
 {
@@ -96,7 +92,40 @@ namespace GreedyKid
                     _language = Language.Count - 1;
                 else if (_language < 0)
                     _language = Language.EN;
+                if (_language == Language.RU && !_transposedCyrillic)
+                    LoadCyrillic();
             }
+        }
+
+        private bool _transposedCyrillic = false;
+
+        private string ConvertToGame(string text)
+        {
+            // force uppercase
+            text = text.ToUpperInvariant();
+            // transpose cyrillic to decidated font table space
+            text = TransposeCyrillic(text);
+            // remove anything that isn't in the font table [32-255]
+            text = System.Text.RegularExpressions.Regex.Replace(text, @"[^\u0020-\u00FF]", string.Empty);
+
+            return text.Trim(' ');
+        }
+
+        private string TransposeCyrillic(string text)
+        {
+            System.Text.StringBuilder output = new System.Text.StringBuilder(text.Length);
+
+            for (int i = 0; i < text.Length; i++)
+            {
+                if (text[i] == 'Ё')
+                    output.Append('Ë');
+                else if (text[i] >= 'А' && text[i] <= 'Я')
+                    output.Append((char)(text[i] - 912));
+                else
+                    output.Append(text[i]);
+            }
+
+            return output.ToString();
         }
 
         // *********************** MAIN SCREEN ***********************
@@ -128,7 +157,7 @@ namespace GreedyKid
         private string[] _campaign = new string[] { "MAIN CAMPAIGN", "CAMPAGNE PRINCIPALE", "SPIELEN", "ИГРАТЬ", "JUGAR", "JOGAR", "GIOCA" };
         public string Campaign { get { return _campaign[(int)_language]; } }
 
-        private string[] _workshop = new string[] { "STEAM WORKSHOP", "WORKSHOP STEAM", "SPIELEN", "ИГРАТЬ", "JUGAR", "JOGAR", "GIOCA" };
+        private string[] _workshop = new string[] { "STEAM WORKSHOP", "WORKSHOP STEAM", "STEAM WORKSHOP", "STEAM WORKSHOP", "STEAM WORKSHOP", "STEAM WORKSHOP", "STEAM WORKSHOP" };
         public string Workshop { get { return _workshop[(int)_language]; } }        
 
         // *********************** SETTINGS SCREEN ***********************
@@ -158,7 +187,7 @@ namespace GreedyKid
         public string Keyboard { get { return _keyboard[(int)_language]; } }
         private string[] _remap = new string[] { "CHANGE MAPPING", "PERSONALISER", "BELEGUNG ÄNDERN", "ИЗМЕНИТЬ НАЗНАЧЕНИЯ", "PERSONALIZAR", "PERSONALIZAR", "CAMBIA MAPPA" };
         public string Remap { get { return _remap[(int)_language]; } }
-        private string[] _microphone = new string[] { "MICROPHONE", "MICROPHONE", "BELEGUNG ÄNDERN", "ИЗМЕНИТЬ НАЗНАЧЕНИЯ", "PERSONALIZAR", "PERSONALIZAR", "CAMBIA MAPPA" };
+        private string[] _microphone = new string[] { "MICROPHONE", "MICROPHONE", "MICROPHONE", "MICROPHONE", "MICROPHONE", "MICROPHONE", "MICROPHONE" };
         public string Microphone { get { return _microphone[(int)_language]; } }
 
         private string[] _music = new string[] { "MUSIC VOLUME", "VOLUME DES MUSIQUES", "MUSIKLAUTSTÄRKE", "ГРОМКОСТЬ МУЗЫКИ", "VOLUMEN DE MÚSICA", "VOLUME DA MÚSICA", "VOLUME MUSICA" };
@@ -179,13 +208,13 @@ namespace GreedyKid
         private string[] _right = new string[] { "RIGHT", "DROITE", "RECHTS", "ВПРАВО", "DERECHA", "DIREITA", "DESTRA" };
         public string Right { get { return _right[(int)_language]; } }
 
-        private string[] _shout = new string[] { "SHOUT", "CRIER", "HOCH", "ВВЕРХ", "ARRIBA", "PARA CIMA", "SU" };
+        private string[] _shout = new string[] { "SHOUT", "CRIER", "SHOUT", "SHOUT", "SHOUT", "SHOUT", "SHOUT" };
         public string Shout { get { return _shout[(int)_language]; } }
-        private string[] _interact = new string[] { "INTERACT", "INTERAGIR", "RUNTER", "ВНИЗ", "ABAJO", "PARA BAIXO", "GIÙ" };
+        private string[] _interact = new string[] { "INTERACT", "INTERAGIR", "INTERACT", "INTERACT", "INTERACT", "INTERACT", "INTERACT" };
         public string Interact { get { return _interact[(int)_language]; } }
-        private string[] _roll = new string[] { "DODGE ROLL", "ROULADE", "LINKS", "ВЛЕВО", "IZQUIERDA", "ESQUERDA", "SINISTRA" };
+        private string[] _roll = new string[] { "DODGE ROLL", "ROULADE", "DODGE ROLL", "DODGE ROLL", "DODGE ROLL", "DODGE ROLL", "DODGE ROLL" };
         public string Roll { get { return _roll[(int)_language]; } }
-        private string[] _taunt = new string[] { "TAUNT", "PROVOQUER", "RECHTS", "ВПРАВО", "DERECHA", "DIREITA", "DESTRA" };
+        private string[] _taunt = new string[] { "TAUNT", "PROVOQUER", "TAUNT", "TAUNT", "TAUNT", "TAUNT", "TAUNT" };
         public string Taunt { get { return _taunt[(int)_language]; } }
 
         private string[] _restore = new string[] { "RESTORE DEFAULT", "RÉ-INITIALISER", "STANDARD WIEDERHERSTELLEN", "ВОCСТАНОВИТЬ ПО УМОЛЧАНИЮ", "REINICIALIZAR", "REINICIALIZAR", "RIPRISTINA IMPOSTAZIONI PREDEFINITE" };
@@ -203,5 +232,55 @@ namespace GreedyKid
 
         private string[] _resume = new string[] { "RESUME", "REPRENDRE", "WEITER", "ПРОДОЛЖИТЬ", "REANUDAR", "RETOMAR", "RIPRENDI" };
         public string Resume { get { return _resume[(int)_language]; } }
+
+        // *********************** LANGUAGE LOADING ***********************
+
+        private void LoadCyrillic()
+        {
+            if (_transposedCyrillic || _language != Language.RU)
+                return;
+
+            _transposedCyrillic = true;
+
+            int i = (int)Language.RU;
+
+            _play[i] = ConvertToGame(_play[i]);
+            _settings[i] = ConvertToGame(_settings[i]);
+            _quit[i] = ConvertToGame(_quit[i]);
+            _select[i] = ConvertToGame(_select[i]);
+            _back[i] = ConvertToGame(_back[i]);
+            _press[i] = ConvertToGame(_press[i]);
+
+            _campaign[i] = ConvertToGame(_campaign[i]);
+            _workshop[i] = ConvertToGame(_workshop[i]);
+
+            _languageTitle[i] = ConvertToGame(_languageTitle[i]);
+            _languageValue[i] = ConvertToGame(_languageValue[i]);
+            _resolution[i] = ConvertToGame(_resolution[i]);
+            _fullscreen[i] = ConvertToGame(_fullscreen[i]);
+            _no[i] = ConvertToGame(_no[i]);
+            _borderless[i] = ConvertToGame(_borderless[i]);
+            _real[i] = ConvertToGame(_real[i]);
+            _buttons[i] = ConvertToGame(_buttons[i]);
+            _keyboard[i] = ConvertToGame(_keyboard[i]);
+            _remap[i] = ConvertToGame(_remap[i]);
+            _microphone[i] = ConvertToGame(_microphone[i]);
+            _music[i] = ConvertToGame(_music[i]);
+            _sfx[i] = ConvertToGame(_sfx[i]);
+
+            _up[i] = ConvertToGame(_up[i]);
+            _down[i] = ConvertToGame(_down[i]);
+            _left[i] = ConvertToGame(_left[i]);
+            _right[i] = ConvertToGame(_right[i]);
+            _shout[i] = ConvertToGame(_shout[i]);
+            _interact[i] = ConvertToGame(_interact[i]);
+            _roll[i] = ConvertToGame(_roll[i]);
+            _taunt[i] = ConvertToGame(_taunt[i]);
+            _restore[i] = ConvertToGame(_restore[i]);
+
+            _resume[i] = ConvertToGame(_resume[i]);
+            _restart[i] = ConvertToGame(_restart[i]);
+            _pause[i] = ConvertToGame(_pause[i]);
+        }
     }
 }
