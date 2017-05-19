@@ -36,6 +36,7 @@ namespace GreedyKid
         public SplashScreenManager()
         {
             TextureManager.LoadSplash();
+            SfxManager.Instance.LoadSplashSfx();
 
             _backgroundRectangles = new Rectangle[4];
             for (int i = 0; i < _backgroundRectangles.Length; i++)

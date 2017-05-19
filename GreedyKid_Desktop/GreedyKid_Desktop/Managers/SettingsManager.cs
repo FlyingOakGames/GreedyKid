@@ -236,6 +236,7 @@ namespace GreedyKid
                         }
                     }
                     SetResolution(ResolutionX, ResolutionY, false);
+                    SfxManager.Instance.SetVolume(SfxVolume);
                 }
                 catch (Exception) { }
 #elif XBOXONE
@@ -579,7 +580,7 @@ namespace GreedyKid
             if (sfxVolume > 10)
                 sfxVolume = 10;
             SfxVolume = sfxVolume / 10.0f;
-            //SoundManager.SetVolume(1.0f);
+            SfxManager.Instance.SetVolume(SfxVolume);
             // blips
             //SoundManager.PlayPersistant((int)PersistantSfx.ItemEquip);
         }
@@ -591,7 +592,7 @@ namespace GreedyKid
             if (sfxVolume < 0)
                 sfxVolume = 0;
             SfxVolume = sfxVolume / 10.0f;
-            //SoundManager.SetVolume(1.0f);
+            SfxManager.Instance.SetVolume(SfxVolume);
             // blips
             //SoundManager.PlayPersistant((int)PersistantSfx.ItemEquip);
         }

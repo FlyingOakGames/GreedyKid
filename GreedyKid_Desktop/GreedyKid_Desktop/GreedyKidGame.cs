@@ -18,7 +18,7 @@ namespace GreedyKid
     /// </summary>
     public class GreedyKidGame : Game
     {
-        public const string Version = "V.1";
+        public const string Version = "V.2";
 
         public static bool ShouldExit = false;
         public static bool ShouldApplyChanges = false;
@@ -54,6 +54,8 @@ namespace GreedyKid
             SettingsManager settingsManager = SettingsManager.Instance;
             // init UI helper
             UIHelper uiHelper = UIHelper.Instance;
+            // init sfx
+            SfxManager sfxManager = SfxManager.Instance;
 
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -109,6 +111,7 @@ namespace GreedyKid
             _renderTarget = new RenderTarget2D(GraphicsDevice, Width, Height);
 
             TextureManager.Content = Content;
+            SfxManager.Content = Content;
         }
 
         /// <summary>
@@ -195,10 +198,13 @@ namespace GreedyKid
 
                     if (_splashScreenManager.SkipToTitle)
                     {
+                        SfxManager.Instance.Unload();
+
                         Content.Unload();
 
                         TextureManager.LoadGameplay();
                         TextureManager.LoadFont();
+                        SfxManager.Instance.LoadGameplaySfx();
 
                         _titleScreenManager = new TitleScreenManager();
 
