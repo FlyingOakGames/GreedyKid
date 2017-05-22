@@ -146,6 +146,11 @@ namespace GreedyKid
                         _scoreFrame = -1;
                 }
 
+                if (_oakFrame == 6)
+                {
+                    SfxManager.Instance.Play(Sfx.SplashBonus);
+                }
+
                 if (_oakFrame == 9)
                 {
                     _scoreFrame = 0;

@@ -237,6 +237,7 @@ namespace GreedyKid
                     }
                     SetResolution(ResolutionX, ResolutionY, false);
                     SfxManager.Instance.SetVolume(SfxVolume);
+                    MusicManager.Instance.SetVolume(MusicVolume);
                 }
                 catch (Exception) { }
 #elif XBOXONE
@@ -353,6 +354,8 @@ namespace GreedyKid
 
         public void UpdateMouseSelection(int x, int y)
         {
+            int previous = _selectionOption;
+
             if (_isRemapping)
             {
                 if (y >= 23 && y < 23 + 15)
@@ -427,6 +430,9 @@ namespace GreedyKid
                     _selectionOption = 7;
                 }
             }
+
+            if (previous != _selectionOption)
+                SfxManager.Instance.Play(Sfx.MenuBlip);
         }
 
         public void PushSelect(bool fromMouse, int mouseX)
@@ -489,9 +495,14 @@ namespace GreedyKid
             if (_waitingForInput)
                 return;
 
+            int previous = _selectionOption;
+
             _selectionOption--;
             if (_selectionOption < 0)
                 _selectionOption = (_isRemapping ? 8 : 7);
+
+            if (previous != _selectionOption)
+                SfxManager.Instance.Play(Sfx.MenuBlip);
         }
 
         public void PushDown()
@@ -499,8 +510,13 @@ namespace GreedyKid
             if (_waitingForInput)
                 return;
 
+            int previous = _selectionOption;
+
             _selectionOption++;
             _selectionOption %= (_isRemapping ? 9 : 8);
+
+            if (previous != _selectionOption)
+                SfxManager.Instance.Play(Sfx.MenuBlip);
         }
 
         public void PushRight()
@@ -511,27 +527,46 @@ namespace GreedyKid
             switch (_selectionOption)
             {
                 case 0:
-                    TextManager.Instance.Language++; break;
+                    Language previousL = TextManager.Instance.Language;
+                    TextManager.Instance.Language++; 
+                    if (previousL != TextManager.Instance.Language)
+                        SfxManager.Instance.Play(Sfx.MenuBlip);
+                    break;
                 case 1:
+                    int previousR = _selectedResolution;
                     _selectedResolution++;
                     _selectedResolution = Math.Min(_selectedResolution, _compatibleXResolution.Count - 1);
                     ResolutionX = _compatibleXResolution[_selectedResolution];
                     ResolutionY = _compatibleYResolution[_selectedResolution];
+                    if (previousR != _selectedResolution)
+                        SfxManager.Instance.Play(Sfx.MenuBlip);
                     break;
                 case 2:
                     if (FullScreenMode == FullScreenMode.No)
+                    {
+                        SfxManager.Instance.Play(Sfx.MenuBlip);
                         FullScreenMode = FullScreenMode.Bordeless;
+                    }
                     else if (FullScreenMode == FullScreenMode.Bordeless)
+                    {
+                        SfxManager.Instance.Play(Sfx.MenuBlip);
                         FullScreenMode = FullScreenMode.Real;
+                    }
                     break;
                 case 3:
                     if (GamePadInputsHandler.PreferredButtonType == ButtonType.Xbox)
+                    {
+                        SfxManager.Instance.Play(Sfx.MenuBlip);
                         GamePadInputsHandler.PreferredButtonType = ButtonType.PlayStation;
+                    }
                     break;
                 case 5:
+                    int previousM = SelectedMicrophone;
                     SelectedMicrophone++;
                     SelectedMicrophone = Math.Min(SelectedMicrophone, _microphoneName.Count - 1);
                     MicrophoneManager.Instance.SetMicrophone(SelectedMicrophone);
+                    if (previousM != SelectedMicrophone)
+                        SfxManager.Instance.Play(Sfx.MenuBlip);
                     break;
                 case 6: MusicVolumeDown(); break;
                 case 7: SfxVolumeDown(); break;
@@ -546,27 +581,46 @@ namespace GreedyKid
             switch (_selectionOption)
             {
                 case 0:
-                    TextManager.Instance.Language--; break;
+                    Language previousL = TextManager.Instance.Language;
+                    TextManager.Instance.Language--;
+                    if (previousL != TextManager.Instance.Language)
+                        SfxManager.Instance.Play(Sfx.MenuBlip);
+                    break;
                 case 1:
+                    int previousR = _selectedResolution;
                     _selectedResolution--;
                     _selectedResolution = Math.Max(_selectedResolution, 0);
                     ResolutionX = _compatibleXResolution[_selectedResolution];
                     ResolutionY = _compatibleYResolution[_selectedResolution];
+                    if (previousR != _selectedResolution)
+                        SfxManager.Instance.Play(Sfx.MenuBlip);
                     break;
                 case 2:
                     if (FullScreenMode == FullScreenMode.Bordeless)
+                    {
+                        SfxManager.Instance.Play(Sfx.MenuBlip);
                         FullScreenMode = FullScreenMode.No;
+                    }
                     else if (FullScreenMode == FullScreenMode.Real)
+                    {
+                        SfxManager.Instance.Play(Sfx.MenuBlip);
                         FullScreenMode = FullScreenMode.Bordeless;
+                    }
                     break;
                 case 3:
                     if (GamePadInputsHandler.PreferredButtonType == ButtonType.PlayStation)
+                    {
+                        SfxManager.Instance.Play(Sfx.MenuBlip);
                         GamePadInputsHandler.PreferredButtonType = ButtonType.Xbox;
+                    }
                     break;
                 case 5:
+                    int previousM = SelectedMicrophone;
                     SelectedMicrophone--;
                     SelectedMicrophone = Math.Max(SelectedMicrophone, -1);
                     MicrophoneManager.Instance.SetMicrophone(SelectedMicrophone);
+                    if (previousM != SelectedMicrophone)
+                        SfxManager.Instance.Play(Sfx.MenuBlip);
                     break;
                 case 6: MusicVolumeUp(); break;
                 case 7: SfxVolumeUp(); break;
@@ -582,7 +636,7 @@ namespace GreedyKid
             SfxVolume = sfxVolume / 10.0f;
             SfxManager.Instance.SetVolume(SfxVolume);
             // blips
-            //SoundManager.PlayPersistant((int)PersistantSfx.ItemEquip);
+            SfxManager.Instance.Play(Sfx.SoundTest);
         }
 
         private void SfxVolumeDown()
@@ -594,7 +648,7 @@ namespace GreedyKid
             SfxVolume = sfxVolume / 10.0f;
             SfxManager.Instance.SetVolume(SfxVolume);
             // blips
-            //SoundManager.PlayPersistant((int)PersistantSfx.ItemEquip);
+            SfxManager.Instance.Play(Sfx.SoundTest);
         }
 
         private void MusicVolumeUp()
@@ -604,7 +658,7 @@ namespace GreedyKid
             if (musicVolume > 10)
                 musicVolume = 10;
             MusicVolume = musicVolume / 10.0f;
-            //MusicManager.SetVolume(1.0f);
+            MusicManager.Instance.SetVolume(MusicVolume);
         }
 
         private void MusicVolumeDown()
@@ -614,7 +668,7 @@ namespace GreedyKid
             if (musicVolume < 0)
                 musicVolume = 0;
             MusicVolume = musicVolume / 10.0f;
-            //MusicManager.SetVolume(1.0f);
+            MusicManager.Instance.SetVolume(MusicVolume);
         }
 
         private bool OptionMax()

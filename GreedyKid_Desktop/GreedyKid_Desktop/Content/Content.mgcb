@@ -45,3 +45,27 @@
 /processorParam:TextureFormat=Color
 /build:Fonts/latin.png
 
+#begin Sfx/MenuBlip.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/MenuBlip.wav
+
+#begin Sfx/SplashBonus.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/SplashBonus.wav
+
+#begin Sfx/SoundTest.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/SoundTest.wav
+
+#begin Musics/1.wma
+/importer:WmaImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Musics/1.wma
+

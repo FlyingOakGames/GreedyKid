@@ -64,6 +64,8 @@ namespace GreedyKid
 
         public void UpdateMouseSelection(int x, int y)
         {
+            int previous = _selectionOption;
+
             switch (_state)
             {
                 case TitleScreenState.Title: break;
@@ -105,6 +107,9 @@ namespace GreedyKid
                     // todo
                     break;
             }
+
+            if (previous != _selectionOption)
+                SfxManager.Instance.Play(Sfx.MenuBlip);
         }
 
         public void PushSelect(bool fromMouse = false, int mouseX = 0)
@@ -173,6 +178,8 @@ namespace GreedyKid
 
         public void PushUp()
         {
+            int previous = _selectionOption;
+
             if (_state != TitleScreenState.Settings)
                 _selectionOption--;   
             else
@@ -188,10 +195,15 @@ namespace GreedyKid
                     case TitleScreenState.LevelSelection: _selectionOption = 0; break;
                     case TitleScreenState.SteamWorkshop: break;
                 }
+
+            if (previous != _selectionOption)
+                SfxManager.Instance.Play(Sfx.MenuBlip);
         }
 
         public void PushDown()
         {
+            int previous = _selectionOption;
+
             if (_state != TitleScreenState.Settings)
                 _selectionOption++;
 
@@ -204,6 +216,9 @@ namespace GreedyKid
                 case TitleScreenState.LevelSelection: _selectionOption %= 1; break;
                 case TitleScreenState.SteamWorkshop: break;
             }
+
+            if (previous != _selectionOption)
+                SfxManager.Instance.Play(Sfx.MenuBlip);
         }
 
         public void PushLeft()

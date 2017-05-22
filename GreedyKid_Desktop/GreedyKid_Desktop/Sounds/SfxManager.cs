@@ -5,6 +5,13 @@ namespace GreedyKid
 {
     public enum Sfx
     {
+        // splash only
+        SplashBonus,
+
+        // gameplay
+        MenuBlip,
+        SoundTest,
+
         Count,
     }
 
@@ -41,12 +48,15 @@ namespace GreedyKid
 
         public void LoadSplashSfx()
         {
-
+            LoadSfx((int)Sfx.SplashBonus);
         }
 
         public void LoadGameplaySfx()
         {
-
+            for (int i = (int)Sfx.MenuBlip; i < (int)Sfx.Count; i++)
+            {
+                LoadSfx(i);
+            }
         }
 
         private void LoadSfx(int id)
@@ -80,8 +90,9 @@ namespace GreedyKid
             _volume = volume;
         }
 
-        public void Play(int id)
+        public void Play(Sfx sfx)
         {
+            int id = (int)sfx;
             if (_sfx[id] != null)
             {
                 try

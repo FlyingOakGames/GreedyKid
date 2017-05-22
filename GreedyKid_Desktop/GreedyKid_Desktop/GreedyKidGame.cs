@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -112,6 +113,9 @@ namespace GreedyKid
 
             TextureManager.Content = Content;
             SfxManager.Content = Content;
+            ContentManager musicContent = new ContentManager(this.Services);
+            musicContent.RootDirectory = Content.RootDirectory;
+            MusicManager.Content = musicContent;
         }
 
         /// <summary>
@@ -178,6 +182,7 @@ namespace GreedyKid
             float gameTimeF = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             MicrophoneManager.Instance.Update(gameTimeF);
+            MusicManager.Instance.Update(gameTimeF);
 
 #if DESKTOP
             InputManager.CheckNewGamepad();
@@ -186,6 +191,9 @@ namespace GreedyKid
             switch (_state)
             {
                 case GameState.None:
+
+                    MusicManager.Instance.LoadSong(1);
+                    MusicManager.Instance.Play();
 
                     _splashScreenManager = new SplashScreenManager();
 

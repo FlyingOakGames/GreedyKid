@@ -405,6 +405,8 @@ namespace GreedyKid
             }
             else
             {
+                int previous = _pauseOption;
+
                 if (y >= 70 && y < 85)
                 {
                     _pauseOption = 0;
@@ -421,6 +423,9 @@ namespace GreedyKid
                 {
                     _pauseOption = 3;
                 }
+
+                if (previous != _pauseOption)
+                    SfxManager.Instance.Play(Sfx.MenuBlip);
             }
         }
 
@@ -463,9 +468,14 @@ namespace GreedyKid
                 SettingsManager.Instance.PushUp();
             else
             {
+                int previous = _pauseOption;
+
                 _pauseOption--;
                 if (_pauseOption < 0)
                     _pauseOption = 3;
+
+                if (previous != _pauseOption)
+                    SfxManager.Instance.Play(Sfx.MenuBlip);
             }
         }
 
@@ -475,8 +485,13 @@ namespace GreedyKid
                 SettingsManager.Instance.PushDown();
             else
             {
+                int previous = _pauseOption;
+
                 _pauseOption++;
                 _pauseOption %= 4;
+
+                if (previous != _pauseOption)
+                    SfxManager.Instance.Play(Sfx.MenuBlip);
             }
         }
 
