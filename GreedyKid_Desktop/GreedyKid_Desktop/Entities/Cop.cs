@@ -7,7 +7,7 @@ namespace GreedyKid
 {
     public sealed class Cop : IEntity
     {
-        public const int CopCount = 3;
+        public const int CopCount = 4;
         public const int NonFiringCopCount = 1;
         public const int NormalCopCount = 2;
         public const int SwatCopCount = 1;
@@ -66,6 +66,10 @@ namespace GreedyKid
         private Room _hookedRoom = null;
         private static int[] _hookingUpOffset = null;
         private static int[] _hookingDownOffset = null;
+
+        // Robocop hook
+        private static int[] _rocketUpOffset = null;
+        private static int[] _rocketDownOffset = null;
 
         private int _currentSmokeUpFrame = -1;
         private float _currentSmokeUpFrameTime = 0.0f;
@@ -126,6 +130,10 @@ namespace GreedyKid
                 _frames[(int)EntityState.SmokeUp] = new Rectangle[CopCount][];
                 // SmokeDown
                 _frames[(int)EntityState.SmokeDown] = new Rectangle[CopCount][];
+                // RocketUp
+                _frames[(int)EntityState.RocketUp] = new Rectangle[CopCount][];
+                // RocketDown
+                _frames[(int)EntityState.RocketDown] = new Rectangle[CopCount][];
 
                 // type
                 for (int t = 0; t < CopCount; t++)
@@ -258,6 +266,25 @@ namespace GreedyKid
                     }
                     _frameDuration[(int)EntityState.SmokeDown] = 0.1f;
 
+                    // RocketUp (ok)
+                    _frames[(int)EntityState.RocketUp][t] = new Rectangle[9];
+                    for (int f = 0; f < _frames[(int)EntityState.RocketUp][t].Length; f++)
+                    {
+                        _frames[(int)EntityState.RocketUp][t][f] = new Rectangle(f * 32 + 43 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                    }
+                    _frameDuration[(int)EntityState.RocketUp] = 0.1f;
+
+                    // RocketDown (ok)
+                    _frames[(int)EntityState.RocketDown][t] = new Rectangle[9];
+                    for (int f = 0; f < _frames[(int)EntityState.RocketDown][t].Length; f++)
+                    {
+                        if (f < 2)
+                            _frames[(int)EntityState.RocketDown][t][f] = new Rectangle(f * 32 + 43 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                        else
+                            _frames[(int)EntityState.RocketDown][t][f] = new Rectangle(f * 32 + 55 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                    }
+                    _frameDuration[(int)EntityState.RocketDown] = 0.1f;
+
                     // HookingUp (ok)
                     _frames[(int)EntityState.HookingUp][t] = new Rectangle[15];                    
                     _frames[(int)EntityState.HookingUp][t][0] = new Rectangle(0 * 32 + 57 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
@@ -319,6 +346,16 @@ namespace GreedyKid
                         _frames[(int)EntityState.RopeDown][t][f] = new Rectangle(904 + f * 32 + 15 * 32, 1814, 32, 49);
                     }
                     _frameDuration[(int)EntityState.RopeDown] = 0.1f;
+
+                    _rocketUpOffset = new int[]
+                    {
+                        0, 0, -4, -11, -22, -31, -40, -40, -40
+                    };
+
+                    _rocketDownOffset = new int[]
+                    {
+                        0, 0, 0, 0, 5, 21, 40, 40, 40
+                    };
                 }
             }
 
@@ -480,7 +517,10 @@ namespace GreedyKid
                     {
                         NextAction();
                     }
-                    else if (State == EntityState.HookingUp || State == EntityState.HookingDown)
+                    else if (State == EntityState.HookingUp ||
+                        State == EntityState.HookingDown ||
+                        State == EntityState.RocketUp ||
+                        State == EntityState.RocketDown)
                     {
                         Room.Cops.Remove(this);
                         Room = _hookedRoom;
@@ -612,7 +652,7 @@ namespace GreedyKid
                     X = 304 - Room.RightMargin * 8 - 16;
                 }
 
-                if (Type >= NormalCopCount && Type < NormalCopCount + SwatCopCount)
+                if (Type >= NormalCopCount)
                     LookForRoomToHook();
             }
 
@@ -698,7 +738,10 @@ namespace GreedyKid
             else if (_isVisible && !_isAngry && canSeePlayer && _currentHitCooldown <= 0.0f && State != EntityState.Rolling && State != EntityState.Exiting && State != EntityState.HookingDown && State != EntityState.HookingUp)
             {
                 // caught player
-                Boo(false);
+                if (Type < NormalCopCount + SwatCopCount)
+                    Boo(false);
+                else
+                    Hit();
             }
 
             if (_isAngry && canSeePlayer && State != EntityState.Boo && State != EntityState.Slam && Math.Abs(X + 16.0f - LastKnownPlayerPosition) <=  HitRange - 1.0f)
@@ -737,23 +780,23 @@ namespace GreedyKid
                         if (RandomHelper.Next() > 0.5f)
                         {
                             _hookedRoom = _upperRoom;
-                            HookingUp();
+                            GoUp();
                         }
                         else
                         {
                             _hookedRoom = _lowerRoom;
-                            HookingDown();
+                            GoDown();
                         }
                     }
                     else if (_upperRoom != null)
                     {
                         _hookedRoom = _upperRoom;
-                        HookingUp();
+                        GoUp();
                     }
                     else
                     {
                         _hookedRoom = _lowerRoom;
-                        HookingDown();
+                        GoDown();
                     }
 
                     _wantsToHookRoom = false;
@@ -764,7 +807,7 @@ namespace GreedyKid
             }
         }
 
-        private void HookingUp()
+        private void GoUp()
         {
             _currentFrame = 0;
             _currentFrameTime = 0.0f;
@@ -775,11 +818,14 @@ namespace GreedyKid
             _wantsToHookRoom = false;
 
             _isAngry = false;
-
-            State = EntityState.HookingUp;
+            
+            if (Type < NormalCopCount + SwatCopCount)
+                State = EntityState.HookingUp;
+            else
+                State = EntityState.RocketUp;
         }
 
-        private void HookingDown()
+        private void GoDown()
         {
             _currentFrame = 0;
             _currentFrameTime = 0.0f;
@@ -791,7 +837,10 @@ namespace GreedyKid
 
             _isAngry = false;
 
-            State = EntityState.HookingDown;
+            if (Type < NormalCopCount + SwatCopCount)
+                State = EntityState.HookingDown;
+            else
+                State = EntityState.RocketDown;
         }
 
         private void Boo(bool turn = true)
@@ -950,7 +999,10 @@ namespace GreedyKid
             _currentFrame = 0;
             _currentFrameTime = 0.0f;
             State = EntityState.HitCooldown;
-            _actionTime = _currentHitCooldown;
+            if (Type < NormalCopCount + SwatCopCount)
+                _actionTime = _currentHitCooldown;
+            else
+                _actionTime = _frameDuration[(int)EntityState.HitCooldown] * _frames[(int)EntityState.HitCooldown][Type].Length;
             _hasJustTurned = false;
 
             _wantsToOpenDoor = false;
@@ -999,10 +1051,19 @@ namespace GreedyKid
 
             Texture2D texture = TextureManager.Gameplay;
 
-            if (State != EntityState.HookingDown && State != EntityState.HookingUp)
+            int robocopOffset = 0;
+            if (Type >= NormalCopCount + SwatCopCount)
+            {
+                if (Orientation == SpriteEffects.None)
+                    robocopOffset = 4;
+                else
+                    robocopOffset = -4;
+            }
+
+            if (State != EntityState.HookingDown && State != EntityState.HookingUp && State != EntityState.RocketUp && State != EntityState.RocketDown)
             {
                 spriteBatch.Draw(texture,
-                    new Rectangle((int)X, 128 - 40 * Room.Y + 9 + cameraPosY, 32, 32),
+                    new Rectangle((int)X + robocopOffset, 128 - 40 * Room.Y + 9 + cameraPosY, 32, 32),
                     _frames[(int)State][Type][_currentFrame],
                     Color.White,
                     0.0f,
@@ -1041,6 +1102,28 @@ namespace GreedyKid
                     0.0f);
                 spriteBatch.Draw(texture,
                     new Rectangle((int)X, 128 - 40 * Room.Y + 9 + cameraPosY + _hookingDownOffset[_currentFrame], 32, 32),
+                    _frames[(int)State][Type][_currentFrame],
+                    Color.White,
+                    0.0f,
+                    Vector2.Zero,
+                    Orientation,
+                    0.0f);
+            }
+            else if (State == EntityState.RocketUp)
+            {
+                spriteBatch.Draw(texture,
+                    new Rectangle((int)X + robocopOffset, 128 - 40 * Room.Y + 9 + cameraPosY + _rocketUpOffset[_currentFrame], 32, 32),
+                    _frames[(int)State][Type][_currentFrame],
+                    Color.White,
+                    0.0f,
+                    Vector2.Zero,
+                    Orientation,
+                    0.0f);
+            }
+            else if (State == EntityState.RocketDown)
+            {
+                spriteBatch.Draw(texture,
+                    new Rectangle((int)X + robocopOffset, 128 - 40 * Room.Y + 9 + cameraPosY + _rocketDownOffset[_currentFrame], 32, 32),
                     _frames[(int)State][Type][_currentFrame],
                     Color.White,
                     0.0f,

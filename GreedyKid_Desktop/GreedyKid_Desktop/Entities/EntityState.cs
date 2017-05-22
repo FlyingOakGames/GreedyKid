@@ -39,6 +39,9 @@ namespace GreedyKid
         RopeDown,
         SmokeUp,
         SmokeDown,
+        // robocop
+        RocketUp,
+        RocketDown,
 
         Count
     }
