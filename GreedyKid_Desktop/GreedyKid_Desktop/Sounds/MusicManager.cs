@@ -117,5 +117,12 @@ namespace GreedyKid
                 MediaPlayer.Stop();
             }
         }
+
+        public void Unload()
+        {
+            Stop();
+            Content.Unload();
+            _currentSong = null;
+        }
     }
 }

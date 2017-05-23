@@ -125,6 +125,9 @@ namespace GreedyKid
         protected override void UnloadContent()
         {
             MicrophoneManager.Instance.Dispose();
+            Content.Unload();
+            MusicManager.Instance.Unload();
+            base.UnloadContent();
         }
 
         /// <summary>
@@ -209,6 +212,8 @@ namespace GreedyKid
                         SfxManager.Instance.Unload();
 
                         Content.Unload();
+
+                        TextureManager.Splash = null;
 
                         TextureManager.LoadGameplay();
                         TextureManager.LoadFont();
