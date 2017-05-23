@@ -30,6 +30,7 @@ namespace GreedyKid
         public bool CanClose = false;
 
         public bool IsKOBlocked = false;
+        public bool IsRobocopBlocked = false;
 
         public bool IsOpenLeft
         {
@@ -120,7 +121,7 @@ namespace GreedyKid
 
         public void CheckCanCloseFromLeft()
         {
-            if (_state == RoomDoorState.OpenLeft && !IsKOBlocked)
+            if (_state == RoomDoorState.OpenLeft && !IsKOBlocked && !IsRobocopBlocked)
             {
                 CanClose = true;
             }
@@ -128,7 +129,7 @@ namespace GreedyKid
 
         public void CheckCanCloseFromRight()
         {
-            if (_state == RoomDoorState.OpenRight && !IsKOBlocked)
+            if (_state == RoomDoorState.OpenRight && !IsKOBlocked && !IsRobocopBlocked)
             {
                 CanClose = true;
             }

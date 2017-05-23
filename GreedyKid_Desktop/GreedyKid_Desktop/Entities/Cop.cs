@@ -88,6 +88,8 @@ namespace GreedyKid
         private int _currentStartingSmokeFrame = -1;
         private float _currentStartingSmokeFrameTime = 0.0f;
 
+        private static Rectangle _landingLightRectangle;
+
         public Cop()
         {
             // init once
@@ -98,6 +100,8 @@ namespace GreedyKid
 
                 int nbDoorLine = (int)Math.Ceiling(FloorDoor.DoorCount / (float)FloorDoor.DoorPerLine);
                 int nbFurnitureLine = (int)Math.Ceiling(Furniture.FurnitureCount / (float)Furniture.FurniturePerLine);
+
+                _landingLightRectangle = new Rectangle(1 * 32 + 28 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + (NormalCopCount + SwatCopCount) * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32 + 16, 32, 1);
 
                 // idle
                 _frames[(int)EntityState.Idle] = new Rectangle[CopCount][];
@@ -149,6 +153,8 @@ namespace GreedyKid
                 _frames[(int)EntityState.LandingSmoke] = new Rectangle[CopCount][];
                 // StartingSmoke
                 _frames[(int)EntityState.StartingSmoke] = new Rectangle[CopCount][];
+                // Landing
+                _frames[(int)EntityState.Landing] = new Rectangle[CopCount][];
 
                 // type
                 for (int t = 0; t < CopCount; t++)
@@ -324,6 +330,17 @@ namespace GreedyKid
                     }
                     _frameDuration[(int)EntityState.RocketDown] = 0.1f;
 
+                    // Landing (ok)
+                    _frames[(int)EntityState.Landing][t] = new Rectangle[7];
+                    for (int f = 0; f < _frames[(int)EntityState.Landing][t].Length; f++)
+                    {
+                        if (f > 0)
+                            _frames[(int)EntityState.Landing][t][f] = new Rectangle(f * 32 + 28 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                        else
+                            _frames[(int)EntityState.Landing][t][f] = new Rectangle(0, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
+                    }
+                    _frameDuration[(int)EntityState.Landing] = 0.1f;
+
                     // HookingUp (ok)
                     _frames[(int)EntityState.HookingUp][t] = new Rectangle[15];                    
                     _frames[(int)EntityState.HookingUp][t][0] = new Rectangle(0 * 32 + 57 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32 + Retired.RetiredCount * 32 + Nurse.NurseCount * 32, 32, 32);
@@ -397,7 +414,7 @@ namespace GreedyKid
                     };
                 }
             }
-
+            
             NextAction();
         }
 
@@ -446,6 +463,25 @@ namespace GreedyKid
             _currentWindowFrameTime = 0.0f;
 
             Roll();
+        }
+
+        public void SpawnLand(float x, SpriteEffects orientation)
+        {
+            X = x;
+            _isVisible = true;
+            State = EntityState.Idle;
+            _currentFrame = 0;
+            _currentFrameTime = 0.0f;
+            _actionTime = 0.0f;
+            _hasJustTurned = false;
+
+            _isAngry = false;
+            _shouldRoll = false;
+            _isBreakingWindow = false;
+
+            Orientation = orientation;
+
+            Land();
         }
 
         public void Update(float gameTime, bool boo, bool taunted)
@@ -605,6 +641,10 @@ namespace GreedyKid
                     {
                         NextAction();
                     }
+                    else if (State == EntityState.Landing)
+                    {
+                        NextAction();
+                    }
                     else if (State == EntityState.HookingUp ||
                         State == EntityState.HookingDown ||
                         State == EntityState.RocketUp ||
@@ -685,6 +725,15 @@ namespace GreedyKid
 
                     _smokeX = (int)X;
                     _smokeY = 128 - 40 * Room.Y + 9 + 16 - 40;
+                    _smokeOrientation = Orientation;
+                }
+                else if (State == EntityState.Landing && _currentFrame == 5)
+                {
+                    _currentSmokeDownFrame = 0;
+                    _currentSmokeDownFrameTime = 0.0f;
+
+                    _smokeX = (int)X;
+                    _smokeY = 128 - 40 * Room.Y + 9 + 16;
                     _smokeOrientation = Orientation;
                 }
                 else if (State == EntityState.HookingDown && _currentFrame == 3)
@@ -852,7 +901,7 @@ namespace GreedyKid
                 // lost player             
                 Unboo();                
             }
-            else if (_isVisible && !_isAngry && canSeePlayer && _currentHitCooldown <= 0.0f && State != EntityState.Rolling && State != EntityState.Exiting && State != EntityState.HookingDown && State != EntityState.HookingUp)
+            else if (_isVisible && !_isAngry && canSeePlayer && _currentHitCooldown <= 0.0f && State != EntityState.Rolling && State != EntityState.Exiting && State != EntityState.HookingDown && State != EntityState.HookingUp && State != EntityState.Landing && State != EntityState.RocketUp && State != EntityState.RocketDown)
             {
                 // caught player
                 if (Type < NormalCopCount + SwatCopCount)
@@ -1161,6 +1210,17 @@ namespace GreedyKid
             _shouldRoll = false;
         }
 
+        private void Land()
+        {
+            _currentFrame = 0;
+            _currentFrameTime = 0.0f;
+            State = EntityState.Landing;
+
+            _actionTime = 0.0f;
+
+            _shouldRoll = false;
+        }
+
         public void Draw(SpriteBatch spriteBatch, int cameraPosY)
         {
             if (!_isVisible)
@@ -1175,6 +1235,21 @@ namespace GreedyKid
                     robocopOffset = 4;
                 else
                     robocopOffset = -4;
+            }
+
+            // landing light
+            if (State == EntityState.Landing && _currentFrame == 1)
+            {
+                int height = 128 - 40 * Room.Y + 9 + cameraPosY + 2;
+                if (height > 0)
+                    spriteBatch.Draw(texture,
+                        new Rectangle((int)X + robocopOffset,0, 32, height),
+                        _landingLightRectangle,
+                        Color.White,
+                        0.0f,
+                        Vector2.Zero,
+                        Orientation,
+                        0.0f);
             }
 
             if (State != EntityState.HookingDown && State != EntityState.HookingUp && State != EntityState.RocketUp && State != EntityState.RocketDown)
@@ -1337,6 +1412,25 @@ namespace GreedyKid
         public bool IsHitting
         {
             get { return State == EntityState.Hit; }
+        }
+
+        public int RobocopBeamPosition
+        {
+            get
+            {
+                if (State == EntityState.Landing && _currentFrame == 0)
+                    return (int)X;
+                else
+                    return -1;
+            }
+        }
+
+        public bool RobocopFlash
+        {
+            get
+            {
+                return (State == EntityState.Landing && _currentFrame == 3) || (Type >= NormalCopCount + SwatCopCount && State == EntityState.HitCooldown && _currentFrame == 0);
+            }
         }
 
         private Room LookForRoomToHook()

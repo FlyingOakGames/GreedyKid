@@ -45,6 +45,7 @@ namespace GreedyKid
         RocketSmokeUp,
         LandingSmoke,
         StartingSmoke,
+        Landing,
 
         Count
     }

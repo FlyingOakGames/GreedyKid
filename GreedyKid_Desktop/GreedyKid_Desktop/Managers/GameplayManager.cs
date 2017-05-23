@@ -36,6 +36,7 @@ namespace GreedyKid
         Cop,
         Swat,
         Robocop,
+        None
     }
 
     public sealed class GameplayManager
@@ -53,6 +54,9 @@ namespace GreedyKid
         private Rectangle[] _iconRectangle;
         private Rectangle[] _maskRectangle;
         private Rectangle[] _numberRectangle;
+
+        private Rectangle _robocopBeamRectangle;
+        private Rectangle _pixelRectangle;
 
         public int SelectedLevel = 0;
 
@@ -119,6 +123,7 @@ namespace GreedyKid
         private float _currentCopArrivingTime = -1.0f;   // to reset
         private const float _copArrivingTime = 2.0f;
         private float _nextSwatSpawn = 0.0f;
+        private float _nextRobocopSpawn = 0.0f;
 
         // camera
         private float _cameraPositionY = 0.0f;        
@@ -326,6 +331,10 @@ namespace GreedyKid
             _pauseBackgroundRectangles = new Rectangle[2];
             _pauseBackgroundRectangles[0] = new Rectangle(1619, TextureManager.GameplayHeight - 184, 111, 153);
             _pauseBackgroundRectangles[1] = new Rectangle(1731, TextureManager.GameplayHeight - 184, 137, 153);
+
+            // robocop
+            _robocopBeamRectangle = new Rectangle(117, TextureManager.GameplayHeight - 113, 32, 16);
+            _pixelRectangle = new Rectangle(133, TextureManager.GameplayHeight - 110, 1, 1);
         }
 
         public void LoadBuilding()
@@ -374,9 +383,23 @@ namespace GreedyKid
             _spawningCop = null;   // to reset
             _currentCopArrivingTime = -1.0f;   // to reset
 
-            Time = _building.CurrentLevel.TimeBeforeCop;
-            _timerType = TimerType.Cop;
             _currentSeconds = 0.0f;
+            _timerType = TimerType.None;
+            if (_building.CurrentLevel.TimeBeforeCop > 0)
+            {
+                Time = _building.CurrentLevel.TimeBeforeCop;
+                _timerType = TimerType.Cop;                
+            }
+            else if (_building.CurrentLevel.TimeBeforeSwat > 0)
+            {
+                Time = _building.CurrentLevel.TimeBeforeSwat;
+                _timerType = TimerType.Swat;
+            }
+            else if (_building.CurrentLevel.TimeBeforeRobocop > 0)
+            {
+                Time = _building.CurrentLevel.TimeBeforeRobocop;
+                _timerType = TimerType.Robocop;
+            }
 
             // camera init
             _cameraPositionY = 0.0f;
@@ -616,6 +639,16 @@ namespace GreedyKid
                                 _timerType = TimerType.Swat;
                                 Time = _building.CurrentLevel.TimeBeforeSwat;
                             }
+                            else if (_timerType == TimerType.Cop && _building.CurrentLevel.TimeBeforeRobocop > 0)
+                            {
+                                // start robocop timer
+                                _timerType = TimerType.Robocop;
+                                Time = _building.CurrentLevel.TimeBeforeRobocop;
+                            }
+                            else if (_timerType == TimerType.Cop)
+                            {
+                                _timerType = TimerType.None;
+                            }
                             else if (_timerType == TimerType.Swat)
                             {
                                 // spawn swat
@@ -627,7 +660,16 @@ namespace GreedyKid
                                     _timerType = TimerType.Robocop;
                                     Time = _building.CurrentLevel.TimeBeforeRobocop;
                                 }
+                                else
+                                {
+                                    _timerType = TimerType.None;
+                                }
                             }
+                        }
+                        else if (Time == 0 && _timerType == TimerType.Robocop)
+                        {
+                            _timerType = TimerType.None;
+                            SpawnRobocop();
                         }
                     }
                 }
@@ -640,6 +682,17 @@ namespace GreedyKid
                     if (_nextSwatSpawn <= 0.0f)
                     {
                         SpawnSwat();
+                    }
+                }
+
+                // robocop spawn
+                if (_nextRobocopSpawn > 0.0f)
+                {
+                    _nextRobocopSpawn -= gameTime;
+
+                    if (_nextRobocopSpawn <= 0.0f)
+                    {
+                        SpawnRobocop();
                     }
                 }
 
@@ -1206,6 +1259,51 @@ namespace GreedyKid
             _currentExitFrame = 4;
             _currentExitFrameTime = 0.0f;
             _exitState = ElevatorState.Closing;
+        }
+
+        private void SpawnRobocop()
+        {
+            Cop robocop = null;
+
+            if (_building.CurrentLevel.RobocopCount > 0)
+            {
+                _building.CurrentLevel.RobocopCount--;
+                robocop = new Cop();
+                robocop.Type = Cop.NormalCopCount + Cop.SwatCopCount;
+            }
+
+            if (robocop == null)
+                return;
+
+            _nextRobocopSpawn = 0.1f + RandomHelper.Next() * 0.2f;
+
+            // look for space to spawn
+            int rFloor = RandomHelper.Next(_building.CurrentLevel.Floors.Length);
+            while (_building.CurrentLevel.Floors[rFloor].Rooms.Length == 0) // avoid empty floor
+            {
+                rFloor++;
+                rFloor %= _building.CurrentLevel.Floors.Length;
+            }
+            int rRoom = RandomHelper.Next(_building.CurrentLevel.Floors[rFloor].Rooms.Length);
+            Room room = _building.CurrentLevel.Floors[rFloor].Rooms[rRoom];
+            // find correct X
+            int roomSize = (304 - room.RightMargin * 8 + 8 - 64 - (room.LeftMargin * 8 + 16 + 32));
+            int x = room.LeftMargin * 8 + 16 + 32 + RandomHelper.Next(roomSize);
+            for (int r = 0; r < room.RoomDoors.Length; r++)
+            {
+                RoomDoor door = room.RoomDoors[r];
+                if ((x >= door.X && x <= door.X + 32) ||
+                    (x + 32 >= door.X && x + 32 <= door.X + 32))
+                {
+                    door.OpenLeft();
+                    door.IsRobocopBlocked = true;
+                }
+            }
+
+            robocop.Room = room;
+            room.Cops.Add(robocop);
+
+            robocop.SpawnLand(x, (RandomHelper.Next() > 0.5f ? SpriteEffects.None : SpriteEffects.FlipHorizontally));
         }
         
         private void SpawnSwat()
@@ -1907,6 +2005,46 @@ namespace GreedyKid
                 new Rectangle(261 + textX, 0, _numberRectangle[11].Width, _numberRectangle[11].Height),
                 _numberRectangle[11],
                 Color.White);
+
+            // robocop beam
+            if (!_pause && _building.CurrentLevel != null && SelectedLevel >= 0 && SelectedLevel < _building.LevelCount)
+            {
+                // cops & drops
+                for (int f = 0; f < _building.CurrentLevel.Floors.Length; f++)
+                {
+                    Floor floor = _building.CurrentLevel.Floors[f];
+
+                    // rooms
+                    for (int r = 0; r < floor.Rooms.Length; r++)
+                    {
+                        Room room = floor.Rooms[r];
+
+                        // cops
+                        for (int c = 0; c < room.Cops.Count; c++)
+                        {
+                            Cop cop = room.Cops[c];
+                            if (cop != null)
+                            {
+                                int x = cop.RobocopBeamPosition;
+                                if (x >= 0)
+                                {
+                                    spriteBatch.Draw(texture,
+                                        new Rectangle(x, 0, _robocopBeamRectangle.Width, _robocopBeamRectangle.Height),
+                                        _robocopBeamRectangle,
+                                        Color.White);
+                                }
+                                if (cop.RobocopFlash)
+                                {
+                                    spriteBatch.Draw(texture,
+                                        new Rectangle(0, 0, GreedyKidGame.Width, GreedyKidGame.Height),
+                                        _pixelRectangle,
+                                        Color.White);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
 
             spriteBatch.End();
         }        
