@@ -42,6 +42,9 @@ namespace GreedyKid
         // robocop
         RocketUp,
         RocketDown,
+        RocketSmokeUp,
+        LandingSmoke,
+        StartingSmoke,
 
         Count
     }
