@@ -6,9 +6,10 @@ namespace GreedyKid
 {
     public enum DamageType
     {
-        Normal,
-        Taser,
-        Gun,
+        Normal, // tonfa cop / retiree
+        Taser, //  taser cop
+        Gun, // swat
+        Magnum, // robocop
     }
 
     public sealed class Player : IEntity
@@ -190,6 +191,22 @@ namespace GreedyKid
             }
             _frameDuration[(int)EntityState.Tased] = 0.1f;
 
+            // shot
+            _frames[(int)EntityState.Shot] = new Rectangle[2];
+            for (int f = 0; f < _frames[(int)EntityState.Shot].Length; f++)
+            {
+                _frames[(int)EntityState.Shot][f] = new Rectangle(f * 32 + 57 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine, 32, 32);
+            }
+            _frameDuration[(int)EntityState.Shot] = 0.1f;
+
+            // splash
+            _frames[(int)EntityState.Splash] = new Rectangle[1];
+            for (int f = 0; f < _frames[(int)EntityState.Splash].Length; f++)
+            {
+                _frames[(int)EntityState.Splash][f] = new Rectangle(f * 32 + 59 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine, 32, 32);
+            }
+            _frameDuration[(int)EntityState.Splash] = 0.1f;
+
 
             // hiding before entering
             _isVisible = false;
@@ -274,6 +291,10 @@ namespace GreedyKid
                     else if (State == EntityState.SlamingDoor)
                     {
                         State = EntityState.Idle;
+                    }
+                    else if (State == EntityState.Shot || State == EntityState.Splash)
+                    {
+                        _currentFrame = _frames[(int)State].Length - 1; // block on last frame
                     }
                 }
             }
@@ -633,11 +654,23 @@ namespace GreedyKid
             _currentFrameTime = 0.0f;
         }
 
+        public void HitRobocop(SpriteEffects orientation)
+        {
+            _lastDamageType = DamageType.Magnum;
+            Orientation = orientation;
+            Life = 0;
+            KO();
+        }
+
         private void KO()
         {
             State = EntityState.Crying;
             if (_lastDamageType == DamageType.Taser)
                 State = EntityState.Tased;
+            else if (_lastDamageType == DamageType.Gun)
+                State = EntityState.Shot;
+            else if (_lastDamageType == DamageType.Magnum)
+                State = EntityState.Splash;
             _currentFrame = 0;
             _currentFrameTime = 0.0f;
 

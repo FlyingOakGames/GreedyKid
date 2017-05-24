@@ -39,6 +39,7 @@ namespace GreedyKid
         RopeDown,
         SmokeUp,
         SmokeDown,
+        Shot,
         // robocop
         RocketUp,
         RocketDown,
@@ -46,6 +47,7 @@ namespace GreedyKid
         LandingSmoke,
         StartingSmoke,
         Landing,
+        Splash,
 
         Count
     }

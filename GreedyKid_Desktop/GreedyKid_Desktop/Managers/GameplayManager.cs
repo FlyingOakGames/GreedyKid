@@ -794,6 +794,10 @@ namespace GreedyKid
                                     else
                                     {
                                         // robocop fire
+                                        if (Player.CanBeHit)
+                                        {
+                                            Player.HitRobocop((cop.Orientation == SpriteEffects.None ? SpriteEffects.FlipHorizontally : SpriteEffects.None));
+                                        }
                                         //FireBullet(BulletType.Taser, cop.X, cop.Orientation, cop.Room);
                                     }
                                 }
@@ -1662,6 +1666,10 @@ namespace GreedyKid
                     }
                 }
 
+                if (!_pause)
+                    if ((Player != null && _spawnEntrance && _spawningCop != null && Player.Life <= 0) || (_entranceState != ElevatorState.Opening && Player != null && !Player.HasEnteredElevator && Player.Life <= 0))
+                        Player.Draw(spriteBatch, cameraPosY);
+
                 // retireds & nurses
                 for (int f = 0; f < _building.CurrentLevel.Floors.Length; f++)
                 {
@@ -1802,7 +1810,7 @@ namespace GreedyKid
             }
 
             if (!_pause)
-                if ((Player != null && _spawnEntrance && _spawningCop != null) || (_entranceState != ElevatorState.Opening && Player != null && !Player.HasEnteredElevator))
+                if ((Player != null && _spawnEntrance && _spawningCop != null && Player.Life > 0) || (_entranceState != ElevatorState.Opening && Player != null && !Player.HasEnteredElevator && Player.Life > 0))
                     Player.Draw(spriteBatch, cameraPosY);
 
             // transition

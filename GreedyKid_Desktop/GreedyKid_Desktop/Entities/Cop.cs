@@ -1041,7 +1041,7 @@ namespace GreedyKid
 
             _currentHitCooldown = _hitCooldown;
 
-            if (Type >= NonFiringCopCount)
+            if (Type >= NonFiringCopCount && Type < NormalCopCount + SwatCopCount)
                 HasFired = true;
         }
 
@@ -1168,7 +1168,10 @@ namespace GreedyKid
             if (Type < NormalCopCount + SwatCopCount)
                 _actionTime = _currentHitCooldown;
             else
+            {
+                HasFired = true;
                 _actionTime = _frameDuration[(int)EntityState.HitCooldown] * _frames[(int)EntityState.HitCooldown][Type].Length;
+            }
             _hasJustTurned = false;
 
             _wantsToOpenDoor = false;
