@@ -1960,7 +1960,7 @@ namespace GreedyKid
             UIHelper.Instance.DrawMicrophoneVolume(spriteBatch);
 
             // cop timer
-            if (!_pause && _totalCopTimer > 0)
+            if (_building.CurrentLevel != null && SelectedLevel >= 0 && SelectedLevel < _building.LevelCount && !_pause && _totalCopTimer > 0)
             {
                 int maxX = GreedyKidGame.Width - _copTimerRectangle[12].Width - 15;
                 int minX = 15;

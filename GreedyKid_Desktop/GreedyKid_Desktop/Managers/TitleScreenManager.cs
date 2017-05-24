@@ -158,7 +158,10 @@ namespace GreedyKid
             switch (_state)
             {
                 case TitleScreenState.Title: break;
-                case TitleScreenState.Main: _state = TitleScreenState.Title; InputManager.PlayerDevice = null; break;
+                case TitleScreenState.Main:
+                    _state = TitleScreenState.Title;
+                    InputManager.PlayerDevice = null;
+                    break;
                 case TitleScreenState.Settings:
                     if (!SettingsManager.Instance.PushCancel(fromMouse))
                     {
