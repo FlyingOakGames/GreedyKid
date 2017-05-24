@@ -116,6 +116,8 @@ namespace GreedyKid
         private float _currentElevatorKidFrameTime = 0.0f;
         private const float _elevatorKidFrameTime = 0.1f;
 
+        private int _copTimer = 0;
+
         // spawning cop
         private TimerType _timerType = TimerType.Cop;
         private bool _spawnEntrance = false;
@@ -387,19 +389,21 @@ namespace GreedyKid
             _timerType = TimerType.None;
             if (_building.CurrentLevel.TimeBeforeCop > 0)
             {
-                Time = _building.CurrentLevel.TimeBeforeCop;
+                _copTimer = _building.CurrentLevel.TimeBeforeCop;
                 _timerType = TimerType.Cop;                
             }
             else if (_building.CurrentLevel.TimeBeforeSwat > 0)
             {
-                Time = _building.CurrentLevel.TimeBeforeSwat;
+                _copTimer = _building.CurrentLevel.TimeBeforeSwat;
                 _timerType = TimerType.Swat;
             }
             else if (_building.CurrentLevel.TimeBeforeRobocop > 0)
             {
-                Time = _building.CurrentLevel.TimeBeforeRobocop;
+                _copTimer = _building.CurrentLevel.TimeBeforeRobocop;
                 _timerType = TimerType.Robocop;
             }
+
+            Time = 0;
 
             // camera init
             _cameraPositionY = 0.0f;
@@ -612,11 +616,13 @@ namespace GreedyKid
                 {
                     _currentSeconds -= 1.0f;
 
-                    if (Time > 0)
-                    {
-                        Time--;
+                    Time++;
 
-                        if (Time == (int)_copArrivingTime && _timerType == TimerType.Cop)
+                    if (_copTimer > 0)
+                    {
+                        _copTimer--;
+
+                        if (_copTimer == (int)_copArrivingTime && _timerType == TimerType.Cop)
                         {
                             if (_building.CurrentLevel.Cop1Count > 0)
                             {
@@ -631,19 +637,19 @@ namespace GreedyKid
                                 _spawningCop.Type = 1;
                             }
                         }
-                        else if (Time == 0 && _timerType < TimerType.Robocop)
+                        else if (_copTimer == 0 && _timerType < TimerType.Robocop)
                         {
                             if (_timerType == TimerType.Cop && _building.CurrentLevel.TimeBeforeSwat > 0)
                             {
                                 // start swat timer
                                 _timerType = TimerType.Swat;
-                                Time = _building.CurrentLevel.TimeBeforeSwat;
+                                _copTimer = _building.CurrentLevel.TimeBeforeSwat;
                             }
                             else if (_timerType == TimerType.Cop && _building.CurrentLevel.TimeBeforeRobocop > 0)
                             {
                                 // start robocop timer
                                 _timerType = TimerType.Robocop;
-                                Time = _building.CurrentLevel.TimeBeforeRobocop;
+                                _copTimer = _building.CurrentLevel.TimeBeforeRobocop;
                             }
                             else if (_timerType == TimerType.Cop)
                             {
@@ -658,7 +664,7 @@ namespace GreedyKid
                                 {
                                     // start robocop timer
                                     _timerType = TimerType.Robocop;
-                                    Time = _building.CurrentLevel.TimeBeforeRobocop;
+                                    _copTimer = _building.CurrentLevel.TimeBeforeRobocop;
                                 }
                                 else
                                 {
@@ -666,7 +672,7 @@ namespace GreedyKid
                                 }
                             }
                         }
-                        else if (Time == 0 && _timerType == TimerType.Robocop)
+                        else if (_copTimer == 0 && _timerType == TimerType.Robocop)
                         {
                             _timerType = TimerType.None;
                             SpawnRobocop();

@@ -1489,11 +1489,13 @@ namespace GreedyKidEditor
             }
 
             // time
-
+            /*
             if (_building != null && SelectedLevel >= 0 && SelectedLevel < _building.Levels.Count)
             {
                 Time = _building.Levels[SelectedLevel].TimeBeforeCop;
-            }
+            }*/
+
+            Time = 0;
 
             _encodedTime[0] = Time / 600;
             _encodedTime[1] = (Time - _encodedTime[0] * 600) / 60;

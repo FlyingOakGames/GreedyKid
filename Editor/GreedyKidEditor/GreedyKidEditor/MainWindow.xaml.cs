@@ -844,6 +844,7 @@ namespace GreedyKidEditor
                 Level level = _building.Levels[PreviewRenderer.SelectedLevel];
 
                 level.Cop1Count++;
+                level.Cop1Count = Math.Min(level.Cop1Count, Cop.MaxNormalCop - level.Cop2Count);
                 cop1TextBox.Text = level.Cop1Count.ToString();
             }
         }
@@ -867,6 +868,7 @@ namespace GreedyKidEditor
                 Level level = _building.Levels[PreviewRenderer.SelectedLevel];
 
                 level.Cop2Count++;
+                level.Cop2Count = Math.Min(level.Cop2Count, Cop.MaxNormalCop - level.Cop1Count);
                 cop2TextBox.Text = level.Cop2Count.ToString();
             }
         }
@@ -901,6 +903,7 @@ namespace GreedyKidEditor
                 Level level = _building.Levels[PreviewRenderer.SelectedLevel];
 
                 level.Swat1Count++;
+                level.Swat1Count = Math.Min(level.Swat1Count, Cop.MaxSwatCop);
                 swat1TextBox.Text = level.Swat1Count.ToString();
             }
         }
@@ -935,6 +938,7 @@ namespace GreedyKidEditor
                 Level level = _building.Levels[PreviewRenderer.SelectedLevel];
 
                 level.RobocopCount++;
+                level.RobocopCount = Math.Min(level.RobocopCount, Cop.MaxRobocop);
                 robocopTextBox.Text = level.RobocopCount.ToString();
             }
         }

@@ -6,6 +6,10 @@ namespace GreedyKidEditor
     {
         public const int CopCount = 4;
 
+        public const int MaxNormalCop = 9;
+        public const int MaxSwatCop = 9;
+        public const int MaxRobocop = 9;
+
         public int Type = 0;
         public int X = 0;
 
