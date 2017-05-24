@@ -67,7 +67,7 @@ namespace GreedyKid
             _microphoneRectangle = new Rectangle[10];
             for (int i = 0; i < 10; i++)
             {
-                _microphoneRectangle[i] = new Rectangle(0, TextureManager.GameplayHeight - 148 - 4 * i, 146, 4);
+                _microphoneRectangle[i] = new Rectangle(40 + 3 * i, TextureManager.GameplayHeight - 113, 2, 89);
             }
 
             _selectionRectangle = new Rectangle(142, TextureManager.GameplayHeight - 140, 4, 7);
@@ -146,8 +146,17 @@ namespace GreedyKid
 
                 // microphone
                 int micLevel = Math.Min(9, MicrophoneManager.Instance.LeveledVolume);
+                int posY = GreedyKidGame.Height / 2 - _microphoneRectangle[0].Height / 2;
                 spriteBatch.Draw(texture,
-                    new Rectangle(93, 175, _microphoneRectangle[0].Width, _microphoneRectangle[0].Height),
+                    new Rectangle(6, posY, _microphoneRectangle[0].Width, _microphoneRectangle[0].Height),
+                     _microphoneRectangle[micLevel],
+                     Color.White,
+                     0.0f,
+                     Vector2.Zero,
+                     SpriteEffects.FlipHorizontally,
+                     0.0f);
+                spriteBatch.Draw(texture,
+                    new Rectangle(GreedyKidGame.Width - 8, posY, _microphoneRectangle[0].Width, _microphoneRectangle[0].Height),
                      _microphoneRectangle[micLevel],
                      Color.White);
             }

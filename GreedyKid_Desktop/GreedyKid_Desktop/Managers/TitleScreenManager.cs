@@ -239,7 +239,12 @@ namespace GreedyKid
 
             Texture2D texture = TextureManager.Gameplay;
 
-            UIHelper.Instance.DrawBorders(spriteBatch);            
+            UIHelper.Instance.DrawBorders(spriteBatch);
+
+            if (_state != TitleScreenState.Title)
+            {
+                UIHelper.Instance.DrawMicrophoneVolume(spriteBatch);
+            }
 
             // background
             if (_state == TitleScreenState.Title)
@@ -307,12 +312,7 @@ namespace GreedyKid
                 yStart = 115;
 
                 UIHelper.Instance.DrawCenteredText(spriteBatch, "NOTHING HERE YET, JUST PRESS A", yStart, 0, _selectionOption);
-            }
-
-            if (_state != TitleScreenState.Title)
-            {
-                UIHelper.Instance.DrawMicrophoneVolume(spriteBatch);
-            }
+            }            
 
             // commands
             if (_state == TitleScreenState.Title)

@@ -58,6 +58,8 @@ namespace GreedyKid
         private Rectangle _robocopBeamRectangle;
         private Rectangle _pixelRectangle;
 
+        private Rectangle[] _copTimerRectangle;
+
         public int SelectedLevel = 0;
 
         public Player Player;
@@ -117,8 +119,10 @@ namespace GreedyKid
         private const float _elevatorKidFrameTime = 0.1f;
 
         private int _copTimer = 0;
+        private int _totalCopTimer = 0;
 
         // spawning cop
+        private int _initialNormalCopCount = 0;
         private TimerType _timerType = TimerType.Cop;
         private bool _spawnEntrance = false;
         private Cop _spawningCop = null;   // to reset
@@ -337,6 +341,17 @@ namespace GreedyKid
             // robocop
             _robocopBeamRectangle = new Rectangle(117, TextureManager.GameplayHeight - 113, 32, 16);
             _pixelRectangle = new Rectangle(133, TextureManager.GameplayHeight - 110, 1, 1);
+
+            _copTimerRectangle = new Rectangle[13];
+            for (int i = 0; i < 9; i++)
+            {
+                _copTimerRectangle[i] = new Rectangle(70 + 7 * i, TextureManager.GameplayHeight - 66, 6, 12);
+            }
+            for (int i = 9; i < 12; i++)
+            {
+                _copTimerRectangle[i] = new Rectangle(133 + 15 * (i - 9), TextureManager.GameplayHeight - 66, 14, 12);
+            }
+            _copTimerRectangle[12] = new Rectangle(178, TextureManager.GameplayHeight - 66, 21, 12);
         }
 
         public void LoadBuilding()
@@ -385,10 +400,13 @@ namespace GreedyKid
             _spawningCop = null;   // to reset
             _currentCopArrivingTime = -1.0f;   // to reset
 
+            _totalCopTimer = _building.CurrentLevel.TimeBeforeCop + _building.CurrentLevel.TimeBeforeSwat + _building.CurrentLevel.TimeBeforeRobocop;
+
             _currentSeconds = 0.0f;
             _timerType = TimerType.None;
             if (_building.CurrentLevel.TimeBeforeCop > 0)
             {
+                _initialNormalCopCount = _building.CurrentLevel.Cop1Count + _building.CurrentLevel.Cop2Count;
                 _copTimer = _building.CurrentLevel.TimeBeforeCop;
                 _timerType = TimerType.Cop;                
             }
@@ -621,6 +639,19 @@ namespace GreedyKid
                     if (_copTimer > 0)
                     {
                         _copTimer--;
+
+                        if (_timerType == TimerType.Cop)
+                        {
+                            _building.CurrentLevel.TimeBeforeCop--;
+                        }
+                        else if (_timerType == TimerType.Swat)
+                        {
+                            _building.CurrentLevel.TimeBeforeSwat--;
+                        }
+                        else if (_timerType == TimerType.Robocop)
+                        {
+                            _building.CurrentLevel.TimeBeforeRobocop--;
+                        }
 
                         if (_copTimer == (int)_copArrivingTime && _timerType == TimerType.Cop)
                         {
@@ -1927,6 +1958,93 @@ namespace GreedyKid
                 Color.White);
 
             UIHelper.Instance.DrawMicrophoneVolume(spriteBatch);
+
+            // cop timer
+            if (!_pause && _totalCopTimer > 0)
+            {
+                int maxX = GreedyKidGame.Width - _copTimerRectangle[12].Width - 15;
+                int minX = 15;
+                // warning
+                spriteBatch.Draw(texture,
+                    new Rectangle(maxX,
+                        GreedyKidGame.Height - _copTimerRectangle[12].Height - 1,
+                        _copTimerRectangle[12].Width,
+                        _copTimerRectangle[12].Height),
+                    _copTimerRectangle[12],
+                    Color.White);
+
+                int distance = maxX - _copTimerRectangle[9].Width - _copTimerRectangle[0].Width + 2 - minX;
+                int time = 0;
+
+                if (_building.CurrentLevel.TimeBeforeRobocop > 0)
+                {
+                    time = _building.CurrentLevel.TimeBeforeRobocop + _building.CurrentLevel.TimeBeforeSwat + _building.CurrentLevel.TimeBeforeCop;
+
+                    // icon
+                    spriteBatch.Draw(texture,
+                       new Rectangle(minX - 1 + _copTimerRectangle[0].Width + (int)(distance - distance * ((time - _currentSeconds) / _totalCopTimer)),
+                           GreedyKidGame.Height - _copTimerRectangle[11].Height - 1,
+                           _copTimerRectangle[11].Width,
+                           _copTimerRectangle[11].Height),
+                       _copTimerRectangle[11],
+                       Color.White);
+
+                    // count
+                    spriteBatch.Draw(texture,
+                      new Rectangle(minX + (int)(distance - distance * ((time - _currentSeconds) / _totalCopTimer)),
+                          GreedyKidGame.Height - _copTimerRectangle[9].Height - 1,
+                          _copTimerRectangle[0].Width,
+                          _copTimerRectangle[0].Height),
+                      _copTimerRectangle[_building.CurrentLevel.RobocopCount - 1],
+                      Color.White);                    
+                }
+
+                if (_building.CurrentLevel.TimeBeforeSwat > 0)
+                {
+                    time = _building.CurrentLevel.TimeBeforeSwat + _building.CurrentLevel.TimeBeforeCop;
+
+                    // icon
+                    spriteBatch.Draw(texture,
+                       new Rectangle(minX - 1 + _copTimerRectangle[0].Width + (int)(distance - distance * ((time - _currentSeconds) / _totalCopTimer)),
+                           GreedyKidGame.Height - _copTimerRectangle[10].Height - 1,
+                           _copTimerRectangle[10].Width,
+                           _copTimerRectangle[10].Height),
+                       _copTimerRectangle[10],
+                       Color.White);
+
+                    // count
+                    spriteBatch.Draw(texture,
+                      new Rectangle(minX + (int)(distance - distance * ((time - _currentSeconds) / _totalCopTimer)),
+                          GreedyKidGame.Height - _copTimerRectangle[9].Height - 1,
+                          _copTimerRectangle[0].Width,
+                          _copTimerRectangle[0].Height),
+                      _copTimerRectangle[_building.CurrentLevel.Swat1Count - 1],
+                      Color.White);
+                }
+
+                if (_building.CurrentLevel.TimeBeforeCop > 0)
+                {
+                    time = _building.CurrentLevel.TimeBeforeCop;
+
+                    // icon
+                    spriteBatch.Draw(texture,
+                       new Rectangle(minX - 1 + _copTimerRectangle[0].Width + (int)(distance - distance * ((time - _currentSeconds) / _totalCopTimer)),
+                           GreedyKidGame.Height - _copTimerRectangle[9].Height - 1,
+                           _copTimerRectangle[9].Width,
+                           _copTimerRectangle[9].Height),
+                       _copTimerRectangle[9],
+                       Color.White);
+
+                    // count
+                    spriteBatch.Draw(texture,
+                      new Rectangle(minX + (int)(distance - distance * ((time - _currentSeconds) / _totalCopTimer)),
+                          GreedyKidGame.Height - _copTimerRectangle[9].Height - 1,
+                          _copTimerRectangle[0].Width,
+                          _copTimerRectangle[0].Height),
+                      _copTimerRectangle[_initialNormalCopCount - 1],
+                      Color.White);
+                }
+            }
 
             // player life
             for (int h = 0; h < 3; h++)
