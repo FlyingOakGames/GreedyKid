@@ -18,7 +18,7 @@ namespace GreedyKid
     {
         public string SaveDirectory = "";
 
-        private static string _settingsPath = "Settings";
+        private string _settingsPath = "Settings";
 
         // settings
         public int ResolutionX = -1;

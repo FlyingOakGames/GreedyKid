@@ -354,10 +354,22 @@ namespace GreedyKid
             _copTimerRectangle[12] = new Rectangle(178, TextureManager.GameplayHeight - 66, 21, 12);
         }
 
-        public void LoadBuilding()
+        public string BuildingIdentifier
         {
+            get {
+                if (_building == null)
+                    return String.Empty;
+                else
+                    return _building.Identifier;
+            }
+        }
+
+        public void LoadBuilding(string identifier)
+        {            
             _building = new Building();
-            _building.Load();
+            _building.Load(identifier);
+
+            SaveManager.Instance.Load(_building);
 
             LoadLevel(0);
         }

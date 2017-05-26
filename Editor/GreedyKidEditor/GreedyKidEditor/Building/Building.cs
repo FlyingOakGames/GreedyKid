@@ -5,6 +5,8 @@ namespace GreedyKidEditor
 {
     public sealed class Building
     {
+        public string Identifier = "Default";
+
         public string Name = "";
 
         public List<Level> Levels = new List<Level>();
@@ -22,6 +24,8 @@ namespace GreedyKidEditor
 
         public void Save(BinaryWriter writer, bool export = false)
         {
+            writer.Write(Identifier);
+
             writer.Write(Name);
 
             writer.Write(Levels.Count);
@@ -36,6 +40,8 @@ namespace GreedyKidEditor
         public void Load(BinaryReader reader)
         {
             Levels.Clear();
+
+            Identifier = reader.ReadString();
 
             Name = reader.ReadString();
 

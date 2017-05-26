@@ -17,6 +17,8 @@ namespace GreedyKid
     public sealed class TitleScreenManager
     {
         public bool StartGame = false;
+        public bool ShouldLoadBuilding = false;
+        public string RequiredBuildingIdentifier = "Default";
 
         private Rectangle _viewport;
         private Rectangle[] _backgroundRectangles;
@@ -133,7 +135,12 @@ namespace GreedyKid
                     break;
                 case TitleScreenState.Play:
                     if (_selectionOption == 0)
+                    {
                         _state = TitleScreenState.LevelSelection;
+                        // load building
+                        ShouldLoadBuilding = true;
+                        RequiredBuildingIdentifier = "Default";
+                    }
                     //else if (_selectionOption == 1)
                     //    _state = TitleScreenState.SteamWorkshop;
                     else if (_selectionOption == 2)
@@ -171,8 +178,13 @@ namespace GreedyKid
                     }
                     break;
                 case TitleScreenState.Play: _state = TitleScreenState.Main; break;
-                case TitleScreenState.LevelSelection: _state = TitleScreenState.Play; break;
-                case TitleScreenState.SteamWorkshop: _selectionOption = 1; _state = TitleScreenState.Play; break;
+                case TitleScreenState.LevelSelection:
+                    _state = TitleScreenState.Play;
+                    break;
+                case TitleScreenState.SteamWorkshop:
+                    _selectionOption = 1;
+                    _state = TitleScreenState.Play;
+                    break;
             }
 
             if (fromMouse)

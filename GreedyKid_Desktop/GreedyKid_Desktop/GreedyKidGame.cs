@@ -233,11 +233,20 @@ namespace GreedyKid
 
                     _titleScreenManager.Update(gameTimeF);
 
-                    if (_titleScreenManager.StartGame)
+                    if (_titleScreenManager.ShouldLoadBuilding)
                     {
-                        _gameplayManager = new GameplayManager();
-                        _gameplayManager.LoadBuilding();
+                        if (_gameplayManager == null || _gameplayManager.BuildingIdentifier != _titleScreenManager.RequiredBuildingIdentifier)
+                        {
+                            _gameplayManager = new GameplayManager();
+                            _gameplayManager.LoadBuilding(_titleScreenManager.RequiredBuildingIdentifier);
+                        }
 
+                        _titleScreenManager.ShouldLoadBuilding = false;
+
+                        GC.Collect();
+                    }
+                    else if (_titleScreenManager.StartGame)
+                    {                       
                         _titleScreenManager = null;
 
                         _state = GameState.Ingame;
