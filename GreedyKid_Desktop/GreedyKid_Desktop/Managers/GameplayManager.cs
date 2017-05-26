@@ -60,6 +60,8 @@ namespace GreedyKid
 
         private Rectangle[] _copTimerRectangle;
 
+        private Rectangle[] _gameoverRectangle;
+
         public int SelectedLevel = 0;
 
         public Player Player;
@@ -154,6 +156,13 @@ namespace GreedyKid
         private Rectangle[] _pauseBackgroundRectangles;
 
         public bool ReturnToLevelSelection = false;
+
+        // gameover
+        private float _currentGameOverFrameTime = 0.0f;
+        private int _currentGameOverFrame = 0;
+        private int _currentFrameBeforeGameOver = 0;
+        private const int _frameBeforeGameOver = 10;
+        private const float _gameOverFrameTime = 0.1f;
 
         public GameplayManager()
         {
@@ -305,11 +314,15 @@ namespace GreedyKid
             _numberRectangle[11].X = _numberRectangle[10].X + _numberRectangle[10].Width;
 
             // transition
-            _transitionRectangle = new Rectangle[4];
+            _transitionRectangle = new Rectangle[7];
             _transitionRectangle[0] = new Rectangle(152, TextureManager.GameplayHeight - 130, 1, 1); // 1x1
             _transitionRectangle[2] = new Rectangle(150, TextureManager.GameplayHeight - 133, 50, 50); // circle half full
             _transitionRectangle[1] = new Rectangle(150, TextureManager.GameplayHeight - 184, 50, 50); // circle empty            
             _transitionRectangle[3] = new Rectangle(201, TextureManager.GameplayHeight - 184, 328, 184); // half full
+
+            _transitionRectangle[4] = new Rectangle(201, TextureManager.GameplayHeight - 183, 328, 13); // gameover 1
+            _transitionRectangle[5] = new Rectangle(201, TextureManager.GameplayHeight - 183, 328, 28); // gameover 2
+            _transitionRectangle[6] = new Rectangle(201, TextureManager.GameplayHeight - 183, 328, 82); // gameover 3
 
             // inter level
             _interLevelRectangle = new Rectangle[_elevatorFrameCount + _cableFrameCount + 3 + _elevatorKidFrameCount];
@@ -352,7 +365,19 @@ namespace GreedyKid
                 _copTimerRectangle[i] = new Rectangle(133 + 15 * (i - 9), TextureManager.GameplayHeight - 66, 14, 12);
             }
             _copTimerRectangle[12] = new Rectangle(178, TextureManager.GameplayHeight - 66, 21, 12);
-        }
+
+            // gameover
+            _gameoverRectangle = new Rectangle[9];
+            _gameoverRectangle[0] = new Rectangle(0, TextureManager.GameplayHeight - 38, 11, 6); // upper left
+            _gameoverRectangle[1] = new Rectangle(11, TextureManager.GameplayHeight - 38, 1, 6); // up
+            _gameoverRectangle[2] = new Rectangle(12, TextureManager.GameplayHeight - 38, 11, 6); // upper right
+            _gameoverRectangle[3] = new Rectangle(12, TextureManager.GameplayHeight - 32, 11, 1); // right
+            _gameoverRectangle[4] = new Rectangle(12, TextureManager.GameplayHeight - 31, 11, 6); // lower right
+            _gameoverRectangle[5] = new Rectangle(11, TextureManager.GameplayHeight - 31, 1, 6); // down
+            _gameoverRectangle[6] = new Rectangle(0, TextureManager.GameplayHeight - 31, 11, 6); // lower left
+            _gameoverRectangle[7] = new Rectangle(0, TextureManager.GameplayHeight - 32, 11, 1); // left
+            _gameoverRectangle[8] = new Rectangle(11, TextureManager.GameplayHeight - 32, 1, 1); // background
+        }        
 
         public string BuildingIdentifier
         {
@@ -450,6 +475,11 @@ namespace GreedyKid
             // bullets
             _bulletCount = 0;
 
+            // gameover
+            _currentGameOverFrameTime = 0.0f;
+            _currentGameOverFrame = 0;
+            _currentFrameBeforeGameOver = 0;
+
             // clean memory
             GC.Collect();
         }
@@ -514,9 +544,12 @@ namespace GreedyKid
 
         public void RequestPause()
         {
-            _pause = true;
-            _pauseOption = 0;
-            _inSettings = false;
+            if (Player != null && Player.Life > 0)
+            {
+                _pause = true;
+                _pauseOption = 0;
+                _inSettings = false;
+            }
         }
 
         public void PauseUp()
@@ -638,6 +671,20 @@ namespace GreedyKid
                         MoveCamera((playerY - 2) * 40.0f);
                     else if (playerY < prevPlayerY && _cameraPositionY > (playerY - 1) * 40.0f)
                         MoveCamera((playerY - 1) * 40.0f);                    
+                }
+
+                // gameover
+                if (Player.Life <= 0)
+                {
+                    _currentGameOverFrameTime += gameTime;
+                    if (_currentGameOverFrameTime >= _gameOverFrameTime)
+                    {
+                        _currentGameOverFrameTime -= _gameOverFrameTime;
+                        if (_currentFrameBeforeGameOver < _frameBeforeGameOver)
+                            _currentFrameBeforeGameOver++;
+                        else
+                            _currentGameOverFrame++;
+                    }
                 }
 
                 // cop spawning
@@ -1479,6 +1526,108 @@ namespace GreedyKid
             }
         }
 
+        private void DrawGameoverBox(SpriteBatch spriteBatch, int width, int frame)
+        {
+            Texture2D texture = TextureManager.Gameplay;
+
+            int height = 20;
+
+
+            int x = GreedyKidGame.Width / 2 - width / 2;
+            int y = GreedyKidGame.Height / 2 - height / 2;
+
+
+            // background
+            spriteBatch.Draw(texture,
+                new Rectangle(
+                    x + _gameoverRectangle[0].Width - 1,
+                    y + _gameoverRectangle[0].Height - 1,
+                    width - _gameoverRectangle[0].Width - _gameoverRectangle[2].Width + 2,
+                    height - _gameoverRectangle[0].Height - _gameoverRectangle[6].Height + 2),
+                _gameoverRectangle[8],
+                Color.White);
+
+            // upper left
+            spriteBatch.Draw(texture,
+                new Rectangle(
+                    x,
+                    y,
+                    _gameoverRectangle[0].Width,
+                    _gameoverRectangle[0].Height),
+                _gameoverRectangle[0],
+                Color.White);
+
+            // up
+            spriteBatch.Draw(texture,
+                new Rectangle(
+                    x + _gameoverRectangle[0].Width - 1,
+                    y,
+                    width - _gameoverRectangle[0].Width - _gameoverRectangle[2].Width + 2,
+                    _gameoverRectangle[1].Height),
+                _gameoverRectangle[1],
+                Color.White);
+
+            // upper right
+            spriteBatch.Draw(texture,
+                new Rectangle(
+                    x + width - _gameoverRectangle[2].Width,
+                    y,
+                    _gameoverRectangle[2].Width,
+                    _gameoverRectangle[2].Height),
+                _gameoverRectangle[2],
+                Color.White);
+
+            // right
+            spriteBatch.Draw(texture,
+                new Rectangle(
+                    x + width - _gameoverRectangle[3].Width,
+                    y + _gameoverRectangle[2].Height - 1,
+                    _gameoverRectangle[3].Width,
+                    height - _gameoverRectangle[2].Height - _gameoverRectangle[4].Height + 2),
+                _gameoverRectangle[3],
+                Color.White);
+
+            // lower right
+            spriteBatch.Draw(texture,
+                new Rectangle(
+                    x + width - _gameoverRectangle[4].Width,
+                    y + height - _gameoverRectangle[4].Height,
+                    _gameoverRectangle[4].Width,
+                    _gameoverRectangle[4].Height),
+                _gameoverRectangle[4],
+                Color.White);
+
+            // down
+            spriteBatch.Draw(texture,
+                new Rectangle(
+                    x + _gameoverRectangle[0].Width - 1,
+                    y + height - _gameoverRectangle[5].Height,
+                    width - _gameoverRectangle[0].Width - _gameoverRectangle[2].Width + 2,
+                    _gameoverRectangle[5].Height),
+                _gameoverRectangle[5],
+                Color.White);
+
+            // lower left
+            spriteBatch.Draw(texture,
+                new Rectangle(
+                    x,
+                    y + height - _gameoverRectangle[6].Height,
+                    _gameoverRectangle[6].Width,
+                    _gameoverRectangle[6].Height),
+                _gameoverRectangle[6],
+                Color.White);
+
+            // left
+            spriteBatch.Draw(texture,
+                new Rectangle(
+                    x,
+                    y + _gameoverRectangle[2].Height - 1,
+                    _gameoverRectangle[3].Width,
+                    height - _gameoverRectangle[2].Height - _gameoverRectangle[4].Height + 2),
+                _gameoverRectangle[7],
+                Color.White);
+        }
+
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Begin(samplerState: SamplerState.PointWrap);
@@ -1861,6 +2010,43 @@ namespace GreedyKid
             if (!_pause)
                 if ((Player != null && _spawnEntrance && _spawningCop != null && Player.Life > 0) || (_entranceState != ElevatorState.Opening && Player != null && !Player.HasEnteredElevator && Player.Life > 0))
                     Player.Draw(spriteBatch, cameraPosY);
+
+            // gameover
+            if (!_pause && Player != null && _currentGameOverFrame > 0)
+            {
+                // background
+                if (_currentGameOverFrame == 1)
+                {
+                    spriteBatch.Draw(texture,
+                        new Rectangle(0, GreedyKidGame.Height / 2 - _transitionRectangle[4].Height / 2, GreedyKidGame.Width, _transitionRectangle[4].Height),
+                        _transitionRectangle[4],
+                        Color.White);
+                }
+                else if (_currentGameOverFrame == 2)
+                {
+                    spriteBatch.Draw(texture,
+                        new Rectangle(0, GreedyKidGame.Height / 2 - _transitionRectangle[5].Height / 2, GreedyKidGame.Width, _transitionRectangle[5].Height),
+                        _transitionRectangle[5],
+                        Color.White);
+                }
+                else if (_currentGameOverFrame == 3)
+                {
+                    spriteBatch.Draw(texture,
+                        new Rectangle(0, GreedyKidGame.Height / 2 - _transitionRectangle[6].Height / 2, GreedyKidGame.Width, _transitionRectangle[6].Height),
+                        _transitionRectangle[6],
+                        Color.White);
+                }
+                else
+                {
+                    spriteBatch.Draw(texture,
+                        new Rectangle(0, 0, GreedyKidGame.Width, GreedyKidGame.Height),
+                        _transitionRectangle[3],
+                        Color.White);
+                }
+
+                // box
+                DrawGameoverBox(spriteBatch, 100, 0);
+            }
 
             // transition
             if (_transitionState != TransitionState.None && !_pause)

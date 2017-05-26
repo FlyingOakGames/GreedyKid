@@ -264,8 +264,6 @@ namespace GreedyKid
                         _titleScreenManager = new TitleScreenManager();
                         _titleScreenManager.SetState(TitleScreenState.LevelSelection);
 
-                        _gameplayManager = null;
-
                         _state = GameState.Title;
 
                         GC.Collect();
