@@ -24,6 +24,15 @@ namespace GreedyKidEditor
 
         public void Save(BinaryWriter writer)
         {
+            // removing empty floors
+            for (int f = Floors.Count - 1; f >= 0; f--)
+            {
+                if (Floors[f].Rooms.Count == 0)
+                    Floors.RemoveAt(f);
+                else
+                    break;
+            }
+
             writer.Write(Name);
 
             writer.Write(Floors.Count);
