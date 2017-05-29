@@ -233,6 +233,9 @@ namespace GreedyKid
         private string[] _resume = new string[] { "RESUME", "REPRENDRE", "WEITER", "ПРОДОЛЖИТЬ", "REANUDAR", "RETOMAR", "RIPRENDI" };
         public string Resume { get { return _resume[(int)_language]; } }
 
+        private string[] _gameover = new string[] { "GAME OVER", "FIN DE PARTIE", "GAME OVER", "ИГРА ОКОНЧЕНА", "FIN DE PARTIDA", "FIM DA PARTIDA", "GAME OVER" };
+        public string Gameover { get { return _gameover[(int)_language]; } }
+
         // *********************** LANGUAGE LOADING ***********************
 
         private void LoadCyrillic()

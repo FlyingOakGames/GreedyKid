@@ -74,7 +74,7 @@ namespace GreedyKid
             GamePadState currentState = GamePad.GetState(_playerIndex, GamePadDeadZone.IndependentAxes);
             _isConnected = currentState.IsConnected;
 
-            if (manager.Player != null && !manager.Pause)
+            if (manager.Player != null && !manager.Pause && !manager.Gameover)
             {
                 // moving
                 if (currentState.DPad.Left == ButtonState.Pressed || currentState.ThumbSticks.Left.X < 0.0f)
@@ -122,6 +122,18 @@ namespace GreedyKid
                 else if ((currentState.DPad.Left == ButtonState.Pressed && _previousGamePadState.DPad.Left == ButtonState.Released) ||
                     (currentState.ThumbSticks.Left.X <= -_stickDZ && _previousGamePadState.ThumbSticks.Left.X > -_stickDZ))
                     manager.PauseLeft();
+            }
+            else if (manager.Player != null && manager.Gameover)
+            {
+                if (currentState.Buttons.A == ButtonState.Pressed && _previousGamePadState.Buttons.A == ButtonState.Released)
+                    manager.PauseSelect();
+
+                if ((currentState.DPad.Up == ButtonState.Pressed && _previousGamePadState.DPad.Up == ButtonState.Released) ||
+                    (currentState.ThumbSticks.Left.Y >= _stickDZ && _previousGamePadState.ThumbSticks.Left.Y < _stickDZ))
+                    manager.PauseUp();
+                else if ((currentState.DPad.Down == ButtonState.Pressed && _previousGamePadState.DPad.Down == ButtonState.Released) ||
+                    (currentState.ThumbSticks.Left.Y <= -_stickDZ && _previousGamePadState.ThumbSticks.Left.Y > -_stickDZ))
+                    manager.PauseDown();
             }
             else
             {

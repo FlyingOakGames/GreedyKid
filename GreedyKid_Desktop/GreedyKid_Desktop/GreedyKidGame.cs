@@ -246,9 +246,11 @@ namespace GreedyKid
                         GC.Collect();
                     }
                     else if (_titleScreenManager.StartGame)
-                    {                       
-                        _titleScreenManager = null;
+                    {
+                        _gameplayManager.LoadLevel(0); // level should come from _titleScreenManager selection
 
+                        _titleScreenManager = null;
+                       
                         _state = GameState.Ingame;
 
                         GC.Collect();
@@ -261,6 +263,8 @@ namespace GreedyKid
 
                     if (_gameplayManager.ReturnToLevelSelection)
                     {
+                        _gameplayManager.ReturnToLevelSelection = false;
+
                         _titleScreenManager = new TitleScreenManager();
                         _titleScreenManager.SetState(TitleScreenState.LevelSelection);
 

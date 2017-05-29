@@ -195,12 +195,16 @@ namespace GreedyKid
             }
         }
 
-        public void DrawTitle(SpriteBatch spriteBatch, string text)
+        public void DrawTitle(SpriteBatch spriteBatch, string text, int frame = -1)
         {
             SpriteFont font = TextManager.Instance.Font;
             Texture2D texture = TextureManager.Gameplay;
 
             int textWidth = (int)font.MeasureString(text).X;
+
+            Color highlight = _selectedColor;
+            if (frame == 0)
+                highlight = Color.White;
 
             // mask
             spriteBatch.Draw(texture,
@@ -223,10 +227,11 @@ namespace GreedyKid
                 _selectedColor);
 
             // text
-            spriteBatch.DrawString(font,
-                text,
-                new Vector2(GreedyKidGame.Width / 2 - textWidth / 2, 1),
-                Color.White);
+            if (frame != 2)
+                spriteBatch.DrawString(font,
+                    text,
+                    new Vector2(GreedyKidGame.Width / 2 - textWidth / 2, 1),
+                    Color.White);
         }
 
 
