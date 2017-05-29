@@ -61,6 +61,8 @@ namespace GreedyKid
 
         private Rectangle[] _gameoverRectangle;
 
+        private Rectangle[] _scoreRectangle;
+
         public int SelectedLevel = 0;
 
         public Player Player;
@@ -375,6 +377,16 @@ namespace GreedyKid
             _gameoverRectangle[6] = new Rectangle(0, TextureManager.GameplayHeight - 31, 11, 6); // lower left
             _gameoverRectangle[7] = new Rectangle(0, TextureManager.GameplayHeight - 32, 11, 1); // left
             _gameoverRectangle[8] = new Rectangle(11, TextureManager.GameplayHeight - 32, 1, 1); // background
+
+            // score
+            _scoreRectangle = new Rectangle[7];
+            _scoreRectangle[0] = new Rectangle(449, TextureManager.GameplayHeight - 232, 33, 11); // no star
+            _scoreRectangle[1] = new Rectangle(449, TextureManager.GameplayHeight - 232 + 12, 33, 11); // 1 star
+            _scoreRectangle[2] = new Rectangle(449, TextureManager.GameplayHeight - 232 + 24, 33, 11); // 2 stars
+            _scoreRectangle[3] = new Rectangle(449, TextureManager.GameplayHeight - 232 + 36, 33, 11); // 3 stars
+            _scoreRectangle[4] = new Rectangle(494, TextureManager.GameplayHeight - 240, 14, 9); // check
+            _scoreRectangle[5] = new Rectangle(509, TextureManager.GameplayHeight - 240, 12, 9); // no check
+            _scoreRectangle[6] = new Rectangle(323, TextureManager.GameplayHeight - 240, 125, 10); // separation
         }        
 
         public string BuildingIdentifier
@@ -1202,7 +1214,8 @@ namespace GreedyKid
                             SelectedLevel++;
                             SelectedLevel %= _building.LevelCount;
                             // init elevator position
-                            _elevatorX = (int)Player.X;
+                            //_elevatorX = (int)Player.X;
+                            _elevatorX = 210;
                             _elevatorY = 69;// 128 - 40 * Player.Room.Y + 4;
 
                             _building.CurrentLevel = null;
@@ -2071,6 +2084,61 @@ namespace GreedyKid
                     new Rectangle(_elevatorX, _elevatorY, _interLevelRectangle[0].Width, _interLevelRectangle[0].Height),
                     _interLevelRectangle[_elevatorFrameCount + _cableFrameCount + 3 + _currentElevatorKidFrame],
                     Color.White);
+
+
+                // score recap
+                int recapX = 36;
+                int recapY = 30;
+                int recapWidth = _scoreRectangle[6].Width;
+
+                // stars
+                spriteBatch.Draw(texture,
+                    new Rectangle(
+                        recapX + recapWidth / 2 - _scoreRectangle[0].Width / 2,
+                        recapY,
+                        _scoreRectangle[0].Width,
+                        _scoreRectangle[0].Height),
+                    _scoreRectangle[0],
+                    Color.White);
+
+                // stage clear
+                UIHelper.Instance.DrawCenteredText(spriteBatch, "STAGE CLEAR", recapY + 13, -1, _pauseOption, recapWidth, recapX);
+
+                // sperator
+                spriteBatch.Draw(texture,
+                    new Rectangle(
+                        recapX + recapWidth / 2 - _scoreRectangle[6].Width / 2,
+                        recapY + 29,
+                        _scoreRectangle[6].Width,
+                        _scoreRectangle[6].Height),
+                    _scoreRectangle[6],
+                    Color.White);
+
+                // time
+                int timeWidth = _scoreRectangle[4].Width; // + "TIME " + "00:00"
+                int moneyWidth = _scoreRectangle[4].Width; // + "MONEY " + Score + "$"
+
+                // money
+
+                // separator
+                spriteBatch.Draw(texture,
+                    new Rectangle(
+                        recapX + recapWidth / 2 - _scoreRectangle[6].Width / 2,
+                        recapY + 69,
+                        _scoreRectangle[6].Width,
+                        _scoreRectangle[6].Height),
+                    _scoreRectangle[6],
+                    Color.White,
+                    0.0f,
+                    Vector2.Zero,
+                    SpriteEffects.FlipVertically,
+                    0.0f
+                    );
+
+                // selection
+                UIHelper.Instance.DrawCenteredText(spriteBatch, "NEXT STAGE", recapY + 82, 0, _pauseOption, recapWidth, recapX);
+                UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.Restart, recapY + 82 + 15, 1, _pauseOption, recapWidth, recapX);
+                UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.Quit, recapY + 82 + 30, 2, _pauseOption, recapWidth, recapX);
             }
             // pause
             else

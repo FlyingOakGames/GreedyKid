@@ -162,7 +162,7 @@ namespace GreedyKid
             }
         }
 
-        public void DrawCenteredText(SpriteBatch spriteBatch, string text, int yPos, int option, int selectedOption)
+        public void DrawCenteredText(SpriteBatch spriteBatch, string text, int yPos, int option, int selectedOption, int targetWidth = -1, int targetX = 0)
         {
             SpriteFont font = TextManager.Instance.Font;
 
@@ -170,26 +170,32 @@ namespace GreedyKid
 
             Texture2D texture = TextureManager.Gameplay;
 
+            if (targetWidth == -1)
+                targetWidth = GreedyKidGame.Width;            
+
             // mask
             spriteBatch.Draw(texture,
-                new Rectangle(GreedyKidGame.Width / 2 - textWidth / 2 - 2, yPos + 3 - (selectedOption == option ? 1 : 0), textWidth + 4, 9),
+                new Rectangle(targetX + targetWidth / 2 - textWidth / 2 - 2, yPos + 3 - (selectedOption == option ? 1 : 0), textWidth + 4, 9),
                 _1x1Rectangle,
                 _backgroundColor);
             spriteBatch.Draw(texture,
-                new Rectangle(GreedyKidGame.Width / 2 - textWidth / 2 - 1, yPos + 2 - (selectedOption == option ? 1 : 0), textWidth + 2, 11),
+                new Rectangle(targetX + targetWidth / 2 - textWidth / 2 - 1, yPos + 2 - (selectedOption == option ? 1 : 0), textWidth + 2, 11),
                 _1x1Rectangle,
                 _backgroundColor);
 
+            Color notSelectedColor = _notSelectedColor;
+            if (option == -1)
+                notSelectedColor = Color.White;
 
             spriteBatch.DrawString(font,
                 text,
-                new Vector2(GreedyKidGame.Width / 2 - textWidth / 2, yPos - (selectedOption == option ? 1 : 0)),
-                (selectedOption == option ? Color.White : _notSelectedColor));
+                new Vector2(targetX + targetWidth / 2 - textWidth / 2, yPos - (selectedOption == option ? 1 : 0)),
+                (selectedOption == option ? Color.White : notSelectedColor));
 
             if (selectedOption == option)
             {
                 spriteBatch.Draw(texture,
-                    new Rectangle(GreedyKidGame.Width / 2 - textWidth / 2 - _selectionRectangle.Width - 2, yPos + 3, _selectionRectangle.Width, _selectionRectangle.Height),
+                    new Rectangle(targetX + targetWidth / 2 - textWidth / 2 - _selectionRectangle.Width - 2, yPos + 3, _selectionRectangle.Width, _selectionRectangle.Height),
                     _selectionRectangle,
                     _selectedColor);
             }
