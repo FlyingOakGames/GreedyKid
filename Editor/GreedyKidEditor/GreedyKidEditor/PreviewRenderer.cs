@@ -634,6 +634,26 @@ namespace GreedyKidEditor
                 bool drawHelper = false;
                 int helperX = 0;
 
+                // target time
+                Rectangle timeRectangle = new Rectangle(138, 0, 50, 12);
+
+                if (IsHover(timeRectangle, true) && _hasWheelUp)
+                    _building.Levels[SelectedLevel].TargetTime++;
+                else if (IsHover(timeRectangle, true) && _hasLeftClick)
+                    _building.Levels[SelectedLevel].TargetTime += 5;
+                else if (IsHover(timeRectangle, true) && _hasWheelDown)
+                {
+                    _building.Levels[SelectedLevel].TargetTime--;
+                    if (_building.Levels[SelectedLevel].TargetTime < 0)
+                        _building.Levels[SelectedLevel].TargetTime = 0;
+                }
+                else if (IsHover(timeRectangle, true) && _hasRightClick)
+                {
+                    _building.Levels[SelectedLevel].TargetTime -= 5;
+                    if (_building.Levels[SelectedLevel].TargetTime < 0)
+                        _building.Levels[SelectedLevel].TargetTime = 0;
+                }
+
                 for (int f = 0; f < _building.Levels[SelectedLevel].Floors.Count; f++)
                 {
                     Floor floor = _building.Levels[SelectedLevel].Floors[f];
@@ -1104,9 +1124,9 @@ namespace GreedyKidEditor
                             source = _retiredRectangle[retired.Type][_retiredSequence[_currentRetiredFrame]];
                             destination = new Rectangle((int)retired.X, 128 - 40 * f + 9 + cameraPosY, 32, 32);
 
-                            Color color = (IsHover(destination) && SelectionMode == SelectionMode.Retired ? _selectionColor : Color.White);
+                            Color color = (IsHover(destination, true) && SelectionMode == SelectionMode.Retired ? _selectionColor : Color.White);
                             if (IsOutsideRoom(room, retired))
-                                color = (IsHover(destination) && SelectionMode == SelectionMode.Retired ? _selectionColorRed : Color.Red);
+                                color = (IsHover(destination, true) && SelectionMode == SelectionMode.Retired ? _selectionColorRed : Color.Red);
 
                             spriteBatch.Draw(_levelTexture,
                                 destination,
@@ -1138,45 +1158,45 @@ namespace GreedyKidEditor
                             }
 
                             // update
-                            if (IsHover(destination) && SelectionMode == SelectionMode.Retired && _hasWheelUp)
+                            if (IsHover(destination, true) && SelectionMode == SelectionMode.Retired && _hasWheelUp)
                             {
                                 retired.Type++;
                                 retired.Type = Math.Min(retired.Type, Retired.RetiredCount - 1);
                             }
-                            else if (IsHover(destination) && SelectionMode == SelectionMode.Retired && _hasWheelDown)
+                            else if (IsHover(destination, true) && SelectionMode == SelectionMode.Retired && _hasWheelDown)
                             {
                                 retired.Type--;
                                 retired.Type = Math.Max(retired.Type, 0);
                             }
-                            if (IsHover(destination) && SelectionMode == SelectionMode.Retired && _hasCDown)
+                            if (IsHover(destination, true) && SelectionMode == SelectionMode.Retired && _hasCDown)
                             {
                                 retired.Life++;
                                 retired.Life = Math.Min(retired.Life, 3);
                             }
-                            else if (IsHover(destination) && SelectionMode == SelectionMode.Retired && _hasVDown)
+                            else if (IsHover(destination, true) && SelectionMode == SelectionMode.Retired && _hasVDown)
                             {
                                 retired.Life--;
                                 retired.Life = Math.Max(retired.Life, 1);
                             }
-                            if (IsHover(destination) && SelectionMode == SelectionMode.Retired && _hasBDown)
+                            if (IsHover(destination, true) && SelectionMode == SelectionMode.Retired && _hasBDown)
                             {
                                 retired.Money++;
                                 retired.Money = Math.Min(retired.Money, 20);
                             }
-                            else if (IsHover(destination) && SelectionMode == SelectionMode.Retired && _hasNDown)
+                            else if (IsHover(destination, true) && SelectionMode == SelectionMode.Retired && _hasNDown)
                             {
                                 retired.Money--;
                                 retired.Money = Math.Max(retired.Money, 0);
                             }
 
                             // remove
-                            if (IsHover(destination) && SelectionMode == SelectionMode.Retired && _hasRightClick && IsHover(room, f, cameraPosY))
+                            if (IsHover(destination, true) && SelectionMode == SelectionMode.Retired && _hasRightClick && IsHover(room, f, cameraPosY))
                             {
                                 remove = rr;
                             }
 
                             // selection
-                            if (IsHover(destination) && SelectionMode == SelectionMode.Retired && _hasSpaceDown)
+                            if (IsHover(destination, true) && SelectionMode == SelectionMode.Retired && _hasSpaceDown)
                             {
                                 _lockedObject = retired;
                             }
@@ -1202,9 +1222,9 @@ namespace GreedyKidEditor
                             source = _nurseRectangle[nurse.Type][_nurseSequence[_currentNurseFrame]];
                             destination = new Rectangle((int)nurse.X, 128 - 40 * f + 9 + cameraPosY, 32, 32);
 
-                            Color color = (IsHover(destination) && SelectionMode == SelectionMode.Nurse ? _selectionColor : Color.White);
+                            Color color = (IsHover(destination, true) && SelectionMode == SelectionMode.Nurse ? _selectionColor : Color.White);
                             if (IsOutsideRoom(room, nurse))
-                                color = (IsHover(destination) && SelectionMode == SelectionMode.Nurse ? _selectionColorRed : Color.Red);
+                                color = (IsHover(destination, true) && SelectionMode == SelectionMode.Nurse ? _selectionColorRed : Color.Red);
 
                             spriteBatch.Draw(_levelTexture,
                                 destination,
@@ -1222,35 +1242,35 @@ namespace GreedyKidEditor
                                 _lifeColor);
 
                             // update
-                            if (IsHover(destination) && SelectionMode == SelectionMode.Nurse && _hasWheelUp)
+                            if (IsHover(destination, true) && SelectionMode == SelectionMode.Nurse && _hasWheelUp)
                             {
                                 nurse.Type++;
                                 nurse.Type = Math.Min(nurse.Type, Nurse.NurseCount - 1);
                             }
-                            else if (IsHover(destination) && SelectionMode == SelectionMode.Nurse && _hasWheelDown)
+                            else if (IsHover(destination, true) && SelectionMode == SelectionMode.Nurse && _hasWheelDown)
                             {
                                 nurse.Type--;
                                 nurse.Type = Math.Max(nurse.Type, 0);
                             }
-                            if (IsHover(destination) && SelectionMode == SelectionMode.Nurse && _hasCDown)
+                            if (IsHover(destination, true) && SelectionMode == SelectionMode.Nurse && _hasCDown)
                             {
                                 nurse.Life++;
                                 nurse.Life = Math.Min(nurse.Life, 3);
                             }
-                            else if (IsHover(destination) && SelectionMode == SelectionMode.Nurse && _hasVDown)
+                            else if (IsHover(destination, true) && SelectionMode == SelectionMode.Nurse && _hasVDown)
                             {
                                 nurse.Life--;
                                 nurse.Life = Math.Max(nurse.Life, 1);
                             }
 
                             // remove
-                            if (IsHover(destination) && SelectionMode == SelectionMode.Nurse && _hasRightClick && IsHover(room, f, cameraPosY))
+                            if (IsHover(destination, true) && SelectionMode == SelectionMode.Nurse && _hasRightClick && IsHover(room, f, cameraPosY))
                             {
                                 remove = n;
                             }
 
                             // selection
-                            if (IsHover(destination) && SelectionMode == SelectionMode.Nurse && _hasSpaceDown)
+                            if (IsHover(destination, true) && SelectionMode == SelectionMode.Nurse && _hasSpaceDown)
                             {
                                 _lockedObject = nurse;
                             }
@@ -1276,9 +1296,9 @@ namespace GreedyKidEditor
                             source = _copRectangle[cop.Type][_copSequence[_currentCopFrame]];
                             destination = new Rectangle((int)cop.X, 128 - 40 * f + 9 + cameraPosY, 32, 32);
 
-                            Color color = (IsHover(destination) && SelectionMode == SelectionMode.Cop ? _selectionColor : Color.White);
+                            Color color = (IsHover(destination, true) && SelectionMode == SelectionMode.Cop ? _selectionColor : Color.White);
                             if (IsOutsideRoom(room, cop))
-                                color = (IsHover(destination) && SelectionMode == SelectionMode.Cop ? _selectionColorRed : Color.Red);
+                                color = (IsHover(destination, true) && SelectionMode == SelectionMode.Cop ? _selectionColorRed : Color.Red);
 
                             spriteBatch.Draw(_levelTexture,
                                 destination,
@@ -1286,25 +1306,25 @@ namespace GreedyKidEditor
                                 color);
 
                             // update
-                            if (IsHover(destination) && SelectionMode == SelectionMode.Cop && _hasWheelUp)
+                            if (IsHover(destination, true) && SelectionMode == SelectionMode.Cop && _hasWheelUp)
                             {
                                 cop.Type++;
                                 cop.Type = Math.Min(cop.Type, Cop.CopCount - 1);
                             }
-                            else if (IsHover(destination) && SelectionMode == SelectionMode.Cop && _hasWheelDown)
+                            else if (IsHover(destination, true) && SelectionMode == SelectionMode.Cop && _hasWheelDown)
                             {
                                 cop.Type--;
                                 cop.Type = Math.Max(cop.Type, 0);
                             }
 
                             // remove
-                            if (IsHover(destination) && SelectionMode == SelectionMode.Cop && _hasRightClick && IsHover(room, f, cameraPosY))
+                            if (IsHover(destination, true) && SelectionMode == SelectionMode.Cop && _hasRightClick && IsHover(room, f, cameraPosY))
                             {
                                 remove = c;
                             }
 
                             // selection
-                            if (IsHover(destination) && SelectionMode == SelectionMode.Cop && _hasSpaceDown)
+                            if (IsHover(destination, true) && SelectionMode == SelectionMode.Cop && _hasSpaceDown)
                             {
                                 _lockedObject = cop;
                             }
@@ -1338,8 +1358,8 @@ namespace GreedyKidEditor
                 // room creation
                 if (!isHoverAnyRoom && SelectionMode == SelectionMode.Room && _hasLeftClick)
                 {
-                    if (_mouseState.Position.X > 0 &&
-                        _mouseState.Position.Y > 0 &&
+                    if (_mouseState.Position.X > 14 &&
+                        _mouseState.Position.Y > 14 &&
                         _mouseState.Position.X < Width &&
                         _mouseState.Position.Y < Height)
                     {
@@ -1495,7 +1515,7 @@ namespace GreedyKidEditor
                 Time = _building.Levels[SelectedLevel].TimeBeforeCop;
             }*/
 
-            Time = 0;
+            Time = _building.Levels[SelectedLevel].TargetTime;
 
             _encodedTime[0] = Time / 600;
             _encodedTime[1] = (Time - _encodedTime[0] * 600) / 60;
@@ -1548,7 +1568,7 @@ namespace GreedyKidEditor
                     _editorIcons[i],
                     Color.White);
 
-                if (IsHover(destination) && (_hasLeftClick || _hasRightClick))
+                if (IsHover(destination, true) && (_hasLeftClick || _hasRightClick))
                     SelectionMode = (SelectionMode)i;
 
                 if (SelectionMode == (SelectionMode)i)
@@ -1578,7 +1598,7 @@ namespace GreedyKidEditor
                 _editorIcons[(int)SelectionMode.Count + 3],
                 Color.White);
 
-            if (IsHover(destination) && _hasLeftClick)
+            if (IsHover(destination, true) && _hasLeftClick)
             {
                 _currentCameraFloor++;
                 MoveCameraToFloor(_currentCameraFloor);
@@ -1591,7 +1611,7 @@ namespace GreedyKidEditor
                 _editorIcons[(int)SelectionMode.Count + (_currentCameraFloor == 0 ? 0 : 2)],
                 Color.White);
 
-            if (IsHover(destination) && _hasLeftClick)
+            if (IsHover(destination, true) && _hasLeftClick)
             {
                 _currentCameraFloor--;
                 MoveCameraToFloor(_currentCameraFloor);
@@ -1602,8 +1622,13 @@ namespace GreedyKidEditor
             base.Draw(gameTime);
         }
 
-        public bool IsHover(Rectangle r)
+        public bool IsHover(Rectangle r, bool isCharacter = false)
         {
+            if (!isCharacter)
+            {
+                r.Y = r.Y + 8;
+                r.Height = r.Height - 16;
+            }
             Rectangle rr = new Rectangle(_mouseState.Position, new Point(1));
             return r.Intersects(rr);
         }

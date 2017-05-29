@@ -22,6 +22,9 @@ namespace GreedyKidEditor
         public int TimeBeforeRobocop = 0;
         public int RobocopCount = 0;
 
+        // score
+        public int TargetTime = 0;
+
         public void Save(BinaryWriter writer)
         {
             // removing empty floors
@@ -34,6 +37,8 @@ namespace GreedyKidEditor
             }
 
             writer.Write(Name);
+
+            writer.Write(TargetTime);
 
             writer.Write(Floors.Count);
             for (int i = 0; i < Floors.Count; i++)
@@ -53,6 +58,8 @@ namespace GreedyKidEditor
         public void Load(BinaryReader reader)
         {
             Name = reader.ReadString();
+
+            TargetTime = reader.ReadInt32();
 
             int n = reader.ReadInt32();
             for (int i = 0; i < n; i++)

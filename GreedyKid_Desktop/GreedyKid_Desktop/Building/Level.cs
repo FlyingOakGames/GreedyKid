@@ -21,9 +21,14 @@ namespace GreedyKid
         public int TimeBeforeRobocop = 0;
         public int RobocopCount = 0;
 
+        // score
+        public int TargetTime = 0;
+
         public void Load(BinaryReader reader)
         {
             Name = reader.ReadString();
+
+            TargetTime = reader.ReadInt32();
 
             int n = reader.ReadInt32();
             Floors = new Floor[n];

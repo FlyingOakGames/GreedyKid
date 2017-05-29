@@ -478,6 +478,7 @@ namespace GreedyKid
             _currentFrameBeforeGameOver = 0;
 
             ReturnToLevelSelection = false;
+            _pauseOption = 0;
 
             // clean memory
             GC.Collect();
