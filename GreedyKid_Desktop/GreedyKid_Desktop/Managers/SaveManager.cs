@@ -15,6 +15,7 @@ namespace GreedyKid
         private bool[] _isLevelDone;
         private int[] _levelTime;
         private int[] _levelMoney;
+        private int[] _levelStars;
 
         private SaveManager()
         {
@@ -33,12 +34,16 @@ namespace GreedyKid
             }
         }
 
-        public void SetScore(int level, int money, int time)
+        public void SetScore(int level, int money, int time, int stars)
         {
             _isLevelDone[level] = true;
             // shoud handle best score here
-            _levelMoney[level] = money;
-            _levelTime[level] = time;
+            if (stars >= _levelStars[level])
+            {
+                _levelMoney[level] = money;
+                _levelTime[level] = time;
+                _levelStars[level] = stars;
+            }
         }
 
         public void Load(Building building)
@@ -53,6 +58,7 @@ namespace GreedyKid
             _isLevelDone = new bool[building.LevelCount];
             _levelTime = new int[building.LevelCount];
             _levelMoney = new int[building.LevelCount];
+            _levelStars = new int[building.LevelCount];
 
 #if PLAYSTATION4
             path = PlatformHelper.PlayStation4.BeginSave(_statsPath, true);
@@ -89,6 +95,7 @@ namespace GreedyKid
                                     _isLevelDone[i] = reader.ReadBoolean();
                                     _levelTime[i] = reader.ReadInt32();
                                     _levelMoney[i] = reader.ReadInt32();
+                                    _levelStars[i] = reader.ReadInt32();
                                 }
                             }
                         }
@@ -135,6 +142,7 @@ namespace GreedyKid
                             writer.Write(_isLevelDone[i]);
                             writer.Write(_levelTime[i]);
                             writer.Write(_levelMoney[i]);
+                            writer.Write(_levelStars[i]);
                         }
 
                         writer.Flush();

@@ -23,6 +23,8 @@ namespace GreedyKid
         private Rectangle _viewport;
         private Rectangle[] _backgroundRectangles;
         private Rectangle _titleRectangle;
+        private Rectangle[] _selectionRectangle;
+        private Rectangle[] _numberRectangle;
 
         private TitleScreenState _state = TitleScreenState.Title;
 
@@ -32,13 +34,40 @@ namespace GreedyKid
         {
             _viewport = new Rectangle(0, 0, GreedyKidGame.Width, GreedyKidGame.Height);
 
-            _backgroundRectangles = new Rectangle[2];
+            _backgroundRectangles = new Rectangle[4];
             // title
             _backgroundRectangles[0] = new Rectangle(898, TextureManager.GameplayHeight - GreedyKidGame.Height, 298, 164);
             // main
             _backgroundRectangles[1] = new Rectangle(898 + _backgroundRectangles[0].Width + 1, TextureManager.GameplayHeight - GreedyKidGame.Height, 308 , 165);
+            // level selection
+            _backgroundRectangles[2] = new Rectangle(1921, TextureManager.GameplayHeight - 250, 123, 123);
+            _backgroundRectangles[3] = new Rectangle(1921, TextureManager.GameplayHeight - 127, 126, 126);
 
-            _titleRectangle = new Rectangle(TextureManager.GameplayWidth - 95, TextureManager.GameplayHeight - 81, 95, 81);
+            _titleRectangle = new Rectangle(0, TextureManager.GameplayHeight - 225, 95, 81);
+
+            // level selection
+            _selectionRectangle = new Rectangle[11];
+            // big stars
+            _selectionRectangle[0] = new Rectangle(523, TextureManager.GameplayHeight - 239, 23, 7); // no star
+            _selectionRectangle[1] = new Rectangle(523, TextureManager.GameplayHeight - 231, 23, 7); // 1 star
+            _selectionRectangle[2] = new Rectangle(523, TextureManager.GameplayHeight - 223, 23, 7); // 2 stars
+            _selectionRectangle[3] = new Rectangle(523, TextureManager.GameplayHeight - 215, 23, 7); // 3 stars
+            // level block
+            _selectionRectangle[4] = new Rectangle(431, TextureManager.GameplayHeight - 229, 35, 44); // selected
+            _selectionRectangle[5] = new Rectangle(377, TextureManager.GameplayHeight - 229, 35, 44); // unlocked
+            _selectionRectangle[6] = new Rectangle(341, TextureManager.GameplayHeight - 229, 35, 44); // locked
+            // arrows
+            _selectionRectangle[7] = new Rectangle(483, TextureManager.GameplayHeight - 230, 9, 13); // left off
+            _selectionRectangle[8] = new Rectangle(493, TextureManager.GameplayHeight - 230, 9, 13); // left on
+            _selectionRectangle[9] = new Rectangle(503, TextureManager.GameplayHeight - 230, 9, 13); // right off
+            _selectionRectangle[10] = new Rectangle(513, TextureManager.GameplayHeight - 230, 9, 13); // right on
+
+            // number font
+            _numberRectangle = new Rectangle[10];
+            for (int i = 0; i < 10; i++)
+            {
+                _numberRectangle[i] = new Rectangle(230 + i * 11, TextureManager.GameplayHeight - 195, 11, 10);
+            }
         }
 
         public void SetState(TitleScreenState state)
@@ -274,6 +303,17 @@ namespace GreedyKid
                  spriteBatch.Draw(texture,
                     new Rectangle(4, 3, _backgroundRectangles[1].Width, _backgroundRectangles[1].Height),
                     _backgroundRectangles[1],
+                    Color.White);
+            }
+            else if (_state == TitleScreenState.LevelSelection || _state == TitleScreenState.SteamWorkshop)
+            {
+                spriteBatch.Draw(texture,
+                    new Rectangle(17, 17, _backgroundRectangles[2].Width, _backgroundRectangles[2].Height),
+                    _backgroundRectangles[2],
+                    Color.White);
+                spriteBatch.Draw(texture,
+                    new Rectangle(186, 42, _backgroundRectangles[3].Width, _backgroundRectangles[3].Height),
+                    _backgroundRectangles[3],
                     Color.White);
             }
             

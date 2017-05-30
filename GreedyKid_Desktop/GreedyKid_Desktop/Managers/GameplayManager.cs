@@ -61,8 +61,6 @@ namespace GreedyKid
 
         private Rectangle[] _gameoverRectangle;
 
-        private Rectangle[] _scoreRectangle;
-
         public int SelectedLevel = 0;
 
         public Player Player;
@@ -382,16 +380,6 @@ namespace GreedyKid
             _gameoverRectangle[6] = new Rectangle(0, TextureManager.GameplayHeight - 31, 11, 6); // lower left
             _gameoverRectangle[7] = new Rectangle(0, TextureManager.GameplayHeight - 32, 11, 1); // left
             _gameoverRectangle[8] = new Rectangle(11, TextureManager.GameplayHeight - 32, 1, 1); // background
-
-            // score
-            _scoreRectangle = new Rectangle[7];
-            _scoreRectangle[0] = new Rectangle(449, TextureManager.GameplayHeight - 232, 33, 11); // no star
-            _scoreRectangle[1] = new Rectangle(449, TextureManager.GameplayHeight - 232 + 12, 33, 11); // 1 star
-            _scoreRectangle[2] = new Rectangle(449, TextureManager.GameplayHeight - 232 + 24, 33, 11); // 2 stars
-            _scoreRectangle[3] = new Rectangle(449, TextureManager.GameplayHeight - 232 + 36, 33, 11); // 3 stars
-            _scoreRectangle[4] = new Rectangle(494, TextureManager.GameplayHeight - 240, 14, 9); // check
-            _scoreRectangle[5] = new Rectangle(509, TextureManager.GameplayHeight - 240, 12, 9); // no check
-            _scoreRectangle[6] = new Rectangle(323, TextureManager.GameplayHeight - 240, 125, 10); // separation
         }        
 
         public string BuildingIdentifier
@@ -1289,8 +1277,16 @@ namespace GreedyKid
                             int sec = _targetTime % 60;
                             _timeString = (min < 10 ? "0" : String.Empty) + min + ":" + (sec < 10 ? "0" : String.Empty) + sec;
 
+                            // stars
+                            int stars = 1;
+                            if (Time <= _targetTime)
+                                stars++;
+                            if (Score >= _targetMoney)
+                                stars++;
+
                             // save score
-                            SaveManager.Instance.SetScore(SelectedLevel, Score, Time);
+                            SaveManager.Instance.SetScore(SelectedLevel, Score, Time, stars);
+                            SaveManager.Instance.Save(_building);
 
                             // go to inter level
                             _building.CurrentLevel = null;
@@ -2190,11 +2186,12 @@ namespace GreedyKid
                     _interLevelRectangle[_elevatorFrameCount + _cableFrameCount + 3 + _currentElevatorKidFrame],
                     Color.White);
 
+                Rectangle[] scoreRectangle = UIHelper.Instance.ScoreRectangles;
 
                 // score recap
                 int recapX = 36;
                 int recapY = 30;
-                int recapWidth = _scoreRectangle[6].Width;
+                int recapWidth = scoreRectangle[6].Width;
 
                 // stars
                 int stars = 1;
@@ -2205,11 +2202,11 @@ namespace GreedyKid
 
                 spriteBatch.Draw(texture,
                     new Rectangle(
-                        recapX + recapWidth / 2 - _scoreRectangle[0].Width / 2,
+                        recapX + recapWidth / 2 - scoreRectangle[0].Width / 2,
                         recapY,
-                        _scoreRectangle[0].Width,
-                        _scoreRectangle[0].Height),
-                    _scoreRectangle[stars],
+                        scoreRectangle[0].Width,
+                        scoreRectangle[0].Height),
+                    scoreRectangle[stars],
                     Color.White);
 
                 // stage clear
@@ -2218,30 +2215,30 @@ namespace GreedyKid
                 // sperator
                 spriteBatch.Draw(texture,
                     new Rectangle(
-                        recapX + recapWidth / 2 - _scoreRectangle[6].Width / 2,
+                        recapX + recapWidth / 2 - scoreRectangle[6].Width / 2,
                         recapY + 29,
-                        _scoreRectangle[6].Width,
-                        _scoreRectangle[6].Height),
-                    _scoreRectangle[6],
+                        scoreRectangle[6].Width,
+                        scoreRectangle[6].Height),
+                    scoreRectangle[6],
                     Color.White);
 
                 SpriteFont genericFont = TextManager.Instance.GenericFont;
                 SpriteFont font = TextManager.Instance.Font;
 
                 // time
-                int timeWidth = _scoreRectangle[(Time <= _targetTime ? 4 : 5)].Width + (int)font.MeasureString(TextManager.Instance.Time).X + (int)genericFont.MeasureString(_timeString).X;
+                int timeWidth = scoreRectangle[(Time <= _targetTime ? 4 : 5)].Width + (int)font.MeasureString(TextManager.Instance.Time).X + (int)genericFont.MeasureString(_timeString).X;
                 int timeX = recapX + recapWidth / 2 - timeWidth / 2;
                 spriteBatch.Draw(texture,
                     new Rectangle(
                         timeX,
                         recapY + 42,
-                        _scoreRectangle[(Time <= _targetTime ? 4 : 5)].Width,
-                        _scoreRectangle[(Time <= _targetTime ? 4 : 5)].Height),
-                    _scoreRectangle[(Time <= _targetTime ? 4 : 5)],
+                        scoreRectangle[(Time <= _targetTime ? 4 : 5)].Width,
+                        scoreRectangle[(Time <= _targetTime ? 4 : 5)].Height),
+                    scoreRectangle[(Time <= _targetTime ? 4 : 5)],
                     Color.White);
                 spriteBatch.DrawString(font,
                     TextManager.Instance.Time,
-                    new Vector2(timeX + _scoreRectangle[(Time <= _targetTime ? 4 : 5)].Width, recapY + 39),
+                    new Vector2(timeX + scoreRectangle[(Time <= _targetTime ? 4 : 5)].Width, recapY + 39),
                     Color.White);
                 spriteBatch.DrawString(font,
                     _timeString,
@@ -2249,19 +2246,19 @@ namespace GreedyKid
                     Color.White);
 
                 // money
-                int moneyWidth = _scoreRectangle[(Score >= _targetMoney ? 4 : 5)].Width + (int)font.MeasureString(TextManager.Instance.Money).X + (int)genericFont.MeasureString(_moneyString).X;
+                int moneyWidth = scoreRectangle[(Score >= _targetMoney ? 4 : 5)].Width + (int)font.MeasureString(TextManager.Instance.Money).X + (int)genericFont.MeasureString(_moneyString).X;
                 int moneyX = recapX + recapWidth / 2 - moneyWidth / 2;
                 spriteBatch.Draw(texture,
                     new Rectangle(
                         moneyX,
                         recapY + 57,
-                        _scoreRectangle[(Score >= _targetMoney ? 4 : 5)].Width,
-                        _scoreRectangle[(Score >= _targetMoney ? 4 : 5)].Height),
-                    _scoreRectangle[(Score >= _targetMoney ? 4 : 5)],
+                        scoreRectangle[(Score >= _targetMoney ? 4 : 5)].Width,
+                        scoreRectangle[(Score >= _targetMoney ? 4 : 5)].Height),
+                    scoreRectangle[(Score >= _targetMoney ? 4 : 5)],
                     Color.White);
                 spriteBatch.DrawString(font,
                     TextManager.Instance.Money,
-                    new Vector2(moneyX + _scoreRectangle[(Score >= _targetMoney ? 4 : 5)].Width, recapY + 54),
+                    new Vector2(moneyX + scoreRectangle[(Score >= _targetMoney ? 4 : 5)].Width, recapY + 54),
                     Color.White);
                 spriteBatch.DrawString(font,
                     _moneyString,
@@ -2271,11 +2268,11 @@ namespace GreedyKid
                 // separator
                 spriteBatch.Draw(texture,
                     new Rectangle(
-                        recapX + recapWidth / 2 - _scoreRectangle[6].Width / 2,
+                        recapX + recapWidth / 2 - scoreRectangle[6].Width / 2,
                         recapY + 69,
-                        _scoreRectangle[6].Width,
-                        _scoreRectangle[6].Height),
-                    _scoreRectangle[6],
+                        scoreRectangle[6].Width,
+                        scoreRectangle[6].Height),
+                    scoreRectangle[6],
                     Color.White,
                     0.0f,
                     Vector2.Zero,

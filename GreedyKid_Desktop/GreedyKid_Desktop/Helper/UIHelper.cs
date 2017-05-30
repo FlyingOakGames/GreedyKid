@@ -1,9 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace GreedyKid
 {
@@ -22,6 +19,7 @@ namespace GreedyKid
         private Rectangle _1x1Rectangle;
         private Rectangle[] _bordersRectangle;
         private Rectangle[] _microphoneRectangle;
+        private Rectangle[] _scoreRectangle;
         private Color _backgroundColor = new Color(34, 32, 52);
         private Color _selectedColor = new Color(217, 87, 99);
         private Color _notSelectedColor = new Color(132, 126, 135);
@@ -52,6 +50,11 @@ namespace GreedyKid
             get { return _backgroundColor; }
         }
 
+        public Rectangle[] ScoreRectangles
+        {
+            get { return _scoreRectangle; }
+        }
+
         private UIHelper()
         {
             _bordersRectangle = new Rectangle[8];
@@ -72,6 +75,16 @@ namespace GreedyKid
 
             _selectionRectangle = new Rectangle(142, TextureManager.GameplayHeight - 140, 4, 7);
             _1x1Rectangle = new Rectangle(1, 1963, 1, 1);
+
+            // score
+            _scoreRectangle = new Rectangle[7];
+            _scoreRectangle[0] = new Rectangle(449, TextureManager.GameplayHeight - 232, 33, 11); // no star
+            _scoreRectangle[1] = new Rectangle(449, TextureManager.GameplayHeight - 232 + 12, 33, 11); // 1 star
+            _scoreRectangle[2] = new Rectangle(449, TextureManager.GameplayHeight - 232 + 24, 33, 11); // 2 stars
+            _scoreRectangle[3] = new Rectangle(449, TextureManager.GameplayHeight - 232 + 36, 33, 11); // 3 stars
+            _scoreRectangle[4] = new Rectangle(494, TextureManager.GameplayHeight - 240, 14, 9); // check
+            _scoreRectangle[5] = new Rectangle(509, TextureManager.GameplayHeight - 240, 12, 9); // no check
+            _scoreRectangle[6] = new Rectangle(323, TextureManager.GameplayHeight - 240, 125, 10); // separation
         }
 
         public static UIHelper Instance
