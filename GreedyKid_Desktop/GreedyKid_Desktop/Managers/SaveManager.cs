@@ -13,7 +13,7 @@ namespace GreedyKid
         private string _currentBuildingIdentifier = "";
 
         private bool[] _isLevelDone;
-        private float[] _levelTime;
+        private int[] _levelTime;
         private int[] _levelMoney;
 
         private SaveManager()
@@ -33,6 +33,14 @@ namespace GreedyKid
             }
         }
 
+        public void SetScore(int level, int money, int time)
+        {
+            _isLevelDone[level] = true;
+            // shoud handle best score here
+            _levelMoney[level] = money;
+            _levelTime[level] = time;
+        }
+
         public void Load(Building building)
         {
             if (_currentBuildingIdentifier == building.Identifier)
@@ -43,7 +51,7 @@ namespace GreedyKid
             string path = _savePath + "_" + building.Identifier;
 
             _isLevelDone = new bool[building.LevelCount];
-            _levelTime = new float[building.LevelCount];
+            _levelTime = new int[building.LevelCount];
             _levelMoney = new int[building.LevelCount];
 
 #if PLAYSTATION4
@@ -79,7 +87,7 @@ namespace GreedyKid
                                 for (int i = 0; i < building.LevelCount; i++)
                                 {
                                     _isLevelDone[i] = reader.ReadBoolean();
-                                    _levelTime[i] = reader.ReadSingle();
+                                    _levelTime[i] = reader.ReadInt32();
                                     _levelMoney[i] = reader.ReadInt32();
                                 }
                             }

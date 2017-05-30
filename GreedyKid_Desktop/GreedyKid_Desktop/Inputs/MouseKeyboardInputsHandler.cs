@@ -516,12 +516,31 @@ namespace GreedyKid
                     ShouldUpdateMouse = false;
                 }
             }
+            // inter level
             else
             {
-                // go
-                if (ActionKey.IsPressed(mouseState, keyboardState) && ActionKey.IsReleased(_previousMouseState, _previousKeyboardState) ||
-                    keyboardState.IsKeyDown(Keys.Enter) && _previousKeyboardState.IsKeyUp(Keys.Enter))
-                    manager.DisappearTransition();
+                if ((ActionKey.IsPressed(mouseState, keyboardState) && ActionKey.IsReleased(_previousMouseState, _previousKeyboardState)) ||
+                    (keyboardState.IsKeyDown(Keys.Enter) && _previousKeyboardState.IsKeyUp(Keys.Enter)) ||
+                    (mouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released))
+                    manager.PauseSelect(
+                        (mouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) || (ActionKey.IsPressed(mouseState, keyboardState) && ActionKey.IsReleased(_previousMouseState, _previousKeyboardState)),
+                        (int)((mouseState.Position.X - GreedyKidGame.Viewport.X) * (GreedyKidGame.Width / (float)GreedyKidGame.Viewport.Width)));
+
+                if (keyboardState.IsKeyDown(Keys.Up) && _previousKeyboardState.IsKeyUp(Keys.Up) ||
+                    UpKey.IsPressed(mouseState, keyboardState) && UpKey.IsReleased(_previousMouseState, _previousKeyboardState))
+                    manager.PauseUp();
+                else if (keyboardState.IsKeyDown(Keys.Down) && _previousKeyboardState.IsKeyUp(Keys.Down) ||
+                    DownKey.IsPressed(mouseState, keyboardState) && DownKey.IsReleased(_previousMouseState, _previousKeyboardState))
+                    manager.PauseDown();
+
+                if (mouseState.X != _previousMouseState.X || mouseState.Y != _previousMouseState.Y || ShouldUpdateMouse)
+                {
+                    manager.UpdateMouseSelection(
+                        (int)((mouseState.Position.X - GreedyKidGame.Viewport.X) * (GreedyKidGame.Width / (float)GreedyKidGame.Viewport.Width)),
+                        (int)((mouseState.Position.Y - GreedyKidGame.Viewport.Y) * (GreedyKidGame.Height / (float)GreedyKidGame.Viewport.Height))
+                        );
+                    ShouldUpdateMouse = false;
+                }
             }
 
             _previousKeyboardState = keyboardState;

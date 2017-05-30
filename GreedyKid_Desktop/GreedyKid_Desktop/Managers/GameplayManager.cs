@@ -121,6 +121,11 @@ namespace GreedyKid
         private float _currentElevatorKidFrameTime = 0.0f;
         private const float _elevatorKidFrameTime = 0.1f;
 
+        private string _timeString;
+        private string _moneyString;
+        private int _targetTime = 0;
+        private int _targetMoney = 0;
+
         private int _copTimer = 0;
         private int _totalCopTimer = 0;
 
@@ -469,6 +474,9 @@ namespace GreedyKid
             Score = 0;
             Time = 0;
 
+            _targetTime = _building.CurrentLevel.TargetTime;
+            _targetMoney = _building.CurrentLevel.TargetMoney;
+
             // camera init
             _cameraPositionY = 0.0f;
             _currentCameraTime = _totalCameraTime;
@@ -508,6 +516,20 @@ namespace GreedyKid
 
                 if (y < GreedyKidGame.Height / 2)
                     _pauseOption = 0;
+                else
+                    _pauseOption = 1;
+
+                if (previous != _pauseOption)
+                    SfxManager.Instance.Play(Sfx.MenuBlip);
+            }
+            else if (!IsIngame)
+            {
+                int previous = _pauseOption;
+
+                if (y < 126)
+                    _pauseOption = 0;
+                else if (y > 142)
+                    _pauseOption = 2;
                 else
                     _pauseOption = 1;
 
@@ -591,6 +613,17 @@ namespace GreedyKid
                 if (previous != _pauseOption)
                     SfxManager.Instance.Play(Sfx.MenuBlip);
             }
+            else if (!IsIngame)
+            {
+                int previous = _pauseOption;
+
+                _pauseOption--;
+                if (_pauseOption < 0)
+                    _pauseOption = 2;
+
+                if (previous != _pauseOption)
+                    SfxManager.Instance.Play(Sfx.MenuBlip);
+            }
             else
             {
                 int previous = _pauseOption;
@@ -614,6 +647,16 @@ namespace GreedyKid
 
                 _pauseOption++;
                 _pauseOption %= 2;
+
+                if (previous != _pauseOption)
+                    SfxManager.Instance.Play(Sfx.MenuBlip);
+            }
+            else if (!IsIngame)
+            {
+                int previous = _pauseOption;
+
+                _pauseOption++;
+                _pauseOption %= 3;
 
                 if (previous != _pauseOption)
                     SfxManager.Instance.Play(Sfx.MenuBlip);
@@ -654,6 +697,26 @@ namespace GreedyKid
                 {
                     case 0: ResetLevel(); _pause = false; break;
                     case 1: ReturnToLevelSelection = true; break;
+                }
+
+                if (fromMouse)
+                    MouseKeyboardInputsHandler.ShouldUpdateMouse = true;
+            }
+            else if (!IsIngame)
+            {
+                switch (_pauseOption)
+                {
+                    case 0:                            
+                        // end level, load next
+                        SelectedLevel++;
+                        SelectedLevel %= _building.LevelCount;
+                        DisappearTransition(); break;
+                    case 1:
+                        DisappearTransition();
+                        break;
+                    case 2:
+                        ReturnToLevelSelection = true;
+                        break;
                 }
 
                 if (fromMouse)
@@ -701,6 +764,11 @@ namespace GreedyKid
         public bool Gameover
         {
             get { return !_pause && Player != null && _currentGameOverFrame > 0; }
+        }
+
+        public bool IsIngame
+        {
+            get { return _building.CurrentLevel != null && SelectedLevel >= 0 && SelectedLevel < _building.LevelCount; }
         }
 
         public void Update(float gameTime)
@@ -1209,18 +1277,27 @@ namespace GreedyKid
                         _transitionState = TransitionState.Hidden;
 
                         if (Player != null && Player.HasEnteredElevator)
-                        {
-                            // end level, load next
-                            SelectedLevel++;
-                            SelectedLevel %= _building.LevelCount;
+                        {                            
                             // init elevator position
                             //_elevatorX = (int)Player.X;
                             _elevatorX = 210;
                             _elevatorY = 69;// 128 - 40 * Player.Room.Y + 4;
 
+                            // target score
+                            _moneyString = "$" + (_targetMoney < 100 ? (_targetMoney < 10 ? "00" : "0") : String.Empty) + _targetMoney;
+                            int min = _targetTime / 60;
+                            int sec = _targetTime % 60;
+                            _timeString = (min < 10 ? "0" : String.Empty) + min + ":" + (sec < 10 ? "0" : String.Empty) + sec;
+
+                            // save score
+                            SaveManager.Instance.SetScore(SelectedLevel, Score, Time);
+
+                            // go to inter level
                             _building.CurrentLevel = null;
                             Player = null;
-                            // save score
+
+                            _pauseOption = 0;
+
                             // load transition
                             AppearTransition();
                         }
@@ -1743,7 +1820,7 @@ namespace GreedyKid
 
             int cameraPosY = (int)Math.Round(_cameraPositionY);
 
-            if (!_pause && _building.CurrentLevel != null && SelectedLevel >= 0 && SelectedLevel < _building.LevelCount)
+            if (!_pause && IsIngame)
             {                
                 int shoutingFrame = Furniture.FurnitureFrames - 4 + _currentShoutFrame;
                 bool isShouting = Player.IsShouting;
@@ -2035,8 +2112,36 @@ namespace GreedyKid
                 for (int i = 0; i < _bulletCount; i++)
                     _bullets[i].Draw(spriteBatch, _bulletRectangle, cameraPosY);
             }
+            // pause
+            else if (_pause)
+            {
+                if (!_inSettings)
+                {
+                    // background
+                    spriteBatch.Draw(texture,
+                        new Rectangle(20, 17, _pauseBackgroundRectangles[0].Width, _pauseBackgroundRectangles[0].Height),
+                        _pauseBackgroundRectangles[0],
+                        Color.White);
+                    spriteBatch.Draw(texture,
+                        new Rectangle(180, 17, _pauseBackgroundRectangles[1].Width, _pauseBackgroundRectangles[1].Height),
+                        _pauseBackgroundRectangles[1],
+                        Color.White);
+
+                    // text
+                    int yStart = 70;
+
+                    UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.Resume, yStart, 0, _pauseOption);
+                    UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.Settings, yStart + 15, 1, _pauseOption);
+                    UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.Restart, yStart + 30, 2, _pauseOption);
+                    UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.Quit, yStart + 45, 3, _pauseOption);
+                }
+                else
+                {
+                    SettingsManager.Instance.Draw(spriteBatch);
+                }
+            }
             // inter level
-            else if (!_pause)
+            else
             {
                 // background
                 Rectangle backgroundSource1 = _interLevelRectangle[_elevatorFrameCount + _cableFrameCount];
@@ -2092,17 +2197,23 @@ namespace GreedyKid
                 int recapWidth = _scoreRectangle[6].Width;
 
                 // stars
+                int stars = 1;
+                if (Time <= _targetTime)
+                    stars++;
+                if (Score >= _targetMoney)
+                    stars++;
+
                 spriteBatch.Draw(texture,
                     new Rectangle(
                         recapX + recapWidth / 2 - _scoreRectangle[0].Width / 2,
                         recapY,
                         _scoreRectangle[0].Width,
                         _scoreRectangle[0].Height),
-                    _scoreRectangle[0],
+                    _scoreRectangle[stars],
                     Color.White);
 
                 // stage clear
-                UIHelper.Instance.DrawCenteredText(spriteBatch, "STAGE CLEAR", recapY + 13, -1, _pauseOption, recapWidth, recapX);
+                UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.StageClear, recapY + 13, -1, _pauseOption, recapWidth, recapX);
 
                 // sperator
                 spriteBatch.Draw(texture,
@@ -2114,11 +2225,48 @@ namespace GreedyKid
                     _scoreRectangle[6],
                     Color.White);
 
+                SpriteFont genericFont = TextManager.Instance.GenericFont;
+                SpriteFont font = TextManager.Instance.Font;
+
                 // time
-                int timeWidth = _scoreRectangle[4].Width; // + "TIME " + "00:00"
-                int moneyWidth = _scoreRectangle[4].Width; // + "MONEY " + Score + "$"
+                int timeWidth = _scoreRectangle[(Time <= _targetTime ? 4 : 5)].Width + (int)font.MeasureString(TextManager.Instance.Time).X + (int)genericFont.MeasureString(_timeString).X;
+                int timeX = recapX + recapWidth / 2 - timeWidth / 2;
+                spriteBatch.Draw(texture,
+                    new Rectangle(
+                        timeX,
+                        recapY + 42,
+                        _scoreRectangle[(Time <= _targetTime ? 4 : 5)].Width,
+                        _scoreRectangle[(Time <= _targetTime ? 4 : 5)].Height),
+                    _scoreRectangle[(Time <= _targetTime ? 4 : 5)],
+                    Color.White);
+                spriteBatch.DrawString(font,
+                    TextManager.Instance.Time,
+                    new Vector2(timeX + _scoreRectangle[(Time <= _targetTime ? 4 : 5)].Width, recapY + 39),
+                    Color.White);
+                spriteBatch.DrawString(font,
+                    _timeString,
+                    new Vector2(timeX + timeWidth - (int)genericFont.MeasureString(_timeString).X, recapY + 39),
+                    Color.White);
 
                 // money
+                int moneyWidth = _scoreRectangle[(Score >= _targetMoney ? 4 : 5)].Width + (int)font.MeasureString(TextManager.Instance.Money).X + (int)genericFont.MeasureString(_moneyString).X;
+                int moneyX = recapX + recapWidth / 2 - moneyWidth / 2;
+                spriteBatch.Draw(texture,
+                    new Rectangle(
+                        moneyX,
+                        recapY + 57,
+                        _scoreRectangle[(Score >= _targetMoney ? 4 : 5)].Width,
+                        _scoreRectangle[(Score >= _targetMoney ? 4 : 5)].Height),
+                    _scoreRectangle[(Score >= _targetMoney ? 4 : 5)],
+                    Color.White);
+                spriteBatch.DrawString(font,
+                    TextManager.Instance.Money,
+                    new Vector2(moneyX + _scoreRectangle[(Score >= _targetMoney ? 4 : 5)].Width, recapY + 54),
+                    Color.White);
+                spriteBatch.DrawString(font,
+                    _moneyString,
+                    new Vector2(moneyX + moneyWidth - (int)genericFont.MeasureString(_moneyString).X, recapY + 54),
+                    Color.White);
 
                 // separator
                 spriteBatch.Draw(texture,
@@ -2136,38 +2284,11 @@ namespace GreedyKid
                     );
 
                 // selection
-                UIHelper.Instance.DrawCenteredText(spriteBatch, "NEXT STAGE", recapY + 82, 0, _pauseOption, recapWidth, recapX);
+                UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.NextStage, recapY + 82, 0, _pauseOption, recapWidth, recapX);
                 UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.Restart, recapY + 82 + 15, 1, _pauseOption, recapWidth, recapX);
                 UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.Quit, recapY + 82 + 30, 2, _pauseOption, recapWidth, recapX);
             }
-            // pause
-            else
-            {
-                if (!_inSettings)
-                {
-                    // background
-                    spriteBatch.Draw(texture,
-                        new Rectangle(20, 17, _pauseBackgroundRectangles[0].Width, _pauseBackgroundRectangles[0].Height),
-                        _pauseBackgroundRectangles[0],
-                        Color.White);
-                    spriteBatch.Draw(texture,
-                        new Rectangle(180, 17, _pauseBackgroundRectangles[1].Width, _pauseBackgroundRectangles[1].Height),
-                        _pauseBackgroundRectangles[1],
-                        Color.White);
 
-                    // text
-                    int yStart = 70;
-
-                    UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.Resume, yStart, 0, _pauseOption);
-                    UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.Settings, yStart + 15, 1, _pauseOption);
-                    UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.Restart, yStart + 30, 2, _pauseOption);
-                    UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.Quit, yStart + 45, 3, _pauseOption);
-                }
-                else
-                {
-                    SettingsManager.Instance.Draw(spriteBatch);
-                }
-            }
 
             if (!_pause)
                 if ((Player != null && _spawnEntrance && _spawningCop != null && Player.Life > 0) || (_entranceState != ElevatorState.Opening && Player != null && !Player.HasEnteredElevator && Player.Life > 0))
@@ -2278,7 +2399,7 @@ namespace GreedyKid
             }
 
             // ****** UI ******
-            if (_building.CurrentLevel != null && SelectedLevel >= 0 && SelectedLevel < _building.LevelCount)
+            if (IsIngame)
             {
                 // floor mask
                 spriteBatch.Draw(texture,
@@ -2321,7 +2442,7 @@ namespace GreedyKid
             UIHelper.Instance.DrawMicrophoneVolume(spriteBatch);
 
             // cop timer
-            if (_building.CurrentLevel != null && SelectedLevel >= 0 && SelectedLevel < _building.LevelCount && !_pause && _totalCopTimer > 0 && !Gameover)
+            if (IsIngame && !_pause && _totalCopTimer > 0 && !Gameover)
             {
                 int maxX = GreedyKidGame.Width - _copTimerRectangle[12].Width - 15;
                 int minX = 15;
@@ -2494,6 +2615,13 @@ namespace GreedyKid
                 if (InputManager.PlayerDevice != null)
                     InputManager.PlayerDevice.Draw(spriteBatch);
             }
+            else if (!IsIngame)
+            {
+                UIHelper.Instance.DrawCommand(spriteBatch, TextManager.Instance.Select, CommandType.Select);
+
+                if (InputManager.PlayerDevice != null)
+                    InputManager.PlayerDevice.Draw(spriteBatch);
+            }
 
             // score
             _encodedScore[0] = Score / 100;
@@ -2518,7 +2646,7 @@ namespace GreedyKid
                 Color.White);
 
             // robocop beam
-            if (!_pause && _building.CurrentLevel != null && SelectedLevel >= 0 && SelectedLevel < _building.LevelCount)
+            if (!_pause && IsIngame)
             {
                 // cops & drops
                 for (int f = 0; f < _building.CurrentLevel.Floors.Length; f++)

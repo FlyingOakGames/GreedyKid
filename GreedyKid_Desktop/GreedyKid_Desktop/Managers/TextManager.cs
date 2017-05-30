@@ -236,6 +236,22 @@ namespace GreedyKid
         private string[] _gameover = new string[] { "GAME OVER", "FIN DE PARTIE", "GAME OVER", "ИГРА ОКОНЧЕНА", "FIN DE PARTIDA", "FIM DA PARTIDA", "GAME OVER" };
         public string Gameover { get { return _gameover[(int)_language]; } }
 
+        // *********************** INTER LEVEL SCREEN ***********************
+
+        // 0% stageclear, time, money, nextstage
+
+        private string[] _stageClear = new string[] { "STAGE CLEAR", "NIVEAU TERMINÉ", "STAGE CLEAR", "STAGE CLEAR", "STAGE CLEAR", "STAGE CLEAR", "STAGE CLEAR" };
+        public string StageClear { get { return _stageClear[(int)_language]; } }
+
+        private string[] _nextState = new string[] { "NEXT STAGE", "NIVEAU SUIVANT", "NEXT STAGE", "NEXT STAGE", "NEXT STAGE", "NEXT STAGE", "NEXT STAGE" };
+        public string NextStage { get { return _nextState[(int)_language]; } }
+
+        private string[] _time = new string[] { "TIME  ", "TEMPS  ", "TIME  ", "TIME  ", "TIME  ", "TIME  ", "TIME  " };
+        public string Time { get { return _time[(int)_language]; } }
+
+        private string[] _money = new string[] { "MONEY  ", "ARGENT  ", "MONEY  ", "MONEY  ", "MONEY  ", "MONEY  ", "MONEY  " };
+        public string Money { get { return _money[(int)_language]; } }
+
         // *********************** LANGUAGE LOADING ***********************
 
         private void LoadCyrillic()

@@ -39,8 +39,10 @@ namespace GreedyKid
         public Floor UpperFloor = null;
         public Floor LowerFloor = null;
 
-        public void Load(BinaryReader reader)
+        public int Load(BinaryReader reader)
         {
+            int money = 0;
+
             BackgroundColor = reader.ReadInt32();
 
             LeftMargin = reader.ReadInt32();
@@ -84,6 +86,7 @@ namespace GreedyKid
             {
                 Retired retired = new Retired();
                 retired.Load(reader);
+                money += retired.Money;
                 retired.Room = this;
                 Retireds.Add(retired);
             }
@@ -112,6 +115,8 @@ namespace GreedyKid
             ExitX = reader.ReadInt32();
 
             Drops = new List<Droppable>();
+
+            return money;
         }        
 
         public void AddDrop(ObjectType type, float x)

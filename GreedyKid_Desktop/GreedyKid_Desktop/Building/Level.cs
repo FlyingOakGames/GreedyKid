@@ -23,9 +23,12 @@ namespace GreedyKid
 
         // score
         public int TargetTime = 0;
+        public int TargetMoney = 0;
 
         public void Load(BinaryReader reader)
         {
+            TargetMoney = 0;
+
             Name = reader.ReadString();
 
             TargetTime = reader.ReadInt32();
@@ -36,7 +39,7 @@ namespace GreedyKid
             {
                 Floors[i] = new Floor();
                 Floors[i].Y = i;
-                Floors[i].Load(reader);
+                TargetMoney += Floors[i].Load(reader);
             }
 
             TimeBeforeCop = reader.ReadInt32();

@@ -135,12 +135,18 @@ namespace GreedyKid
                     (currentState.ThumbSticks.Left.Y <= -_stickDZ && _previousGamePadState.ThumbSticks.Left.Y > -_stickDZ))
                     manager.PauseDown();
             }
+            // inter level
             else
             {
-                // go
-                if ((currentState.Buttons.A == ButtonState.Pressed && _previousGamePadState.Buttons.A == ButtonState.Released) ||
-                    (currentState.Buttons.Start == ButtonState.Pressed && _previousGamePadState.Buttons.Start == ButtonState.Released))
-                    manager.DisappearTransition();
+                if (currentState.Buttons.A == ButtonState.Pressed && _previousGamePadState.Buttons.A == ButtonState.Released)
+                    manager.PauseSelect();
+
+                if ((currentState.DPad.Up == ButtonState.Pressed && _previousGamePadState.DPad.Up == ButtonState.Released) ||
+                    (currentState.ThumbSticks.Left.Y >= _stickDZ && _previousGamePadState.ThumbSticks.Left.Y < _stickDZ))
+                    manager.PauseUp();
+                else if ((currentState.DPad.Down == ButtonState.Pressed && _previousGamePadState.DPad.Down == ButtonState.Released) ||
+                    (currentState.ThumbSticks.Left.Y <= -_stickDZ && _previousGamePadState.ThumbSticks.Left.Y > -_stickDZ))
+                    manager.PauseDown();
             }
 
             _previousGamePadState = currentState;
