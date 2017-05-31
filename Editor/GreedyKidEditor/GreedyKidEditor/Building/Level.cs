@@ -111,5 +111,23 @@ namespace GreedyKidEditor
 
             return exitCount;
         }
+
+        public int GetTargetMoney()
+        {
+            int money = 0;
+
+            for (int i = 0; i < Floors.Count; i++)
+            {
+                for (int n = 0; n < Floors[i].Rooms.Count; n++)
+                {
+                    for (int r = 0; r < Floors[i].Rooms[n].Retireds.Count; r++)
+                    {
+                        money += Floors[i].Rooms[n].Retireds[r].Money;
+                    }
+                }
+            }
+
+            return money;
+        }
     }
 }

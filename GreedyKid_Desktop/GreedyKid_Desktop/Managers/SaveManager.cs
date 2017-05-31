@@ -24,6 +24,11 @@ namespace GreedyKid
 #endif
         }
 
+        public bool IsLevelDone(int level)
+        {
+            return _isLevelDone[level];
+        }
+
         public static SaveManager Instance
         {
             get

@@ -17,6 +17,9 @@ namespace GreedyKid
         public string Name = "";
         public int LevelCount = 0;
 
+        public int[] TargetTime;
+        public int[] TargetMoney;
+
         public Level CurrentLevel;        
 
         public void Load(string buildingIdentifier)
@@ -39,6 +42,18 @@ namespace GreedyKid
                     Name = reader.ReadString();
 
                     LevelCount = reader.ReadInt32();
+
+                    TargetTime = new int[LevelCount];
+                    for (int i = 0; i < LevelCount; i++)
+                    {
+                        TargetTime[i] = reader.ReadInt32();
+                    }
+
+                    TargetMoney = new int[LevelCount];
+                    for (int i = 0; i < LevelCount; i++)
+                    {
+                        TargetMoney[i] = reader.ReadInt32();
+                    }
                 }
             }
 

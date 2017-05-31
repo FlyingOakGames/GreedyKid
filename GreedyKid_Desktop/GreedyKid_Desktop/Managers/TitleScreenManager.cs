@@ -30,6 +30,11 @@ namespace GreedyKid
 
         private int _selectionOption = 0;
 
+        private int _selectedLevel = 0;
+        private int[] _targetTime;
+        private int[] _targetMoney;
+        private int _levelCount = 0;
+
         public TitleScreenManager()
         {
             _viewport = new Rectangle(0, 0, GreedyKidGame.Width, GreedyKidGame.Height);
@@ -47,13 +52,13 @@ namespace GreedyKid
 
             // level selection
             _selectionRectangle = new Rectangle[11];
-            // big stars
+            // small stars
             _selectionRectangle[0] = new Rectangle(523, TextureManager.GameplayHeight - 239, 23, 7); // no star
             _selectionRectangle[1] = new Rectangle(523, TextureManager.GameplayHeight - 231, 23, 7); // 1 star
             _selectionRectangle[2] = new Rectangle(523, TextureManager.GameplayHeight - 223, 23, 7); // 2 stars
             _selectionRectangle[3] = new Rectangle(523, TextureManager.GameplayHeight - 215, 23, 7); // 3 stars
             // level block
-            _selectionRectangle[4] = new Rectangle(431, TextureManager.GameplayHeight - 229, 35, 44); // selected
+            _selectionRectangle[4] = new Rectangle(413, TextureManager.GameplayHeight - 229, 35, 44); // selected
             _selectionRectangle[5] = new Rectangle(377, TextureManager.GameplayHeight - 229, 35, 44); // unlocked
             _selectionRectangle[6] = new Rectangle(341, TextureManager.GameplayHeight - 229, 35, 44); // locked
             // arrows
@@ -73,6 +78,26 @@ namespace GreedyKid
         public void SetState(TitleScreenState state)
         {
             _state = state;
+        }
+
+        public void SetBuilding(Building building)
+        {
+            _levelCount = building.LevelCount;
+            _targetMoney = new int[_levelCount];
+            _targetTime = new int[_levelCount];
+
+            _selectedLevel = -1;
+
+            for (int i = 0; i < _levelCount; i++)
+            {
+                _targetTime[i] = building.TargetTime[i];
+                _targetMoney[i] = building.TargetMoney[i];
+                if (_selectedLevel == -1 && !SaveManager.Instance.IsLevelDone(i))
+                    _selectedLevel = i;
+            }
+
+            if (_selectedLevel == -1)
+                _selectedLevel = 0;
         }
 
         public void Update(float gameTime)
@@ -364,12 +389,42 @@ namespace GreedyKid
             }
             else if (_state == TitleScreenState.LevelSelection)
             {
+                // previous levels
+                for (int i = 0; i < 3; i++)
+                {
+                    if (_selectedLevel - 1 - i < 0)
+                        continue;
 
+                    // current level
+                    spriteBatch.Draw(texture,
+                        new Rectangle(106 - i * 41, 68, _selectionRectangle[5].Width, _selectionRectangle[5].Height),
+                        _selectionRectangle[5],
+                        Color.White);
+                }
 
+                // current level
+                spriteBatch.Draw(texture,
+                    new Rectangle(147, 68, _selectionRectangle[4].Width, _selectionRectangle[4].Height),
+                    _selectionRectangle[4],
+                    Color.White);
 
-                yStart = 115;
+                // next levels
+                for (int i = 0; i < 3; i++)
+                {
+                    if (_selectedLevel + 1 + i > _levelCount)
+                        continue;
 
-                UIHelper.Instance.DrawCenteredText(spriteBatch, "NOTHING HERE YET, JUST PRESS A", yStart, 0, _selectionOption);
+                    int locked = (SaveManager.Instance.IsLevelDone(_selectedLevel + 1 + i) ? 5 : 6);
+                    if (locked == 6 && _selectedLevel + 2 + i < _levelCount && !SaveManager.Instance.IsLevelDone(_selectedLevel + 2 + i) &&
+                        _selectedLevel + i >= 0 && SaveManager.Instance.IsLevelDone(_selectedLevel + i))
+                        locked = 5;
+
+                    // current level
+                    spriteBatch.Draw(texture,
+                        new Rectangle(188 + i * 41, 68, _selectionRectangle[locked].Width, _selectionRectangle[locked].Height),
+                        _selectionRectangle[locked],
+                        Color.White);
+                }
             }            
 
             // commands

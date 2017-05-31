@@ -35,6 +35,15 @@ namespace GreedyKidEditor
                 for (int i = 0; i < Levels.Count; i++)
                     Levels[i].Save(writer);
             }
+            else
+            {
+                // target times
+                for (int i = 0; i < Levels.Count; i++)
+                    writer.Write(Levels[i].TargetTime);
+                // target money
+                for (int i = 0; i < Levels.Count; i++)
+                    writer.Write(Levels[i].GetTargetMoney());
+            }
         }
 
         public void Load(BinaryReader reader)

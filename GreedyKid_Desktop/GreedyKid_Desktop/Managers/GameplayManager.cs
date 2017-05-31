@@ -392,12 +392,14 @@ namespace GreedyKid
             }
         }
 
-        public void LoadBuilding(string identifier)
+        public Building LoadBuilding(string identifier)
         {            
             _building = new Building();
             _building.Load(identifier);
 
-            SaveManager.Instance.Load(_building);            
+            SaveManager.Instance.Load(_building);
+
+            return _building;         
         }
 
         public void LoadLevel(int level)
