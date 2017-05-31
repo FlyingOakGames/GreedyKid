@@ -815,6 +815,8 @@ namespace GreedyKid
                     _currentSeconds -= 1.0f;
 
                     Time++;
+                    if (Time > 99 * 60 + 59)
+                        Time = 99 * 60 + 59;
 
                     if (_copTimer > 0)
                     {
@@ -2626,6 +2628,15 @@ namespace GreedyKid
             _encodedScore[2] = Score % 10;
 
             textX = 0;
+
+            // $
+            spriteBatch.Draw(texture,
+                new Rectangle(261 + textX, 0, _numberRectangle[11].Width, _numberRectangle[11].Height),
+                _numberRectangle[11],
+                Color.White);
+
+            textX += _numberRectangle[11].Width;
+
             for (int s = 0; s < _encodedScore.Length; s++)
             {
                 Rectangle source = _numberRectangle[_encodedScore[s]];
@@ -2636,12 +2647,7 @@ namespace GreedyKid
 
                 textX += source.Width;
             }
-            // $
-            spriteBatch.Draw(texture,
-                new Rectangle(261 + textX, 0, _numberRectangle[11].Width, _numberRectangle[11].Height),
-                _numberRectangle[11],
-                Color.White);
-
+            
             // robocop beam
             if (!_pause && IsIngame)
             {

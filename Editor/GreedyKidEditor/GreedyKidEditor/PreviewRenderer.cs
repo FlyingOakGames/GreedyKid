@@ -1542,6 +1542,15 @@ namespace GreedyKidEditor
             _encodedScore[2] = Score % 10;
 
             textX = 0;
+
+            // $
+            spriteBatch.Draw(_levelTexture,
+                new Rectangle(261 + textX, 0, _numberRectangle[11].Width, _numberRectangle[11].Height),
+                _numberRectangle[11],
+                Color.White);
+
+            textX += _numberRectangle[11].Width;
+
             for (int s = 0; s < _encodedScore.Length; s++)
             {
                 source = _numberRectangle[_encodedScore[s]];
@@ -1552,12 +1561,7 @@ namespace GreedyKidEditor
 
                 textX += source.Width;
             }
-            // $
-            spriteBatch.Draw(_levelTexture,
-                new Rectangle(261 + textX, 0, _numberRectangle[11].Width, _numberRectangle[11].Height),
-                _numberRectangle[11],
-                Color.White);
-
+            
             // editor UI
             for (int i = 0; i < (int)SelectionMode.Count - 1; i++)
             {
