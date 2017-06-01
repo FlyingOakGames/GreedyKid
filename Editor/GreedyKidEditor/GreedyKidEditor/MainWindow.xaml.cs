@@ -723,11 +723,16 @@ namespace GreedyKidEditor
 
         private void addButton_Click(object sender, RoutedEventArgs e)
         {
-            _building.Levels.Add(new Level());
+            if (_building.Levels.Count < 99)
+            {
+                _building.Levels.Add(new Level());
 
-            RefreshLevelListBox();
+                RefreshLevelListBox();
 
-            levelListBox.SelectedIndex = _building.Levels.Count - 1;
+                levelListBox.SelectedIndex = _building.Levels.Count - 1;
+            }
+            else
+                MessageBox.Show("Warning: You can't make more than 99 levels.");
         }
 
         private void removeButton_Click(object sender, RoutedEventArgs e)

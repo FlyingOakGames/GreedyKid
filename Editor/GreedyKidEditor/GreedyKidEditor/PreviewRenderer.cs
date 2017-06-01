@@ -644,15 +644,16 @@ namespace GreedyKidEditor
                 else if (IsHover(timeRectangle, true) && _hasWheelDown)
                 {
                     _building.Levels[SelectedLevel].TargetTime--;
-                    if (_building.Levels[SelectedLevel].TargetTime < 0)
-                        _building.Levels[SelectedLevel].TargetTime = 0;
                 }
                 else if (IsHover(timeRectangle, true) && _hasRightClick)
                 {
-                    _building.Levels[SelectedLevel].TargetTime -= 5;
-                    if (_building.Levels[SelectedLevel].TargetTime < 0)
-                        _building.Levels[SelectedLevel].TargetTime = 0;
+                    _building.Levels[SelectedLevel].TargetTime -= 5;                    
                 }
+
+                if (_building.Levels[SelectedLevel].TargetTime < 1)
+                    _building.Levels[SelectedLevel].TargetTime = 1;
+                if (_building.Levels[SelectedLevel].TargetTime > 99 * 60 + 59)
+                    _building.Levels[SelectedLevel].TargetTime = 99 * 60 + 59;
 
                 for (int f = 0; f < _building.Levels[SelectedLevel].Floors.Count; f++)
                 {
@@ -1181,7 +1182,7 @@ namespace GreedyKidEditor
                             if (IsHover(destination, true) && SelectionMode == SelectionMode.Retired && _hasBDown)
                             {
                                 retired.Money++;
-                                retired.Money = Math.Min(retired.Money, 20);
+                                retired.Money = Math.Min(retired.Money, Retired.MaxMoney);
                             }
                             else if (IsHover(destination, true) && SelectionMode == SelectionMode.Retired && _hasNDown)
                             {
@@ -1205,7 +1206,8 @@ namespace GreedyKidEditor
                         // add
                         if (SelectionMode == SelectionMode.Retired && _hasLeftClick && IsHover(room, f, cameraPosY))
                         {
-                            room.Retireds.Add(new Retired(_mouseState.Position.X - 16));
+                            if ((_building.Levels[SelectedLevel].GetRetiredCount() + 1) * Retired.MaxMoney <= 999)
+                                room.Retireds.Add(new Retired(_mouseState.Position.X - 16));
                         }
                         else if (remove >= 0)
                         {
@@ -1535,7 +1537,9 @@ namespace GreedyKidEditor
                 textX += source.Width;
             }
 
-            // score            
+            // score         
+            if (Score > 999)
+                Score = 999;   
 
             _encodedScore[0] = Score / 100;
             _encodedScore[1] = (Score - _encodedScore[0] * 100) / 10;

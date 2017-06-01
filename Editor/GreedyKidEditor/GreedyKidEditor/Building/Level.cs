@@ -23,7 +23,7 @@ namespace GreedyKidEditor
         public int RobocopCount = 0;
 
         // score
-        public int TargetTime = 0;
+        public int TargetTime = 1;
 
         public void Save(BinaryWriter writer)
         {
@@ -38,6 +38,8 @@ namespace GreedyKidEditor
 
             writer.Write(Name);
 
+            if (TargetTime < 1)
+                TargetTime = 1;
             writer.Write(TargetTime);
 
             writer.Write(Floors.Count);
@@ -128,6 +130,21 @@ namespace GreedyKidEditor
             }
 
             return money;
+        }
+
+        public int GetRetiredCount()
+        {
+            int count = 0;
+
+            for (int i = 0; i < Floors.Count; i++)
+            {
+                for (int n = 0; n < Floors[i].Rooms.Count; n++)
+                {
+                    count += Floors[i].Rooms[n].Retireds.Count;
+                }
+            }
+
+            return count;
         }
     }
 }
