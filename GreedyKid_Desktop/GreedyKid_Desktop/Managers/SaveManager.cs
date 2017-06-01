@@ -29,6 +29,21 @@ namespace GreedyKid
             return _isLevelDone[level];
         }
 
+        public int LevelTime(int level)
+        {
+            return _levelTime[level];
+        }
+
+        public int LevelMoney(int level)
+        {
+            return _levelMoney[level];
+        }
+
+        public int LevelStars(int level)
+        {
+            return _levelStars[level];
+        }
+
         public static SaveManager Instance
         {
             get
@@ -46,7 +61,10 @@ namespace GreedyKid
             if (stars >= _levelStars[level])
             {
                 _levelMoney[level] = money;
-                _levelTime[level] = time;
+                if (stars == 3 && _levelTime[level] > 0)
+                    _levelTime[level] = Math.Min(time, _levelTime[level]);
+                else
+                    _levelTime[level] = time;
                 _levelStars[level] = stars;
             }
         }

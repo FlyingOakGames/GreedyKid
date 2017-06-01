@@ -238,8 +238,8 @@ namespace GreedyKid
                         if (_gameplayManager == null || _gameplayManager.BuildingIdentifier != _titleScreenManager.RequiredBuildingIdentifier)
                         {
                             _gameplayManager = new GameplayManager();
-                            Building b = _gameplayManager.LoadBuilding(_titleScreenManager.RequiredBuildingIdentifier);
-                            _titleScreenManager.SetBuilding(b);
+                            _gameplayManager.LoadBuilding(_titleScreenManager.RequiredBuildingIdentifier);
+                            _titleScreenManager.SetBuilding(_gameplayManager.Building);
                         }
 
                         _titleScreenManager.ShouldLoadBuilding = false;
@@ -248,7 +248,7 @@ namespace GreedyKid
                     }
                     else if (_titleScreenManager.StartGame)
                     {
-                        _gameplayManager.LoadLevel(0); // level should come from _titleScreenManager selection
+                        _gameplayManager.LoadLevel(_titleScreenManager.SelectedLevel);
 
                         _titleScreenManager = null;
                        
@@ -268,6 +268,7 @@ namespace GreedyKid
 
                         _titleScreenManager = new TitleScreenManager();
                         _titleScreenManager.SetState(TitleScreenState.LevelSelection);
+                        _titleScreenManager.SetBuilding(_gameplayManager.Building, _gameplayManager.SelectedLevel);
 
                         _state = GameState.Title;
 

@@ -392,14 +392,17 @@ namespace GreedyKid
             }
         }
 
-        public Building LoadBuilding(string identifier)
+        public void LoadBuilding(string identifier)
         {            
             _building = new Building();
             _building.Load(identifier);
 
-            SaveManager.Instance.Load(_building);
+            SaveManager.Instance.Load(_building);      
+        }
 
-            return _building;         
+        public Building Building
+        {
+            get { return _building; }
         }
 
         public void LoadLevel(int level)
@@ -489,6 +492,8 @@ namespace GreedyKid
 
             ReturnToLevelSelection = false;
             _pauseOption = 0;
+            _inSettings = false;
+            _pause = false;
 
             // clean memory
             GC.Collect();
@@ -697,9 +702,7 @@ namespace GreedyKid
                 switch (_pauseOption)
                 {
                     case 0:                            
-                        // end level, load next
-                        SelectedLevel++;
-                        SelectedLevel %= _building.LevelCount;
+                        // end level, load next                        
                         DisappearTransition(); break;
                     case 1:
                         DisappearTransition();
@@ -1303,7 +1306,15 @@ namespace GreedyKid
                         }
                         else
                         {
-                            LoadLevel(SelectedLevel);
+                            if (SelectedLevel < _building.LevelCount - 1)
+                            {
+                                SelectedLevel++;
+                                LoadLevel(SelectedLevel);
+                            }
+                            else
+                            {
+                                ReturnToLevelSelection = true;
+                            }
                         }
                     }
                 }
