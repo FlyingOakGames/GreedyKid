@@ -4,8 +4,8 @@ namespace GreedyKidEditor
 {
     public sealed class Detail : IMovable
     {
-        public const int NormalDetailCount = 20;
-        public const int AnimatedDetailCount = 7;
+        public const int NormalDetailCount = 19;
+        public const int AnimatedDetailCount = 9;
         public const int AnimatedDetailFrames = 4;
 
         public int Type = 0;
