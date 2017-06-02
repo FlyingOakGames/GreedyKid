@@ -788,5 +788,18 @@ namespace GreedyKid
                       || State == EntityState.Taunting);
             }
         }
+
+        public bool CanBeHitByRobocop
+        {
+            get
+            {
+                return _hitTime <= 0.0f && _isVisible &&
+                    (State == EntityState.Shouting
+                      || State == EntityState.Idle
+                      || State == EntityState.Running
+                      || State == EntityState.Taunting
+                      || State == EntityState.Rolling);
+            }
+        }
     }
 }

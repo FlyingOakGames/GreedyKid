@@ -831,6 +831,13 @@ namespace GreedyKid
             {
                 RoomDoor roomDoor = Room.RoomDoors[d];
 
+                if (Type >= NormalCopCount + SwatCopCount && X < roomDoor.X + 16 && X > roomDoor.X - 16)
+                {
+                    roomDoor.CanClose = false;
+                    roomDoor.IsRobocopBlocked = true;
+                    continue;
+                }
+
                 // check if player in sight
                 if (LastKnownPlayerPosition >= 0)
                 {

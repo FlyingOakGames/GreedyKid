@@ -959,6 +959,36 @@ namespace GreedyKid
                         for (int d = 0; d < room.RoomDoors.Length; d++)
                         {
                             room.RoomDoors[d].Update(gameTime);
+                            // check if the door can be unblocked
+                            if (room.RoomDoors[d].IsKOBlocked)
+                            {
+                                bool hasKOInIt = false;
+                                for (int rr = 0; rr < room.Retireds.Count; rr++)
+                                {
+                                    if (room.Retireds[rr].Life <= 0 && room.Retireds[rr].X < room.RoomDoors[d].X + 16 && room.Retireds[rr].X > room.RoomDoors[d].X - 16)
+                                    {
+                                        hasKOInIt = true;
+                                        break;
+                                    }
+                                }
+                                if (!hasKOInIt)
+                                    room.RoomDoors[d].IsKOBlocked = false;
+                            }
+                            if (room.RoomDoors[d].IsRobocopBlocked)
+                            {
+                                bool hasRobocopInIt = false;
+                                for (int c = 0; c < room.Cops.Count; c++)
+                                {
+                                    if (room.Cops[c].Type >= Cop.NormalCopCount + Cop.SwatCopCount && room.Cops[c].X < room.RoomDoors[d].X + 16 && room.Cops[c].X > room.RoomDoors[d].X - 16)
+                                    {
+                                        hasRobocopInIt = true;
+                                        break;
+                                    }
+                                }
+
+                                if (!hasRobocopInIt)
+                                    room.RoomDoors[d].IsRobocopBlocked = false;
+                            }
                         }
 
                         // floor doors
@@ -1018,7 +1048,7 @@ namespace GreedyKid
                                     else
                                     {
                                         // robocop fire
-                                        if (Player.CanBeHit)
+                                        if (Player.CanBeHitByRobocop)
                                         {
                                             Player.HitRobocop((cop.Orientation == SpriteEffects.None ? SpriteEffects.FlipHorizontally : SpriteEffects.None));
                                         }
@@ -1550,6 +1580,8 @@ namespace GreedyKid
                     (x + 32 >= door.X && x + 32 <= door.X + 32))
                 {
                     door.OpenLeft();
+
+
                     door.IsRobocopBlocked = true;
                 }
             }
