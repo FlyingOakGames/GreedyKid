@@ -22,13 +22,20 @@ namespace GreedyKid
         private float _currentFrameTime = 0.0f;
         private const float _frameTime = 0.1f;
 
+        private float _lockedTime = 0.0f;
+
         public Droppable(ObjectType type)
         {
             Type = type;
             _currentFrame = RandomHelper.Next(5);
         }
 
-        public void Drop(float x)
+        public bool CanBeLooted
+        {
+            get { return _lockedTime <= 0.0f; }
+        }
+
+        public void Drop(float x, float lockedTime)
         {
             _initialX = x;
             X = x;
@@ -38,6 +45,8 @@ namespace GreedyKid
             if (RandomHelper.Next() < 0.5f)
                 _differenceX *= -1.0f;
             _totalTime = 1.0f + RandomHelper.Next() * 1.0f;
+
+            _lockedTime = lockedTime;
         }
 
         public void Update(float gameTime)
@@ -54,7 +63,11 @@ namespace GreedyKid
                     _currentFrame %= 6;
                 else
                     _currentFrame %= 5;
-            }            
+            }
+
+            // locked
+            if (_lockedTime > 0.0f)
+                _lockedTime -= gameTime;
 
             if (_currentTime < _totalTime)
             {

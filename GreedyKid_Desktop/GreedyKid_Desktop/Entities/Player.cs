@@ -30,6 +30,7 @@ namespace GreedyKid
         private float _currentFrameTime = 0.0f;
 
         public int Life = 3;
+        public int Money = 0;
 
         // moving
         private int _moveDirection = 0;
@@ -645,6 +646,44 @@ namespace GreedyKid
             _currentHitShowTime = 0.0f;
 
             Life--;
+
+            if (Life > 0)
+                LooseMoney();
+        }
+
+        private void LooseMoney(bool all = false)
+        {
+            int moneyToDrop = Money / 4;
+            if (moneyToDrop == 0)
+                moneyToDrop = 1;
+            if (all)
+            {
+                moneyToDrop = Money;
+                Money = 0;
+            }
+            else
+            {
+                Money = Money / 2;
+            }
+
+            while (moneyToDrop > 0)
+            {
+                if (moneyToDrop > 2)
+                {
+                    Room.AddDrop(ObjectType.CashBig, X, 1.0f);
+                    moneyToDrop -= 3;
+                }
+                else if (moneyToDrop > 1)
+                {
+                    Room.AddDrop(ObjectType.CashMedium, X, 1.0f);
+                    moneyToDrop -= 2;
+                }
+                else
+                {
+                    Room.AddDrop(ObjectType.CashSmall, X, 1.0f);
+                    moneyToDrop -= 1;
+                }
+            }
         }
 
         private void SlamDoor()
@@ -676,6 +715,8 @@ namespace GreedyKid
 
             _hitTime = 0.0f;
             _currentHitShowTime = 0.0f;
+
+            LooseMoney(true);
         }
 
         public void Action()

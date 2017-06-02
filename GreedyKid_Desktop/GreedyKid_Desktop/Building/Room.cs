@@ -119,12 +119,12 @@ namespace GreedyKid
             return money;
         }        
 
-        public void AddDrop(ObjectType type, float x)
+        public void AddDrop(ObjectType type, float x, float lockedTime = 0.0f)
         {
             Droppable drop = new Droppable(type);
             drop.Room = this;
             Drops.Add(drop);
-            drop.Drop(x + 8.0f);
+            drop.Drop(x + 8.0f, lockedTime);
         }
     }
 }

@@ -65,7 +65,7 @@ namespace GreedyKid
 
         public Player Player;
 
-        public int Score = 0;
+        private int _score = 0;
         private int[] _encodedScore = new int[] { 0, 0, 0 };
         public int Time = 0;
         private int[] _encodedTime = new int[] { 0, 0, 10, 0, 0 };
@@ -464,7 +464,8 @@ namespace GreedyKid
                 _timerType = TimerType.Robocop;
             }
 
-            Score = 0;
+            Player.Money = 0;
+            _score = 0;
             Time = 0;
 
             _targetTime = _building.CurrentLevel.TargetTime;
@@ -1180,7 +1181,7 @@ namespace GreedyKid
                             Droppable drop = room.Drops[d];
                             drop.Update(gameTime);
 
-                            if (drop.Room == Player.Room && Math.Abs((drop.X + 8.0f) - (Player.X + 16.0f)) < 8.0f)
+                            if (Player.Life > 0 && drop.Room == Player.Room && drop.CanBeLooted && Math.Abs((drop.X + 8.0f) - (Player.X + 16.0f)) < 8.0f)
                             {
                                 if (drop.Type == ObjectType.HealthPack)
                                 {
@@ -1189,13 +1190,16 @@ namespace GreedyKid
                                 }
                                 else
                                 {
-                                    Score += 4 - (int)drop.Type;
+                                    Player.Money += 4 - (int)drop.Type;
                                 }
                                 room.Drops.RemoveAt(d);
                             }
                         }
                     }
                 }
+
+                // score
+                _score = Player.Money;
 
                 // bullets
                 for (int i = _bulletCount - 1; i >= 0; i--)
@@ -1318,11 +1322,14 @@ namespace GreedyKid
                             int stars = 1;
                             if (Time <= _targetTime)
                                 stars++;
-                            if (Score >= _targetMoney)
+                            if (Player.Money >= _targetMoney)
                                 stars++;
 
+                            // score
+                            _score = Player.Money;
+
                             // save score
-                            SaveManager.Instance.SetScore(SelectedLevel, Score, Time, stars);
+                            SaveManager.Instance.SetScore(SelectedLevel, Player.Money, Time, stars);
                             SaveManager.Instance.Save(_building);
 
                             // go to inter level
@@ -2244,7 +2251,7 @@ namespace GreedyKid
                 int stars = 1;
                 if (Time <= _targetTime)
                     stars++;
-                if (Score >= _targetMoney)
+                if (_score >= _targetMoney)
                     stars++;
 
                 spriteBatch.Draw(texture,
@@ -2293,19 +2300,19 @@ namespace GreedyKid
                     Color.White);
 
                 // money
-                int moneyWidth = scoreRectangle[(Score >= _targetMoney ? 4 : 5)].Width + (int)font.MeasureString(TextManager.Instance.Money).X + (int)genericFont.MeasureString(_moneyString).X;
+                int moneyWidth = scoreRectangle[(_score >= _targetMoney ? 4 : 5)].Width + (int)font.MeasureString(TextManager.Instance.Money).X + (int)genericFont.MeasureString(_moneyString).X;
                 int moneyX = recapX + recapWidth / 2 - moneyWidth / 2;
                 spriteBatch.Draw(texture,
                     new Rectangle(
                         moneyX,
                         recapY + 57,
-                        scoreRectangle[(Score >= _targetMoney ? 4 : 5)].Width,
-                        scoreRectangle[(Score >= _targetMoney ? 4 : 5)].Height),
-                    scoreRectangle[(Score >= _targetMoney ? 4 : 5)],
+                        scoreRectangle[(_score >= _targetMoney ? 4 : 5)].Width,
+                        scoreRectangle[(_score >= _targetMoney ? 4 : 5)].Height),
+                    scoreRectangle[(_score >= _targetMoney ? 4 : 5)],
                     Color.White);
                 spriteBatch.DrawString(font,
                     TextManager.Instance.Money,
-                    new Vector2(moneyX + scoreRectangle[(Score >= _targetMoney ? 4 : 5)].Width, recapY + 54),
+                    new Vector2(moneyX + scoreRectangle[(_score >= _targetMoney ? 4 : 5)].Width, recapY + 54),
                     Color.White);
                 spriteBatch.DrawString(font,
                     _moneyString,
@@ -2668,9 +2675,9 @@ namespace GreedyKid
             }
 
             // score
-            _encodedScore[0] = Score / 100;
-            _encodedScore[1] = (Score - _encodedScore[0] * 100) / 10;
-            _encodedScore[2] = Score % 10;
+            _encodedScore[0] = _score / 100;
+            _encodedScore[1] = (_score - _encodedScore[0] * 100) / 10;
+            _encodedScore[2] = _score % 10;
 
             textX = 0;
 
