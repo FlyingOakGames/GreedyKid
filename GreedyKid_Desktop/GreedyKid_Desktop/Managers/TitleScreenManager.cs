@@ -497,7 +497,7 @@ namespace GreedyKid
                 // title
                 UIHelper.Instance.DrawTitle(spriteBatch, TextManager.Instance.Campaign);
 
-                int stars = _completedLevels / (_levelCount / 4);
+                int stars = (int)(_completedLevels / (_levelCount / 3.0f));
                 
                 // big stars
                 spriteBatch.Draw(texture,
