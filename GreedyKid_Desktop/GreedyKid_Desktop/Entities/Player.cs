@@ -593,7 +593,7 @@ namespace GreedyKid
         {
             if (!_isVisible)
                 return;
-            if (State == EntityState.Idle || State == EntityState.Running)
+            if (State == EntityState.Idle || State == EntityState.Running || State == EntityState.Taunting)
             {
                 _moveDirection = -1;
                 Orientation = SpriteEffects.FlipHorizontally;
@@ -604,7 +604,7 @@ namespace GreedyKid
         {
             if (!_isVisible)
                 return;
-            if (State == EntityState.Idle || State == EntityState.Running)
+            if (State == EntityState.Idle || State == EntityState.Running || State == EntityState.Taunting)
             {
                 _moveDirection = 1;
                 Orientation = SpriteEffects.None;
@@ -654,7 +654,7 @@ namespace GreedyKid
         private void LooseMoney(bool all = false)
         {
             int moneyToDrop = Money / 4;
-            if (moneyToDrop == 0)
+            if (moneyToDrop == 0 && Money > 0)
                 moneyToDrop = 1;
             if (all)
             {
