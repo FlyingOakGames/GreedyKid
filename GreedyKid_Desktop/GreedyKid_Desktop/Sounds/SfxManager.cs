@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
+using System;
+using System.IO;
 
 namespace GreedyKid
 {
@@ -69,7 +71,20 @@ namespace GreedyKid
 #else
                 fileName = ((Sfx)id).ToString();
 #endif
-                _sfx[id] = Content.Load<SoundEffect>(_sfxPath + fileName);
+                try
+                {
+                    _sfx[id] = Content.Load<SoundEffect>(_sfxPath + fileName);
+                }
+                catch (Exception)
+                {
+                    // development fallback
+                    string path = Content.RootDirectory + "/" + _sfxPath + fileName + ".wav";
+                    if (!File.Exists(path + fileName + ".wav")) // MacOS hack
+                    {
+                        path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "Resources", "Content/" + _sfxPath);
+                    }
+                    _sfx[id] = SoundEffect.FromStream(File.OpenRead(path + fileName + ".wav"));
+                }
             }
         }
 

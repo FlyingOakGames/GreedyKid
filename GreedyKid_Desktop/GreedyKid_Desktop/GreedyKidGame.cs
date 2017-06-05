@@ -215,7 +215,7 @@ namespace GreedyKid
 
                         TextureManager.Splash = null;
 
-                        TextureManager.LoadGameplay();
+                        TextureManager.LoadGameplay(GraphicsDevice);
                         TextureManager.LoadFont();
                         SfxManager.Instance.LoadGameplaySfx();
 

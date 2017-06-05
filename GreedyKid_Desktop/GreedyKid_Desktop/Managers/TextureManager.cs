@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.IO;
 
 namespace GreedyKid
 {
@@ -19,10 +21,25 @@ namespace GreedyKid
             set;
         }
 
-        public static void LoadGameplay()
+        public static void LoadGameplay(GraphicsDevice device)
         {
             if (Content != null)
-                Gameplay = Content.Load<Texture2D>(@"Textures/level");
+            {
+                try
+                {
+                    Gameplay = Content.Load<Texture2D>(@"Textures/level");
+                }
+                catch (Exception)
+                {
+                    // development fallback
+                    string path = Content.RootDirectory + "/Textures/";
+                    if (!File.Exists(path + "level.png")) // MacOS hack
+                    {
+                        path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "Resources", "Content/Textures/");
+                    }
+                    Gameplay = Texture2D.FromStream(device, File.OpenRead(path + "level.png"));
+                }
+            }
         }
 
         public static void LoadSplash()
