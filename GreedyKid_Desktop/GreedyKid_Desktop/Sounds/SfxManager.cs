@@ -108,17 +108,17 @@ namespace GreedyKid
             LoadSfx((int)Sfx.SplashBonus);
         }
 
-        public void LoadGameplaySfx()
+        public void LoadGameplaySfx(bool force = false)
         {
             for (int i = (int)Sfx.MenuBlip; i < (int)Sfx.Count; i++)
             {
-                LoadSfx(i);
+                LoadSfx(i, force);
             }
         }
 
-        private void LoadSfx(int id)
+        private void LoadSfx(int id, bool force = false)
         {
-            if (_sfx[id] == null)
+            if (_sfx[id] == null || force)
             {
                 string fileName = "";
 #if XBOXONE
@@ -126,6 +126,31 @@ namespace GreedyKid
 #else
                 fileName = ((Sfx)id).ToString();
 #endif
+
+                if (force && _sfx[id] != null)
+                {
+                    // was it a wav?
+                    string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "Resources", "Content/" + _sfxPath);
+                    if (File.Exists(path + fileName + ".wav")) // MacOS hack
+                    {
+                        _sfx[id].Dispose();
+                        _sfx[id] = null;
+                        LoadSfxDebug(id, fileName);
+                        return;
+                    }
+                    else
+                    {
+                        path = Content.RootDirectory + "/" + _sfxPath + fileName + ".wav";
+                        if (File.Exists(path)) // MacOS hack
+                        {
+                            _sfx[id].Dispose();
+                            _sfx[id] = null;
+                            LoadSfxDebug(id, fileName);
+                            return;
+                        }
+                    }
+                }
+
                 try
                 {
                     _sfx[id] = Content.Load<SoundEffect>(_sfxPath + fileName);
@@ -133,14 +158,19 @@ namespace GreedyKid
                 catch (Exception)
                 {
                     // development fallback
-                    string path = Content.RootDirectory + "/" + _sfxPath + fileName + ".wav";
-                    if (!File.Exists(path + fileName + ".wav")) // MacOS hack
-                    {
-                        path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "Resources", "Content/" + _sfxPath);
-                    }
-                    _sfx[id] = SoundEffect.FromStream(File.OpenRead(path + fileName + ".wav"));
+                    LoadSfxDebug(id, fileName);
                 }
             }
+        }
+
+        private void LoadSfxDebug(int id, string fileName)
+        {
+            string path = Content.RootDirectory + "/" + _sfxPath;
+            if (!File.Exists(path + fileName + ".wav")) // MacOS hack
+            {
+                path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "Resources", "Content/" + _sfxPath);
+            }
+            _sfx[id] = SoundEffect.FromStream(File.OpenRead(path + fileName + ".wav"));
         }
 
         public void Unload()

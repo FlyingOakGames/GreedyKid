@@ -43,7 +43,7 @@ namespace GreedyKid
         private RenderTarget2D _renderTarget;
         private Color _fillColor = new Color(34, 32, 52);
 
-#if DEBUG
+#if SFX_DEBUG
         KeyboardState previousKeyboardState;
 #endif
 
@@ -162,21 +162,13 @@ namespace GreedyKid
                 }
 #endif
             }
-#if DEBUG
+#if SFX_DEBUG
             KeyboardState keyboardState = Keyboard.GetState();
 
-            if (_state == GameState.Ingame && _gameplayManager != null)
+            if (keyboardState.IsKeyDown(Keys.F5) && previousKeyboardState.IsKeyUp(Keys.F5))
             {
-                if (keyboardState.IsKeyDown(Keys.F1) && previousKeyboardState.IsKeyUp(Keys.F1))
-                    _gameplayManager.ResetLevel();
-
-                if (keyboardState.IsKeyDown(Keys.F2) && previousKeyboardState.IsKeyUp(Keys.F2))
-                    _gameplayManager.NextLevel();
-                if (keyboardState.IsKeyDown(Keys.F3) && previousKeyboardState.IsKeyUp(Keys.F3))
-                    _gameplayManager.PreviousLevel();
-
-                if (keyboardState.IsKeyDown(Keys.F4) && previousKeyboardState.IsKeyUp(Keys.F4))
-                    _gameplayManager.SpawnCop();
+                SfxManager.Instance.LoadGameplaySfx(true);
+                GC.Collect();
             }
 
             previousKeyboardState = keyboardState;
