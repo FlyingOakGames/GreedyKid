@@ -1187,10 +1187,12 @@ namespace GreedyKid
                                 {
                                     Player.Life += 2;
                                     Player.Life = Math.Min(Player.Life, 6);
+                                    SfxManager.Instance.Play(Sfx.HealthPack);
                                 }
                                 else
                                 {
                                     Player.Money += 4 - (int)drop.Type;
+                                    SfxManager.Instance.Play(Sfx.MoneyGrab);
                                 }
                                 room.Drops.RemoveAt(d);
                             }
@@ -1529,6 +1531,7 @@ namespace GreedyKid
             _currentEntranceFrame = 0;
             _currentEntranceFrameTime = 0.0f;
             _entranceState = ElevatorState.Opening;
+            SfxManager.Instance.Play(Sfx.ElevatorOpen);
         }
 
         private void OpenExitElevator()
@@ -1536,6 +1539,7 @@ namespace GreedyKid
             _currentExitFrame = 0;
             _currentExitFrameTime = 0.0f;
             _exitState = ElevatorState.Opening;
+            SfxManager.Instance.Play(Sfx.ElevatorOpen);
         }
 
         private void CloseEntranceElevator()

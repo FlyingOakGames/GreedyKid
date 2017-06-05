@@ -103,6 +103,7 @@ namespace GreedyKid
 
             if (_state == RoomDoorState.Closed)
             {
+                SfxManager.Instance.Play(Sfx.DoorOpen);
                 _state = RoomDoorState.OpeningToLeft;
                 Frame = 10;
                 _currentFrameTime = 0.0f;
@@ -113,6 +114,7 @@ namespace GreedyKid
         {
             if (_state == RoomDoorState.Closed)
             {
+                SfxManager.Instance.Play(Sfx.DoorOpen);
                 _state = RoomDoorState.OpeningToRight;
                 Frame = 1;
                 _currentFrameTime = 0.0f;
@@ -143,6 +145,7 @@ namespace GreedyKid
                 Frame = 5;
                 _currentFrameTime = 0.0f;
                 CanClose = false;
+                SfxManager.Instance.Play(Sfx.DoorClose);
             }
             else if (_state == RoomDoorState.OpenLeft)
             {
@@ -150,6 +153,7 @@ namespace GreedyKid
                 Frame = 14;
                 _currentFrameTime = 0.0f;
                 CanClose = false;
+                SfxManager.Instance.Play(Sfx.DoorClose);
             }
         }
     }

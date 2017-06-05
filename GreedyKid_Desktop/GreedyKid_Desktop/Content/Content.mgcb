@@ -69,3 +69,291 @@
 /processorParam:Quality=Best
 /build:Musics/1.wma
 
+#begin Sfx/DoorOpenClose.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/DoorOpenClose.wav
+
+#begin Sfx/DoorClose.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/DoorClose.wav
+
+#begin Sfx/TaserHit.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/TaserHit.wav
+
+#begin Sfx/RoboFire.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/RoboFire.wav
+
+#begin Sfx/SwatFire.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/SwatFire.wav
+
+#begin Sfx/WidowsBreak.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/WidowsBreak.wav
+
+#begin Sfx/HeavyHit.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/HeavyHit.wav
+
+#begin Sfx/CopSwing.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/CopSwing.wav
+
+#begin Sfx/CopRoll.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/CopRoll.wav
+
+#begin Sfx/CopSurprise.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/CopSurprise.wav
+
+#begin Sfx/CopTaser.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/CopTaser.wav
+
+#begin Sfx/Cry.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/Cry.wav
+
+#begin Sfx/DoorOpen.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/DoorOpen.wav
+
+#begin Sfx/ElevatorOpen.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/ElevatorOpen.wav
+
+#begin Sfx/GrapplingDown.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/GrapplingDown.wav
+
+#begin Sfx/GrapplingUp.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/GrapplingUp.wav
+
+#begin Sfx/Help.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/Help.wav
+
+#begin Sfx/Hide.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/Hide.wav
+
+#begin Sfx/Hit.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/Hit.wav
+
+#begin Sfx/MoneyGrab.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/MoneyGrab.wav
+
+#begin Sfx/MoneyLoot.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/MoneyLoot.wav
+
+#begin Sfx/NAngryF.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/NAngryF.wav
+
+#begin Sfx/NAngryH.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/NAngryH.wav
+
+#begin Sfx/NBooF.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/NBooF.wav
+
+#begin Sfx/NBooH.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/NBooH.wav
+
+#begin Sfx/NKOF.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/NKOF.wav
+
+#begin Sfx/NKOH.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/NKOH.wav
+
+#begin Sfx/PlayerRoll.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/PlayerRoll.wav
+
+#begin Sfx/RAngryF.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/RAngryF.wav
+
+#begin Sfx/RAngryH.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/RAngryH.wav
+
+#begin Sfx/RBooF.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/RBooF.wav
+
+#begin Sfx/RBooH.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/RBooH.wav
+
+#begin Sfx/Revive.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/Revive.wav
+
+#begin Sfx/RKOF.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/RKOF.wav
+
+#begin Sfx/RKOH.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/RKOH.wav
+
+#begin Sfx/RoboHit.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/RoboHit.wav
+
+#begin Sfx/RoboDown.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/RoboDown.wav
+
+#begin Sfx/RoboLanding.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/RoboLanding.wav
+
+#begin Sfx/RoboUp.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/RoboUp.wav
+
+#begin Sfx/Shout1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/Shout1.wav
+
+#begin Sfx/Shout2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/Shout2.wav
+
+#begin Sfx/Shout3.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/Shout3.wav
+
+#begin Sfx/Shout4.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/Shout4.wav
+
+#begin Sfx/Shout5.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/Shout5.wav
+
+#begin Sfx/SwatHit.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/SwatHit.wav
+
+#begin Sfx/Taunt1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/Taunt1.wav
+
+#begin Sfx/Taunt2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/Taunt2.wav
+
+#begin Sfx/HealthPack.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/HealthPack.wav
+

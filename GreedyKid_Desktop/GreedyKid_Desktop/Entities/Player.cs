@@ -238,6 +238,16 @@ namespace GreedyKid
                 _currentFrameTime -= _frameDuration[(int)State];
                 _currentFrame++;
 
+                // taunt sfx
+                if (State == EntityState.Taunting && _currentFrame == 0)
+                {
+                    SfxManager.Instance.Play(Sfx.Taunt1);
+                }
+                else if (State == EntityState.Taunting && _currentFrame == 2)
+                {
+                    SfxManager.Instance.Play(Sfx.Taunt2);
+                }
+
                 if (_currentFrame == _frames[(int)State].Length)
                 {
                     _currentFrame = 0;
@@ -418,6 +428,7 @@ namespace GreedyKid
 
                 if (_doingAction && floorDoor.CanOpen)
                 {
+                    SfxManager.Instance.Play(Sfx.DoorOpenClose);
                     floorDoor.EnterOpen();
                     Enter(floorDoor);
                 }
@@ -490,6 +501,7 @@ namespace GreedyKid
 
                     if (cop.IsHitting && Math.Abs(cop.X - X) <= Cop.HitRange)
                     {
+                        SfxManager.Instance.Play(Sfx.HeavyHit);
                         Hit((cop.Orientation == SpriteEffects.None ? SpriteEffects.FlipHorizontally : SpriteEffects.None), DamageType.Normal);
                     }
                 }
@@ -622,6 +634,8 @@ namespace GreedyKid
                 else
                     _moveDirection = -1;
 
+                SfxManager.Instance.Play(Sfx.PlayerRoll);
+
                 State = EntityState.Rolling;
                 _currentFrame = 0;
                 _currentFrameTime = 0.0f;
@@ -647,6 +661,8 @@ namespace GreedyKid
 
             Life--;
 
+            SfxManager.Instance.Play(Sfx.Hit);
+
             if (Life > 0)
                 LooseMoney();
         }
@@ -665,6 +681,9 @@ namespace GreedyKid
             {
                 Money = Money / 2;
             }
+
+            if (moneyToDrop > 0)
+                SfxManager.Instance.Play(Sfx.MoneyLoot);
 
             while (moneyToDrop > 0)
             {
@@ -705,11 +724,24 @@ namespace GreedyKid
         {
             State = EntityState.Crying;
             if (_lastDamageType == DamageType.Taser)
+            {
+                SfxManager.Instance.Play(Sfx.TaserHit);
                 State = EntityState.Tased;
+            }
             else if (_lastDamageType == DamageType.Gun)
+            {
+                SfxManager.Instance.Play(Sfx.SwatHit);
                 State = EntityState.Shot;
+            }
             else if (_lastDamageType == DamageType.Magnum)
+            {
+                SfxManager.Instance.Play(Sfx.RoboHit);
                 State = EntityState.Splash;
+            }
+            else
+            {
+                SfxManager.Instance.Play(Sfx.Cry);
+            }
             _currentFrame = 0;
             _currentFrameTime = 0.0f;
 
@@ -739,6 +771,8 @@ namespace GreedyKid
                 return;
             if (State == EntityState.Idle || State == EntityState.Running || State == EntityState.Shouting)
             {
+                if (!_shouting)
+                    SfxManager.Instance.Play(Sfx.Shout1 + RandomHelper.Next(5));
                 _moveDirection = 0;
                 _shouting = true;
             }
@@ -750,6 +784,8 @@ namespace GreedyKid
                 return;
             if (State == EntityState.Idle || State == EntityState.Running || State == EntityState.Taunting)
             {
+                if (!_taunting)
+                    SfxManager.Instance.Play(Sfx.Taunt1);
                 _moveDirection = 0;
                 _taunting = true;
             }
@@ -799,6 +835,7 @@ namespace GreedyKid
 
         private void Smoke()
         {
+            SfxManager.Instance.Play(Sfx.Hide);
             _currentSmokeFrame = 0;
             _currentSmokeFrameTime = 0.0f;
             _smokeX = (int)X;

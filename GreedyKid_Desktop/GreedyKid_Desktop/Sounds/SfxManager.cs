@@ -14,7 +14,62 @@ namespace GreedyKid
         MenuBlip,
         SoundTest,
 
-        Count,
+        DoorOpen,
+        DoorClose,
+        DoorOpenClose,
+        ElevatorOpen,
+
+        Hide,
+        PlayerRoll,
+        Taunt1,
+        Taunt2,
+        Shout1,
+        Shout2,
+        Shout3,
+        Shout4,
+        Shout5,
+        Hit,
+        Cry,
+        HeavyHit,
+        TaserHit,
+        SwatHit,
+        RoboHit,
+        MoneyGrab,
+        MoneyLoot,
+        HealthPack,
+
+        CopRoll,
+        CopSurprise,
+        CopSwing,
+        CopTaser,
+        
+        WidowsBreak,
+        GrapplingUp,
+        GrapplingDown,
+        SwatFire,
+
+        RoboLanding,
+        RoboUp,
+        RoboDown,
+        RoboFire,
+
+        RAngryH,
+        RAngryF,
+        RBooH,
+        RBooF,
+        RKOH,
+        RKOF,
+        Revive,
+
+        NAngryH,
+        NAngryF,
+        NBooH,
+        NBooF,
+        NKOH,
+        NKOF,
+        Help,
+
+        Count,              
     }
 
     public sealed class SfxManager

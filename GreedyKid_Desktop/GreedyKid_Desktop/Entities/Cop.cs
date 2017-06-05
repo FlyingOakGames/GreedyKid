@@ -462,6 +462,8 @@ namespace GreedyKid
             _currentWindowFrame = 0;
             _currentWindowFrameTime = 0.0f;
 
+            SfxManager.Instance.Play(Sfx.WidowsBreak);
+
             Roll();
         }
 
@@ -480,6 +482,8 @@ namespace GreedyKid
             _isBreakingWindow = false;
 
             Orientation = orientation;
+
+            SfxManager.Instance.Play(Sfx.RoboLanding);
 
             Land();
         }
@@ -919,6 +923,7 @@ namespace GreedyKid
 
             if (_isAngry && canSeePlayer && State != EntityState.Boo && State != EntityState.Slam && Math.Abs(X + 16.0f - LastKnownPlayerPosition) <=  HitRange - 1.0f)
             {
+                SfxManager.Instance.Play(Sfx.CopSwing);
                 Hit();
             }
 
@@ -935,6 +940,7 @@ namespace GreedyKid
                         {
                             if (floorDoor.CanAIOpen)
                             {
+                                SfxManager.Instance.Play(Sfx.DoorOpenClose);
                                 floorDoor.EnterOpen();
                                 Enter(floorDoor);
                                 _wantsToOpenDoor = false;
@@ -947,7 +953,7 @@ namespace GreedyKid
 
                 // hooking to rooms
                 if (_wantsToHookRoom && (_upperRoom != null || _lowerRoom != null))
-                {
+                {                   
                     if (_upperRoom != null && _lowerRoom != null)
                     {
                         if (RandomHelper.Next() > 0.5f)
@@ -991,11 +997,17 @@ namespace GreedyKid
             _wantsToHookRoom = false;
 
             _isAngry = false;
-            
+
             if (Type < NormalCopCount + SwatCopCount)
+            {
                 State = EntityState.HookingUp;
+                SfxManager.Instance.Play(Sfx.GrapplingUp);
+            }
             else
+            {
                 State = EntityState.RocketUp;
+                SfxManager.Instance.Play(Sfx.RoboUp);
+            }
         }
 
         private void GoDown()
@@ -1011,9 +1023,15 @@ namespace GreedyKid
             _isAngry = false;
 
             if (Type < NormalCopCount + SwatCopCount)
+            {
                 State = EntityState.HookingDown;
+                SfxManager.Instance.Play(Sfx.GrapplingDown);
+            }
             else
+            {
                 State = EntityState.RocketDown;
+                SfxManager.Instance.Play(Sfx.RoboDown);
+            }
         }
 
         private void Boo(bool turn = true)
@@ -1030,7 +1048,9 @@ namespace GreedyKid
                 else
                     Orientation = SpriteEffects.None;
             }
-           
+
+            SfxManager.Instance.Play(Sfx.CopSurprise);
+
             State = EntityState.Boo;
             _isAngry = true;            
         }
@@ -1049,7 +1069,13 @@ namespace GreedyKid
             _currentHitCooldown = _hitCooldown;
 
             if (Type >= NonFiringCopCount && Type < NormalCopCount + SwatCopCount)
+            {
+                if (Type >= NormalCopCount)
+                    SfxManager.Instance.Play(Sfx.SwatFire);
+                else
+                    SfxManager.Instance.Play(Sfx.CopTaser);
                 HasFired = true;
+            }
         }
 
         private void NextAction()
@@ -1176,6 +1202,7 @@ namespace GreedyKid
                 _actionTime = _currentHitCooldown;
             else
             {
+                SfxManager.Instance.Play(Sfx.RoboFire);
                 HasFired = true;
                 _actionTime = _frameDuration[(int)EntityState.HitCooldown] * _frames[(int)EntityState.HitCooldown][Type].Length;
             }
@@ -1216,6 +1243,8 @@ namespace GreedyKid
             State = EntityState.Rolling;
 
             _actionTime = 0.0f;
+
+            SfxManager.Instance.Play(Sfx.CopRoll);
 
             _shouldRoll = false;
         }

@@ -19,6 +19,8 @@ namespace GreedyKid
 
         public int Life = 1;
 
+        private bool _isFemale = false;
+
         public int Money = 0;
 
         public EntityState State = EntityState.Idle;
@@ -215,6 +217,10 @@ namespace GreedyKid
 
             NextAction();
             _currentHeartFrame = RandomHelper.Next(4 + (Life - 1) * 4);
+
+            _isFemale = false;
+            if (Type == 1 || Type == 3)
+                _isFemale = true;
         }
 
         public void Load(BinaryReader reader)
@@ -493,6 +499,7 @@ namespace GreedyKid
                         {
                             if (floorDoor.CanAIOpen)
                             {
+                                SfxManager.Instance.Play(Sfx.DoorOpenClose);
                                 floorDoor.EnterOpen();
                                 Enter(floorDoor);
                                 _wantsToOpenDoor = false;
@@ -524,6 +531,9 @@ namespace GreedyKid
             {
                 State = EntityState.KO;
 
+                if (Money > 0)
+                    SfxManager.Instance.Play(Sfx.MoneyLoot);
+
                 while (Money > 0)
                 {
                     if (Money > 2)
@@ -542,9 +552,14 @@ namespace GreedyKid
                         Money -= 1;
                     }
                 }
+
+                SfxManager.Instance.Play(Sfx.RKOH + (_isFemale ? 1 : 0));
             }
             else
             {
+                SfxManager.Instance.Play(Sfx.RBooH + (_isFemale ? 1 : 0));
+
+                SfxManager.Instance.Play(Sfx.RAngryH + (_isFemale ? 1 : 0));
 
                 _angryTime = RandomHelper.Next() * 5.0f + 3.0f;
                 
@@ -561,6 +576,8 @@ namespace GreedyKid
             _actionTime = 0.0f;
             _hasJustTurned = false;
             _angryTime = RandomHelper.Next() * 5.0f + 3.0f;
+
+            SfxManager.Instance.Play(Sfx.RAngryH + (_isFemale ? 1 : 0));
 
             Walk();
         }
@@ -619,6 +636,8 @@ namespace GreedyKid
             _actionTime = 0.0f;
             _hasJustTurned = false;
             _wantsToOpenDoor = false;
+
+            SfxManager.Instance.Play(Sfx.RBooH + (_isFemale ? 1 : 0));
         }
 
         public void Ressurect()
@@ -641,6 +660,8 @@ namespace GreedyKid
             _hasJustTurned = true;
             _wantsToOpenDoor = false;
             _actionTime = 0.0f;
+
+            SfxManager.Instance.Play(Sfx.Revive + (_isFemale ? 1 : 0));
 
             NextAction();
 
