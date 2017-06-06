@@ -335,10 +335,11 @@ namespace GreedyKidEditor
                 }
             }
 
-            _elevatorRectangle = new Rectangle[3][];
+            _elevatorRectangle = new Rectangle[4][];
             _elevatorRectangle[0] = new Rectangle[Room.ElevatorFrames];
             _elevatorRectangle[1] = new Rectangle[Room.ElevatorFrames];
             _elevatorRectangle[2] = new Rectangle[Room.PaintCount];
+            _elevatorRectangle[3] = new Rectangle[2];
 
             for (int f = 0; f < Room.ElevatorFrames; f++)
             {
@@ -349,6 +350,8 @@ namespace GreedyKidEditor
             {
                 _elevatorRectangle[2][p] = new Rectangle(2 * 40 * Room.ElevatorFrames + p * 40, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine, 40, 48);
             }
+            _elevatorRectangle[3][0] = new Rectangle(2 * 40 * Room.ElevatorFrames + Room.PaintCount * 40, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine, 40, 48);
+            _elevatorRectangle[3][1] = new Rectangle(2 * 40 * Room.ElevatorFrames + Room.PaintCount * 40 + 40, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine, 40, 48);
 
             int nbFurnitureLine = (int)Math.Ceiling(Furniture.FurnitureCount / (float)Furniture.FurniturePerLine);
 
@@ -1066,6 +1069,13 @@ namespace GreedyKidEditor
                                 destination,
                                 source,
                                 color);
+
+                            source = _elevatorRectangle[3][0];
+
+                            spriteBatch.Draw(_levelTexture,
+                                destination,
+                                source,
+                                color);
                         }
 
                         // add
@@ -1102,7 +1112,14 @@ namespace GreedyKidEditor
                             spriteBatch.Draw(_levelTexture,
                                 destination,
                                 source,
-                                (IsHover(destination) && SelectionMode == SelectionMode.Elevator ? _selectionColor : Color.White));
+                                color);
+
+                            source = _elevatorRectangle[3][1];
+
+                            spriteBatch.Draw(_levelTexture,
+                                destination,
+                                source,
+                                color);
                         }
 
                         // add
