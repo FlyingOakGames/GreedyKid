@@ -238,12 +238,8 @@ namespace GreedyKid
                 _currentFrameTime -= _frameDuration[(int)State];
                 _currentFrame++;
 
-                // taunt sfx
-                if (State == EntityState.Taunting && _currentFrame == 0)
-                {
-                    SfxManager.Instance.Play(Sfx.Taunt1);
-                }
-                else if (State == EntityState.Taunting && _currentFrame == 2)
+                // taunt sfx                
+                if (State == EntityState.Taunting && _currentFrame == 2)
                 {
                     SfxManager.Instance.Play(Sfx.Taunt2);
                 }
@@ -306,6 +302,10 @@ namespace GreedyKid
                     else if (State == EntityState.Shot || State == EntityState.Splash)
                     {
                         _currentFrame = _frames[(int)State].Length - 1; // block on last frame
+                    }
+                    else if (State == EntityState.Taunting)
+                    {
+                        SfxManager.Instance.Play(Sfx.Taunt1);
                     }
                 }
             }
@@ -771,7 +771,7 @@ namespace GreedyKid
                 return;
             if (State == EntityState.Idle || State == EntityState.Running || State == EntityState.Shouting)
             {
-                if (!_shouting)
+                if (State != EntityState.Shouting)
                     SfxManager.Instance.Play(Sfx.Shout1 + RandomHelper.Next(5));
                 _moveDirection = 0;
                 _shouting = true;
@@ -784,7 +784,7 @@ namespace GreedyKid
                 return;
             if (State == EntityState.Idle || State == EntityState.Running || State == EntityState.Taunting)
             {
-                if (!_taunting)
+                if (State != EntityState.Taunting)
                     SfxManager.Instance.Play(Sfx.Taunt1);
                 _moveDirection = 0;
                 _taunting = true;
