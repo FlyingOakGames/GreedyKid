@@ -854,13 +854,20 @@ namespace GreedyKid
 
         public bool IsVisible
         {
-            get { return State != EntityState.Entering && State != EntityState.Exiting && State != EntityState.Hiding && State != EntityState.Shouting && Life > 0; }
+            get {
+                return _isVisible && Life > 0 &&
+                    (State == EntityState.Shouting
+                      || State == EntityState.Idle
+                      || State == EntityState.Running
+                      || State == EntityState.Taunting
+                      || State == EntityState.Rolling);
+            }
         }
 
         public bool CanBeHit
         {
             get {
-                return _hitTime <= 0.0f && _isVisible &&
+                return _hitTime <= 0.0f && _isVisible && Life > 0 &&
                     (State == EntityState.Shouting
                       || State == EntityState.Idle
                       || State == EntityState.Running
@@ -872,7 +879,7 @@ namespace GreedyKid
         {
             get
             {
-                return _hitTime <= 0.0f && _isVisible &&
+                return _hitTime <= 0.0f && _isVisible && Life > 0 &&
                     (State == EntityState.Shouting
                       || State == EntityState.Idle
                       || State == EntityState.Running

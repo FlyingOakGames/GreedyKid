@@ -94,7 +94,7 @@ namespace GreedyKid
         private float _currentExitFrameTime = 0.0f;
         private const float _elevatorFrameTime = 0.1f;
 
-        private bool _canEscape = false;
+        private bool _hasFinishedLevel = false;
 
         // transition
         private Rectangle[] _transitionRectangle;
@@ -498,6 +498,8 @@ namespace GreedyKid
             _pauseOption = 0;
             _inSettings = false;
             _pause = false;
+
+            _hasFinishedLevel = false;
 
             // clean memory
             GC.Collect();
@@ -947,7 +949,7 @@ namespace GreedyKid
                     }
                 }
 
-                _canEscape = true;
+                bool allRetireeKO = true;
                 Player.CanEnterElevator = false;
 
                 for (int f = 0; f < _building.CurrentLevel.Floors.Length; f++)
@@ -1052,7 +1054,7 @@ namespace GreedyKid
                                     else
                                     {
                                         // robocop fire
-                                        if (Player.CanBeHitByRobocop)
+                                        if (cop.Room == Player.Room && Player.CanBeHitByRobocop)
                                         {
                                             Player.HitRobocop((cop.Orientation == SpriteEffects.None ? SpriteEffects.FlipHorizontally : SpriteEffects.None));
                                         }
@@ -1091,7 +1093,7 @@ namespace GreedyKid
                                 retired.Update(gameTime, boo, isTaunting);
 
                                 if (retired.Life > 0)
-                                    _canEscape = false;
+                                    allRetireeKO = false;
                             }
                         }
 
@@ -1218,8 +1220,11 @@ namespace GreedyKid
                     }
                 }
 
+                if (allRetireeKO)
+                    _hasFinishedLevel = true;
+
                 // elevator
-                if (_canEscape && _exitState == ElevatorState.Closed && _currentCopArrivingTime < 0.0f)
+                if (_hasFinishedLevel && _exitState == ElevatorState.Closed && _currentCopArrivingTime < 0.0f)
                     OpenExitElevator();
                 else if (Player.HasEnteredElevator && _exitState == ElevatorState.Open)
                     CloseExitElevator();
