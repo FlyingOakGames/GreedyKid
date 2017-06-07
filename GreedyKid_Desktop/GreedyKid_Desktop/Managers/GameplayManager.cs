@@ -132,8 +132,8 @@ namespace GreedyKid
         private TimerType _timerType = TimerType.Cop;
         private bool _spawnEntrance = false;
         private Cop _spawningCop = null;   // to reset
-        private float _currentCopArrivingTime = -1.0f;   // to reset
-        private const float _copArrivingTime = 2.0f;
+        //private float _currentCopArrivingTime = -1.0f;   // to reset
+        //private const float _copArrivingTime = 2.0f;
         private float _nextSwatSpawn = 0.0f;
         private float _nextRobocopSpawn = 0.0f;
 
@@ -444,7 +444,7 @@ namespace GreedyKid
             Cop dummy = new Cop(); // dummy load a cop to init static fields and avoid a freeze upon cop spawning
             dummy = null;
             _spawningCop = null;   // to reset
-            _currentCopArrivingTime = -1.0f;   // to reset
+            //_currentCopArrivingTime = -1.0f;   // to reset
 
             _totalCopTimer = _building.CurrentLevel.TimeBeforeCop + _building.CurrentLevel.TimeBeforeSwat + _building.CurrentLevel.TimeBeforeRobocop;
 
@@ -846,7 +846,7 @@ namespace GreedyKid
                             _building.CurrentLevel.TimeBeforeRobocop--;
                         }
 
-                        if (_copTimer == (int)_copArrivingTime && _timerType == TimerType.Cop)
+                        if (_copTimer == 0 && _timerType == TimerType.Cop)
                         {
                             if (_building.CurrentLevel.Cop1Count > 0)
                             {
@@ -937,6 +937,7 @@ namespace GreedyKid
                 UpdateElevators(gameTime);
 
                 // open entrance / door for cop arriving
+                /*
                 if (_currentCopArrivingTime >= 0.0f)
                 {
                     _currentCopArrivingTime -= gameTime;
@@ -948,7 +949,7 @@ namespace GreedyKid
                             OpenExitElevator();
                     }
                 }
-
+                */
                 bool allRetireeKO = true;
                 Player.CanEnterElevator = false;
 
@@ -1224,7 +1225,7 @@ namespace GreedyKid
                     _hasFinishedLevel = true;
 
                 // elevator
-                if (_hasFinishedLevel && _exitState == ElevatorState.Closed && _currentCopArrivingTime < 0.0f)
+                if (_hasFinishedLevel && _exitState == ElevatorState.Closed)
                     OpenExitElevator();
                 else if (Player.HasEnteredElevator && _exitState == ElevatorState.Open)
                     CloseExitElevator();
@@ -1422,13 +1423,13 @@ namespace GreedyKid
                                 if (_building.CurrentLevel.Cop1Count > 0)
                                 {
                                     _building.CurrentLevel.Cop1Count--;
-                                    SpawnCop(0.0f);
+                                    SpawnCop();
                                     _spawningCop.Type = 0;
                                 }
                                 else if (_building.CurrentLevel.Cop2Count > 0)
                                 {
                                     _building.CurrentLevel.Cop2Count--;
-                                    SpawnCop(0.0f);
+                                    SpawnCop();
                                     _spawningCop.Type = 1;
                                 }
                             }
@@ -1498,13 +1499,13 @@ namespace GreedyKid
                                 if (_building.CurrentLevel.Cop1Count > 0)
                                 {
                                     _building.CurrentLevel.Cop1Count--;
-                                    SpawnCop(0.0f);
+                                    SpawnCop();
                                     _spawningCop.Type = 0;
                                 }
                                 else if (_building.CurrentLevel.Cop2Count > 0)
                                 {
                                     _building.CurrentLevel.Cop2Count--;
-                                    SpawnCop(0.0f);
+                                    SpawnCop();
                                     _spawningCop.Type = 1;
                                 }
                             }
@@ -1652,10 +1653,10 @@ namespace GreedyKid
             }
         }
 
-        public void SpawnCop(float timeBeforeSpawn = _copArrivingTime)
+        public void SpawnCop()
         {
-            if (_currentCopArrivingTime >= 0.0f)
-                return; // cop already in queue
+            //if (_currentCopArrivingTime >= 0.0f)
+            //    return; // cop already in queue
 
             _spawningCop = new Cop();
 
@@ -1706,7 +1707,11 @@ namespace GreedyKid
             }
 
             // open entrance / door
-            _currentCopArrivingTime = timeBeforeSpawn;
+            //_currentCopArrivingTime = timeBeforeSpawn;
+            if (_spawnEntrance)
+                OpenEntranceElevator();
+            else
+                OpenExitElevator();
         }
 
         private void MoveCamera(float targetPosition)
