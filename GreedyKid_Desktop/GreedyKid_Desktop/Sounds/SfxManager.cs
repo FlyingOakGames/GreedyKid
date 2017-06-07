@@ -20,6 +20,7 @@ namespace GreedyKid
         ElevatorOpen,
 
         Hide,
+        Show,
         PlayerRoll,
         Taunt1,
         Taunt2,

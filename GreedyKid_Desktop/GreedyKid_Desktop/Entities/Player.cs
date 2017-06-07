@@ -279,6 +279,7 @@ namespace GreedyKid
                         // generate smoke
                         Smoke();
                         State = EntityState.Idle;
+                        SfxManager.Instance.Play(Sfx.Show);
                     }
                     // shouting
                     else if (State == EntityState.Shouting)
@@ -824,6 +825,7 @@ namespace GreedyKid
 
             // generate smoke
             Smoke();
+            SfxManager.Instance.Play(Sfx.Hide);
         }
 
         private void Show()
@@ -835,7 +837,6 @@ namespace GreedyKid
 
         private void Smoke()
         {
-            SfxManager.Instance.Play(Sfx.Hide);
             _currentSmokeFrame = 0;
             _currentSmokeFrameTime = 0.0f;
             _smokeX = (int)X;

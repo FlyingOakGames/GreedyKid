@@ -357,3 +357,9 @@
 /processorParam:Quality=Best
 /build:Sfx/HealthPack.wav
 
+#begin Sfx/Show.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/Show.wav
+
