@@ -29,8 +29,97 @@ namespace GreedyKidEditor
 
         private Building _building = new Building("New building");
 
+#if !DEBUG
+        private void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs unhandledExceptionEventArgs)
+        {
+            Exception exception = unhandledExceptionEventArgs.ExceptionObject as Exception;
+            if (exception != null)
+            {
+                ReportCrash(exception);
+            }
+            Environment.Exit(0);
+        }
+
+        public void ReportCrash(Exception exception)
+        {
+            string version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+
+            // write a local dump
+            using (System.IO.StreamWriter writer = new System.IO.StreamWriter(System.IO.Path.Combine(SaveDirectory, "editor_crash.log"), true))
+            {
+                writer.WriteLine("----------------------- Boo! Greedy Kid Editor crash log -----------------------" + Environment.NewLine + Environment.NewLine);
+                writer.WriteLine("Date: " + DateTime.Now.ToString() + Environment.NewLine + Environment.NewLine);
+                writer.WriteLine("Editor version: " + version + Environment.NewLine + Environment.NewLine);
+                writer.WriteLine("Operating system: " + SystemHelper.Name + Environment.NewLine + Environment.NewLine);
+                writer.WriteLine("Exception Type: " + exception.GetType().ToString() + Environment.NewLine + Environment.NewLine);
+                writer.WriteLine("Message: " + exception.Message + Environment.NewLine + "StackTrace: " + Environment.NewLine + exception.StackTrace + Environment.NewLine + Environment.NewLine);
+                if (exception.InnerException != null)
+                {
+                    writer.WriteLine("Inner exception Type: " + exception.InnerException.GetType().ToString() + Environment.NewLine + Environment.NewLine);
+                    writer.WriteLine("Inner exception: " + exception.InnerException.Message + Environment.NewLine + "StackTrace: " + Environment.NewLine + exception.InnerException.StackTrace + Environment.NewLine + Environment.NewLine);
+                }
+                writer.WriteLine("---------------------------------------------------------------------" + Environment.NewLine + Environment.NewLine);
+            }
+
+            // send to db
+            using (System.Net.WebClient client = new System.Net.WebClient())
+            {
+
+                string message = "EDITOR " + exception.Message;
+                string stackTrace = exception.GetType().ToString() + " -- " + exception.StackTrace;
+                if (exception.InnerException != null)
+                {
+                    message += " (Inner exception: " + exception.InnerException.Message + ")";
+                    stackTrace += " (Inner exception: " + exception.InnerException.GetType().ToString() + " -- " + exception.InnerException.StackTrace + ")";
+                }
+
+                string secret = HashHelper.SHA1(message + SystemHelper.Name + version).ToLowerInvariant();
+
+                try
+                {
+                    System.Collections.Specialized.NameValueCollection data = new System.Collections.Specialized.NameValueCollection()
+                    {
+                        { "secret", secret },
+                        { "message", message },
+                        { "stracktrace", stackTrace },
+                        { "version", version },
+                        { "os", SystemHelper.Name },
+                    };
+                    byte[] response =
+                    client.UploadValues("http://flying-oak.com/greedykidcrash.php", data);
+
+                    string result = System.Text.Encoding.UTF8.GetString(response);
+                    Console.WriteLine(result);
+                }
+                catch (System.Net.WebException)
+                {
+                    // 404
+                }
+            }
+        }
+
+        private string SaveDirectory = "";
+#endif
+
         public MainWindow()
         {
+#if !DEBUG
+            // crash reporter
+            string userHome = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+
+            if (Environment.OSVersion.Platform == PlatformID.MacOSX || (Environment.OSVersion.Platform == PlatformID.Unix && SystemHelper.IsMac))
+                SaveDirectory = Path.Combine(userHome, "Library/Application Support/Flying Oak Games/Boo! Greedy Kid");
+            else if (Environment.OSVersion.Platform == PlatformID.Unix)
+                SaveDirectory = Path.Combine(userHome, ".greedykid");
+            else
+                SaveDirectory = Path.Combine(userHome, "AppData\\LocalLow\\Flying Oak Games\\Boo! Greedy Kid");
+
+            if (!Directory.Exists(SaveDirectory))
+                Directory.CreateDirectory(SaveDirectory);
+
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
+#endif
+
             Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
             Thread.CurrentThread.CurrentUICulture = System.Globalization.CultureInfo.InvariantCulture;
 
