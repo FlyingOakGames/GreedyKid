@@ -1223,7 +1223,7 @@ namespace GreedyKid
                     _hasFinishedLevel = true;
 
                 // elevator
-                if (_hasFinishedLevel && _exitState == ElevatorState.Closed)
+                if (_hasFinishedLevel && _exitState == ElevatorState.Closed && !Player.HasEnteredElevator)
                     OpenExitElevator();
                 else if (Player.HasEnteredElevator && _exitState == ElevatorState.Open)
                     CloseExitElevator();
@@ -1296,7 +1296,8 @@ namespace GreedyKid
                     if (_currentTransitionFrame < 0)
                     {
                         _transitionState = TransitionState.None;
-                        OpenEntranceElevator();
+                        if (Player != null)
+                            OpenEntranceElevator();
                     }
                 }
             }
