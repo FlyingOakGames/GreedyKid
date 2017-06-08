@@ -281,11 +281,6 @@ namespace GreedyKid
                         State = EntityState.Idle;
                         SfxManager.Instance.Play(Sfx.Show);
                     }
-                    // shouting
-                    else if (State == EntityState.Shouting)
-                    {
-                        _currentFrame = 1;
-                    }
                     // hit
                     else if (State == EntityState.Hit)
                     {
