@@ -925,7 +925,7 @@ namespace GreedyKid
                 }
 
                 if (MicrophoneManager.Instance.LeveledVolume >= _microphoneSensitivity)
-                    Player.Shout();
+                    Player.Shout(true);
 
                 bool isShouting = Player.IsShouting;
                 bool isTaunting = Player.IsTaunting;
