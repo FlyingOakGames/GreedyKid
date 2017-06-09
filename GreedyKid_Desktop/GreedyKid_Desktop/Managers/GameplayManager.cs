@@ -118,6 +118,7 @@ namespace GreedyKid
         private int _currentElevatorKidFrame = 0;
         private float _currentElevatorKidFrameTime = 0.0f;
         private const float _elevatorKidFrameTime = 0.1f;
+        private bool _toNextLevel = false;
 
         private string _timeString;
         private string _moneyString;
@@ -501,6 +502,8 @@ namespace GreedyKid
 
             _hasFinishedLevel = false;
 
+            _toNextLevel = false;
+
             // clean memory
             GC.Collect();
         }
@@ -707,10 +710,13 @@ namespace GreedyKid
             {
                 switch (_pauseOption)
                 {
-                    case 0:                            
-                        // end level, load next                        
-                        DisappearTransition(); break;
+                    case 0:
+                        // end level, load next      
+                        _toNextLevel = true;
+                        DisappearTransition();
+                        break;
                     case 1:
+                        _toNextLevel = false;
                         DisappearTransition();
                         break;
                     case 2:
@@ -1352,8 +1358,12 @@ namespace GreedyKid
                             AppearTransition();
                         }
                         else
-                        {
-                            if (SelectedLevel < _building.LevelCount - 1)
+                        {                            
+                            if (!_toNextLevel)
+                            {
+                                LoadLevel(SelectedLevel);
+                            }
+                            else if (_toNextLevel && SelectedLevel < _building.LevelCount - 1)
                             {
                                 SelectedLevel++;
                                 LoadLevel(SelectedLevel);
