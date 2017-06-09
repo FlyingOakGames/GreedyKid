@@ -139,6 +139,9 @@
     <None Include="Content\level_12">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Content\level_13">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Content\level_2">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
