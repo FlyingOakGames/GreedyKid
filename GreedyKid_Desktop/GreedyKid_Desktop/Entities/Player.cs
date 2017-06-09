@@ -761,13 +761,13 @@ namespace GreedyKid
             }
         }
 
-        public void Shout()
+        public void Shout(bool fromMicrophone = false)
         {
             if (!_isVisible)
                 return;
             if (State == EntityState.Idle || State == EntityState.Running || State == EntityState.Shouting)
             {
-                if (State != EntityState.Shouting)
+                if (State != EntityState.Shouting && !fromMicrophone)
                     SfxManager.Instance.Play(Sfx.Shout1 + RandomHelper.Next(5));
                 _moveDirection = 0;
                 _shouting = true;
