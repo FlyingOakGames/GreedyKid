@@ -19,7 +19,7 @@ namespace GreedyKid
     /// </summary>
     public class GreedyKidGame : Game
     {
-        public const string Version = "V.2";
+        public const string Version = "V.3";
 
         public static bool ShouldExit = false;
         public static bool ShouldApplyChanges = false;
