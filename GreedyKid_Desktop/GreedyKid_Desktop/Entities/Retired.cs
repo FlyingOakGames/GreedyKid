@@ -7,7 +7,7 @@ namespace GreedyKid
 {
     public sealed class Retired : IEntity
     {
-        public const int RetiredCount = 5;
+        public const int RetiredCount = 7;
         public const int MaxLife = 3;
 
         private const float _walkSpeed = 16.0f;
