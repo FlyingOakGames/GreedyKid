@@ -710,8 +710,8 @@ namespace GreedyKidEditor
                     }
                 }
 
-                if (retiredCount == 0)
-                    MessageBox.Show("Warning: Level " + (i + 1) + " has no retiree.");
+                //if (retiredCount == 0)
+                //    MessageBox.Show("Warning: Level " + (i + 1) + " has no retiree (exit elevator will instantly open).");
 
                 // check reachability
                 if (_reachableRooms.Count == 0)
@@ -742,6 +742,13 @@ namespace GreedyKidEditor
                     MessageBox.Show("Warning: Level " + (i + 1) + " can't be completed because some retiree are not reachable.");
                 else if (!canExit)
                     MessageBox.Show("Warning: Level " + (i + 1) + " can't be completed because the exit is not reachable.");
+
+                if (level.Cop1Count + level.Cop2Count == 0 && level.TimeBeforeCop > 0)
+                    MessageBox.Show("Warning: Level " + (i + 1) + " has a cop timer but no cop.");
+                if (level.Swat1Count == 0 && level.TimeBeforeSwat > 0)
+                    MessageBox.Show("Warning: Level " + (i + 1) + " has a SWAT timer but no SWAT cop.");
+                if (level.RobocopCount == 0 && level.TimeBeforeRobocop > 0)
+                    MessageBox.Show("Warning: Level " + (i + 1) + " has a robot timer but no robot.");
             }
         }
 
