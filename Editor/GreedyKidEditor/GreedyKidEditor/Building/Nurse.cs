@@ -4,7 +4,7 @@ namespace GreedyKidEditor
 {
     public sealed class Nurse : IMovable
     {
-        public const int NurseCount = 1;
+        public const int NurseCount = 2;
 
         public int Type = 0;
         public int X = 0;

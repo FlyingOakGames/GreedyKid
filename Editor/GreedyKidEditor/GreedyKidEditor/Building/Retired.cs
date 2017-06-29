@@ -4,7 +4,7 @@ namespace GreedyKidEditor
 {
     public sealed class Retired : IMovable
     {
-        public const int RetiredCount = 7;
+        public const int RetiredCount = 8;
         public const int MaxMoney = 20;
 
         public int Type = 0;

@@ -7,7 +7,7 @@ namespace GreedyKid
 {
     public sealed class Retired : IEntity
     {
-        public const int RetiredCount = 7;
+        public const int RetiredCount = 8;
         public const int MaxLife = 3;
 
         private const float _walkSpeed = 16.0f;
@@ -219,7 +219,7 @@ namespace GreedyKid
             _currentHeartFrame = RandomHelper.Next(4 + (Life - 1) * 4);
 
             _isFemale = false;
-            if (Type == 1 || Type == 3)
+            if (Type == 1 || Type == 3 || Type == 5 || Type == 7)
                 _isFemale = true;
         }
 

@@ -7,7 +7,7 @@ namespace GreedyKid
 {
     public sealed class Nurse : IEntity
     {
-        public const int NurseCount = 1;
+        public const int NurseCount = 2;
         public const int MaxLife = 3;
 
         private const float _walkSpeed = 24.0f;

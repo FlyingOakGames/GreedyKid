@@ -1,7 +1,13 @@
 ﻿V.3 (alpha)					? June 2017
 
 	New:
-		2 new retirees
+		Tutorial levels
+		3 new retiree sprites
+		1 new nurse sprites
+		1 new cop sprites
+
+	Changes:
+		Reworked MacOS and Linux runtime for better compatibility and performance.
 
 
 V.2 (alpha)					2nd June 2017

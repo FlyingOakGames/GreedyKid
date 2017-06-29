@@ -7,9 +7,9 @@ namespace GreedyKid
 {
     public sealed class Cop : IEntity
     {
-        public const int CopCount = 4;
+        public const int CopCount = 5;
         public const int NonFiringCopCount = 1;
-        public const int NormalCopCount = 2;
+        public const int NormalCopCount = 3;
         public const int SwatCopCount = 1;
 
         private const float _walkSpeed = 24.0f;
