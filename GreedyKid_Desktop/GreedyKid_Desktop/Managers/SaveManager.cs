@@ -6,7 +6,8 @@ namespace GreedyKid
 {
     public sealed class SaveManager
     {
-        private string _savePath = "Save";
+        private string _savePath = "Scores";
+        private static int[] _minVersion = new int[] { 0, 6, 0, 0 };
 
         private static SaveManager _instance;
 
@@ -113,12 +114,45 @@ namespace GreedyKid
                             using (BinaryReader reader = new BinaryReader(stream))
 #endif
                             {
-                                for (int i = 0; i < building.LevelCount; i++)
+                                string currentVersion = System.Reflection.Assembly.GetExecutingAssembly()
+                                    .GetName()
+                                    .Version
+                                    .ToString();
+
+                                string version = reader.ReadString();
+
+                                bool goodVersion = true;
+
+                                string[] split = version.Split('.');
+                                int[] versionSplit = new int[split.Length];
+                                for (int i = 0; i < split.Length; i++)
                                 {
-                                    _isLevelDone[i] = reader.ReadBoolean();
-                                    _levelTime[i] = reader.ReadInt32();
-                                    _levelMoney[i] = reader.ReadInt32();
-                                    _levelStars[i] = reader.ReadInt32();
+                                    if (!Int32.TryParse(split[i], out versionSplit[i]))
+                                        goodVersion = false;
+                                }
+                                if (split.Length != 4)
+                                    goodVersion = false;
+
+                                if (goodVersion)
+                                {
+                                    if ((versionSplit[0] < _minVersion[0]) ||
+                                        (versionSplit[0] == _minVersion[0] && versionSplit[1] < _minVersion[1]) ||
+                                        (versionSplit[0] == _minVersion[0] && versionSplit[1] == _minVersion[1] && versionSplit[2] < _minVersion[2]) ||
+                                        (versionSplit[0] == _minVersion[0] && versionSplit[1] == _minVersion[1] && versionSplit[2] == _minVersion[2] && versionSplit[3] < _minVersion[3]))
+                                    {
+                                        goodVersion = false;
+                                    }
+                                }
+
+                                if (goodVersion)
+                                {
+                                    for (int i = 0; i < building.LevelCount; i++)
+                                    {
+                                        _isLevelDone[i] = reader.ReadBoolean();
+                                        _levelTime[i] = reader.ReadInt32();
+                                        _levelMoney[i] = reader.ReadInt32();
+                                        _levelStars[i] = reader.ReadInt32();
+                                    }
                                 }
                             }
                         }

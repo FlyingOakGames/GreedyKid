@@ -1,5 +1,8 @@
 ﻿V.3 (alpha)					? June 2017
 
+	Notice:
+		Due to a new internal level structure, all saves prior to this version will be erased
+
 	New:
 		Tutorial levels
 		3 new retiree sprites
