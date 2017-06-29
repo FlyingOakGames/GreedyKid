@@ -212,8 +212,9 @@ namespace GreedyKidEditor
                 if (renderer != null)
                 {
                     renderer.MousePosition = p;
-                }
-
+                    if (Keyboard.IsKeyDown(Key.Space))
+                        renderer.SpaceState = true;
+                }               
             }
             catch (InvalidOperationException)
             {

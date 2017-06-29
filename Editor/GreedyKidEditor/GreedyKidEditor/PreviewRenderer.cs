@@ -807,7 +807,7 @@ namespace GreedyKidEditor
                             }
 
                             // remove
-                            if (IsHover(selectionDestination) && SelectionMode == SelectionMode.Detail && _hasRightClick && IsHover(room, f, cameraPosY))
+                            if (IsHover(selectionDestination) && SelectionMode == SelectionMode.Detail && _hasRightClick)
                             {
                                 remove = d;
                             }
@@ -899,7 +899,7 @@ namespace GreedyKidEditor
                             }
 
                             // remove
-                            if (IsHover(destination) && SelectionMode == SelectionMode.FloorDoor && _hasRightClick && IsHover(room, f, cameraPosY))
+                            if (IsHover(destination) && SelectionMode == SelectionMode.FloorDoor && _hasRightClick)
                             {
                                 remove = d;
                             }
@@ -940,7 +940,7 @@ namespace GreedyKidEditor
                                 color);
 
                             // remove
-                            if (IsHover(destination) && SelectionMode == SelectionMode.RoomDoor && _hasRightClick && IsHover(room, f, cameraPosY))
+                            if (IsHover(destination) && SelectionMode == SelectionMode.RoomDoor && _hasRightClick)
                             {
                                 remove = d;
                             }
@@ -993,7 +993,7 @@ namespace GreedyKidEditor
                             }
 
                             // remove
-                            if (IsHover(destination) && SelectionMode == SelectionMode.Furniture && _hasRightClick && IsHover(room, f, cameraPosY))
+                            if (IsHover(destination) && SelectionMode == SelectionMode.Furniture && _hasRightClick)
                             {
                                 remove = ff;
                             }
@@ -1208,7 +1208,7 @@ namespace GreedyKidEditor
                             }
 
                             // remove
-                            if (IsHover(destination, true) && SelectionMode == SelectionMode.Retired && _hasRightClick && IsHover(room, f, cameraPosY))
+                            if (IsHover(destination, true) && SelectionMode == SelectionMode.Retired && _hasRightClick)
                             {
                                 remove = rr;
                             }
@@ -1283,7 +1283,7 @@ namespace GreedyKidEditor
                             }
 
                             // remove
-                            if (IsHover(destination, true) && SelectionMode == SelectionMode.Nurse && _hasRightClick && IsHover(room, f, cameraPosY))
+                            if (IsHover(destination, true) && SelectionMode == SelectionMode.Nurse && _hasRightClick)
                             {
                                 remove = n;
                             }
@@ -1337,7 +1337,7 @@ namespace GreedyKidEditor
                             }
 
                             // remove
-                            if (IsHover(destination, true) && SelectionMode == SelectionMode.Cop && _hasRightClick && IsHover(room, f, cameraPosY))
+                            if (IsHover(destination, true) && SelectionMode == SelectionMode.Cop && _hasRightClick)
                             {
                                 remove = c;
                             }
