@@ -295,8 +295,16 @@ namespace GreedyKidEditor
             // listen for messages that are meant for a hosted Win32 window.
             if (msg == WM_MOUSEWHEEL) // WM_MOUSEWHEEL
             {
-                if (renderer != null && IsApplicationActive())
-                    renderer.MouseWheelDelta = wParam.ToInt32() >> 16;
+                try
+                {
+                    if (renderer != null && IsApplicationActive())
+                        renderer.MouseWheelDelta = wParam.ToInt32() >> 16;
+                }
+                catch (OverflowException)
+                {
+                    if (renderer != null && IsApplicationActive())
+                        renderer.MouseWheelDelta = 0;
+                }
 
                 handled = true;   
             }
