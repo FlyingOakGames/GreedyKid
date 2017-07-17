@@ -5,8 +5,11 @@ namespace GreedyKidEditor
 {
     public sealed class Building
     {
+#if DEVMODE
         public string Identifier = "Default";
-
+#else
+        public string Identifier = "NotUploadedToWorkshopYet";
+#endif
         public string Name = "";
 
         public List<Level> Levels = new List<Level>();

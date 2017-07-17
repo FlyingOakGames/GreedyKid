@@ -20,6 +20,8 @@ namespace GreedyKid
         public bool ShouldLoadBuilding = false;
         public string RequiredBuildingIdentifier = "Default";
 
+        public bool IsWorkshopBuilding = false;
+
         private Rectangle _viewport;
         private Rectangle[] _backgroundRectangles;
         private Rectangle _titleRectangle;
@@ -38,11 +40,17 @@ namespace GreedyKid
         private int _levelCount = 0;
         private int _completedLevels = 0;
         private string _completionString;
+        private string _buildingName;
 
         private string _bestTimeString;
         private string _targetTimeString;
         private string _bestMoneyString;
         private string _targetMoneyString;
+
+        private string[] _workshopIdentifiers = null;
+        private string[] _workshopBuildingNames = null;
+        private int _workshopOffset = 0;
+        private int _workshopMaxItem = 8;
 
         public TitleScreenManager()
         {
@@ -82,6 +90,19 @@ namespace GreedyKid
             {
                 _numberRectangle[i] = new Rectangle(230 + i * 11, TextureManager.GameplayHeight - 195, 11, 10);
             }
+
+            // workshop scan
+            _workshopIdentifiers = null;
+            _workshopBuildingNames = null;
+            if (System.IO.Directory.Exists("Content/Workshop/"))
+            {
+                _workshopIdentifiers = System.IO.Directory.GetDirectories("Content/Workshop/");
+                _workshopBuildingNames = new string[_workshopIdentifiers.Length];
+                for (int i = 0; i < _workshopIdentifiers.Length; i++)
+                {
+                    Building.GetName(_workshopIdentifiers[i], out _workshopIdentifiers[i], out _workshopBuildingNames[i]);
+                }
+            }
         }
 
         public int SelectedLevel
@@ -96,6 +117,7 @@ namespace GreedyKid
 
         public void SetBuilding(Building building, int selectedLevel = -1)
         {
+            _buildingName = building.Name.ToUpperInvariant();
             _levelCount = building.LevelCount;
             _targetMoney = new int[_levelCount];
             _targetTime = new int[_levelCount];
@@ -225,10 +247,27 @@ namespace GreedyKid
                         _state = TitleScreenState.LevelSelection;
                         // load building
                         ShouldLoadBuilding = true;
+                        IsWorkshopBuilding = false;
                         RequiredBuildingIdentifier = "Default";
                     }
-                    //else if (_selectionOption == 1)
-                    //    _state = TitleScreenState.SteamWorkshop;
+                    else if (_selectionOption == 1)
+                    {
+                        _selectionOption = 0;
+                        _state = TitleScreenState.SteamWorkshop;
+                        // scan folder and load level names
+                        _workshopOffset = 0;
+                        _workshopIdentifiers = null;
+                        _workshopBuildingNames = null;
+                        if (System.IO.Directory.Exists("Content/Workshop/"))
+                        {
+                            _workshopIdentifiers = System.IO.Directory.GetDirectories("Content/Workshop/");
+                            _workshopBuildingNames = new string[_workshopIdentifiers.Length];
+                            for (int i = 0; i < _workshopIdentifiers.Length; i++)
+                            {
+                                Building.GetName(_workshopIdentifiers[i], out _workshopIdentifiers[i], out _workshopBuildingNames[i]);
+                            }
+                        }
+                    }
                     else if (_selectionOption == 2)
                         PushBack(fromMouse);
                     break;
@@ -250,7 +289,22 @@ namespace GreedyKid
                     }                                        
                     break;
                 case TitleScreenState.SteamWorkshop:
-                    StartGame = true;
+                    if (_selectionOption == _workshopMaxItem) // down
+                    {
+
+                    }
+                    else if (_selectionOption == _workshopMaxItem + 1) // up
+                    {
+
+                    }
+                    else if (_workshopIdentifiers != null && _workshopIdentifiers.Length > 0)
+                    {
+                        _state = TitleScreenState.LevelSelection;
+                        // load building
+                        ShouldLoadBuilding = true;
+                        IsWorkshopBuilding = true;
+                        RequiredBuildingIdentifier = _workshopIdentifiers[_selectionOption + _workshopOffset];
+                    }
                     break;
             }
 
@@ -280,7 +334,10 @@ namespace GreedyKid
                 case TitleScreenState.Play: _state = TitleScreenState.Main; break;
                 case TitleScreenState.LevelSelection:
                     _selectionOption = 0;
-                    _state = TitleScreenState.Play;
+                    if (IsWorkshopBuilding)
+                        _state = TitleScreenState.SteamWorkshop;
+                    else
+                        _state = TitleScreenState.Play;
                     break;
                 case TitleScreenState.SteamWorkshop:
                     _selectionOption = 1;
@@ -452,7 +509,7 @@ namespace GreedyKid
             {
                 yStart = 30;
             }
-            else if (_state == TitleScreenState.Settings || _state == TitleScreenState.LevelSelection)
+            else if (_state == TitleScreenState.Settings || _state == TitleScreenState.LevelSelection || _state == TitleScreenState.SteamWorkshop)
             {
                 yStart = -1;
             }
@@ -490,12 +547,49 @@ namespace GreedyKid
             {
                 SettingsManager.Instance.Draw(spriteBatch);
             }
+            else if (_state == TitleScreenState.SteamWorkshop)
+            {
+                yStart = 30;
+
+                // title
+                UIHelper.Instance.DrawTitle(spriteBatch, TextManager.Instance.Workshop);
+
+                if (_workshopIdentifiers != null && _workshopIdentifiers.Length > 0)
+                {
+                    if (_workshopOffset > 0)
+                    {
+                        UIHelper.Instance.DrawCenteredText(spriteBatch, "...", yStart - 15, _workshopMaxItem + 1, _selectionOption);
+                    }
+                    for (int i = 0; i < _workshopMaxItem; i++)
+                    {                        
+                        int currentId = _workshopOffset + i;
+                        if (currentId >= _workshopBuildingNames.Length)
+                            break;
+                        UIHelper.Instance.DrawCenteredText(spriteBatch, _workshopBuildingNames[currentId], yStart + i * 15, i, _selectionOption);
+                    }
+                    if (_workshopBuildingNames.Length > _workshopMaxItem && _workshopOffset + _workshopMaxItem < _workshopBuildingNames.Length)
+                    {
+                        UIHelper.Instance.DrawCenteredText(spriteBatch, "...", yStart + _workshopMaxItem * 15, _workshopMaxItem, _selectionOption);
+                    }
+                }
+                else
+                {
+                    // no workshop level
+                    UIHelper.Instance.DrawCenteredText(spriteBatch, "THERE'S NO WORKSHOP ITEM", 45, -1, 0);
+
+                    UIHelper.Instance.DrawCenteredText(spriteBatch, "GO TO THE STEAM WORKSHOP", 80, -1, 0);
+                    UIHelper.Instance.DrawCenteredText(spriteBatch, "AND SUBSCRIBE TO ITEMS TO SEE THEM HERE", 90, -1, 0);
+                }
+            }
             else if (_state == TitleScreenState.LevelSelection)
             {
                 Rectangle[] scoreRectangle = UIHelper.Instance.ScoreRectangles;
 
                 // title
-                UIHelper.Instance.DrawTitle(spriteBatch, TextManager.Instance.Campaign);
+                if (IsWorkshopBuilding)
+                    UIHelper.Instance.DrawTitle(spriteBatch, _buildingName);
+                else
+                    UIHelper.Instance.DrawTitle(spriteBatch, TextManager.Instance.Campaign);
 
                 int stars = (int)(_completedLevels / (_levelCount / 3.0f));
                 
@@ -763,7 +857,7 @@ namespace GreedyKid
                 UIHelper.Instance.DrawCommand(spriteBatch, GreedyKidGame.Version, CommandType.None, true);
                 UIHelper.Instance.DrawCommand(spriteBatch, TextManager.Instance.Press, CommandType.Select);
             }
-            else
+            else if (_state != TitleScreenState.SteamWorkshop || (_state == TitleScreenState.SteamWorkshop && _workshopIdentifiers != null && _workshopIdentifiers.Length > 0))
             {
                 UIHelper.Instance.DrawCommand(spriteBatch, TextManager.Instance.Select, CommandType.Select);
             }

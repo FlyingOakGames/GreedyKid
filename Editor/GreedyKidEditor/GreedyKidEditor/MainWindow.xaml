@@ -36,11 +36,13 @@
                 </MenuItem>
                 <MenuItem Header="Save as" Click="MenuItem_Click_3" />
                 <Separator/>
-                <MenuItem x:Name="exportMenu" Header="_Export (dev mode)" InputGestureText="Crtl+E" Command="{StaticResource ExportCmd}">
+                <MenuItem x:Name="exportMenu" Header="_Export main campaign (dev mode)" InputGestureText="Crtl+E" Command="{StaticResource ExportCmd}">
                     <MenuItem.InputBindings>
                         <KeyBinding Key="E" Modifiers="control"/>
                     </MenuItem.InputBindings>
                 </MenuItem>
+                <MenuItem Header="Export to test in-game (will appear in workshop menu)" Click="MenuItem_Click_6" />
+                <MenuItem Header="Upload to Steam Workshop" Click="MenuItem_Click_7" />
                 <Separator x:Name="exportSeparator"/>
                 <MenuItem Header="Exit" Click="MenuItem_Click"/>
             </MenuItem>

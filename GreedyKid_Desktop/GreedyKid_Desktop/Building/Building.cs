@@ -20,7 +20,21 @@ namespace GreedyKid
         public int[] TargetTime;
         public int[] TargetMoney;
 
-        public Level CurrentLevel;        
+        public Level CurrentLevel;
+
+        public static void GetName(string buildingFolder, out string identifier, out string name)
+        {
+            using (GZipStream gzipStream = new GZipStream(TitleContainer.OpenStream(buildingFolder + "\\building"), CompressionMode.Decompress, false, true))
+            {
+                using (BinaryReader reader = new BinaryReader(gzipStream))
+                {
+                    identifier = reader.ReadString();
+
+                    name = reader.ReadString();
+                    name = name.ToUpperInvariant();
+                }
+            }
+        }
 
         public void Load(string buildingIdentifier)
         {

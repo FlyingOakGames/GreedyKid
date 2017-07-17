@@ -10,6 +10,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Interop;
 using System.Linq;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace GreedyKidEditor
 {
@@ -27,7 +28,7 @@ namespace GreedyKidEditor
 
         private const string _latestSave = "latest";
 
-        private Building _building = new Building("New building");
+        private Building _building = new Building("New building");        
 
 #if !DEBUG
         private void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs unhandledExceptionEventArgs)
@@ -146,15 +147,12 @@ namespace GreedyKidEditor
 
             Load();
 
-            if (!File.Exists("Content\\Textures\\level.png")) // devmode 
-            {
-                exportMenu.Visibility = Visibility.Collapsed;
-                exportSeparator.Visibility = Visibility.Collapsed;
-            }
-            else
-            {
-                this.Title = this.Title + " - DEV MODE";
-            }
+#if !DEVMODE
+            exportMenu.Visibility = Visibility.Collapsed;
+            exportSeparator.Visibility = Visibility.Collapsed;
+#else
+            this.Title = this.Title + " - DEV MODE";
+#endif
         }
 
         protected override void OnSourceInitialized(EventArgs e)
@@ -573,13 +571,16 @@ namespace GreedyKidEditor
 
         private void MenuItem_Click_2(object sender, ExecutedRoutedEventArgs e)
         {
+#if DEVMODE
             System.Windows.Forms.FolderBrowserDialog dialog = new System.Windows.Forms.FolderBrowserDialog();
+
             if (Directory.Exists(@"D:\Projects\GreedyKid\GreedyKid_Desktop\GreedyKid_Desktop\Content"))
                 dialog.SelectedPath = @"D:\Projects\GreedyKid\GreedyKid_Desktop\GreedyKid_Desktop\Content";
             if (Directory.Exists(@"C:\Projects\GreedyKid\GreedyKid_Desktop\GreedyKid_Desktop\Content"))
                 dialog.SelectedPath = @"C:\Projects\GreedyKid\GreedyKid_Desktop\GreedyKid_Desktop\Content";
             else if (Directory.Exists(@"D:\FlyingOak\GreedyKid\GreedyKid_Desktop\GreedyKid_Desktop\Content"))
                 dialog.SelectedPath = @"D:\FlyingOak\GreedyKid\GreedyKid_Desktop\GreedyKid_Desktop\Content";
+
             System.Windows.Forms.DialogResult result = dialog.ShowDialog();
 
             // export
@@ -615,6 +616,12 @@ namespace GreedyKidEditor
 
             System.Media.SystemSounds.Beep.Play();
 
+            CheckExport();
+#endif
+        }
+
+        private void CheckExport()
+        {
             // verification
             if (_building.Levels.Count == 0)
             {
@@ -802,6 +809,50 @@ namespace GreedyKidEditor
             return rooms;
         }
 
+        private void MenuItem_Click_6(object sender, RoutedEventArgs e)
+        {
+            string path = AppDomain.CurrentDomain.BaseDirectory + "..\\Content\\Workshop\\" + _building.Identifier;
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+
+            // export
+            using (FileStream fs = new FileStream(path + "\\building", FileMode.OpenOrCreate))
+            {
+                using (GZipStream gzipStream = new GZipStream(fs, CompressionMode.Compress))
+                {
+                    using (BinaryWriter writer = new BinaryWriter(gzipStream))
+                    {
+                        _building.Save(writer, true);
+                    }
+                }
+            }
+
+            for (int l = 0; l < _building.Levels.Count; l++)
+            {
+                using (FileStream fs = new FileStream(path + "\\level_" + l, FileMode.OpenOrCreate))
+                {
+                    using (GZipStream gzipStream = new GZipStream(fs, CompressionMode.Compress))
+                    {
+                        using (BinaryWriter writer = new BinaryWriter(gzipStream))
+                        {
+                            _building.Levels[l].Save(writer);
+                        }
+                    }
+                }
+            }            
+
+            loadedFile.Text = DateTime.Now.ToString("HH:mm") + ": Exported " + _building.Name + " (path to file: " + path + ")";
+
+            System.Media.SystemSounds.Beep.Play();
+
+            CheckExport();
+        }
+
+        private void MenuItem_Click_7(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Not available yet, but you can share levels exported as test.");
+        }
+
         private void checkBox_Checked(object sender, RoutedEventArgs e)
         {
             PreviewRenderer.PreviewAnimation = true;
@@ -901,12 +952,21 @@ namespace GreedyKidEditor
 
         private void renameBuildingButton_Click(object sender, RoutedEventArgs e)
         {
+            MessageBox.Show("Names are limited to latin characters.");
+
             TextInputDialog dialog = new TextInputDialog();
             dialog.Owner = this;
 
             if (dialog.ShowDialog() == true)
             {
                 _building.Name = dialog.ResponseText;
+                // check text
+                _building.Name = Regex.Replace(_building.Name, @"[^\u0020-\u00FF]+", "?");
+                if (_building.Name.Length > 25)
+                {
+                    _building.Name = _building.Name.Substring(0, 25);
+                    MessageBox.Show("Names are limited to 25 characters.");
+                }
                 buildingLabel.Content = _building.Name;
             }
         }

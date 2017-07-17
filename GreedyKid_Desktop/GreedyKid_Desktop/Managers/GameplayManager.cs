@@ -169,6 +169,8 @@ namespace GreedyKid
         private const int _frameBeforeGameOver = 10;
         private const float _gameOverFrameTime = 0.1f;
 
+        public bool IsWorkshopBuilding = false;
+
         public GameplayManager()
         {
             _roomRectangle = new Rectangle[Room.PaintCount][][]; // colors

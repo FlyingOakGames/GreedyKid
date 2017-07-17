@@ -250,6 +250,7 @@ namespace GreedyKidEditor
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+#if DEVMODE
             if (File.Exists("Content\\Textures\\level.png")) // devmode only
             {
                 using (System.IO.FileStream file = System.IO.File.OpenRead("Content\\Textures\\level.png"))
@@ -261,6 +262,9 @@ namespace GreedyKidEditor
             {
                 _levelTexture = Content.Load<Texture2D>("Textures\\level");
             }
+#else
+            _levelTexture = Content.Load<Texture2D>("Textures\\level");
+#endif
 
 
             _roomRectangle = new Rectangle[Room.PaintCount][][]; // colors
