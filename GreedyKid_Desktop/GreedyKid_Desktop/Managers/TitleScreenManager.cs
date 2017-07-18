@@ -168,7 +168,7 @@ namespace GreedyKid
         public void UpdateMouseSelection(int x, int y)
         {
             int previous = _selectionOption;
-
+            
             switch (_state)
             {
                 case TitleScreenState.Title: break;
@@ -214,7 +214,18 @@ namespace GreedyKid
                     }
                     break;
                 case TitleScreenState.SteamWorkshop:
-                    // todo
+                    if (y >= 30 && y < _workshopMaxItem * 15 + 30)
+                    {
+                        _selectionOption = (y - 30) / 15;
+                    }
+                    else if (y < 30 && _workshopOffset > 0)
+                    {
+                        _selectionOption = _workshopMaxItem + 1;
+                    }
+                    else if (y >= _workshopMaxItem * 15 + 30 && _workshopBuildingNames != null && _workshopBuildingNames.Length > _workshopMaxItem && _workshopOffset + _workshopMaxItem < _workshopBuildingNames.Length)
+                    {
+                        _selectionOption = _workshopMaxItem;
+                    }
                     break;
             }
 
@@ -291,11 +302,17 @@ namespace GreedyKid
                 case TitleScreenState.SteamWorkshop:
                     if (_selectionOption == _workshopMaxItem) // down
                     {
-
+                        if (_workshopBuildingNames != null && _workshopBuildingNames.Length > _workshopMaxItem && _workshopOffset + _workshopMaxItem < _workshopBuildingNames.Length)
+                        {
+                            _workshopOffset++;
+                        }
                     }
                     else if (_selectionOption == _workshopMaxItem + 1) // up
                     {
-
+                        if (_workshopOffset > 0)
+                        {
+                            _workshopOffset--;
+                        }
                     }
                     else if (_workshopIdentifiers != null && _workshopIdentifiers.Length > 0)
                     {
@@ -366,7 +383,16 @@ namespace GreedyKid
                     case TitleScreenState.Settings: break;
                     case TitleScreenState.Play: _selectionOption = 2; break;
                     case TitleScreenState.LevelSelection: _selectionOption = 0; break;
-                    case TitleScreenState.SteamWorkshop: break;
+                    case TitleScreenState.SteamWorkshop:
+                        if (_selectionOption == -1 && _workshopOffset > 0)
+                        {
+                            _workshopOffset--;
+                        }
+                        if (_selectionOption < 0)
+                        {
+                            _selectionOption = 0;
+                        }
+                        break;
                 }
 
             if (previous != _selectionOption)
@@ -387,7 +413,14 @@ namespace GreedyKid
                 case TitleScreenState.Settings: SettingsManager.Instance.PushDown(); break;
                 case TitleScreenState.Play: _selectionOption %= 3; break;
                 case TitleScreenState.LevelSelection: _selectionOption %= 1; break;
-                case TitleScreenState.SteamWorkshop: break;
+                case TitleScreenState.SteamWorkshop:
+                    if (_selectionOption == _workshopMaxItem && _workshopBuildingNames != null && _workshopBuildingNames.Length > _workshopMaxItem && _workshopOffset + _workshopMaxItem < _workshopBuildingNames.Length)
+                    {
+                        _workshopOffset++;
+                    }
+                    if (_selectionOption > _workshopMaxItem - 1)
+                        _selectionOption = _workshopMaxItem - 1;
+                    break;
             }
 
             if (previous != _selectionOption)

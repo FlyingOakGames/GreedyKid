@@ -1,5 +1,15 @@
 ﻿V.4 (alpha)
 
+	New:
+		Game editor: 
+			The game now comes with its building editor in the "./Editor" folder
+			For a complete tutorial of how it works, please refer to this video: YT link
+			There is no Steam integration yet, and as a consequence, you can test only one building at a time
+			The editor only works on Windows (for now)
+		Basic workshop support:
+			You can export and manually share levels
+			If they are present in the "./Content/Workshop" folder, they will appear in the game workshop menu
+			There is no Steam integration yet
 
 
 V.3 (alpha)					29th June 2017
