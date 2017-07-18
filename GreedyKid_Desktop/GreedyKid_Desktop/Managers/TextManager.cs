@@ -130,7 +130,7 @@ namespace GreedyKid
 
         // *********************** MAIN SCREEN ***********************
 
-        // 85%
+        // 100%
 
         private string[] _play = new string[] { "PLAY", "JOUER", "SPIELEN", "ИГРАТЬ", "JUGAR", "JOGAR", "GIOCA" };
         public string Play { get { return _play[(int)_language]; } }
@@ -154,11 +154,24 @@ namespace GreedyKid
 
         // 0% campaign, workshop
 
-        private string[] _campaign = new string[] { "MAIN CAMPAIGN", "CAMPAGNE PRINCIPALE", "SPIELEN", "ИГРАТЬ", "JUGAR", "JOGAR", "GIOCA" };
+        private string[] _campaign = new string[] { "MAIN CAMPAIGN", "CAMPAGNE PRINCIPALE", "MAIN CAMPAIGN", "MAIN CAMPAIGN", "MAIN CAMPAIGN", "MAIN CAMPAIGN", "MAIN CAMPAIGN" };
         public string Campaign { get { return _campaign[(int)_language]; } }
 
         private string[] _workshop = new string[] { "STEAM WORKSHOP", "WORKSHOP STEAM", "STEAM WORKSHOP", "STEAM WORKSHOP", "STEAM WORKSHOP", "STEAM WORKSHOP", "STEAM WORKSHOP" };
-        public string Workshop { get { return _workshop[(int)_language]; } }        
+        public string Workshop { get { return _workshop[(int)_language]; } }
+
+        // *********************** WORKSHOP ***********************
+
+        // 0% workshopNotice1, workshopNotice2, workshopNotice3
+
+        private string[] _workshopNotice1 = new string[] { "THERE'S NO WORKSHOP ITEM", "THERE'S NO WORKSHOP ITEM", "THERE'S NO WORKSHOP ITEM", "THERE'S NO WORKSHOP ITEM", "THERE'S NO WORKSHOP ITEM", "THERE'S NO WORKSHOP ITEM", "THERE'S NO WORKSHOP ITEM" };
+        public string WorkshopNotice1 { get { return _workshopNotice1[(int)_language]; } }
+
+        private string[] _workshopNotice2 = new string[] { "GO TO THE STEAM WORKSHOP", "GO TO THE STEAM WORKSHOP", "GO TO THE STEAM WORKSHOP", "GO TO THE STEAM WORKSHOP", "GO TO THE STEAM WORKSHOP", "GO TO THE STEAM WORKSHOP", "GO TO THE STEAM WORKSHOP" };
+        public string WorkshopNotice2 { get { return _workshopNotice2[(int)_language]; } }
+
+        private string[] _workshopNotice3 = new string[] { "AND SUBSCRIBE TO ITEMS TO SEE THEM HERE", "AND SUBSCRIBE TO ITEMS TO SEE THEM HERE", "AND SUBSCRIBE TO ITEMS TO SEE THEM HERE", "AND SUBSCRIBE TO ITEMS TO SEE THEM HERE", "AND SUBSCRIBE TO ITEMS TO SEE THEM HERE", "AND SUBSCRIBE TO ITEMS TO SEE THEM HERE", "AND SUBSCRIBE TO ITEMS TO SEE THEM HERE" };
+        public string WorkshopNotice3 { get { return _workshopNotice3[(int)_language]; } }
 
         // *********************** SETTINGS SCREEN ***********************
 
@@ -243,8 +256,8 @@ namespace GreedyKid
         private string[] _stageClear = new string[] { "STAGE CLEAR", "NIVEAU TERMINÉ", "STAGE CLEAR", "STAGE CLEAR", "STAGE CLEAR", "STAGE CLEAR", "STAGE CLEAR" };
         public string StageClear { get { return _stageClear[(int)_language]; } }
 
-        private string[] _nextState = new string[] { "NEXT STAGE", "NIVEAU SUIVANT", "NEXT STAGE", "NEXT STAGE", "NEXT STAGE", "NEXT STAGE", "NEXT STAGE" };
-        public string NextStage { get { return _nextState[(int)_language]; } }
+        private string[] _nextStage = new string[] { "NEXT STAGE", "NIVEAU SUIVANT", "NEXT STAGE", "NEXT STAGE", "NEXT STAGE", "NEXT STAGE", "NEXT STAGE" };
+        public string NextStage { get { return _nextStage[(int)_language]; } }
 
         private string[] _time = new string[] { "TIME  ", "TEMPS  ", "TIME  ", "TIME  ", "TIME  ", "TIME  ", "TIME  " };
         public string Time { get { return _time[(int)_language]; } }
@@ -273,6 +286,10 @@ namespace GreedyKid
             _campaign[i] = ConvertToGame(_campaign[i]);
             _workshop[i] = ConvertToGame(_workshop[i]);
 
+            _workshopNotice1[i] = ConvertToGame(_workshopNotice1[i]);
+            _workshopNotice2[i] = ConvertToGame(_workshopNotice2[i]);
+            _workshopNotice3[i] = ConvertToGame(_workshopNotice3[i]);
+
             _languageTitle[i] = ConvertToGame(_languageTitle[i]);
             _languageValue[i] = ConvertToGame(_languageValue[i]);
             _resolution[i] = ConvertToGame(_resolution[i]);
@@ -300,6 +317,12 @@ namespace GreedyKid
             _resume[i] = ConvertToGame(_resume[i]);
             _restart[i] = ConvertToGame(_restart[i]);
             _pause[i] = ConvertToGame(_pause[i]);
+            _gameover[i] = ConvertToGame(_gameover[i]);
+
+            _stageClear[i] = ConvertToGame(_stageClear[i]);
+            _nextStage[i] = ConvertToGame(_nextStage[i]);
+            _time[i] = ConvertToGame(_time[i]);
+            _money[i] = ConvertToGame(_money[i]);
         }
     }
 }

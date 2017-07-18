@@ -11,6 +11,9 @@
 			If they are present in the "./Content/Workshop" folder, they will appear in the game workshop menu
 			There is no Steam integration yet
 
+	Fixes:
+		Fixes Russian crashing on game over and level complete screens
+
 
 V.3 (alpha)					29th June 2017
 

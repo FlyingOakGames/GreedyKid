@@ -214,9 +214,15 @@ namespace GreedyKid
                     }
                     break;
                 case TitleScreenState.SteamWorkshop:
-                    if (y >= 30 && y < _workshopMaxItem * 15 + 30)
+                    if (_workshopBuildingNames == null || _workshopBuildingNames.Length == 0)
+                    {
+                        _selectionOption = 0;
+                    }
+                    else if (y >= 30 && y < _workshopMaxItem * 15 + 30)
                     {
                         _selectionOption = (y - 30) / 15;
+                        if (_workshopBuildingNames != null && _workshopBuildingNames.Length < _workshopMaxItem && _selectionOption >= _workshopBuildingNames.Length)
+                            _selectionOption = _workshopBuildingNames.Length - 1;
                     }
                     else if (y < 30 && _workshopOffset > 0)
                     {
@@ -420,6 +426,8 @@ namespace GreedyKid
                     }
                     if (_selectionOption > _workshopMaxItem - 1)
                         _selectionOption = _workshopMaxItem - 1;
+                    if (_workshopBuildingNames != null && _workshopBuildingNames.Length < _workshopMaxItem && _selectionOption >= _workshopBuildingNames.Length)
+                        _selectionOption = _workshopBuildingNames.Length - 1;
                     break;
             }
 
@@ -608,10 +616,10 @@ namespace GreedyKid
                 else
                 {
                     // no workshop level
-                    UIHelper.Instance.DrawCenteredText(spriteBatch, "THERE'S NO WORKSHOP ITEM", 45, -1, 0);
+                    UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.WorkshopNotice1, 45, -1, 0);
 
-                    UIHelper.Instance.DrawCenteredText(spriteBatch, "GO TO THE STEAM WORKSHOP", 80, -1, 0);
-                    UIHelper.Instance.DrawCenteredText(spriteBatch, "AND SUBSCRIBE TO ITEMS TO SEE THEM HERE", 90, -1, 0);
+                    UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.WorkshopNotice2, 80, -1, 0);
+                    UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.WorkshopNotice3, 90, -1, 0);
                 }
             }
             else if (_state == TitleScreenState.LevelSelection)
