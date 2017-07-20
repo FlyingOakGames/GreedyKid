@@ -40,6 +40,10 @@ namespace GreedyKid
 
         // shouting
         private bool _shouting = false;
+        private const float _maximumShoutTime = 1.0f;
+        private float _currentShoutTime = 0.0f;
+        private const float _shoutCooldownTime = 0.25f;
+        private float _currentShoutCooldownTime = 0.0f;
 
         // tauting
         private bool _taunting = false;
@@ -340,18 +344,38 @@ namespace GreedyKid
                 _currentFrameTime = 0.0f;
             }
 
+
+            // limit shout time
+            if (_currentShoutCooldownTime > 0.0f)
+            {
+                _currentShoutCooldownTime -= gameTime;
+                _shouting = false;
+            }
+            if (_shouting)
+            {               
+                _currentShoutTime += gameTime;
+                if (_currentShoutTime > _maximumShoutTime)
+                {
+                    _currentShoutTime = 0.0f;
+                    _currentShoutCooldownTime = _shoutCooldownTime;
+                    _shouting = false;
+                }                
+            }
+
             // start / stop shouting
             if (_shouting && (State == EntityState.Idle || State == EntityState.Running))
             {
                 State = EntityState.Shouting;
                 _currentFrame = 0;
                 _currentFrameTime = 0.0f;
+                _currentShoutTime = 0.0f;
             }
             else if (!_shouting && State == EntityState.Shouting)
             {
                 State = EntityState.Idle;
                 _currentFrame = 0;
                 _currentFrameTime = 0.0f;
+                _currentShoutCooldownTime = _shoutCooldownTime;
             }
 
             // start / stop taunting
@@ -767,7 +791,7 @@ namespace GreedyKid
                 return;
             if (State == EntityState.Idle || State == EntityState.Running || State == EntityState.Shouting)
             {
-                if (State != EntityState.Shouting && !fromMicrophone)
+                if (State != EntityState.Shouting && _currentShoutCooldownTime <= 0.0f && !fromMicrophone)
                     SfxManager.Instance.Play(Sfx.Shout1 + RandomHelper.Next(5));
                 _moveDirection = 0;
                 _shouting = true;
