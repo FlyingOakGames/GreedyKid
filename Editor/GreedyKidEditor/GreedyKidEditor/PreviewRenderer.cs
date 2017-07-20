@@ -289,13 +289,15 @@ namespace GreedyKidEditor
                     };
                 }
 
-                _detailRectangle[p] = new Rectangle[Detail.NormalDetailCount + Detail.AnimatedDetailCount];
-                for (int d = 0; d < Detail.NormalDetailCount + Detail.AnimatedDetailCount; d++)
+                _detailRectangle[p] = new Rectangle[Detail.NormalDetailCount + Detail.AnimatedDetailCount + Detail.TutorialCount];
+                for (int d = 0; d < Detail.NormalDetailCount + Detail.AnimatedDetailCount + Detail.TutorialCount; d++)
                 {
                     if (d < Detail.NormalDetailCount)
                         _detailRectangle[p][d] = new Rectangle(56 * Room.DecorationCount + d * 32, 48 * p, 32, 48);
-                    else
+                    else if (d < Detail.NormalDetailCount + Detail.AnimatedDetailCount)
                         _detailRectangle[p][d] = new Rectangle(56 * Room.DecorationCount + Detail.NormalDetailCount * 32 + (d - Detail.NormalDetailCount) * 32 * Detail.AnimatedDetailFrames, 48 * p, 32, 48);
+                    else
+                        _detailRectangle[p][d] = new Rectangle((d - Detail.NormalDetailCount - Detail.AnimatedDetailCount) * 32, 1759, 32, 48);
                 }
 
                 _floorDoorRectangle[p] = new Rectangle[FloorDoor.DoorCount][];                
@@ -802,7 +804,11 @@ namespace GreedyKidEditor
                             if (IsHover(selectionDestination) && SelectionMode == SelectionMode.Detail && _hasWheelUp)
                             {
                                 detail.Type++;
+#if DEVMODE
+                                detail.Type = Math.Min(detail.Type, Detail.NormalDetailCount + Detail.AnimatedDetailCount + Detail.TutorialCount - 1);
+#else
                                 detail.Type = Math.Min(detail.Type, Detail.NormalDetailCount + Detail.AnimatedDetailCount - 1);
+#endif
                             }
                             else if (IsHover(selectionDestination) && SelectionMode == SelectionMode.Detail && _hasWheelDown)
                             {

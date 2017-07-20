@@ -195,21 +195,26 @@ namespace GreedyKid
                     };
                 }
 
-                _detailRectangle[p] = new Rectangle[Detail.NormalDetailCount + Detail.AnimatedDetailCount][];
-                for (int d = 0; d < Detail.NormalDetailCount + Detail.AnimatedDetailCount; d++)
+                _detailRectangle[p] = new Rectangle[Detail.NormalDetailCount + Detail.AnimatedDetailCount + Detail.TutorialCount][];
+                for (int d = 0; d < Detail.NormalDetailCount + Detail.AnimatedDetailCount + Detail.TutorialCount; d++)
                 {
                     if (d < Detail.NormalDetailCount)
                     {
                         _detailRectangle[p][d] = new Rectangle[1];
                         _detailRectangle[p][d][0] = new Rectangle(56 * Room.DecorationCount + d * 32, 48 * p, 32, 48);
                     }
-                    else
+                    else if (d < Detail.NormalDetailCount + Detail.AnimatedDetailCount)
                     {
                         _detailRectangle[p][d] = new Rectangle[Detail.AnimatedDetailFrames];
                         for (int f = 0; f < Detail.AnimatedDetailFrames; f++)
                         {
                             _detailRectangle[p][d][f] = new Rectangle(56 * Room.DecorationCount + Detail.NormalDetailCount * 32 + (d - Detail.NormalDetailCount) * 32 * Detail.AnimatedDetailFrames + f * 32, 48 * p, 32, 48);
                         }
+                    }
+                    else
+                    {
+                        _detailRectangle[p][d] = new Rectangle[1];
+                        _detailRectangle[p][d][0] = new Rectangle((d - Detail.NormalDetailCount - Detail.AnimatedDetailCount) * 32, TextureManager.GameplayHeight - 289, 32, 48);
                     }
                 }
 
@@ -1953,7 +1958,7 @@ namespace GreedyKid
                             Detail detail = room.Details[d];
 
                             int frame = 0;
-                            if (isShouting && room == Player.Room && detail.Type >= Detail.NormalDetailCount && Math.Abs(detail.X + 16 - playerMiddle) <= _shoutDistance)
+                            if (isShouting && room == Player.Room && detail.Type >= Detail.NormalDetailCount && detail.Type < Detail.NormalDetailCount + Detail.AnimatedDetailCount && Math.Abs(detail.X + 16 - playerMiddle) <= _shoutDistance)
                                 frame = _currentShoutFrame;
 
                             Rectangle source = _detailRectangle[room.BackgroundColor][detail.Type][frame];
