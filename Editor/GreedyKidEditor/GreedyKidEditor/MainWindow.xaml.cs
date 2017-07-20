@@ -620,12 +620,20 @@ namespace GreedyKidEditor
 #endif
         }
 
-        private void CheckExport()
+        private bool CheckExport()
         {
+            bool noError = true;
+
             // verification
             if (_building.Levels.Count == 0)
             {
                 MessageBox.Show("Warning: There is no level.");
+                noError = false;
+            }
+            if (_building.Name.Length == 0)
+            {
+                MessageBox.Show("Warning: Your level must have a name.");
+                noError = false;
             }
             // entrance / exit
             for (int i = 0; i < _building.Levels.Count; i++)
@@ -633,12 +641,18 @@ namespace GreedyKidEditor
                 int start = _building.Levels[i].HasStart();
 
                 if (start == 0)
+                {
                     MessageBox.Show("Warning: Level " + (i + 1) + " has no start.");
+                    noError = false;
+                }
 
                 int exit = _building.Levels[i].HasExit();
 
                 if (exit == 0)
+                {
                     MessageBox.Show("Warning: Level " + (i + 1) + " has no exit.");
+                    noError = false;
+                }
             }
 
             List<Room> _reachableRooms = new List<Room>();
@@ -706,21 +720,25 @@ namespace GreedyKidEditor
                             {
                                 warn1 = true;
                                 MessageBox.Show("Warning: Level " + (i + 1) + " has non-connected grey doors.");
+                                noError = false;
                             }
                             else if (connections == 0 && !warn2)
                             {
                                 warn2 = true;
                                 MessageBox.Show("Warning: Level " + (i + 1) + " has non-connected doors.");
+                                noError = false;
                             }
                             if (connections > 1 && greyDoor && !warn3)
                             {
                                 warn3 = true;
                                 MessageBox.Show("Warning: Level " + (i + 1) + " has grey doors with too many connections.");
+                                noError = false;
                             }
                             else if (connections > 1 && !warn4)
                             {
                                 warn4 = true;
                                 MessageBox.Show("Warning: Level " + (i + 1) + " has doors with too many conenctions.");
+                                noError = false;
                             }
                         }
                     }
@@ -755,17 +773,34 @@ namespace GreedyKidEditor
                 }
 
                 if (retiredCount != reachableRetired)
-                    MessageBox.Show("Warning: Level " + (i + 1) + " can't be completed because some retiree are not reachable.");
+                {
+                    MessageBox.Show("Warning: Level " + (i + 1) + " can't be completed because some retirees are not reachable.");
+                    noError = false;
+                }
                 else if (!canExit)
+                {
                     MessageBox.Show("Warning: Level " + (i + 1) + " can't be completed because the exit is not reachable.");
+                    noError = false;
+                }
 
                 if (level.Cop1Count + level.Cop2Count == 0 && level.TimeBeforeCop > 0)
+                {
                     MessageBox.Show("Warning: Level " + (i + 1) + " has a cop timer but no cop.");
+                    noError = false;
+                }
                 if (level.Swat1Count == 0 && level.TimeBeforeSwat > 0)
+                {
                     MessageBox.Show("Warning: Level " + (i + 1) + " has a SWAT timer but no SWAT cop.");
+                    noError = false;
+                }
                 if (level.RobocopCount == 0 && level.TimeBeforeRobocop > 0)
+                {
                     MessageBox.Show("Warning: Level " + (i + 1) + " has a robot timer but no robot.");
+                    noError = false;
+                }
             }
+
+            return noError;
         }
 
         private List<Room> GetReachableRooms(Room start, Level level)
@@ -811,41 +846,46 @@ namespace GreedyKidEditor
 
         private void MenuItem_Click_6(object sender, RoutedEventArgs e)
         {
-            string path = AppDomain.CurrentDomain.BaseDirectory + "..\\Content\\Workshop\\" + _building.Identifier;
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
-
-            // export
-            using (FileStream fs = new FileStream(path + "\\building", FileMode.OpenOrCreate))
+            if (CheckExport())
             {
-                using (GZipStream gzipStream = new GZipStream(fs, CompressionMode.Compress))
-                {
-                    using (BinaryWriter writer = new BinaryWriter(gzipStream))
-                    {
-                        _building.Save(writer, true);
-                    }
-                }
-            }
+                string path = AppDomain.CurrentDomain.BaseDirectory + "..\\Content\\Workshop\\" + _building.Identifier;
+                if (!Directory.Exists(path))
+                    Directory.CreateDirectory(path);
 
-            for (int l = 0; l < _building.Levels.Count; l++)
-            {
-                using (FileStream fs = new FileStream(path + "\\level_" + l, FileMode.OpenOrCreate))
+                // export
+                using (FileStream fs = new FileStream(path + "\\building", FileMode.OpenOrCreate))
                 {
                     using (GZipStream gzipStream = new GZipStream(fs, CompressionMode.Compress))
                     {
                         using (BinaryWriter writer = new BinaryWriter(gzipStream))
                         {
-                            _building.Levels[l].Save(writer);
+                            _building.Save(writer, true);
                         }
                     }
                 }
-            }            
 
-            loadedFile.Text = DateTime.Now.ToString("HH:mm") + ": Exported " + _building.Name + " (path to file: " + path + ")";
+                for (int l = 0; l < _building.Levels.Count; l++)
+                {
+                    using (FileStream fs = new FileStream(path + "\\level_" + l, FileMode.OpenOrCreate))
+                    {
+                        using (GZipStream gzipStream = new GZipStream(fs, CompressionMode.Compress))
+                        {
+                            using (BinaryWriter writer = new BinaryWriter(gzipStream))
+                            {
+                                _building.Levels[l].Save(writer);
+                            }
+                        }
+                    }
+                }
 
-            System.Media.SystemSounds.Beep.Play();
+                loadedFile.Text = DateTime.Now.ToString("HH:mm") + ": Exported " + _building.Name + " (path to file: " + path + ")";
 
-            CheckExport();
+                System.Media.SystemSounds.Beep.Play();
+            }
+            else
+            {
+                MessageBox.Show("The building hasn't been exported because of the listed warning(s).");
+            }
         }
 
         private void MenuItem_Click_7(object sender, RoutedEventArgs e)
