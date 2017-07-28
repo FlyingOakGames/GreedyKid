@@ -1060,7 +1060,7 @@ namespace GreedyKid
                                     cop.HasFired = false;
                                     if (cop.Type < Cop.NormalCopCount + Cop.SwatCopCount)
                                     {
-                                        BulletType type = BulletType.Taser + cop.Type - 1;
+                                        BulletType type = (cop.Type >= Cop.NormalCopCount ? BulletType.Shotgun : BulletType.Taser);
                                         FireBullet(type, cop.X, cop.Orientation, cop.Room);
                                     }
                                     else
