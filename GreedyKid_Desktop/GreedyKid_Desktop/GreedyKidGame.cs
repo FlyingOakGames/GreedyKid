@@ -186,14 +186,19 @@ namespace GreedyKid
             switch (_state)
             {
                 case GameState.None:
+#if DEBUG
+                    if (InputManager.CheckKeypress())
+                    {
+#endif
+                        MusicManager.Instance.LoadSong(1);
+                        MusicManager.Instance.Play();
 
-                    MusicManager.Instance.LoadSong(1);
-                    MusicManager.Instance.Play();
+                        _splashScreenManager = new SplashScreenManager();
 
-                    _splashScreenManager = new SplashScreenManager();
-
-                    _state = GameState.Splash;
-
+                        _state = GameState.Splash;
+#if DEBUG
+                    }
+#endif
                     break;
                 case GameState.Splash:
 
