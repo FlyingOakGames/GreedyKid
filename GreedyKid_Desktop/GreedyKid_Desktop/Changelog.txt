@@ -1,5 +1,8 @@
 ﻿V.4 (alpha)
 
+	Notice:
+		Due to modified levels, all saves prior to this version will be erased
+
 	New:
 		Game editor: 
 			The game now comes with its building editor in the "./Editor" folder

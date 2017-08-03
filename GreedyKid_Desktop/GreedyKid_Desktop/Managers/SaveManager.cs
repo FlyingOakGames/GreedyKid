@@ -7,7 +7,7 @@ namespace GreedyKid
     public sealed class SaveManager
     {
         private string _savePath = "Scores";
-        private static int[] _minVersion = new int[] { 0, 6, 0, 0 };
+        private static int[] _minVersion = new int[] { 0, 7, 0, 0 };
 
         private static SaveManager _instance;
 
@@ -194,6 +194,13 @@ namespace GreedyKid
                     using (BinaryWriter writer = new BinaryWriter(stream))
 #endif
                     {
+                        string currentVersion = System.Reflection.Assembly.GetExecutingAssembly()
+                                    .GetName()
+                                    .Version
+                                    .ToString();
+
+                        writer.Write(currentVersion);
+
                         for (int i = 0; i < building.LevelCount; i++)
                         {
                             writer.Write(_isLevelDone[i]);
