@@ -593,11 +593,11 @@ namespace GreedyKidEditor
             base.Update(gameTime);
         }
 
-        private void RemoveStart()
+        private void RemoveStart(Level level)
         {
-            for (int f = 0; f < _building.Levels[SelectedLevel].Floors.Count; f++)
+            for (int f = 0; f < level.Floors.Count; f++)
             {
-                Floor floor = _building.Levels[SelectedLevel].Floors[f];
+                Floor floor = level.Floors[f];
 
                 // rooms
                 for (int r = 0; r < floor.Rooms.Count; r++)
@@ -609,11 +609,11 @@ namespace GreedyKidEditor
             }
         }
 
-        private void RemoveExit()
+        private void RemoveExit(Level level)
         {
-            for (int f = 0; f < _building.Levels[SelectedLevel].Floors.Count; f++)
+            for (int f = 0; f < level.Floors.Count; f++)
             {
-                Floor floor = _building.Levels[SelectedLevel].Floors[f];
+                Floor floor = level.Floors[f];
 
                 // rooms
                 for (int r = 0; r < floor.Rooms.Count; r++)
@@ -638,7 +638,13 @@ namespace GreedyKidEditor
 
             Score = 0;
 
+            Level level = null;
             if (_building != null && SelectedLevel >= 0 && SelectedLevel < _building.Levels.Count)
+            {
+                level = _building.Levels[SelectedLevel];
+            }
+
+            if (level != null)
             {
                 bool drawHelper = false;
                 int helperX = 0;
@@ -647,26 +653,26 @@ namespace GreedyKidEditor
                 Rectangle timeRectangle = new Rectangle(138, 0, 50, 12);
 
                 if (IsHover(timeRectangle, true) && _hasWheelUp)
-                    _building.Levels[SelectedLevel].TargetTime++;
+                    level.TargetTime++;
                 else if (IsHover(timeRectangle, true) && _hasLeftClick)
-                    _building.Levels[SelectedLevel].TargetTime += 5;
+                    level.TargetTime += 5;
                 else if (IsHover(timeRectangle, true) && _hasWheelDown)
                 {
-                    _building.Levels[SelectedLevel].TargetTime--;
+                    level.TargetTime--;
                 }
                 else if (IsHover(timeRectangle, true) && _hasRightClick)
                 {
-                    _building.Levels[SelectedLevel].TargetTime -= 5;                    
+                    level.TargetTime -= 5;                    
                 }
 
-                if (_building.Levels[SelectedLevel].TargetTime < 1)
-                    _building.Levels[SelectedLevel].TargetTime = 1;
-                if (_building.Levels[SelectedLevel].TargetTime > 99 * 60 + 59)
-                    _building.Levels[SelectedLevel].TargetTime = 99 * 60 + 59;
+                if (level.TargetTime < 1)
+                    level.TargetTime = 1;
+                if (level.TargetTime > 99 * 60 + 59)
+                    level.TargetTime = 99 * 60 + 59;
 
-                for (int f = 0; f < _building.Levels[SelectedLevel].Floors.Count; f++)
+                for (int f = 0; f < level.Floors.Count; f++)
                 {
-                    Floor floor = _building.Levels[SelectedLevel].Floors[f];
+                    Floor floor = level.Floors[f];
 
                     // rooms                    
                     for (int r = 0; r < floor.Rooms.Count; r++)
@@ -1091,7 +1097,7 @@ namespace GreedyKidEditor
                         // add
                         if (SelectionMode == SelectionMode.Elevator && _hasLeftClick && IsHover(room, f, cameraPosY))
                         {
-                            RemoveStart();
+                            RemoveStart(level);
                             room.HasStart = true;
                             room.StartX = _mouseState.Position.X - 16;
                         }
@@ -1135,7 +1141,7 @@ namespace GreedyKidEditor
                         // add
                         if (SelectionMode == SelectionMode.Elevator && _hasRightClick && IsHover(room, f, cameraPosY))
                         {
-                            RemoveExit();
+                            RemoveExit(level);
                             room.HasExit = true;
                             room.ExitX = _mouseState.Position.X - 16;
                         }
@@ -1233,7 +1239,7 @@ namespace GreedyKidEditor
                         // add
                         if (SelectionMode == SelectionMode.Retired && _hasLeftClick && IsHover(room, f, cameraPosY))
                         {
-                            if ((_building.Levels[SelectedLevel].GetRetiredCount() + 1) * Retired.MaxMoney <= 999)
+                            if ((level.GetRetiredCount() + 1) * Retired.MaxMoney <= 999)
                                 room.Retireds.Add(new Retired(_mouseState.Position.X - 16));
                         }
                         else if (remove >= 0)
@@ -1410,15 +1416,15 @@ namespace GreedyKidEditor
                                     int floor = (160 - (_mouseState.Position.Y - 8)) / 40 + cameraPosY / 40;
 
                                     // adding missing floors
-                                    for (int f = _building.Levels[SelectedLevel].Floors.Count - 1; f < floor + 1; f++)
-                                        _building.Levels[SelectedLevel].Floors.Add(new Floor());
+                                    for (int f = level.Floors.Count - 1; f < floor + 1; f++)
+                                        level.Floors.Add(new Floor());
 
                                     Room room = new Room();
                                     room.LeftMargin = (_mouseState.Position.X - 24) / 8;
                                     room.LeftMargin = Math.Max(room.LeftMargin, 1);
                                     room.LeftMargin = Math.Min(room.LeftMargin, 33);
                                     room.RightMargin = 34 - room.LeftMargin;
-                                    _building.Levels[SelectedLevel].Floors[floor].Rooms.Add(room);
+                                    level.Floors[floor].Rooms.Add(room);
                                 }
                             }
                         }
@@ -1537,14 +1543,8 @@ namespace GreedyKidEditor
                 }
             }
 
-            // time
-            /*
-            if (_building != null && SelectedLevel >= 0 && SelectedLevel < _building.Levels.Count)
-            {
-                Time = _building.Levels[SelectedLevel].TimeBeforeCop;
-            }*/
-
-            Time = _building.Levels[SelectedLevel].TargetTime;
+            if (level != null)
+                Time = level.TargetTime;
 
             _encodedTime[0] = Time / 600;
             _encodedTime[1] = (Time - _encodedTime[0] * 600) / 60;

@@ -1,9 +1,10 @@
-﻿V.4 (alpha)
+﻿V.4 (alpha)					4th August 2017
 
 	Notice:
 		Due to modified levels, all saves prior to this version will be erased
 
 	New:
+		A few new levels
 		Game editor: 
 			The game now comes with its building editor in the "./Editor" folder
 			For a complete tutorial of how it works, please refer to this video: YT link
@@ -13,6 +14,9 @@
 			You can export and manually share levels
 			If they are present in the "./Content/Workshop" folder, they will appear in the game workshop menu
 			There is no Steam integration yet
+
+	Changes:
+		A few levels have a lowered difficulty, but we still have to revamp to whole difficulty curve
 
 	Fixes:
 		Fixes Russian crashing on game over and level complete screens
