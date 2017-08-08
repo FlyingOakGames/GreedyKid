@@ -142,9 +142,13 @@ namespace GreedyKid
             if (selectedLevel != -1)
                 _selectedLevel = selectedLevel;
 
+            if (!SaveManager.Instance.IsLevelDone(-1))
+                _selectedLevel = -1;
+
             _completionString = "( " + (_completedLevels < 10 ? "0" : String.Empty) + _completedLevels + "/" + (_levelCount < 10 ? "0" : String.Empty) + _levelCount + " )";
 
-            UpdateScoreStrings();
+            if (_selectedLevel >= 0)
+                UpdateScoreStrings();
         }
 
         public void Update(float gameTime)
@@ -444,13 +448,14 @@ namespace GreedyKid
                 int previous = _selectedLevel;
 
                 _selectedLevel--;
-                if (_selectedLevel < 0)
-                    _selectedLevel = 0;
+                if (_selectedLevel < -1)
+                    _selectedLevel = -1;
 
                 if (previous != _selectedLevel)
                 {
                     SfxManager.Instance.Play(Sfx.MenuBlip);
-                    UpdateScoreStrings();
+                    if (_selectedLevel >= 0)
+                        UpdateScoreStrings();
                 }
             }
         }
@@ -473,7 +478,8 @@ namespace GreedyKid
                 if (previous != _selectedLevel)
                 {
                     SfxManager.Instance.Play(Sfx.MenuBlip);
-                    UpdateScoreStrings();
+                    if (_selectedLevel >= 0)
+                        UpdateScoreStrings();
                 }
             }
         }
@@ -662,7 +668,7 @@ namespace GreedyKid
                 // previous levels
                 for (int i = 0; i < 3; i++)
                 {
-                    if (_selectedLevel - 1 - i < 0)
+                    if (_selectedLevel - 1 - i < -1)
                         continue;
 
                     // box
@@ -699,12 +705,15 @@ namespace GreedyKid
                             Color.White);
                     }
 
-                    // small stars
-                    stars = SaveManager.Instance.LevelStars(_selectedLevel - 1 - i);                    
-                    spriteBatch.Draw(texture,
-                        new Rectangle(106 - i * 41 + 6, 68 + 44, _selectionRectangle[stars].Width, _selectionRectangle[stars].Height),
-                        _selectionRectangle[stars],
-                        Color.White);
+                    if (d > 0 || e > 0)
+                    {
+                        // small stars
+                        stars = SaveManager.Instance.LevelStars(_selectedLevel - 1 - i);
+                        spriteBatch.Draw(texture,
+                            new Rectangle(106 - i * 41 + 6, 68 + 44, _selectionRectangle[stars].Width, _selectionRectangle[stars].Height),
+                            _selectionRectangle[stars],
+                            Color.White);
+                    }
                 }
 
                 // current level
@@ -741,12 +750,15 @@ namespace GreedyKid
                         Color.White);
                 }
 
-                // small stars
-                stars = SaveManager.Instance.LevelStars(_selectedLevel);
-                spriteBatch.Draw(texture,
-                    new Rectangle(147 + 6, 68 + 44, _selectionRectangle[stars].Width, _selectionRectangle[stars].Height),
-                    _selectionRectangle[stars],
-                    Color.White);
+                if (_selectedLevel >= 0)
+                {
+                    // small stars
+                    stars = SaveManager.Instance.LevelStars(_selectedLevel);
+                    spriteBatch.Draw(texture,
+                        new Rectangle(147 + 6, 68 + 44, _selectionRectangle[stars].Width, _selectionRectangle[stars].Height),
+                        _selectionRectangle[stars],
+                        Color.White);
+                }
 
                 // next levels
                 for (int i = 0; i < 3; i++)
@@ -819,64 +831,68 @@ namespace GreedyKid
                     0.0f
                     );
 
-                SpriteFont genericFont = TextManager.Instance.GenericFont;
-                SpriteFont font = TextManager.Instance.Font;
+                if (_selectedLevel >= 0)
+                {
 
-                // time
-                int time = SaveManager.Instance.LevelTime(_selectedLevel);
-                int icon = (time <= _targetTime[_selectedLevel] ? 4 : 5);
-                if (!SaveManager.Instance.IsLevelDone(_selectedLevel))
-                    icon = 5;
-                int timeWidth = scoreRectangle[icon].Width + (int)font.MeasureString(TextManager.Instance.Time).X + (int)genericFont.MeasureString(_bestTimeString).X + (int)genericFont.MeasureString(_targetTimeString).X;
-                int timeX = GreedyKidGame.Width / 2 - timeWidth / 2;
-                spriteBatch.Draw(texture,
-                    new Rectangle(
-                        timeX,
-                        139,
-                        scoreRectangle[icon].Width,
-                        scoreRectangle[icon].Height),
-                    scoreRectangle[icon],
-                    Color.White);
-                spriteBatch.DrawString(font,
-                    TextManager.Instance.Time,
-                    new Vector2(timeX + scoreRectangle[icon].Width, 136),
-                    Color.White);
-                spriteBatch.DrawString(font,
-                    _bestTimeString,
-                    new Vector2(timeX + scoreRectangle[icon].Width + (int)genericFont.MeasureString(TextManager.Instance.Time).X, 136),
-                    Color.White);
-                spriteBatch.DrawString(font,
-                    _targetTimeString,
-                    new Vector2(timeX + timeWidth - (int)genericFont.MeasureString(_targetTimeString).X, 136),
-                    _targetScoreColor);
+                    SpriteFont genericFont = TextManager.Instance.GenericFont;
+                    SpriteFont font = TextManager.Instance.Font;
 
-                // money
-                int money = SaveManager.Instance.LevelMoney(_selectedLevel);
-                icon = (money >= _targetMoney[_selectedLevel] ? 4 : 5);
-                if (!SaveManager.Instance.IsLevelDone(_selectedLevel))
-                    icon = 5;
-                int moneyWidth = scoreRectangle[icon].Width + (int)font.MeasureString(TextManager.Instance.Money).X + (int)genericFont.MeasureString(_bestMoneyString).X + (int)genericFont.MeasureString(_targetMoneyString).X;
-                int moneyX = GreedyKidGame.Width / 2 - moneyWidth / 2;
-                spriteBatch.Draw(texture,
-                    new Rectangle(
-                        moneyX,
-                        154,
-                        scoreRectangle[icon].Width,
-                        scoreRectangle[icon].Height),
-                    scoreRectangle[icon],
-                    Color.White);
-                spriteBatch.DrawString(font,
-                    TextManager.Instance.Money,
-                    new Vector2(moneyX + scoreRectangle[icon].Width, 151),
-                    Color.White);
-                spriteBatch.DrawString(font,
-                    _bestMoneyString,
-                    new Vector2(moneyX + scoreRectangle[icon].Width + (int)genericFont.MeasureString(TextManager.Instance.Money).X, 151),
-                    Color.White);
-                spriteBatch.DrawString(font,
-                    _targetMoneyString,
-                    new Vector2(moneyX + moneyWidth - (int)genericFont.MeasureString(_targetMoneyString).X, 151),
-                    _targetScoreColor);
+                    // time
+                    int time = SaveManager.Instance.LevelTime(_selectedLevel);
+                    int icon = (time <= _targetTime[_selectedLevel] ? 4 : 5);
+                    if (!SaveManager.Instance.IsLevelDone(_selectedLevel))
+                        icon = 5;
+                    int timeWidth = scoreRectangle[icon].Width + (int)font.MeasureString(TextManager.Instance.Time).X + (int)genericFont.MeasureString(_bestTimeString).X + (int)genericFont.MeasureString(_targetTimeString).X;
+                    int timeX = GreedyKidGame.Width / 2 - timeWidth / 2;
+                    spriteBatch.Draw(texture,
+                        new Rectangle(
+                            timeX,
+                            139,
+                            scoreRectangle[icon].Width,
+                            scoreRectangle[icon].Height),
+                        scoreRectangle[icon],
+                        Color.White);
+                    spriteBatch.DrawString(font,
+                        TextManager.Instance.Time,
+                        new Vector2(timeX + scoreRectangle[icon].Width, 136),
+                        Color.White);
+                    spriteBatch.DrawString(font,
+                        _bestTimeString,
+                        new Vector2(timeX + scoreRectangle[icon].Width + (int)genericFont.MeasureString(TextManager.Instance.Time).X, 136),
+                        Color.White);
+                    spriteBatch.DrawString(font,
+                        _targetTimeString,
+                        new Vector2(timeX + timeWidth - (int)genericFont.MeasureString(_targetTimeString).X, 136),
+                        _targetScoreColor);
+
+                    // money
+                    int money = SaveManager.Instance.LevelMoney(_selectedLevel);
+                    icon = (money >= _targetMoney[_selectedLevel] ? 4 : 5);
+                    if (!SaveManager.Instance.IsLevelDone(_selectedLevel))
+                        icon = 5;
+                    int moneyWidth = scoreRectangle[icon].Width + (int)font.MeasureString(TextManager.Instance.Money).X + (int)genericFont.MeasureString(_bestMoneyString).X + (int)genericFont.MeasureString(_targetMoneyString).X;
+                    int moneyX = GreedyKidGame.Width / 2 - moneyWidth / 2;
+                    spriteBatch.Draw(texture,
+                        new Rectangle(
+                            moneyX,
+                            154,
+                            scoreRectangle[icon].Width,
+                            scoreRectangle[icon].Height),
+                        scoreRectangle[icon],
+                        Color.White);
+                    spriteBatch.DrawString(font,
+                        TextManager.Instance.Money,
+                        new Vector2(moneyX + scoreRectangle[icon].Width, 151),
+                        Color.White);
+                    spriteBatch.DrawString(font,
+                        _bestMoneyString,
+                        new Vector2(moneyX + scoreRectangle[icon].Width + (int)genericFont.MeasureString(TextManager.Instance.Money).X, 151),
+                        Color.White);
+                    spriteBatch.DrawString(font,
+                        _targetMoneyString,
+                        new Vector2(moneyX + moneyWidth - (int)genericFont.MeasureString(_targetMoneyString).X, 151),
+                        _targetScoreColor);
+                }
 
                 // arrows
                 int arrow = (_selectedLevel > 0 ? 8 : 7);

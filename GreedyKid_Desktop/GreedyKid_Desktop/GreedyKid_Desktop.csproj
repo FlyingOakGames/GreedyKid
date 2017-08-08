@@ -80,6 +80,7 @@
     <Compile Include="Inputs\HybridMouseGamePadHandler.cs" />
     <Compile Include="Inputs\IInputsHandler.cs" />
     <Compile Include="Inputs\InputManager.cs" />
+    <Compile Include="Managers\IntroScreenManager.cs" />
     <Compile Include="Managers\MicrophoneManager.cs" />
     <Compile Include="Inputs\MouseKeyboardInputsHandler.cs" />
     <Compile Include="Managers\SaveManager.cs" />

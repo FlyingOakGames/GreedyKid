@@ -10,7 +10,11 @@ namespace GreedyKid
         public const int GameplayWidth = 2048;
         public const int GameplayHeight = 2048;
 
+        public const int IntroWidth = 2048;
+        public const int IntroHeight = 1024;
+
         public static Texture2D Gameplay;
+        public static Texture2D Intro;
         public static Texture2D Splash;
 
         public static SpriteFont LatinFont;
@@ -38,6 +42,27 @@ namespace GreedyKid
                         path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "Resources", "Content/Textures/");
                     }
                     Gameplay = Texture2D.FromStream(device, File.OpenRead(path + "level.png"));
+                }
+            }
+        }
+
+        public static void LoadIntro(GraphicsDevice device)
+        {
+            if (Content != null)
+            {
+                try
+                {
+                    Intro = Content.Load<Texture2D>(@"Textures/intro");
+                }
+                catch (Exception)
+                {
+                    // development fallback
+                    string path = Content.RootDirectory + "/Textures/";
+                    if (!File.Exists(path + "intro.png")) // MacOS hack
+                    {
+                        path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "Resources", "Content/Textures/");
+                    }
+                    Intro = Texture2D.FromStream(device, File.OpenRead(path + "intro.png"));
                 }
             }
         }

@@ -18,6 +18,8 @@ namespace GreedyKid
         private int[] _levelMoney;
         private int[] _levelStars;
 
+        private bool _hasSeenIntro = false;
+
         private SaveManager()
         {
 #if DESKTOP
@@ -27,6 +29,8 @@ namespace GreedyKid
 
         public bool IsLevelDone(int level)
         {
+            if (level == -1)
+                return _hasSeenIntro;
             return _isLevelDone[level];
         }
 
@@ -70,6 +74,11 @@ namespace GreedyKid
             }
         }
 
+        public void SetIntro()
+        {
+            _hasSeenIntro = true;
+        }
+
         public void Load(Building building)
         {
             if (_currentBuildingIdentifier == building.Identifier)
@@ -83,6 +92,8 @@ namespace GreedyKid
             _levelTime = new int[building.LevelCount];
             _levelMoney = new int[building.LevelCount];
             _levelStars = new int[building.LevelCount];
+
+            _hasSeenIntro = false;
 
 #if PLAYSTATION4
             path = PlatformHelper.PlayStation4.BeginSave(_statsPath, true);
@@ -153,6 +164,7 @@ namespace GreedyKid
                                         _levelMoney[i] = reader.ReadInt32();
                                         _levelStars[i] = reader.ReadInt32();
                                     }
+                                    _hasSeenIntro = reader.ReadBoolean();
                                 }
                             }
                         }
@@ -208,6 +220,8 @@ namespace GreedyKid
                             writer.Write(_levelMoney[i]);
                             writer.Write(_levelStars[i]);
                         }
+
+                        writer.Write(_hasSeenIntro);
 
                         writer.Flush();
 #if DESKTOP || PLAYSTATION4

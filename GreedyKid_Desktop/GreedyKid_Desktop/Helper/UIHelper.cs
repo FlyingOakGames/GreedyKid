@@ -20,6 +20,7 @@ namespace GreedyKid
         private Rectangle[] _bordersRectangle;
         private Rectangle[] _microphoneRectangle;
         private Rectangle[] _scoreRectangle;
+        private Rectangle[] _transitionRectangle;
         private Color _backgroundColor = new Color(34, 32, 52);
         private Color _selectedColor = new Color(217, 87, 99);
         private Color _notSelectedColor = new Color(132, 126, 135);
@@ -55,6 +56,13 @@ namespace GreedyKid
             get { return _scoreRectangle; }
         }
 
+        public Rectangle[] TransitionRectangles
+        {
+            get { return _transitionRectangle; }
+        }
+
+
+
         private UIHelper()
         {
             _bordersRectangle = new Rectangle[8];
@@ -85,6 +93,17 @@ namespace GreedyKid
             _scoreRectangle[4] = new Rectangle(492, TextureManager.GameplayHeight - 240, 14, 9); // check
             _scoreRectangle[5] = new Rectangle(507, TextureManager.GameplayHeight - 240, 14, 9); // no check
             _scoreRectangle[6] = new Rectangle(323, TextureManager.GameplayHeight - 240, 125, 10); // separation
+
+            // transition
+            _transitionRectangle = new Rectangle[7];
+            _transitionRectangle[0] = new Rectangle(152, TextureManager.GameplayHeight - 130, 1, 1); // 1x1
+            _transitionRectangle[2] = new Rectangle(150, TextureManager.GameplayHeight - 133, 50, 50); // circle half full
+            _transitionRectangle[1] = new Rectangle(150, TextureManager.GameplayHeight - 184, 50, 50); // circle empty            
+            _transitionRectangle[3] = new Rectangle(201, TextureManager.GameplayHeight - 184, 328, 184); // half full
+
+            _transitionRectangle[4] = new Rectangle(201, TextureManager.GameplayHeight - 183, 328, 13); // gameover 1
+            _transitionRectangle[5] = new Rectangle(201, TextureManager.GameplayHeight - 183, 328, 28); // gameover 2
+            _transitionRectangle[6] = new Rectangle(201, TextureManager.GameplayHeight - 183, 328, 82); // gameover 3
         }
 
         public static UIHelper Instance

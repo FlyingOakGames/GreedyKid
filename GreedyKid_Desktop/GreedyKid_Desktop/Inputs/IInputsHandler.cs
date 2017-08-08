@@ -12,6 +12,8 @@ namespace GreedyKid
 
     public interface IInputsHandler
     {
+        void HandleIntroInputs(IntroScreenManager manager);
+
         void HandleIngameInputs(GameplayManager manager);
 
         void HandleTitleInputs(TitleScreenManager manager);

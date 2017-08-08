@@ -12,6 +12,7 @@ namespace GreedyKid
         Splash,
         Title,
         Ingame,
+        Intro,
     }
 
     /// <summary>
@@ -36,6 +37,7 @@ namespace GreedyKid
         // managers
         private SplashScreenManager _splashScreenManager;
         private TitleScreenManager _titleScreenManager;
+        private IntroScreenManager _introScreenManager;
         private GameplayManager _gameplayManager;
 
         // viewport handling
@@ -213,10 +215,12 @@ namespace GreedyKid
                         TextureManager.Splash = null;
 
                         TextureManager.LoadGameplay(GraphicsDevice);
+                        TextureManager.LoadIntro(GraphicsDevice);
                         TextureManager.LoadFont();
                         SfxManager.Instance.LoadGameplaySfx();
 
                         _titleScreenManager = new TitleScreenManager();
+                        _introScreenManager = new IntroScreenManager();
 
                         _state = GameState.Title;
 
@@ -245,10 +249,33 @@ namespace GreedyKid
                     }
                     else if (_titleScreenManager.StartGame)
                     {
-                        _gameplayManager.LoadLevel(_titleScreenManager.SelectedLevel);
+                        if (_titleScreenManager.SelectedLevel >= 0)
+                        {
+                            _gameplayManager.LoadLevel(_titleScreenManager.SelectedLevel);                            
+                            _state = GameState.Ingame;
+                        }
+                        else if (_titleScreenManager.SelectedLevel == -1)
+                        {
+                            _introScreenManager.Reset();
+                            _state = GameState.Intro;
+                        }
+
                         _gameplayManager.IsWorkshopBuilding = _titleScreenManager.IsWorkshopBuilding;
-                        _titleScreenManager = null;
-                       
+                        _titleScreenManager = null;                                              
+
+                        GC.Collect();
+                    }
+
+                    break;
+                case GameState.Intro:
+
+                    _introScreenManager.Update(gameTimeF);
+
+                    if (_introScreenManager.StartGame)
+                    {
+                        SaveManager.Instance.SetIntro();
+                        SaveManager.Instance.Save(_gameplayManager.Building);
+                        _gameplayManager.LoadLevel(0);
                         _state = GameState.Ingame;
 
                         GC.Collect();
@@ -302,6 +329,9 @@ namespace GreedyKid
                     break;
                 case GameState.Ingame:
                     _gameplayManager.Draw(spriteBatch);
+                    break;
+                case GameState.Intro:                
+                    _introScreenManager.Draw(spriteBatch);
                     break;
             }
 

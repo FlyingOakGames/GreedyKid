@@ -545,7 +545,24 @@ namespace GreedyKid
 
             _previousKeyboardState = keyboardState;
             _previousMouseState = mouseState;
-        }        
+        }
+
+        public void HandleIntroInputs(IntroScreenManager manager)
+        {
+            MouseState mouseState = Mouse.GetState();
+            KeyboardState keyboardState = Keyboard.GetState();
+
+            if ((ActionKey.IsPressed(mouseState, keyboardState) && ActionKey.IsReleased(_previousMouseState, _previousKeyboardState)) ||
+                    (keyboardState.IsKeyDown(Keys.Enter) && _previousKeyboardState.IsKeyUp(Keys.Enter)) ||
+                    (mouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released))
+                manager.DisappearTransition();
+            else if ((keyboardState.IsKeyDown(Keys.Escape) && _previousKeyboardState.IsKeyUp(Keys.Escape)) ||
+                (mouseState.RightButton == ButtonState.Pressed && _previousMouseState.RightButton == ButtonState.Released))
+                manager.DisappearTransition();
+
+            _previousKeyboardState = keyboardState;
+            _previousMouseState = mouseState;
+        }
 
         public void Update(float gameTime)
         {

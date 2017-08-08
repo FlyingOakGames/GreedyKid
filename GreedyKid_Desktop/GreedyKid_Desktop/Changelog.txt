@@ -1,4 +1,14 @@
-﻿V.4 (alpha)					4th August 2017
+﻿V.5 (alpha)					?
+
+	Notice:
+		Due to new levels and change in the save format, all saves prior to this version will be erased
+
+	New:
+		Introduction cutscene:
+			There is now a "0" level which will play a cutscene explaining why the kid is so greedy
+
+
+V.4 (alpha)					4th August 2017
 
 	Notice:
 		Due to modified levels, all saves prior to this version will be erased

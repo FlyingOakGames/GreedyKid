@@ -152,6 +152,21 @@ namespace GreedyKid
             _previousGamePadState = currentState;
         }
 
+        public void HandleIntroInputs(IntroScreenManager manager)
+        {
+            GamePadState currentState = GamePad.GetState(_playerIndex, GamePadDeadZone.IndependentAxes);
+            _isConnected = currentState.IsConnected;
+
+            if (currentState.Buttons.A == ButtonState.Pressed && _previousGamePadState.Buttons.A == ButtonState.Released)
+                manager.DisappearTransition();
+            else if (currentState.Buttons.B == ButtonState.Pressed && _previousGamePadState.Buttons.B == ButtonState.Released)
+                manager.DisappearTransition();
+            else if (currentState.Buttons.Start == ButtonState.Pressed && _previousGamePadState.Buttons.Start == ButtonState.Released)
+                manager.DisappearTransition();
+
+            _previousGamePadState = currentState;
+        }
+
         public bool DetectKeyPress(out Microsoft.Xna.Framework.Input.Keys key, out MouseKeyboardInputsHandler.MouseButton mouseButton, out MouseKeyboardInputsHandler.MappingType type)
         {
             key = Keys.A;

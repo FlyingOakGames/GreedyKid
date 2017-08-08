@@ -97,7 +97,6 @@ namespace GreedyKid
         private bool _hasFinishedLevel = false;
 
         // transition
-        private Rectangle[] _transitionRectangle;
         private TransitionState _transitionState = TransitionState.Hidden;
         private int _currentTransitionFrame = 0;
         private float _currentTransitionFrameTime = 0.0f;
@@ -327,17 +326,6 @@ namespace GreedyKid
             }
             _numberRectangle[10].Width = 5;
             _numberRectangle[11].X = _numberRectangle[10].X + _numberRectangle[10].Width;
-
-            // transition
-            _transitionRectangle = new Rectangle[7];
-            _transitionRectangle[0] = new Rectangle(152, TextureManager.GameplayHeight - 130, 1, 1); // 1x1
-            _transitionRectangle[2] = new Rectangle(150, TextureManager.GameplayHeight - 133, 50, 50); // circle half full
-            _transitionRectangle[1] = new Rectangle(150, TextureManager.GameplayHeight - 184, 50, 50); // circle empty            
-            _transitionRectangle[3] = new Rectangle(201, TextureManager.GameplayHeight - 184, 328, 184); // half full
-
-            _transitionRectangle[4] = new Rectangle(201, TextureManager.GameplayHeight - 183, 328, 13); // gameover 1
-            _transitionRectangle[5] = new Rectangle(201, TextureManager.GameplayHeight - 183, 328, 28); // gameover 2
-            _transitionRectangle[6] = new Rectangle(201, TextureManager.GameplayHeight - 183, 328, 82); // gameover 3
 
             // inter level
             _interLevelRectangle = new Rectangle[_elevatorFrameCount + _cableFrameCount + 3 + _elevatorKidFrameCount];
@@ -2394,6 +2382,8 @@ namespace GreedyKid
                 if ((Player != null && _spawnEntrance && _spawningCop != null && Player.Life > 0) || (_entranceState != ElevatorState.Opening && Player != null && !Player.HasEnteredElevator && Player.Life > 0))
                     Player.Draw(spriteBatch, cameraPosY);
 
+            Rectangle[] transitionRectangle = UIHelper.Instance.TransitionRectangles;
+
             // gameover
             if (Gameover)
             {
@@ -2401,29 +2391,29 @@ namespace GreedyKid
                 if (_currentGameOverFrame == 1)
                 {
                     spriteBatch.Draw(texture,
-                        new Rectangle(0, GreedyKidGame.Height / 2 - _transitionRectangle[4].Height / 2, GreedyKidGame.Width, _transitionRectangle[4].Height),
-                        _transitionRectangle[4],
+                        new Rectangle(0, GreedyKidGame.Height / 2 - transitionRectangle[4].Height / 2, GreedyKidGame.Width, transitionRectangle[4].Height),
+                        transitionRectangle[4],
                         Color.White);
                 }
                 else if (_currentGameOverFrame == 2)
                 {
                     spriteBatch.Draw(texture,
-                        new Rectangle(0, GreedyKidGame.Height / 2 - _transitionRectangle[5].Height / 2, GreedyKidGame.Width, _transitionRectangle[5].Height),
-                        _transitionRectangle[5],
+                        new Rectangle(0, GreedyKidGame.Height / 2 - transitionRectangle[5].Height / 2, GreedyKidGame.Width, transitionRectangle[5].Height),
+                        transitionRectangle[5],
                         Color.White);
                 }
                 else if (_currentGameOverFrame == 3)
                 {
                     spriteBatch.Draw(texture,
-                        new Rectangle(0, GreedyKidGame.Height / 2 - _transitionRectangle[6].Height / 2, GreedyKidGame.Width, _transitionRectangle[6].Height),
-                        _transitionRectangle[6],
+                        new Rectangle(0, GreedyKidGame.Height / 2 - transitionRectangle[6].Height / 2, GreedyKidGame.Width, transitionRectangle[6].Height),
+                        transitionRectangle[6],
                         Color.White);
                 }
                 else
                 {
                     spriteBatch.Draw(texture,
                         new Rectangle(0, 0, GreedyKidGame.Width, GreedyKidGame.Height),
-                        _transitionRectangle[3],
+                        transitionRectangle[3],
                         Color.White);
                 }
 
@@ -2439,7 +2429,7 @@ namespace GreedyKid
                 {
                     spriteBatch.Draw(texture,
                         new Rectangle(0, 0, GreedyKidGame.Width, GreedyKidGame.Height),
-                        _transitionRectangle[0],
+                        transitionRectangle[0],
                         Color.White);
                 }
                 else
@@ -2453,8 +2443,8 @@ namespace GreedyKid
                     }
 
                     spriteBatch.Draw(texture,
-                        new Rectangle(focusX, focusY, _transitionRectangle[_currentTransitionFrame + 1].Width, _transitionRectangle[_currentTransitionFrame + 1].Height),
-                        _transitionRectangle[_currentTransitionFrame + 1],
+                        new Rectangle(focusX, focusY, transitionRectangle[_currentTransitionFrame + 1].Width, transitionRectangle[_currentTransitionFrame + 1].Height),
+                        transitionRectangle[_currentTransitionFrame + 1],
                         Color.White);
 
                     // background
@@ -2464,35 +2454,35 @@ namespace GreedyKid
 
                     // right
                     spriteBatch.Draw(texture,
-                    new Rectangle(focusX + _transitionRectangle[_currentTransitionFrame + 1].Width,
+                    new Rectangle(focusX + transitionRectangle[_currentTransitionFrame + 1].Width,
                         focusY,
-                        _transitionRectangle[3].Width,
-                        _transitionRectangle[3].Height),
-                    _transitionRectangle[frame],
+                        transitionRectangle[3].Width,
+                        transitionRectangle[3].Height),
+                    transitionRectangle[frame],
                     Color.White);
                     // left
                     spriteBatch.Draw(texture,
-                    new Rectangle(focusX - _transitionRectangle[3].Width,
-                        focusY +_transitionRectangle[_currentTransitionFrame + 1].Height - _transitionRectangle[3].Height,
-                        _transitionRectangle[3].Width,
-                        _transitionRectangle[3].Height),
-                    _transitionRectangle[frame],
+                    new Rectangle(focusX - transitionRectangle[3].Width,
+                        focusY + transitionRectangle[_currentTransitionFrame + 1].Height - transitionRectangle[3].Height,
+                        transitionRectangle[3].Width,
+                        transitionRectangle[3].Height),
+                    transitionRectangle[frame],
                     Color.White);
                     // up
                     spriteBatch.Draw(texture,
                     new Rectangle(focusX,
-                        focusY - _transitionRectangle[3].Height,
-                        _transitionRectangle[3].Width,
-                        _transitionRectangle[3].Height),
-                    _transitionRectangle[frame],
+                        focusY - transitionRectangle[3].Height,
+                        transitionRectangle[3].Width,
+                        transitionRectangle[3].Height),
+                    transitionRectangle[frame],
                     Color.White);
                     // down
                     spriteBatch.Draw(texture,
-                    new Rectangle(focusX + _transitionRectangle[_currentTransitionFrame + 1].Width - _transitionRectangle[3].Width,
-                        focusY + _transitionRectangle[_currentTransitionFrame + 1].Height,
-                        _transitionRectangle[3].Width,
-                        _transitionRectangle[3].Height),
-                    _transitionRectangle[frame],
+                    new Rectangle(focusX + transitionRectangle[_currentTransitionFrame + 1].Width - transitionRectangle[3].Width,
+                        focusY + transitionRectangle[_currentTransitionFrame + 1].Height,
+                        transitionRectangle[3].Width,
+                        transitionRectangle[3].Height),
+                    transitionRectangle[frame],
                     Color.White);
                     
                 }
