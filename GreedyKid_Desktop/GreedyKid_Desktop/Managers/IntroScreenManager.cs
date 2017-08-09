@@ -17,7 +17,7 @@ namespace GreedyKid
 
         public IntroScreenManager()
         {
-            _animationFrames = new Rectangle[165];
+            _animationFrames = new Rectangle[219];
 
             for (int i = 0; i < _animationFrames.Length; i++)
             {
