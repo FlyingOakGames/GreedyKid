@@ -188,19 +188,17 @@ namespace GreedyKid
             switch (_state)
             {
                 case GameState.None:
-#if DEBUG
-                    if (InputManager.CheckKeypress())
-                    {
-#endif
-                        MusicManager.Instance.LoadSong(1);
-                        MusicManager.Instance.Play();
+                    TextureManager.LoadGameplay(GraphicsDevice);
+                    TextureManager.LoadIntro(GraphicsDevice);
+                    TextureManager.LoadFont();
+                    SfxManager.Instance.LoadGameplaySfx();                    
 
-                        _splashScreenManager = new SplashScreenManager();
+                    _splashScreenManager = new SplashScreenManager();
 
-                        _state = GameState.Splash;
-#if DEBUG
-                    }
-#endif
+                    MusicManager.Instance.LoadSong(1);
+                    MusicManager.Instance.Play();
+
+                    _state = GameState.Splash;                        
                     break;
                 case GameState.Splash:
 
@@ -208,17 +206,12 @@ namespace GreedyKid
 
                     if (_splashScreenManager.SkipToTitle)
                     {
-                        SfxManager.Instance.Unload();
+                        //SfxManager.Instance.Unload();
 
-                        Content.Unload();
+                        //Content.Unload();
 
-                        TextureManager.Splash = null;
-
-                        TextureManager.LoadGameplay(GraphicsDevice);
-                        TextureManager.LoadIntro(GraphicsDevice);
-                        TextureManager.LoadFont();
-                        SfxManager.Instance.LoadGameplaySfx();
-
+                        //TextureManager.Splash = null;
+                       
                         _titleScreenManager = new TitleScreenManager();
                         _introScreenManager = new IntroScreenManager();
 
