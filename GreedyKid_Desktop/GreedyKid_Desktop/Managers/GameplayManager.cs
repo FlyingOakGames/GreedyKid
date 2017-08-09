@@ -108,6 +108,7 @@ namespace GreedyKid
         private float _currentElevatorKidFrameTime = 0.0f;
         private const float _elevatorKidFrameTime = 0.1f;
         private bool _toNextLevel = false;
+        private bool _toTitleScreen = false;
 
         private string _timeString;
         private string _moneyString;
@@ -490,6 +491,7 @@ namespace GreedyKid
             _hasFinishedLevel = false;
 
             _toNextLevel = false;
+            _toTitleScreen = false;
 
             // clean memory
             GC.Collect();
@@ -700,16 +702,21 @@ namespace GreedyKid
                     case 0:
                         // end level, load next      
                         _toNextLevel = true;
+                        _toTitleScreen = false;
                         DisappearTransition();
                         _waitToDisappear = true;
                         break;
                     case 1:
                         _toNextLevel = false;
+                        _toTitleScreen = false;
                         DisappearTransition();
                         _waitToDisappear = true;
                         break;
                     case 2:
-                        ReturnToLevelSelection = true;
+                        _toNextLevel = false;
+                        _toTitleScreen = true;
+                        DisappearTransition();
+                        _waitToDisappear = true;                        
                         break;
                 }
 
@@ -825,7 +832,7 @@ namespace GreedyKid
                 }
                 else
                 {
-                    if (!_toNextLevel)
+                    if (!_toNextLevel && !_toTitleScreen)
                     {
                         LoadLevel(SelectedLevel);
                     }

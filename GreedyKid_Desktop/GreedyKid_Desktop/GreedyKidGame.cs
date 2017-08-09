@@ -223,7 +223,7 @@ namespace GreedyKid
 
                         GC.Collect();
 
-                        TransitionManager.Instance.AppearTransition(0, 0);
+                        TransitionManager.Instance.AppearTransition();
                     }
 
                     break;
@@ -296,6 +296,8 @@ namespace GreedyKid
                         _state = GameState.Title;
 
                         GC.Collect();
+
+                        TransitionManager.Instance.AppearTransition();
                     }
 
                     break;

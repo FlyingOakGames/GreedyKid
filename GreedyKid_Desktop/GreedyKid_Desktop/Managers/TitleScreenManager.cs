@@ -14,9 +14,17 @@ namespace GreedyKid
         Settings,
     }
 
+    public enum RequestedTransition
+    {
+        ToMainMenu,
+        ToTitleScreen,
+        ToGameplay,
+    }
+
     public sealed class TitleScreenManager
     {
         private bool _waitForTransition = false;
+        private RequestedTransition _requestedTransition = RequestedTransition.ToMainMenu;
         public bool StartGame = false;
         public bool ShouldLoadBuilding = false;
         public string RequiredBuildingIdentifier = "Default";
@@ -154,9 +162,11 @@ namespace GreedyKid
 
         public void Update(float gameTime)
         {
-            if (_state == TitleScreenState.Title && InputManager.CheckEngagement())
-            {
-                _state = TitleScreenState.Main;
+            if (_state == TitleScreenState.Title && InputManager.CheckEngagement() && !_waitForTransition)
+            {                
+                _requestedTransition = RequestedTransition.ToMainMenu;
+                _waitForTransition = true;
+                TransitionManager.Instance.DisappearTransition();
             }
             else if (InputManager.PlayerDevice != null && _state != TitleScreenState.Title && !_waitForTransition)
             {
@@ -171,7 +181,20 @@ namespace GreedyKid
             else if (_waitForTransition && TransitionManager.Instance.IsDone)
             {
                 _waitForTransition = false;
-                StartGame = true;
+                switch (_requestedTransition)
+                {
+                    case RequestedTransition.ToMainMenu:
+                        _state = TitleScreenState.Main;
+                        TransitionManager.Instance.AppearTransition();
+                        break;
+                    case RequestedTransition.ToGameplay:
+                        StartGame = true;
+                        break;
+                    case RequestedTransition.ToTitleScreen:
+                        _state = TitleScreenState.Title;
+                        TransitionManager.Instance.AppearTransition();
+                        break;
+                }
             }
         }
 
@@ -303,7 +326,7 @@ namespace GreedyKid
                     {
                         if (_selectionOption == 0)
                         {
-                            //StartGame = true;
+                            _requestedTransition = RequestedTransition.ToGameplay;
                             _waitForTransition = true;
                             TransitionManager.Instance.DisappearTransition();
                         }
@@ -316,7 +339,7 @@ namespace GreedyKid
                     }
                     else
                     {
-                        //StartGame = true;
+                        _requestedTransition = RequestedTransition.ToGameplay;
                         _waitForTransition = true;
                         TransitionManager.Instance.DisappearTransition();
                     }                                        
@@ -358,8 +381,10 @@ namespace GreedyKid
             switch (_state)
             {
                 case TitleScreenState.Title: break;
-                case TitleScreenState.Main:
-                    _state = TitleScreenState.Title;
+                case TitleScreenState.Main:                    
+                    _requestedTransition = RequestedTransition.ToTitleScreen;
+                    _waitForTransition = true;
+                    TransitionManager.Instance.DisappearTransition();
                     InputManager.PlayerDevice = null;
                     break;
                 case TitleScreenState.Settings:
@@ -907,7 +932,7 @@ namespace GreedyKid
                 }
 
                 // arrows
-                int arrow = (_selectedLevel > 0 ? 8 : 7);
+                int arrow = (_selectedLevel > -1 ? 8 : 7);
                 spriteBatch.Draw(texture,
                     new Rectangle(13, 83, _selectionRectangle[arrow].Width, _selectionRectangle[arrow].Height),
                     _selectionRectangle[arrow],

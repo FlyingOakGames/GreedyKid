@@ -99,6 +99,12 @@ namespace GreedyKid
 
         public void DisappearTransition(int focusX = 0, int focusY = 0)
         {
+            if (focusX == 0 && focusY == 0)
+            {
+                focusX = (GreedyKidGame.Width - _transitionRectangle[1].Width) / 2;
+                focusY = (GreedyKidGame.Height - _transitionRectangle[1].Height) / 2;
+            }
+
             //if (_transitionState == TransitionState.None)
             {
                 _isDone = false;
@@ -110,8 +116,14 @@ namespace GreedyKid
             }
         }
 
-        public void AppearTransition(int focusX, int focusY)
+        public void AppearTransition(int focusX = 0, int focusY = 0)
         {
+            if (focusX == 0 && focusY == 0)
+            {
+                focusX = (GreedyKidGame.Width - _transitionRectangle[1].Width) / 2;
+                focusY = (GreedyKidGame.Height - _transitionRectangle[1].Height) / 2;
+            }
+
             //if (_transitionState == TransitionState.Hidden)
             {
                 _isDone = false;
