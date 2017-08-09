@@ -94,11 +94,12 @@ namespace GreedyKid
             _selectionRectangle[10] = new Rectangle(513, TextureManager.GameplayHeight - 230, 9, 13); // right on
 
             // number font
-            _numberRectangle = new Rectangle[10];
+            _numberRectangle = new Rectangle[11];
             for (int i = 0; i < 10; i++)
             {
                 _numberRectangle[i] = new Rectangle(230 + i * 11, TextureManager.GameplayHeight - 195, 11, 10);
             }
+            _numberRectangle[10] = new Rectangle(212, TextureManager.GameplayHeight - 198, 17, 13);
 
             // workshop scan
             _workshopIdentifiers = null;
@@ -734,6 +735,13 @@ namespace GreedyKid
                             _numberRectangle[e],
                             Color.White);
                     }
+                    else if (d == 0 && e == 0)
+                    {
+                        spriteBatch.Draw(texture,
+                            new Rectangle(103 - i * 41 + _selectionRectangle[5].Width / 2 - textWidth / 2, 83, _numberRectangle[10].Width, _numberRectangle[10].Height),
+                            _numberRectangle[10],
+                            Color.White);
+                    }
                     else
                     {
                         spriteBatch.Draw(texture,
@@ -777,6 +785,13 @@ namespace GreedyKid
                     spriteBatch.Draw(texture,
                         new Rectangle(147 + _selectionRectangle[5].Width / 2 - textWidth / 2 + _numberRectangle[d].Width, 85, _numberRectangle[e].Width, _numberRectangle[e].Height),
                         _numberRectangle[e],
+                        Color.White);
+                }
+                else if (d == 0 && e == 0)
+                {
+                    spriteBatch.Draw(texture,
+                        new Rectangle(144 + _selectionRectangle[5].Width / 2 - textWidth / 2, 83, _numberRectangle[10].Width, _numberRectangle[10].Height),
+                        _numberRectangle[10],
                         Color.White);
                 }
                 else
