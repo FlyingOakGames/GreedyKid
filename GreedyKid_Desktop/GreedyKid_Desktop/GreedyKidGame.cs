@@ -185,6 +185,8 @@ namespace GreedyKid
             InputManager.CheckNewGamepad();
 #endif
 
+            TransitionManager.Instance.Update(gameTimeF);
+
             switch (_state)
             {
                 case GameState.None:
@@ -220,6 +222,8 @@ namespace GreedyKid
                         _splashScreenManager = null;
 
                         GC.Collect();
+
+                        TransitionManager.Instance.AppearTransition(0, 0);
                     }
 
                     break;
@@ -319,14 +323,20 @@ namespace GreedyKid
                     break;
                 case GameState.Title:
                     _titleScreenManager.Draw(spriteBatch);
+                    // transition
+                    TransitionManager.Instance.Draw(spriteBatch);
                     break;
                 case GameState.Ingame:
                     _gameplayManager.Draw(spriteBatch);
+                    // transition
+                    TransitionManager.Instance.Draw(spriteBatch);
                     break;
                 case GameState.Intro:                
                     _introScreenManager.Draw(spriteBatch);
+                    // transition
+                    TransitionManager.Instance.Draw(spriteBatch);
                     break;
-            }
+            }            
 
             // final rendering
             GraphicsDevice.SetRenderTarget(null);

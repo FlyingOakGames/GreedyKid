@@ -158,11 +158,11 @@ namespace GreedyKid
             _isConnected = currentState.IsConnected;
 
             if (currentState.Buttons.A == ButtonState.Pressed && _previousGamePadState.Buttons.A == ButtonState.Released)
-                manager.DisappearTransition();
+                manager.SkipIntro();
             else if (currentState.Buttons.B == ButtonState.Pressed && _previousGamePadState.Buttons.B == ButtonState.Released)
-                manager.DisappearTransition();
+                manager.SkipIntro();
             else if (currentState.Buttons.Start == ButtonState.Pressed && _previousGamePadState.Buttons.Start == ButtonState.Released)
-                manager.DisappearTransition();
+                manager.SkipIntro();
 
             _previousGamePadState = currentState;
         }

@@ -7,19 +7,13 @@ namespace GreedyKid
     {
         public bool StartGame = false;
 
-        // transition       
-        private TransitionState _transitionState = TransitionState.Hidden;
-        private int _currentTransitionFrame = 0;
-        private float _currentTransitionFrameTime = 0.0f;
-        private const float _transitionFrameTime = 0.1f;
-        private int _transitionFocusX = 100;
-        private int _transitionFocusY = 100;
-
         // animation
         private Rectangle[] _animationFrames;
         private int _currentFrame = 0;
         private float _currentFrameTime = 0.0f;
         private const float _frameTime = 0.1f;
+
+        private bool _waitForTransition = false;
 
         public IntroScreenManager()
         {
@@ -39,69 +33,14 @@ namespace GreedyKid
             _currentFrame = 0;
             _currentFrameTime = 0.0f;
             StartGame = false;
-            _transitionState = TransitionState.Hidden;
-            AppearTransition();
+            _waitForTransition = false;
+            TransitionManager.Instance.AppearTransition(129, 70);
         }
 
-        private void UpdateTransition(float gameTime)
+        public void SkipIntro()
         {
-            if (_transitionState == TransitionState.Appearing)
-            {
-                _currentTransitionFrameTime += gameTime;
-
-                if (_currentTransitionFrameTime >= _transitionFrameTime)
-                {
-                    _currentTransitionFrameTime -= _transitionFrameTime;
-
-                    _currentTransitionFrame--;
-                    if (_currentTransitionFrame < 0)
-                    {
-                        _transitionState = TransitionState.None;
-                    }
-                }
-            }
-            else if (_transitionState == TransitionState.Disappearing)
-            {
-                _currentTransitionFrameTime += gameTime;
-
-                if (_currentTransitionFrameTime >= _transitionFrameTime)
-                {
-                    _currentTransitionFrameTime -= _transitionFrameTime;
-
-                    _currentTransitionFrame++;
-                    if (_currentTransitionFrame >= 3)
-                    {
-                        _currentTransitionFrame = 2;
-                        _transitionState = TransitionState.Hidden;
-
-                        StartGame = true;
-                    }
-                }
-            }
-        }
-
-        public void DisappearTransition()
-        {
-            if (_transitionState == TransitionState.None && !StartGame)
-            {
-                _transitionFocusX = 191;
-                _transitionFocusY = 70;
-                _transitionState = TransitionState.Disappearing;
-                _currentTransitionFrame = 0;
-                _currentTransitionFrameTime = 0.0f;
-            }
-        }
-
-        private void AppearTransition()
-        {
-            if (_transitionState == TransitionState.Hidden)
-            {
-                _transitionFocusX = 129;
-                _transitionFocusY = 70;
-                _transitionState = TransitionState.Appearing;
-                _currentTransitionFrame = 2;
-                _currentTransitionFrameTime = 0.0f;
-            }
+            _waitForTransition = true;
+            TransitionManager.Instance.DisappearTransition(191, 70);
         }
 
         public void Update(float gameTime)
@@ -112,8 +51,11 @@ namespace GreedyKid
             if (!SaveManager.Instance.IsLevelDone(-1))
                 StartGame = false;
 
-            // transition
-            UpdateTransition(gameTime);
+            if (_waitForTransition && TransitionManager.Instance.IsDone)
+            {
+                _waitForTransition = false;
+                StartGame = true;
+            }
 
             _currentFrameTime += gameTime;
             if (_currentFrameTime >= _frameTime)
@@ -138,7 +80,7 @@ namespace GreedyKid
                     SfxManager.Instance.Play(Sfx.Taunt2);
 
                 if (_currentFrame == _animationFrames.Length - 3)
-                    DisappearTransition();
+                    SkipIntro();
 
                 if (_currentFrame >= _animationFrames.Length)
                     _currentFrame = _animationFrames.Length - 1;
@@ -162,72 +104,8 @@ namespace GreedyKid
 
             spriteBatch.End();
 
-
             spriteBatch.Begin(samplerState: SamplerState.PointWrap);
-
-            Texture2D textureTransition = TextureManager.Gameplay;
-            // transition
-            if (_transitionState != TransitionState.None)
-            {
-                Rectangle[] transitionRectangle = UIHelper.Instance.TransitionRectangles;
-
-                if (_currentTransitionFrame == 2) // full
-                {
-                    spriteBatch.Draw(textureTransition,
-                        new Rectangle(0, 0, GreedyKidGame.Width, GreedyKidGame.Height),
-                        transitionRectangle[0],
-                        Color.White);
-                }
-                else
-                {
-                    spriteBatch.Draw(textureTransition,
-                        new Rectangle(_transitionFocusX, _transitionFocusY, transitionRectangle[_currentTransitionFrame + 1].Width, transitionRectangle[_currentTransitionFrame + 1].Height),
-                        transitionRectangle[_currentTransitionFrame + 1],
-                        Color.White);
-
-                    // background
-                    int frame = 3;
-                    if (_currentTransitionFrame == 1)
-                        frame = 0;
-
-                    // right
-                    spriteBatch.Draw(textureTransition,
-                    new Rectangle(_transitionFocusX + transitionRectangle[_currentTransitionFrame + 1].Width,
-                        _transitionFocusY,
-                        transitionRectangle[3].Width,
-                        transitionRectangle[3].Height),
-                    transitionRectangle[frame],
-                    Color.White);
-                    // left
-                    spriteBatch.Draw(textureTransition,
-                    new Rectangle(_transitionFocusX - transitionRectangle[3].Width,
-                        _transitionFocusY + transitionRectangle[_currentTransitionFrame + 1].Height - transitionRectangle[3].Height,
-                        transitionRectangle[3].Width,
-                        transitionRectangle[3].Height),
-                    transitionRectangle[frame],
-                    Color.White);
-                    // up
-                    spriteBatch.Draw(textureTransition,
-                    new Rectangle(_transitionFocusX,
-                        _transitionFocusY - transitionRectangle[3].Height,
-                        transitionRectangle[3].Width,
-                        transitionRectangle[3].Height),
-                    transitionRectangle[frame],
-                    Color.White);
-                    // down
-                    spriteBatch.Draw(textureTransition,
-                    new Rectangle(_transitionFocusX + transitionRectangle[_currentTransitionFrame + 1].Width - transitionRectangle[3].Width,
-                        _transitionFocusY + transitionRectangle[_currentTransitionFrame + 1].Height,
-                        transitionRectangle[3].Width,
-                        transitionRectangle[3].Height),
-                    transitionRectangle[frame],
-                    Color.White);
-
-                }
-            }
-
             UIHelper.Instance.DrawBorders(spriteBatch);
-
             spriteBatch.End();
         }
     }

@@ -16,6 +16,7 @@ namespace GreedyKid
 
     public sealed class TitleScreenManager
     {
+        private bool _waitForTransition = false;
         public bool StartGame = false;
         public bool ShouldLoadBuilding = false;
         public string RequiredBuildingIdentifier = "Default";
@@ -157,7 +158,7 @@ namespace GreedyKid
             {
                 _state = TitleScreenState.Main;
             }
-            else if (InputManager.PlayerDevice != null && _state != TitleScreenState.Title)
+            else if (InputManager.PlayerDevice != null && _state != TitleScreenState.Title && !_waitForTransition)
             {
                 InputManager.PlayerDevice.Update(gameTime);
                 InputManager.PlayerDevice.HandleTitleInputs(this);
@@ -167,6 +168,11 @@ namespace GreedyKid
                     SettingsManager.Instance.Update(gameTime);
                 }
             }            
+            else if (_waitForTransition && TransitionManager.Instance.IsDone)
+            {
+                _waitForTransition = false;
+                StartGame = true;
+            }
         }
 
         public void UpdateMouseSelection(int x, int y)
@@ -296,7 +302,11 @@ namespace GreedyKid
                     if (fromMouse)
                     {
                         if (_selectionOption == 0)
-                            StartGame = true;
+                        {
+                            //StartGame = true;
+                            _waitForTransition = true;
+                            TransitionManager.Instance.DisappearTransition();
+                        }
                         else if (_selectionOption == 1)
                             PushLeft();
                         else if (_selectionOption == 2)
@@ -306,7 +316,9 @@ namespace GreedyKid
                     }
                     else
                     {
-                        StartGame = true;
+                        //StartGame = true;
+                        _waitForTransition = true;
+                        TransitionManager.Instance.DisappearTransition();
                     }                                        
                     break;
                 case TitleScreenState.SteamWorkshop:

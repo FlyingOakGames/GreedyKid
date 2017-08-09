@@ -23,14 +23,6 @@ namespace GreedyKid
         Closing,
     }
 
-    public enum TransitionState
-    {
-        None,
-        Appearing,
-        Disappearing,
-        Hidden,
-    }
-
     public enum TimerType
     {
         Cop,
@@ -1373,6 +1365,26 @@ namespace GreedyKid
             }
         }
 
+        public void DisappearTransition()
+        {
+            if (_transitionState == TransitionState.None)
+            {
+                _transitionState = TransitionState.Disappearing;
+                _currentTransitionFrame = 0;
+                _currentTransitionFrameTime = 0.0f;
+            }
+        }
+
+        public void AppearTransition()
+        {
+            if (_transitionState == TransitionState.Hidden)
+            {
+                _transitionState = TransitionState.Appearing;
+                _currentTransitionFrame = 2;
+                _currentTransitionFrameTime = 0.0f;
+            }
+        }
+
         private void UpdateElevators(float gameTime)
         {
             if (_entranceState == ElevatorState.Closed)
@@ -1516,26 +1528,6 @@ namespace GreedyKid
                         }
                     }
                 }
-            }
-        }
-
-        public void DisappearTransition()
-        {
-            if (_transitionState == TransitionState.None)
-            {
-                _transitionState = TransitionState.Disappearing;
-                _currentTransitionFrame = 0;
-                _currentTransitionFrameTime = 0.0f;
-            }
-        }
-
-        public void AppearTransition()
-        {
-            if (_transitionState == TransitionState.Hidden)
-            {
-                _transitionState = TransitionState.Appearing;
-                _currentTransitionFrame = 2;
-                _currentTransitionFrameTime = 0.0f;
             }
         }
 

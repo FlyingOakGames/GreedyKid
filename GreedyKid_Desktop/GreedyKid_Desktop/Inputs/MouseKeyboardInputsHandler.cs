@@ -555,10 +555,10 @@ namespace GreedyKid
             if ((ActionKey.IsPressed(mouseState, keyboardState) && ActionKey.IsReleased(_previousMouseState, _previousKeyboardState)) ||
                     (keyboardState.IsKeyDown(Keys.Enter) && _previousKeyboardState.IsKeyUp(Keys.Enter)) ||
                     (mouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released))
-                manager.DisappearTransition();
+                manager.SkipIntro();
             else if ((keyboardState.IsKeyDown(Keys.Escape) && _previousKeyboardState.IsKeyUp(Keys.Escape)) ||
                 (mouseState.RightButton == ButtonState.Pressed && _previousMouseState.RightButton == ButtonState.Released))
-                manager.DisappearTransition();
+                manager.SkipIntro();
 
             _previousKeyboardState = keyboardState;
             _previousMouseState = mouseState;
