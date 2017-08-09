@@ -89,10 +89,8 @@ namespace GreedyKid
         private bool _hasFinishedLevel = false;
 
         // transition
-        private TransitionState _transitionState = TransitionState.Hidden;
-        private int _currentTransitionFrame = 0;
-        private float _currentTransitionFrameTime = 0.0f;
-        private const float _transitionFrameTime = 0.1f;
+        private bool _waitToAppear = false;
+        private bool _waitToDisappear = false;
 
         // inter level
         private Rectangle[] _interLevelRectangle;
@@ -425,8 +423,10 @@ namespace GreedyKid
             // transition init
             _entranceState = ElevatorState.Closed;
             _exitState = ElevatorState.Closed;
-            _transitionState = TransitionState.Hidden;
+            //_transitionState = TransitionState.Hidden;
             AppearTransition();
+            _waitToAppear = true;
+            _waitToDisappear = false;
 
             // cop init            
             Cop dummy = new Cop(); // dummy load a cop to init static fields and avoid a freeze upon cop spawning
@@ -701,10 +701,12 @@ namespace GreedyKid
                         // end level, load next      
                         _toNextLevel = true;
                         DisappearTransition();
+                        _waitToDisappear = true;
                         break;
                     case 1:
                         _toNextLevel = false;
                         DisappearTransition();
+                        _waitToDisappear = true;
                         break;
                     case 2:
                         ReturnToLevelSelection = true;
@@ -777,7 +779,67 @@ namespace GreedyKid
             }
 
             // transition
-            UpdateTransition(gameTime);
+            if (_waitToAppear && Player != null && TransitionManager.Instance.IsDone)
+            {
+                _waitToAppear = false;            
+                OpenEntranceElevator();
+            }
+            else if (_waitToDisappear && TransitionManager.Instance.IsDone)
+            {
+                _waitToDisappear = false;
+                if (Player != null && Player.HasEnteredElevator)
+                {
+                    // init elevator position
+                    //_elevatorX = (int)Player.X;
+                    _elevatorX = 210;
+                    _elevatorY = 69;// 128 - 40 * Player.Room.Y + 4;
+
+                    // target score
+                    _moneyString = "$" + (_targetMoney < 100 ? (_targetMoney < 10 ? "00" : "0") : String.Empty) + _targetMoney;
+                    int min = _targetTime / 60;
+                    int sec = _targetTime % 60;
+                    _timeString = (min < 10 ? "0" : String.Empty) + min + ":" + (sec < 10 ? "0" : String.Empty) + sec;
+
+                    // stars
+                    int stars = 1;
+                    if (Time <= _targetTime)
+                        stars++;
+                    if (Player.Money >= _targetMoney)
+                        stars++;
+
+                    // score
+                    _score = Player.Money;
+
+                    // save score
+                    SaveManager.Instance.SetScore(SelectedLevel, Player.Money, Time, stars);
+                    SaveManager.Instance.Save(_building);
+
+                    // go to inter level
+                    _building.CurrentLevel = null;
+                    Player = null;
+
+                    _pauseOption = 0;
+
+                    // load transition
+                    AppearTransition();
+                }
+                else
+                {
+                    if (!_toNextLevel)
+                    {
+                        LoadLevel(SelectedLevel);
+                    }
+                    else if (_toNextLevel && SelectedLevel < _building.LevelCount - 1)
+                    {
+                        SelectedLevel++;
+                        LoadLevel(SelectedLevel);
+                    }
+                    else
+                    {
+                        ReturnToLevelSelection = true;
+                    }
+                }
+            }
             
             if (_building.CurrentLevel != null && Player != null && SelectedLevel >= 0 && SelectedLevel < _building.LevelCount)
             {
@@ -1273,116 +1335,30 @@ namespace GreedyKid
                 if (_currentCameraTime >= _totalCameraTime)
                     _cameraPositionY = _initialCameraPositionY + _differenceCameraPositionY;
             }
-        }
+        }        
 
-        private void UpdateTransition(float gameTime)
+        public void AppearTransition()
         {
-            if (_transitionState == TransitionState.Appearing)
+            int focusX = _elevatorX - 8;
+            int focusY = _elevatorY - 2;
+            if (Player != null)
             {
-                _currentTransitionFrameTime += gameTime;
-
-                if (_currentTransitionFrameTime >=_transitionFrameTime)
-                {
-                    _currentTransitionFrameTime -= _transitionFrameTime;
-
-                    _currentTransitionFrame--;                    
-                    if (_currentTransitionFrame < 0)
-                    {
-                        _transitionState = TransitionState.None;
-                        if (Player != null)
-                            OpenEntranceElevator();
-                    }
-                }
+                focusX = (int)Player.X - 9;
+                focusY = 128 - 40 * Player.Room.Y + 5;
             }
-            else if (_transitionState == TransitionState.Disappearing)
-            {
-                _currentTransitionFrameTime += gameTime;
-
-                if (_currentTransitionFrameTime >= _transitionFrameTime)
-                {
-                    _currentTransitionFrameTime -= _transitionFrameTime;
-
-                    _currentTransitionFrame++;
-                    if (_currentTransitionFrame >= 3)
-                    {
-                        _currentTransitionFrame = 2;
-                        _transitionState = TransitionState.Hidden;
-
-                        if (Player != null && Player.HasEnteredElevator)
-                        {                            
-                            // init elevator position
-                            //_elevatorX = (int)Player.X;
-                            _elevatorX = 210;
-                            _elevatorY = 69;// 128 - 40 * Player.Room.Y + 4;
-
-                            // target score
-                            _moneyString = "$" + (_targetMoney < 100 ? (_targetMoney < 10 ? "00" : "0") : String.Empty) + _targetMoney;
-                            int min = _targetTime / 60;
-                            int sec = _targetTime % 60;
-                            _timeString = (min < 10 ? "0" : String.Empty) + min + ":" + (sec < 10 ? "0" : String.Empty) + sec;
-
-                            // stars
-                            int stars = 1;
-                            if (Time <= _targetTime)
-                                stars++;
-                            if (Player.Money >= _targetMoney)
-                                stars++;
-
-                            // score
-                            _score = Player.Money;
-
-                            // save score
-                            SaveManager.Instance.SetScore(SelectedLevel, Player.Money, Time, stars);
-                            SaveManager.Instance.Save(_building);
-
-                            // go to inter level
-                            _building.CurrentLevel = null;
-                            Player = null;
-
-                            _pauseOption = 0;
-
-                            // load transition
-                            AppearTransition();
-                        }
-                        else
-                        {                            
-                            if (!_toNextLevel)
-                            {
-                                LoadLevel(SelectedLevel);
-                            }
-                            else if (_toNextLevel && SelectedLevel < _building.LevelCount - 1)
-                            {
-                                SelectedLevel++;
-                                LoadLevel(SelectedLevel);
-                            }
-                            else
-                            {
-                                ReturnToLevelSelection = true;
-                            }
-                        }
-                    }
-                }
-            }
+            TransitionManager.Instance.AppearTransition(focusX, focusY);
         }
 
         public void DisappearTransition()
         {
-            if (_transitionState == TransitionState.None)
+            int focusX = _elevatorX - 8;
+            int focusY = _elevatorY - 2;
+            if (Player != null)
             {
-                _transitionState = TransitionState.Disappearing;
-                _currentTransitionFrame = 0;
-                _currentTransitionFrameTime = 0.0f;
+                focusX = (int)Player.X - 9;
+                focusY = 128 - 40 * Player.Room.Y + 5;
             }
-        }
-
-        public void AppearTransition()
-        {
-            if (_transitionState == TransitionState.Hidden)
-            {
-                _transitionState = TransitionState.Appearing;
-                _currentTransitionFrame = 2;
-                _currentTransitionFrameTime = 0.0f;
-            }
+            TransitionManager.Instance.DisappearTransition(focusX, focusY);
         }
 
         private void UpdateElevators(float gameTime)
@@ -1507,6 +1483,7 @@ namespace GreedyKid
                             if (Player.HasEnteredElevator)
                             {
                                 DisappearTransition();
+                                _waitToDisappear = true;
                             }
 
                             else if (_spawningCop != null)
@@ -2374,7 +2351,7 @@ namespace GreedyKid
                 if ((Player != null && _spawnEntrance && _spawningCop != null && Player.Life > 0) || (_entranceState != ElevatorState.Opening && Player != null && !Player.HasEnteredElevator && Player.Life > 0))
                     Player.Draw(spriteBatch, cameraPosY);
 
-            Rectangle[] transitionRectangle = UIHelper.Instance.TransitionRectangles;
+            Rectangle[] gameoverRectangle = UIHelper.Instance.GameoverRectangles;
 
             // gameover
             if (Gameover)
@@ -2383,29 +2360,29 @@ namespace GreedyKid
                 if (_currentGameOverFrame == 1)
                 {
                     spriteBatch.Draw(texture,
-                        new Rectangle(0, GreedyKidGame.Height / 2 - transitionRectangle[4].Height / 2, GreedyKidGame.Width, transitionRectangle[4].Height),
-                        transitionRectangle[4],
+                        new Rectangle(0, GreedyKidGame.Height / 2 - gameoverRectangle[1].Height / 2, GreedyKidGame.Width, gameoverRectangle[1].Height),
+                        gameoverRectangle[1],
                         Color.White);
                 }
                 else if (_currentGameOverFrame == 2)
                 {
                     spriteBatch.Draw(texture,
-                        new Rectangle(0, GreedyKidGame.Height / 2 - transitionRectangle[5].Height / 2, GreedyKidGame.Width, transitionRectangle[5].Height),
-                        transitionRectangle[5],
+                        new Rectangle(0, GreedyKidGame.Height / 2 - gameoverRectangle[2].Height / 2, GreedyKidGame.Width, gameoverRectangle[2].Height),
+                        gameoverRectangle[2],
                         Color.White);
                 }
                 else if (_currentGameOverFrame == 3)
                 {
                     spriteBatch.Draw(texture,
-                        new Rectangle(0, GreedyKidGame.Height / 2 - transitionRectangle[6].Height / 2, GreedyKidGame.Width, transitionRectangle[6].Height),
-                        transitionRectangle[6],
+                        new Rectangle(0, GreedyKidGame.Height / 2 - gameoverRectangle[3].Height / 2, GreedyKidGame.Width, gameoverRectangle[3].Height),
+                        gameoverRectangle[3],
                         Color.White);
                 }
                 else
                 {
                     spriteBatch.Draw(texture,
                         new Rectangle(0, 0, GreedyKidGame.Width, GreedyKidGame.Height),
-                        transitionRectangle[3],
+                        gameoverRectangle[0],
                         Color.White);
                 }
 
@@ -2413,73 +2390,7 @@ namespace GreedyKid
                 if (_currentGameOverFrame > 0)
                     DrawGameoverBox(spriteBatch, 117, _currentGameOverFrame - 1);
             }
-
-            // transition
-            if (_transitionState != TransitionState.None && !_pause)
-            {
-                if (_currentTransitionFrame == 2) // full
-                {
-                    spriteBatch.Draw(texture,
-                        new Rectangle(0, 0, GreedyKidGame.Width, GreedyKidGame.Height),
-                        transitionRectangle[0],
-                        Color.White);
-                }
-                else
-                {
-                    int focusX = _elevatorX - 8;
-                    int focusY = _elevatorY - 2;
-                    if (Player != null)
-                    {
-                        focusX = (int)Player.X - 9;
-                        focusY = 128 - 40 * Player.Room.Y + 5;
-                    }
-
-                    spriteBatch.Draw(texture,
-                        new Rectangle(focusX, focusY, transitionRectangle[_currentTransitionFrame + 1].Width, transitionRectangle[_currentTransitionFrame + 1].Height),
-                        transitionRectangle[_currentTransitionFrame + 1],
-                        Color.White);
-
-                    // background
-                    int frame = 3;
-                    if (_currentTransitionFrame == 1)
-                        frame = 0;
-
-                    // right
-                    spriteBatch.Draw(texture,
-                    new Rectangle(focusX + transitionRectangle[_currentTransitionFrame + 1].Width,
-                        focusY,
-                        transitionRectangle[3].Width,
-                        transitionRectangle[3].Height),
-                    transitionRectangle[frame],
-                    Color.White);
-                    // left
-                    spriteBatch.Draw(texture,
-                    new Rectangle(focusX - transitionRectangle[3].Width,
-                        focusY + transitionRectangle[_currentTransitionFrame + 1].Height - transitionRectangle[3].Height,
-                        transitionRectangle[3].Width,
-                        transitionRectangle[3].Height),
-                    transitionRectangle[frame],
-                    Color.White);
-                    // up
-                    spriteBatch.Draw(texture,
-                    new Rectangle(focusX,
-                        focusY - transitionRectangle[3].Height,
-                        transitionRectangle[3].Width,
-                        transitionRectangle[3].Height),
-                    transitionRectangle[frame],
-                    Color.White);
-                    // down
-                    spriteBatch.Draw(texture,
-                    new Rectangle(focusX + transitionRectangle[_currentTransitionFrame + 1].Width - transitionRectangle[3].Width,
-                        focusY + transitionRectangle[_currentTransitionFrame + 1].Height,
-                        transitionRectangle[3].Width,
-                        transitionRectangle[3].Height),
-                    transitionRectangle[frame],
-                    Color.White);
-                    
-                }
-            }
-
+            
             // ****** UI ******
             if (IsIngame)
             {
