@@ -70,6 +70,8 @@ namespace GreedyKid
         NKOF,
         Help,
 
+        TV,
+
         Count,              
     }
 

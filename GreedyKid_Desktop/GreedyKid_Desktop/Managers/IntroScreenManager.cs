@@ -70,6 +70,9 @@ namespace GreedyKid
                     SfxManager.Instance.Play(Sfx.ElevatorOpen);
                 }
 
+                if (_currentFrame == 5 || _currentFrame == 21 || _currentFrame == 37 || _currentFrame == 53 || _currentFrame == 69 || _currentFrame == 85)
+                    SfxManager.Instance.Play(Sfx.TV);
+
                 if (_currentFrame == 115 || _currentFrame == 118 || _currentFrame == 133 || _currentFrame == 140)
                     SfxManager.Instance.Play(Sfx.MoneyGrab);
 
@@ -78,6 +81,15 @@ namespace GreedyKid
 
                 if (_currentFrame == 145 || _currentFrame == 149)
                     SfxManager.Instance.Play(Sfx.Taunt2);
+
+                if (_currentFrame == 173)
+                    SfxManager.Instance.Play(Sfx.HealthPack);
+
+                if (_currentFrame == 179)
+                    SfxManager.Instance.Play(Sfx.CopTaser);
+
+                if (_currentFrame == 196)
+                    SfxManager.Instance.Play(Sfx.HeavyHit);
 
                 if (_currentFrame == _animationFrames.Length - 3)
                     SkipIntro();

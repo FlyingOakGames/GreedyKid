@@ -375,3 +375,9 @@
 /processorParam:TextureFormat=Color
 /build:Textures/intro.png
 
+#begin Sfx/TV.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/TV.wav
+
