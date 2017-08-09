@@ -440,7 +440,9 @@ namespace GreedyKid
                     manager.Player.Roll();
 
                 // action
-                if (ActionKey.IsPressed(mouseState, keyboardState) && ActionKey.IsReleased(_previousMouseState, _previousKeyboardState))
+                if ((ActionKey.IsPressed(mouseState, keyboardState) && ActionKey.IsReleased(_previousMouseState, _previousKeyboardState)) ||
+                    (UpKey.IsPressed(mouseState, keyboardState) && UpKey.IsReleased(_previousMouseState, _previousKeyboardState)) ||
+                    (DownKey.IsPressed(mouseState, keyboardState) && DownKey.IsReleased(_previousMouseState, _previousKeyboardState)))
                     manager.Player.Action();
 
                 // shouting

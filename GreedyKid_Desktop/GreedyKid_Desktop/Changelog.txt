@@ -7,6 +7,9 @@
 		Introduction cutscene:
 			There is now a "0" level which will play a cutscene explaining why the kid is so greedy
 
+	Changes:
+		You can interact with the up/down key with objects and doors
+
 
 V.4 (alpha)					4th August 2017
 

@@ -87,7 +87,11 @@ namespace GreedyKid
                     manager.Player.Roll();
 
                 // action
-                if (currentState.Buttons.A == ButtonState.Pressed && _previousGamePadState.Buttons.A == ButtonState.Released)
+                if ((currentState.Buttons.A == ButtonState.Pressed && _previousGamePadState.Buttons.A == ButtonState.Released) ||
+                    (currentState.DPad.Up == ButtonState.Pressed && _previousGamePadState.DPad.Up == ButtonState.Released) ||
+                    (currentState.ThumbSticks.Left.Y >= _stickDZ && _previousGamePadState.ThumbSticks.Left.Y < _stickDZ) ||
+                    (currentState.DPad.Down == ButtonState.Pressed && _previousGamePadState.DPad.Up == ButtonState.Released) ||
+                    (currentState.ThumbSticks.Left.Y <= -_stickDZ && _previousGamePadState.ThumbSticks.Left.Y > -_stickDZ))
                     manager.Player.Action();
 
                 // shouting
