@@ -401,6 +401,7 @@ namespace GreedyKid
 
                 SpriteEffects targetOrientation = SpriteEffects.None;
 
+                // closing
                 if (X + 16 > roomDoor.X && X + 16 < roomDoor.X + 8)
                 {
                     roomDoor.CheckCanCloseFromLeft();                    
@@ -422,6 +423,29 @@ namespace GreedyKid
                     _closingDoor = roomDoor;
                     Orientation = targetOrientation;
                     SlamDoor();
+                }
+                else if (!_doingAction && State == EntityState.Rolling && _currentFrame < _frames[(int)State].Length - 1)
+                {
+                    // rolling through
+                    roomDoor.CanClose = false;
+
+                    if (X + 16 > roomDoor.X + 8 && X + 16 < roomDoor.X + 16)
+                    {
+                        roomDoor.CheckCanCloseFromLeft();
+                        if (roomDoor.CanClose)
+                            targetOrientation = SpriteEffects.None;
+                    }
+                    else if (X + 16 > roomDoor.X + 16 && X + 16 < roomDoor.X + 24)
+                    {
+                        roomDoor.CheckCanCloseFromRight();
+                        if (roomDoor.CanClose)
+                            targetOrientation = SpriteEffects.FlipHorizontally;
+                    }
+
+                    if (roomDoor.CanClose && targetOrientation == Orientation)
+                    {
+                        roomDoor.Close();
+                    }
                 }
             }
 
