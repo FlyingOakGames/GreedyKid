@@ -692,6 +692,9 @@ namespace GreedyKid
 
         private void Slam(int warp)
         {
+            if (State == EntityState.Slam)
+                return;
+
             _XWarp = warp;
             State = EntityState.Slam;
             _currentFrame = 0;
