@@ -641,7 +641,10 @@ namespace GreedyKid
             _wantsToOpenDoor = false;
 
             if (Life > 1)
+            {
                 Life--;
+                _currentHeartFrame = 0;
+            }
 
             SfxManager.Instance.Play(Sfx.RBooH + (_isFemale ? 1 : 0));
         }

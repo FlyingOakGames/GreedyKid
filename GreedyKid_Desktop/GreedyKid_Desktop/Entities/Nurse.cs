@@ -704,7 +704,10 @@ namespace GreedyKid
             _wantsToOpenDoor = false;
 
             if (Life > 1)
+            {
                 Life--;
+                _currentHeartFrame = 0;
+            }
 
             SfxManager.Instance.Play(Sfx.NBooH + (_isFemale ? 1 : 0));
         }
@@ -794,9 +797,9 @@ namespace GreedyKid
             if (Life > 0)
             {
                 spriteBatch.Draw(texture,
-                new Rectangle((int)X + 8, 128 - 40 * Room.Y + 4 + cameraPosY, 16, 16),
-                _lifeRectangles[Life - 1][_currentHeartFrame],
-                Color.White);
+                    new Rectangle((int)X + 8, 128 - 40 * Room.Y + 4 + cameraPosY, 16, 16),
+                    _lifeRectangles[Life - 1][_currentHeartFrame],
+                    Color.White);
             }
         }
 
