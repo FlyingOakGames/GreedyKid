@@ -30,7 +30,7 @@ namespace GreedyKid
 
         public int Y = 0;
 
-        public List<Retired> Retireds;
+        public List<Retiree> Retirees;
         public List<Nurse> Nurses;
         public List<Cop> Cops;
 
@@ -81,14 +81,14 @@ namespace GreedyKid
                 Furnitures[i].Load(reader);
             }
             n = reader.ReadInt32();
-            Retireds = new List<Retired>(10);
+            Retirees = new List<Retiree>(10);
             for (int i = 0; i < n; i++)
             {
-                Retired retired = new Retired();
-                retired.Load(reader);
-                money += retired.Money;
-                retired.Room = this;
-                Retireds.Add(retired);
+                Retiree retiree = new Retiree();
+                retiree.Load(reader);
+                money += retiree.Money;
+                retiree.Room = this;
+                Retirees.Add(retiree);
             }
             n = reader.ReadInt32();
             Nurses = new List<Nurse>(10);

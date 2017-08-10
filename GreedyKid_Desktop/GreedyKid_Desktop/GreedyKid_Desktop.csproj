@@ -62,7 +62,7 @@
     <Compile Include="Entities\Droppable.cs" />
     <Compile Include="Entities\Nurse.cs" />
     <Compile Include="Entities\Player.cs" />
-    <Compile Include="Entities\Retired.cs" />
+    <Compile Include="Entities\Retiree.cs" />
     <Compile Include="GreedyKidGame.cs" />
     <Compile Include="Helper\EasingHelper.cs" />
     <Compile Include="Helper\GZip\CRC32.cs" />

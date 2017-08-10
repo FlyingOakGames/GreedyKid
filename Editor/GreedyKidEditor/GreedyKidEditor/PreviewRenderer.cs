@@ -14,7 +14,7 @@ namespace GreedyKidEditor
         FloorDoor,
         Furniture,
         Elevator,
-        Retired,
+        Retiree,
         Nurse,
         Cop,
 
@@ -44,7 +44,7 @@ namespace GreedyKidEditor
         Rectangle[][] _roomDoorRectangle;
         Rectangle[][] _elevatorRectangle;
         Rectangle[][][] _furnitureRectangle;
-        Rectangle[][] _retiredRectangle;
+        Rectangle[][] _retireeRectangle;
         Rectangle[][] _nurseRectangle;
         Rectangle[][] _copRectangle;
 
@@ -99,14 +99,14 @@ namespace GreedyKidEditor
         int _currentElevatorFrame = 0;
         float _currentFrameTime = 0.0f;
 
-        int[] _retiredSequence = new int[]
+        int[] _retireeSequence = new int[]
         {
             /*
             2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
             3, 0, 1, 2,*/
             0, 1, 2, 3, 4, 5, 6, 7,
         };
-        int _currentRetiredFrame = 0;
+        int _currentRetireeFrame = 0;
 
         int[] _nurseSequence = new int[]
         {
@@ -361,13 +361,13 @@ namespace GreedyKidEditor
 
             int nbFurnitureLine = (int)Math.Ceiling(Furniture.FurnitureCount / (float)Furniture.FurniturePerLine);
 
-            _retiredRectangle = new Rectangle[Retired.RetiredCount][];
-            for (int t = 0; t < Retired.RetiredCount; t++)
+            _retireeRectangle = new Rectangle[Retiree.RetireeCount][];
+            for (int t = 0; t < Retiree.RetireeCount; t++)
             {
-                _retiredRectangle[t] = new Rectangle[8];
+                _retireeRectangle[t] = new Rectangle[8];
                 for (int f = 0; f < 8; f++) // idle animation
                 {
-                    _retiredRectangle[t][f] = new Rectangle(38 * 32 + f * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32, 32, 32);
+                    _retireeRectangle[t][f] = new Rectangle(38 * 32 + f * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + t * 32, 32, 32);
                 }
             }
 
@@ -377,7 +377,7 @@ namespace GreedyKidEditor
                 _nurseRectangle[t] = new Rectangle[8];
                 for (int f = 0; f < 8; f++) // idle animation
                 {
-                    _nurseRectangle[t][f] = new Rectangle(38 * 32 + f * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + 32 * Retired.RetiredCount + t * 32, 32, 32);
+                    _nurseRectangle[t][f] = new Rectangle(38 * 32 + f * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + 32 * Retiree.RetireeCount + t * 32, 32, 32);
                 }
             }
 
@@ -387,7 +387,7 @@ namespace GreedyKidEditor
                 _copRectangle[t] = new Rectangle[8];
                 for (int f = 0; f < 8; f++) // idle animation
                 {
-                    _copRectangle[t][f] = new Rectangle(35 * 32 + f * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + 32 * Retired.RetiredCount + 32 * Nurse.NurseCount + t * 32, 32, 32);
+                    _copRectangle[t][f] = new Rectangle(35 * 32 + f * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine + 32 + 32 * Retiree.RetireeCount + 32 * Nurse.NurseCount + t * 32, 32, 32);
                 }
             }
 
@@ -554,10 +554,10 @@ namespace GreedyKidEditor
                 if (_currentElevatorFrame >= _elevatorSequence.Length)
                     _currentElevatorFrame = 0;
 
-                _currentRetiredFrame++;
-                if (_currentRetiredFrame >= _retiredSequence.Length)
+                _currentRetireeFrame++;
+                if (_currentRetireeFrame >= _retireeSequence.Length)
                 {
-                    _currentRetiredFrame = 0;
+                    _currentRetireeFrame = 0;
                 }
 
                 _currentNurseFrame++;
@@ -1148,19 +1148,19 @@ namespace GreedyKidEditor
 
                         remove = -1;                        
 
-                        // retired
-                        for (int rr = 0; rr < room.Retireds.Count; rr++)
+                        // retiree
+                        for (int rr = 0; rr < room.Retirees.Count; rr++)
                         {
-                            Retired retired = room.Retireds[rr];
+                            Retiree retiree = room.Retirees[rr];
 
-                            Score += retired.Money;
+                            Score += retiree.Money;
 
-                            source = _retiredRectangle[retired.Type][_retiredSequence[_currentRetiredFrame]];
-                            destination = new Rectangle((int)retired.X, 128 - 40 * f + 9 + cameraPosY, 32, 32);
+                            source = _retireeRectangle[retiree.Type][_retireeSequence[_currentRetireeFrame]];
+                            destination = new Rectangle((int)retiree.X, 128 - 40 * f + 9 + cameraPosY, 32, 32);
 
-                            Color color = (IsHover(destination, true) && SelectionMode == SelectionMode.Retired ? _selectionColor : Color.White);
-                            if (IsOutsideRoom(room, retired))
-                                color = (IsHover(destination, true) && SelectionMode == SelectionMode.Retired ? _selectionColorRed : Color.Red);
+                            Color color = (IsHover(destination, true) && SelectionMode == SelectionMode.Retiree ? _selectionColor : Color.White);
+                            if (IsOutsideRoom(room, retiree))
+                                color = (IsHover(destination, true) && SelectionMode == SelectionMode.Retiree ? _selectionColorRed : Color.Red);
 
                             spriteBatch.Draw(_levelTexture,
                                 destination,
@@ -1168,83 +1168,83 @@ namespace GreedyKidEditor
                                 color);
 
                             // life
-                            int bubble = (retired.Money > 9 ? 2 : 1);
+                            int bubble = (retiree.Money > 9 ? 2 : 1);
                             spriteBatch.Draw(_levelTexture,
-                                new Rectangle((int)retired.X - 8, 128 - 40 * f + 9 + cameraPosY, _bubbleRectangle[0].Width, _bubbleRectangle[0].Height),
+                                new Rectangle((int)retiree.X - 8, 128 - 40 * f + 9 + cameraPosY, _bubbleRectangle[0].Width, _bubbleRectangle[0].Height),
                                 _bubbleRectangle[bubble],
                                 Color.White);
                             spriteBatch.Draw(_levelTexture,
-                                new Rectangle((int)retired.X + 10, 128 - 40 * f + 10 + cameraPosY, _smallNumberRectangle[0].Width, _smallNumberRectangle[0].Height),
-                                _smallNumberRectangle[retired.Life],
+                                new Rectangle((int)retiree.X + 10, 128 - 40 * f + 10 + cameraPosY, _smallNumberRectangle[0].Width, _smallNumberRectangle[0].Height),
+                                _smallNumberRectangle[retiree.Life],
                                 _lifeColor);
-                            int digit = retired.Money % 10;
+                            int digit = retiree.Money % 10;
                             spriteBatch.Draw(_levelTexture,
-                                new Rectangle((int)retired.X - 2, 128 - 40 * f + 10 + cameraPosY, _smallNumberRectangle[0].Width, _smallNumberRectangle[0].Height),
+                                new Rectangle((int)retiree.X - 2, 128 - 40 * f + 10 + cameraPosY, _smallNumberRectangle[0].Width, _smallNumberRectangle[0].Height),
                                 _smallNumberRectangle[digit],
                                 _moneyColor);
-                            digit = retired.Money / 10;
+                            digit = retiree.Money / 10;
                             if (digit > 0)
                             {
                                 spriteBatch.Draw(_levelTexture,
-                                new Rectangle((int)retired.X - 6, 128 - 40 * f + 10 + cameraPosY, _smallNumberRectangle[0].Width, _smallNumberRectangle[0].Height),
+                                new Rectangle((int)retiree.X - 6, 128 - 40 * f + 10 + cameraPosY, _smallNumberRectangle[0].Width, _smallNumberRectangle[0].Height),
                                 _smallNumberRectangle[digit],
                                 _moneyColor);
                             }
 
                             // update
-                            if (IsHover(destination, true) && SelectionMode == SelectionMode.Retired && _hasWheelUp)
+                            if (IsHover(destination, true) && SelectionMode == SelectionMode.Retiree && _hasWheelUp)
                             {
-                                retired.Type++;
-                                retired.Type = Math.Min(retired.Type, Retired.RetiredCount - 1);
+                                retiree.Type++;
+                                retiree.Type = Math.Min(retiree.Type, Retiree.RetireeCount - 1);
                             }
-                            else if (IsHover(destination, true) && SelectionMode == SelectionMode.Retired && _hasWheelDown)
+                            else if (IsHover(destination, true) && SelectionMode == SelectionMode.Retiree && _hasWheelDown)
                             {
-                                retired.Type--;
-                                retired.Type = Math.Max(retired.Type, 0);
+                                retiree.Type--;
+                                retiree.Type = Math.Max(retiree.Type, 0);
                             }
-                            if (IsHover(destination, true) && SelectionMode == SelectionMode.Retired && _hasCDown)
+                            if (IsHover(destination, true) && SelectionMode == SelectionMode.Retiree && _hasCDown)
                             {
-                                retired.Life++;
-                                retired.Life = Math.Min(retired.Life, 3);
+                                retiree.Life++;
+                                retiree.Life = Math.Min(retiree.Life, 3);
                             }
-                            else if (IsHover(destination, true) && SelectionMode == SelectionMode.Retired && _hasVDown)
+                            else if (IsHover(destination, true) && SelectionMode == SelectionMode.Retiree && _hasVDown)
                             {
-                                retired.Life--;
-                                retired.Life = Math.Max(retired.Life, 1);
+                                retiree.Life--;
+                                retiree.Life = Math.Max(retiree.Life, 1);
                             }
-                            if (IsHover(destination, true) && SelectionMode == SelectionMode.Retired && _hasBDown)
+                            if (IsHover(destination, true) && SelectionMode == SelectionMode.Retiree && _hasBDown)
                             {
-                                retired.Money++;
-                                retired.Money = Math.Min(retired.Money, Retired.MaxMoney);
+                                retiree.Money++;
+                                retiree.Money = Math.Min(retiree.Money, Retiree.MaxMoney);
                             }
-                            else if (IsHover(destination, true) && SelectionMode == SelectionMode.Retired && _hasNDown)
+                            else if (IsHover(destination, true) && SelectionMode == SelectionMode.Retiree && _hasNDown)
                             {
-                                retired.Money--;
-                                retired.Money = Math.Max(retired.Money, 0);
+                                retiree.Money--;
+                                retiree.Money = Math.Max(retiree.Money, 0);
                             }
 
                             // remove
-                            if (IsHover(destination, true) && SelectionMode == SelectionMode.Retired && _hasRightClick)
+                            if (IsHover(destination, true) && SelectionMode == SelectionMode.Retiree && _hasRightClick)
                             {
                                 remove = rr;
                             }
 
                             // selection
-                            if (IsHover(destination, true) && SelectionMode == SelectionMode.Retired && _hasSpaceDown)
+                            if (IsHover(destination, true) && SelectionMode == SelectionMode.Retiree && _hasSpaceDown)
                             {
-                                _lockedObject = retired;
+                                _lockedObject = retiree;
                             }
                         }
 
                         // add
-                        if (SelectionMode == SelectionMode.Retired && _hasLeftClick && IsHover(room, f, cameraPosY))
+                        if (SelectionMode == SelectionMode.Retiree && _hasLeftClick && IsHover(room, f, cameraPosY))
                         {
-                            if ((level.GetRetiredCount() + 1) * Retired.MaxMoney <= 999)
-                                room.Retireds.Add(new Retired(_mouseState.Position.X - 16));
+                            if ((level.GetRetireeCount() + 1) * Retiree.MaxMoney <= 999)
+                                room.Retirees.Add(new Retiree(_mouseState.Position.X - 16));
                         }
                         else if (remove >= 0)
                         {
-                            room.Retireds.RemoveAt(remove);
+                            room.Retirees.RemoveAt(remove);
                         }
 
                         remove = -1;

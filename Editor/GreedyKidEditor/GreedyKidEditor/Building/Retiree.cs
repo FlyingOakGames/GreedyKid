@@ -2,9 +2,9 @@
 
 namespace GreedyKidEditor
 {
-    public sealed class Retired : IMovable
+    public sealed class Retiree : IMovable
     {
-        public const int RetiredCount = 8;
+        public const int RetireeCount = 8;
         public const int MaxMoney = 20;
 
         public int Type = 0;
@@ -13,12 +13,12 @@ namespace GreedyKidEditor
         public int Life = 1;
         public int Money = 0;
 
-        public Retired()
+        public Retiree()
         {
 
         }
 
-        public Retired(int x)
+        public Retiree(int x)
         {
             X = x;
         }

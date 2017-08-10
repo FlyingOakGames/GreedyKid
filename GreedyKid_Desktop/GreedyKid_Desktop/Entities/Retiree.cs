@@ -5,9 +5,9 @@ using System.IO;
 
 namespace GreedyKid
 {
-    public sealed class Retired : IEntity
+    public sealed class Retiree : IEntity
     {
-        public const int RetiredCount = 8;
+        public const int RetireeCount = 8;
         public const int MaxLife = 3;
 
         private const float _walkSpeed = 16.0f;
@@ -55,7 +55,7 @@ namespace GreedyKid
         private float _currentHeartFrameTime = 0.0f;
         private const float _heartFrameTime = 0.1f;
 
-        public Retired()
+        public Retiree()
         {
             // init once
             if (_frames == null)
@@ -67,34 +67,34 @@ namespace GreedyKid
                 int nbFurnitureLine = (int)Math.Ceiling(Furniture.FurnitureCount / (float)Furniture.FurniturePerLine);
 
                 // idle
-                _frames[(int)EntityState.Idle] = new Rectangle[RetiredCount][];
+                _frames[(int)EntityState.Idle] = new Rectangle[RetireeCount][];
                 // idle special
-                _frames[(int)EntityState.IdleSpecial] = new Rectangle[RetiredCount][];
+                _frames[(int)EntityState.IdleSpecial] = new Rectangle[RetireeCount][];
                 // idle angry
-                _frames[(int)EntityState.IdleAngry] = new Rectangle[RetiredCount][];
+                _frames[(int)EntityState.IdleAngry] = new Rectangle[RetireeCount][];
                 // turning
-                _frames[(int)EntityState.Turning] = new Rectangle[RetiredCount][];
+                _frames[(int)EntityState.Turning] = new Rectangle[RetireeCount][];
                 // walking
-                _frames[(int)EntityState.Walking] = new Rectangle[RetiredCount][];
+                _frames[(int)EntityState.Walking] = new Rectangle[RetireeCount][];
                 // running
-                _frames[(int)EntityState.Running] = new Rectangle[RetiredCount][];
+                _frames[(int)EntityState.Running] = new Rectangle[RetireeCount][];
                 // entering
-                _frames[(int)EntityState.Entering] = new Rectangle[RetiredCount][];
+                _frames[(int)EntityState.Entering] = new Rectangle[RetireeCount][];
                 // exiting
-                _frames[(int)EntityState.Exiting] = new Rectangle[RetiredCount][];
+                _frames[(int)EntityState.Exiting] = new Rectangle[RetireeCount][];
                 // boo
-                _frames[(int)EntityState.Boo] = new Rectangle[RetiredCount][];
+                _frames[(int)EntityState.Boo] = new Rectangle[RetireeCount][];
                 // KO
-                _frames[(int)EntityState.KO] = new Rectangle[RetiredCount][];
+                _frames[(int)EntityState.KO] = new Rectangle[RetireeCount][];
                 // Slam
-                _frames[(int)EntityState.Slam] = new Rectangle[RetiredCount][];
+                _frames[(int)EntityState.Slam] = new Rectangle[RetireeCount][];
                 // Stun
-                _frames[(int)EntityState.Stun] = new Rectangle[RetiredCount][];
+                _frames[(int)EntityState.Stun] = new Rectangle[RetireeCount][];
                 // BeingRessurected
-                _frames[(int)EntityState.BeingRessurected] = new Rectangle[RetiredCount][];
+                _frames[(int)EntityState.BeingRessurected] = new Rectangle[RetireeCount][];
 
                 // type
-                for (int t = 0; t < RetiredCount; t++)
+                for (int t = 0; t < RetireeCount; t++)
                 {
                     // idle
                     _frames[(int)EntityState.Idle][t] = new Rectangle[8];
@@ -310,9 +310,9 @@ namespace GreedyKid
                         State = EntityState.Idle;
                         if (_targetDoor != null)
                         {
-                            Room.Retireds.Remove(this);
+                            Room.Retirees.Remove(this);
                             Room = _targetDoor.Room;
-                            Room.Retireds.Add(this);
+                            Room.Retirees.Add(this);
                             X = _targetDoor.X;
                             _targetDoor = null;
                         }
@@ -766,11 +766,11 @@ namespace GreedyKid
 
         public bool NotFacing(int playerMiddle)
         {
-            int retiredMiddle = (int)X + 16;
+            int retireeMiddle = (int)X + 16;
 
-            if (Orientation == SpriteEffects.None && retiredMiddle >= playerMiddle)
+            if (Orientation == SpriteEffects.None && retireeMiddle >= playerMiddle)
                 return true;
-            else if (Orientation == SpriteEffects.FlipHorizontally && retiredMiddle <= playerMiddle)
+            else if (Orientation == SpriteEffects.FlipHorizontally && retireeMiddle <= playerMiddle)
                 return true;
 
             return false;

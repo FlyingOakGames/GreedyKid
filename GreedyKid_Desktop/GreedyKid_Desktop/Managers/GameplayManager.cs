@@ -1030,9 +1030,9 @@ namespace GreedyKid
                             if (room.RoomDoors[d].IsKOBlocked)
                             {
                                 bool hasKOInIt = false;
-                                for (int rr = 0; rr < room.Retireds.Count; rr++)
+                                for (int rr = 0; rr < room.Retirees.Count; rr++)
                                 {
-                                    if (room.Retireds[rr].Life <= 0 && room.Retireds[rr].X < room.RoomDoors[d].X + 16 && room.Retireds[rr].X > room.RoomDoors[d].X - 16)
+                                    if (room.Retirees[rr].Life <= 0 && room.Retirees[rr].X < room.RoomDoors[d].X + 16 && room.Retirees[rr].X > room.RoomDoors[d].X - 16)
                                     {
                                         hasKOInIt = true;
                                         break;
@@ -1088,8 +1088,8 @@ namespace GreedyKid
 
                                 if (isShouting && cop.Room == Player.Room)
                                 {
-                                    int retiredMiddle = (int)cop.X + 16;
-                                    if (Math.Abs(retiredMiddle - playerMiddle) <= _shoutDistance && cop.NotFacing(playerMiddle))
+                                    int retireeMiddle = (int)cop.X + 16;
+                                    if (Math.Abs(retireeMiddle - playerMiddle) <= _shoutDistance && cop.NotFacing(playerMiddle))
                                         boo = true;
                                 }
 
@@ -1125,35 +1125,35 @@ namespace GreedyKid
                             }
                         }
 
-                        // retireds                        
-                        for (int rr = 0; rr < room.Retireds.Count; rr++)
+                        // retirees                        
+                        for (int rr = 0; rr < room.Retirees.Count; rr++)
                         {
-                            Retired retired = room.Retireds[rr];
-                            if (retired != null)
+                            Retiree retiree = room.Retirees[rr];
+                            if (retiree != null)
                             {
                                 // boo
                                 bool boo = false;
 
-                                if (isShouting && retired.Room == Player.Room)
+                                if (isShouting && retiree.Room == Player.Room)
                                 {
-                                    int retiredMiddle = (int)retired.X + 16;
-                                    if (Math.Abs(retiredMiddle - playerMiddle) <= _shoutDistance && retired.NotFacing(playerMiddle))
+                                    int retireeMiddle = (int)retiree.X + 16;
+                                    if (Math.Abs(retireeMiddle - playerMiddle) <= _shoutDistance && retiree.NotFacing(playerMiddle))
                                     boo = true;
                                 }
 
                                 // player pos
-                                if (retired.Room == Player.Room)
+                                if (retiree.Room == Player.Room)
                                 {
-                                    retired.LastKnownPlayerPosition = playerMiddle;
+                                    retiree.LastKnownPlayerPosition = playerMiddle;
                                 }
                                 else
                                 {
-                                    retired.LastKnownPlayerPosition = -1;
+                                    retiree.LastKnownPlayerPosition = -1;
                                 }
 
-                                retired.Update(gameTime, boo, isTaunting);
+                                retiree.Update(gameTime, boo, isTaunting);
 
-                                if (retired.Life > 0)
+                                if (retiree.Life > 0)
                                     allRetireeKO = false;
                             }
                         }
@@ -1169,8 +1169,8 @@ namespace GreedyKid
                          
                                 if (isShouting && nurse.Room == Player.Room)
                                 {
-                                    int retiredMiddle = (int)nurse.X + 16;
-                                    if (Math.Abs(retiredMiddle - playerMiddle) <= _shoutDistance && nurse.NotFacing(playerMiddle))
+                                    int retireeMiddle = (int)nurse.X + 16;
+                                    if (Math.Abs(retireeMiddle - playerMiddle) <= _shoutDistance && nurse.NotFacing(playerMiddle))
                                         boo = true;
                                 }
 
@@ -1184,54 +1184,54 @@ namespace GreedyKid
                                     nurse.LastKnownPlayerPosition = -1;
                                 }
 
-                                // ko retired pos
+                                // ko retiree pos
                                 if (!nurse.IsRessurecting)
                                 {
-                                    nurse.LastKnownKORetired = null;
+                                    nurse.LastKnownKORetiree = null;
                                     if (nurse.Life > 0)
                                     {
-                                        for (int rr = 0; rr < room.Retireds.Count; rr++)
+                                        for (int rr = 0; rr < room.Retirees.Count; rr++)
                                         {
-                                            Retired retired = room.Retireds[rr];
-                                            if (retired != null && retired.Life <= 0)
+                                            Retiree retiree = room.Retirees[rr];
+                                            if (retiree != null && retiree.Life <= 0)
                                             {
-                                                bool canSeeRetired = true;
+                                                bool canSeeRetiree = true;
 
                                                 for (int d = 0; d < room.RoomDoors.Length; d++)
                                                 {
                                                     RoomDoor roomDoor = room.RoomDoors[d];
 
-                                                    int retiredPos = (int)retired.X + 16;
+                                                    int retireePos = (int)retiree.X + 16;
 
-                                                    // check if KO retired in sight
-                                                    if (retiredPos > nurse.X + 16
+                                                    // check if KO retiree in sight
+                                                    if (retireePos > nurse.X + 16
                                                         && nurse.Orientation == SpriteEffects.None
                                                         && roomDoor.IsClosed
-                                                        && roomDoor.X + 16 > nurse.X + 16 && retiredPos > roomDoor.X + 16)
-                                                        canSeeRetired = false;
-                                                    else if (retiredPos < nurse.X + 16
+                                                        && roomDoor.X + 16 > nurse.X + 16 && retireePos > roomDoor.X + 16)
+                                                        canSeeRetiree = false;
+                                                    else if (retireePos < nurse.X + 16
                                                         && nurse.Orientation == SpriteEffects.FlipHorizontally
                                                         && roomDoor.IsClosed
-                                                        && roomDoor.X + 16 < nurse.X + 16 && retiredPos < roomDoor.X + 16)
-                                                        canSeeRetired = false;
-                                                    else if (retiredPos < nurse.X + 16
+                                                        && roomDoor.X + 16 < nurse.X + 16 && retireePos < roomDoor.X + 16)
+                                                        canSeeRetiree = false;
+                                                    else if (retireePos < nurse.X + 16
                                                         && nurse.Orientation == SpriteEffects.None)
-                                                        canSeeRetired = false;
-                                                    else if (retiredPos > nurse.X + 16
+                                                        canSeeRetiree = false;
+                                                    else if (retireePos > nurse.X + 16
                                                         && nurse.Orientation == SpriteEffects.FlipHorizontally)
-                                                        canSeeRetired = false;
+                                                        canSeeRetiree = false;
                                                 }
 
                                                 if (
-                                                    (retired.X + 16.0f < nurse.X + 16.0f && nurse.Orientation == SpriteEffects.None) ||
-                                                    (retired.X + 16.0f > nurse.X + 16.0f && nurse.Orientation != SpriteEffects.None)
+                                                    (retiree.X + 16.0f < nurse.X + 16.0f && nurse.Orientation == SpriteEffects.None) ||
+                                                    (retiree.X + 16.0f > nurse.X + 16.0f && nurse.Orientation != SpriteEffects.None)
                                                     )
-                                                    canSeeRetired = false;
+                                                    canSeeRetiree = false;
 
-                                                if (canSeeRetired && nurse.LastKnownKORetired == null)
-                                                    nurse.LastKnownKORetired = retired;
-                                                else if (canSeeRetired && Math.Abs(nurse.X - retired.X) < Math.Abs(nurse.X - nurse.LastKnownKORetired.X))
-                                                    nurse.LastKnownKORetired = retired;
+                                                if (canSeeRetiree && nurse.LastKnownKORetiree == null)
+                                                    nurse.LastKnownKORetiree = retiree;
+                                                else if (canSeeRetiree && Math.Abs(nurse.X - retiree.X) < Math.Abs(nurse.X - nurse.LastKnownKORetiree.X))
+                                                    nurse.LastKnownKORetiree = retiree;
                                             }
                                         }
                                     }
@@ -2115,7 +2115,7 @@ namespace GreedyKid
                     if ((Player != null && _spawnEntrance && _spawningCop != null && Player.Life <= 0) || (_entranceState != ElevatorState.Opening && Player != null && !Player.HasEnteredElevator && Player.Life <= 0))
                         Player.Draw(spriteBatch, cameraPosY);
 
-                // retireds & nurses
+                // retirees & nurses
                 for (int f = 0; f < _building.CurrentLevel.Floors.Length; f++)
                 {
                     Floor floor = _building.CurrentLevel.Floors[f];
@@ -2125,12 +2125,12 @@ namespace GreedyKid
                     {
                         Room room = floor.Rooms[r];
 
-                        // retired
-                        for (int rr = 0; rr < room.Retireds.Count; rr++)
+                        // retiree
+                        for (int rr = 0; rr < room.Retirees.Count; rr++)
                         {
-                            Retired retired = room.Retireds[rr];
-                            if (retired != null)
-                                retired.Draw(spriteBatch, cameraPosY);
+                            Retiree retiree = room.Retirees[rr];
+                            if (retiree != null)
+                                retiree.Draw(spriteBatch, cameraPosY);
                         }
 
                         // nurse

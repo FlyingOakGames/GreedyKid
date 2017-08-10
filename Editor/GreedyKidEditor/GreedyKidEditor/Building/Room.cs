@@ -20,7 +20,7 @@ namespace GreedyKidEditor
         public List<FloorDoor> FloorDoors = new List<FloorDoor>();
         public List<RoomDoor> RoomDoors = new List<RoomDoor>();
         public List<Furniture> Furnitures = new List<Furniture>();
-        public List<Retired> Retireds = new List<Retired>();
+        public List<Retiree> Retirees = new List<Retiree>();
         public List<Nurse> Nurses = new List<Nurse>();
         public List<Cop> Cops = new List<Cop>();
 
@@ -53,9 +53,9 @@ namespace GreedyKidEditor
             writer.Write(Furnitures.Count);
             for (int i = 0; i < Furnitures.Count; i++)
                 Furnitures[i].Save(writer);
-            writer.Write(Retireds.Count);
-            for (int i = 0; i < Retireds.Count; i++)
-                Retireds[i].Save(writer);
+            writer.Write(Retirees.Count);
+            for (int i = 0; i < Retirees.Count; i++)
+                Retirees[i].Save(writer);
             writer.Write(Nurses.Count);
             for (int i = 0; i < Nurses.Count; i++)
                 Nurses[i].Save(writer);
@@ -110,9 +110,9 @@ namespace GreedyKidEditor
             n = reader.ReadInt32();
             for (int i = 0; i < n; i++)
             {
-                Retired d = new Retired();
+                Retiree d = new Retiree();
                 d.Load(reader);
-                Retireds.Add(d);
+                Retirees.Add(d);
             }
             n = reader.ReadInt32();
             for (int i = 0; i < n; i++)

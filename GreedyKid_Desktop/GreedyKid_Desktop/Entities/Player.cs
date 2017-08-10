@@ -495,13 +495,13 @@ namespace GreedyKid
             // getting hit
             if (CanBeHit)
             {
-                for (int r = 0; r < Room.Retireds.Count; r++)
+                for (int r = 0; r < Room.Retirees.Count; r++)
                 {
-                    Retired retired = Room.Retireds[r];
+                    Retiree retiree = Room.Retirees[r];
                     
-                    if (retired.IsAngry && Math.Abs(retired.X - X) < 11.0f)
+                    if (retiree.IsAngry && Math.Abs(retiree.X - X) < 11.0f)
                     {
-                        Hit((retired.Orientation == SpriteEffects.None ? SpriteEffects.FlipHorizontally : SpriteEffects.None), DamageType.Normal);
+                        Hit((retiree.Orientation == SpriteEffects.None ? SpriteEffects.FlipHorizontally : SpriteEffects.None), DamageType.Normal);
                     }
                 }
 

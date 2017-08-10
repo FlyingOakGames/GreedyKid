@@ -117,7 +117,7 @@
     <Compile Include="Building\Furniture.cs" />
     <Compile Include="Building\IMovable.cs" />
     <Compile Include="Building\Nurse.cs" />
-    <Compile Include="Building\Retired.cs" />
+    <Compile Include="Building\Retiree.cs" />
     <Compile Include="Building\Room.cs" />
     <Compile Include="Building\RoomDoor.cs" />
     <Compile Include="Helpers\HashHelper.cs" />

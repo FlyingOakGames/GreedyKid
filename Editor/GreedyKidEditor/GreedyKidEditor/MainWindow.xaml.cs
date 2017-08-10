@@ -669,7 +669,7 @@ namespace GreedyKidEditor
                 bool warn3 = false;
                 bool warn4 = false;
 
-                int retiredCount = 0;
+                int retireeCount = 0;
 
                 for (int f = 0; f < level.Floors.Count; f++)
                 {
@@ -682,7 +682,7 @@ namespace GreedyKidEditor
                         if (room.HasStart)
                             _reachableRooms.Add(room);
 
-                        retiredCount += room.Retireds.Count;
+                        retireeCount += room.Retirees.Count;
 
                         for (int ff = 0; ff < room.FloorDoors.Count; ff++)
                         {
@@ -744,7 +744,7 @@ namespace GreedyKidEditor
                     }
                 }
 
-                //if (retiredCount == 0)
+                //if (retireeCount == 0)
                 //    MessageBox.Show("Warning: Level " + (i + 1) + " has no retiree (exit elevator will instantly open).");
 
                 // check reachability
@@ -752,7 +752,7 @@ namespace GreedyKidEditor
                     continue;
 
                 bool canExit = false;
-                int reachableRetired = 0;
+                int reachableRetiree = 0;
 
                 int currentRoom = -1;
                 while (currentRoom < _reachableRooms.Count - 1)
@@ -761,7 +761,7 @@ namespace GreedyKidEditor
 
                     if (_reachableRooms[currentRoom].HasExit)
                         canExit = true;
-                    reachableRetired += _reachableRooms[currentRoom].Retireds.Count;
+                    reachableRetiree += _reachableRooms[currentRoom].Retirees.Count;
 
                     List<Room> newRooms = GetReachableRooms(_reachableRooms[currentRoom], level);
 
@@ -772,7 +772,7 @@ namespace GreedyKidEditor
                     }
                 }
 
-                if (retiredCount != reachableRetired)
+                if (retireeCount != reachableRetiree)
                 {
                     MessageBox.Show("Warning: Level " + (i + 1) + " can't be completed because some retirees are not reachable.");
                     noError = false;
