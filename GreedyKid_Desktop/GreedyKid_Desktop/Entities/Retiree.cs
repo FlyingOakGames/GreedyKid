@@ -787,7 +787,7 @@ namespace GreedyKid
 
         public bool IsAngry
         {
-            get { return _angryTime > 0.0f && State != EntityState.Entering && State != EntityState.Exiting; }
+            get { return _angryTime > 0.0f && State != EntityState.Entering && State != EntityState.Exiting && State != EntityState.Stun; }
         }
     }
 }

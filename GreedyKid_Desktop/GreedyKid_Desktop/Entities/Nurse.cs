@@ -394,6 +394,7 @@ namespace GreedyKid
             if (State != EntityState.Panic
                 && State != EntityState.Entering
                 && State != EntityState.Exiting
+                && State != EntityState.Slam
                 && LastKnownKORetiree != null && _isVisible)
             {
                 Panic();
