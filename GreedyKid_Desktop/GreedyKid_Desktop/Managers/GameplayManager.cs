@@ -85,6 +85,9 @@ namespace GreedyKid
         private int _currentExitFrame = 0;
         private float _currentExitFrameTime = 0.0f;
         private const float _elevatorFrameTime = 0.1f;
+        private float _currentExitBlinkTime = 0.0f;
+        private bool _currentExitBlink = false;
+        private const float _elevatorBlinkTime = 0.2f;
 
         private bool _hasFinishedLevel = false;
 
@@ -253,7 +256,7 @@ namespace GreedyKid
             _elevatorRectangle[0] = new Rectangle[Room.ElevatorFrames];
             _elevatorRectangle[1] = new Rectangle[Room.ElevatorFrames];
             _elevatorRectangle[2] = new Rectangle[Room.PaintCount];
-            _elevatorRectangle[3] = new Rectangle[2];
+            _elevatorRectangle[3] = new Rectangle[3];
 
             for (int f = 0; f < Room.ElevatorFrames; f++)
             {
@@ -266,6 +269,7 @@ namespace GreedyKid
             }
             _elevatorRectangle[3][0] = new Rectangle(2 * 40 * Room.ElevatorFrames + Room.PaintCount * 40, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine, 40, 48);
             _elevatorRectangle[3][1] = new Rectangle(2 * 40 * Room.ElevatorFrames + Room.PaintCount * 40 + 40, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine, 40, 48);
+            _elevatorRectangle[3][2] = new Rectangle(2 * 40 * Room.ElevatorFrames + Room.PaintCount * 40 + 80, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine, 40, 48);
 
             _objectsRectangle = new Rectangle[(int)ObjectType.Count][];
             _objectsRectangle[(int)ObjectType.HealthPack] = new Rectangle[6];
@@ -1370,6 +1374,18 @@ namespace GreedyKid
 
         private void UpdateElevators(float gameTime)
         {
+            if (_hasFinishedLevel)
+            {
+                _currentExitBlinkTime += gameTime;
+                if (_currentExitBlinkTime >= _elevatorBlinkTime)
+                {
+                    _currentExitBlinkTime -= _elevatorBlinkTime;
+                    _currentExitBlink = !_currentExitBlink;
+                }
+            }
+            else
+                _currentExitBlink = false;
+
             if (_entranceState == ElevatorState.Closed)
             {
                 _currentEntranceFrame = 0;
@@ -2090,7 +2106,7 @@ namespace GreedyKid
                                 Color.White);
 
                             // signal
-                            source = _elevatorRectangle[3][1];
+                            source = _elevatorRectangle[3][(_currentExitBlink ? 2 : 1)];
 
                             spriteBatch.Draw(texture,
                                 new Rectangle(room.ExitX, 128 - 40 * f + cameraPosY, source.Width, source.Height),

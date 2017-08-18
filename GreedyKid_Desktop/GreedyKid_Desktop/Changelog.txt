@@ -11,6 +11,7 @@
 		You can interact with the up/down key with objects and doors
 		Rolling through a door will now close it if you're rolling in the closing direction
 		Slamming a door on a NPC will increase their beat rate
+		Exit elevator will now blink when the level is complete
 
 	Fixes:
 		Fixes the slamming sound and animation on retirees and nurses		
