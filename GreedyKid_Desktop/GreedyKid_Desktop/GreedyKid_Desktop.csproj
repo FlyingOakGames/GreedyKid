@@ -177,6 +177,12 @@
     <None Include="Content\level_23">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Content\level_24">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\level_25">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Content\level_3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -7,7 +7,7 @@ namespace GreedyKid
     public sealed class SaveManager
     {
         private string _savePath = "Scores";
-        private static int[] _minVersion = new int[] { 0, 7, 0, 0 };
+        private static int[] _minVersion = new int[] { 0, 75, 0, 0 };
 
         private static SaveManager _instance;
 
