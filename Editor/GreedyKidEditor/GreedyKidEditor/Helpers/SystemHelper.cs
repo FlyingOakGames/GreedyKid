@@ -37,15 +37,20 @@ namespace GreedyKidEditor
                     Name = "Windows 8.1";
                 else if (Name.Contains("NT 10.0"))
                 {
-                    Name = "Windows 10";
-                    if (Name.Contains("10.0.105"))
-                        Name = Name + " (November 2015 Update)";
+                    if (Name.Contains("10.0.102"))
+                        Name = "Windows 10";
+                    else if (Name.Contains("10.0.105"))
+                        Name = "Windows 10  (November 2015 Update)";
                     else if (Name.Contains("10.0.14"))
-                        Name = Name + " (Anniversary Update)";
+                        Name = "Windows 10  (Anniversary Update)";
                     else if (Name.Contains("10.0.15"))
-                        Name = Name + " (Creators Update)";
+                        Name = "Windows 10  (Creators Update)";
                     else if (Name.Contains("10.0.16"))
-                        Name = Name + " (Redstone 3)";
+                        Name = "Windows 10  (Fall Creators Update)";
+                    else if (Name.Contains("10.0.17"))
+                        Name = "Windows 10  (Redstone 4)";
+                    else
+                        Name = "Windows 10 (Unknown version)";
                 }
 
                 if (Name.Contains("Service Pack 1"))
