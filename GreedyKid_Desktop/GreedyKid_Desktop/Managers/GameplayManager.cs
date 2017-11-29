@@ -149,6 +149,7 @@ namespace GreedyKid
 
         // pause
         private bool _pause = false;
+        private bool _pauseFromDisconnection = false;
         private int _pauseOption = 0;
         private bool _inSettings = false;
         private Rectangle[] _pauseBackgroundRectangles;
@@ -491,6 +492,7 @@ namespace GreedyKid
             _pauseOption = 0;
             _inSettings = false;
             _pause = false;
+            _pauseFromDisconnection = false;
 
             _hasFinishedLevel = false;
 
@@ -585,14 +587,20 @@ namespace GreedyKid
             LoadLevel(SelectedLevel);
         }
 
-        public void RequestPause()
+        public void RequestPause(bool disconnection = false)
         {
             if (Player != null && Player.Life > 0)
             {
                 _pause = true;
                 _pauseOption = 0;
                 _inSettings = false;
+                _pauseFromDisconnection = disconnection;
             }
+        }
+
+        public void ResetDisconnection()
+        {
+            _pauseFromDisconnection = false;
         }
 
         public void PauseUp()

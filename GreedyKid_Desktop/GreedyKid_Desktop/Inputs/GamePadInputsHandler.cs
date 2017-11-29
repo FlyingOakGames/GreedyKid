@@ -72,6 +72,10 @@ namespace GreedyKid
         public void HandleIngameInputs(GameplayManager manager)
         {
             GamePadState currentState = GamePad.GetState(_playerIndex, GamePadDeadZone.IndependentAxes);
+            if (_isConnected && !currentState.IsConnected)
+                manager.RequestPause(true);
+            else if (!_isConnected && currentState.IsConnected)
+                manager.ResetDisconnection();
             _isConnected = currentState.IsConnected;
 
             if (manager.Player != null && !manager.Pause && !manager.Gameover)
