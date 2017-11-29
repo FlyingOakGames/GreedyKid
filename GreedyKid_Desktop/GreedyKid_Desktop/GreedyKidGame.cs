@@ -223,7 +223,7 @@ namespace GreedyKid
 
                         GC.Collect();
 
-                        TransitionManager.Instance.AppearTransition();
+                        TransitionManager.Instance.ForceAppear();
                     }
 
                     break;

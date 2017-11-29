@@ -135,6 +135,13 @@ namespace GreedyKid
             }
         }
 
+        public void ForceAppear()
+        {
+            _isDone = true;
+            _transitionState = TransitionState.None;
+            _currentTransitionFrame = 2;
+        }
+
         public void Draw(SpriteBatch spriteBatch)
         {            
             // transition

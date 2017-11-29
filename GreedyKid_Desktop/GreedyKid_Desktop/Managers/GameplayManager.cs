@@ -2627,7 +2627,7 @@ namespace GreedyKid
             if (_pause)
             {
                 UIHelper.Instance.DrawCommand(spriteBatch, TextManager.Instance.Select, CommandType.Select);
-                UIHelper.Instance.DrawCommand(spriteBatch, TextManager.Instance.Back, CommandType.Back, true);
+                UIHelper.Instance.DrawCommand(spriteBatch, TextManager.Instance.Back, CommandType.Back, CommandPosition.Left);
 
                 if (InputManager.PlayerDevice != null)
                     InputManager.PlayerDevice.Draw(spriteBatch);
