@@ -11,6 +11,7 @@ using System.Windows.Interop;
 using System.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Windows.Media;
 
 namespace GreedyKidEditor
 {
@@ -185,6 +186,31 @@ namespace GreedyKidEditor
             rendererThread.Join();            
         }
 
+        // convert to DPI scaled coordinates
+        private void TransformToPixels(Visual visual,
+                                      double unitX,
+                                      double unitY,
+                                      out double pixelX,
+                                      out double pixelY)
+        {
+            Matrix matrix;
+            var source = PresentationSource.FromVisual(visual);
+            if (source != null)
+            {
+                matrix = source.CompositionTarget.TransformToDevice;
+            }
+            else
+            {
+                using (var src = new HwndSource(new HwndSourceParameters()))
+                {
+                    matrix = src.CompositionTarget.TransformToDevice;
+                }
+            }
+
+            pixelX = unitX / matrix.M11;
+            pixelY = unitY / matrix.M22;
+        }
+
         private void UpdateMouse()
         {
             if (renderer == null)
@@ -204,8 +230,12 @@ namespace GreedyKidEditor
                 // zoom handling
                 float zoomX = (float)wfHost.Width / PreviewRenderer.Width;
                 float zoomY = (float)wfHost.Height / PreviewRenderer.Height;
-                mousePos.X = mousePos.X / zoomX;
-                mousePos.Y = mousePos.Y / zoomY;
+                double scaledX = 0;
+                double scaledY = 0;
+                TransformToPixels(this, mousePos.X, mousePos.Y, out scaledX, out scaledY);
+                //loadedFile.Text = "Base = " + (int)mousePos.X + ";" + (int)mousePos.Y + " Scaled = " + scaledX + ";" + scaledY;
+                mousePos.X = scaledX / zoomX;
+                mousePos.Y = scaledY / zoomY;
                 Microsoft.Xna.Framework.Point p = new Microsoft.Xna.Framework.Point((int)mousePos.X, (int)mousePos.Y);
                 if (renderer != null)
                 {
