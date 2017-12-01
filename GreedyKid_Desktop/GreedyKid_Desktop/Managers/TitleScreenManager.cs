@@ -66,17 +66,27 @@ namespace GreedyKid
         private float _currentAnimationFrameTime = 0.0f;
         private const float _animationFrameTime = 0.1f;
         private Rectangle[] _animationFrames;
+        private bool _reverseToTitle = false;
 
         public TitleScreenManager()
         {
             _viewport = new Rectangle(0, 0, GreedyKidGame.Width, GreedyKidGame.Height);
 
             // title animation
-            _animationFrames = new Rectangle[4];
-            _animationFrames[0] = new Rectangle(898, 1864, 296, 152);
-            _animationFrames[1] = new Rectangle(1195, 1864, 158, 122);
-            _animationFrames[2] = new Rectangle(1354, 1864, 65, 83);
-            _animationFrames[3] = new Rectangle(1420, 1864, 52, 74);
+            _animationFrames = new Rectangle[13];
+            _animationFrames[0] = new Rectangle(898, 1864, 296, 152); // background
+            _animationFrames[1] = new Rectangle(1195, 1864, 158, 122); // retiree
+            _animationFrames[2] = new Rectangle(1354, 1864, 65, 83); // kid
+            _animationFrames[3] = new Rectangle(1420, 1864, 52, 74); // hat
+            _animationFrames[4] = new Rectangle(898, 2017, 276, 2); // mask 1
+            _animationFrames[5] = new Rectangle(898, 2020, 276, 2); // mask 2
+            _animationFrames[6] = new Rectangle(898, 2023, 276, 2); // mask 3
+            _animationFrames[7] = new Rectangle(801, 1772, 193, 33 ); // logo 1
+            _animationFrames[8] = new Rectangle(995, 1728, 121, 77); // logo 2
+            _animationFrames[9] = new Rectangle(1117, 1716, 109, 89 ); // logo 3
+            _animationFrames[10] = new Rectangle(1227, 1722, 113, 83); // logo 4
+            _animationFrames[11] = new Rectangle(1341, 1688, 95, 117); // logo 5
+            _animationFrames[12] = new Rectangle(1437, 1722, 117, 83); // logo 6
 
             _backgroundRectangles = new Rectangle[4];
             // title
@@ -180,12 +190,21 @@ namespace GreedyKid
             if (_currentAnimationFrameTime >= _animationFrameTime)
             {
                 _currentAnimationFrameTime -= _animationFrameTime;
-                _currentAnimationFrame++;
+                if (_reverseToTitle)
+                    _currentAnimationFrame--;
+                else
+                    _currentAnimationFrame++;
 
-                if (_state == TitleScreenState.Title && _currentAnimationFrame == 14)
-                    _currentAnimationFrame = 8;
+                if (_state == TitleScreenState.Title && _currentAnimationFrame == 15)
+                    _currentAnimationFrame = 9;
                 else if (_state != TitleScreenState.Title && _currentAnimationFrame == 4)
                     _currentAnimationFrame = 3;
+                else if (_state != TitleScreenState.Title && _currentAnimationFrame < 0)
+                {
+                    _currentAnimationFrame = 9;
+                    _state = TitleScreenState.Title;
+                    _reverseToTitle = false;
+                }
             }
             
 
@@ -194,6 +213,7 @@ namespace GreedyKid
                 _currentAnimationFrame = 0;
                 _currentAnimationFrameTime = 0.0f;
                 _state = TitleScreenState.Main;
+                _reverseToTitle = false;
             }
             else if (InputManager.PlayerDevice != null && _state != TitleScreenState.Title && _currentAnimationFrame >= 3)
             {
@@ -426,10 +446,9 @@ namespace GreedyKid
             switch (_state)
             {
                 case TitleScreenState.Title: break;
-                case TitleScreenState.Main:                    
-                    _requestedTransition = RequestedTransition.ToTitleScreen;
-                    _waitForTransition = true;
-                    TransitionManager.Instance.DisappearTransition();
+                case TitleScreenState.Main:
+                    _reverseToTitle = true;
+                    _currentAnimationFrameTime = 0.0f;
                     InputManager.PlayerDevice = null;
                     break;
                 case TitleScreenState.Settings:
@@ -640,6 +659,11 @@ namespace GreedyKid
                         new Rectangle(0, 0, GreedyKidGame.Width, GreedyKidGame.Height),
                         UIHelper.Instance.PixelRectangle,
                         Color.White);
+                if (_currentAnimationFrame == 5)
+                    spriteBatch.Draw(TextureManager.Gameplay,
+                        new Rectangle((GreedyKidGame.Width - _animationFrames[4].Width) / 2, GreedyKidGame.Height - 8, _animationFrames[4].Width, _animationFrames[4].Height),
+                        _animationFrames[4],
+                        Color.White);
                 if (_currentAnimationFrame == 1)
                     spriteBatch.Draw(TextureManager.Gameplay,
                         new Rectangle(155, 91, 18, 4),
@@ -696,6 +720,139 @@ namespace GreedyKid
                         new Rectangle(186, hatY, _animationFrames[3].Width, _animationFrames[3].Height),
                         _animationFrames[3],
                         Color.White);
+
+                // logo
+                int logoX = -1;
+                int logoY = -1;
+                int logoFrame = -1;
+
+                if (_currentAnimationFrame == 6)
+                {
+                    logoX = 70;
+                    logoY = 107;
+                    logoFrame = 7;
+                }
+                else if (_currentAnimationFrame == 7)
+                {
+                    logoX = 106;
+                    logoY = 85;
+                    logoFrame = 8;
+                }
+                else if (_currentAnimationFrame == 8)
+                {
+                    logoX = 112;
+                    logoY = 78;
+                    logoFrame = 9;
+                }
+                else if (_currentAnimationFrame >= 9)
+                {
+                    logoX = 110;
+                    logoY = 82;
+                    logoFrame = 10;
+                }
+
+                if (logoFrame != -1)
+                    spriteBatch.Draw(texture,
+                        new Rectangle(logoX, logoY, _animationFrames[logoFrame].Width, _animationFrames[logoFrame].Height),
+                        _animationFrames[logoFrame],
+                        Color.White);
+            }
+            else if (_state == TitleScreenState.Main || _state == TitleScreenState.Play)
+            {
+                // background mask
+                if (_currentAnimationFrame == 0)
+                {
+                    spriteBatch.Draw(TextureManager.Gameplay,
+                        new Rectangle(121, 10, 87, GreedyKidGame.Height - 20),
+                        UIHelper.Instance.PixelRectangle,
+                        UIHelper.Instance.BackgroundColor);
+                    spriteBatch.Draw(TextureManager.Gameplay,
+                            new Rectangle((GreedyKidGame.Width - _animationFrames[5].Width) / 2, GreedyKidGame.Height - 8, _animationFrames[5].Width, _animationFrames[5].Height),
+                            _animationFrames[5],
+                            Color.White);
+                }
+                else
+                {
+                    if (_currentAnimationFrame == 1)
+                        spriteBatch.Draw(TextureManager.Gameplay,
+                            new Rectangle((GreedyKidGame.Width - _animationFrames[6].Width) / 2, GreedyKidGame.Height - 8, _animationFrames[6].Width, _animationFrames[6].Height),
+                            _animationFrames[6],
+                            Color.White);
+
+                    spriteBatch.Draw(TextureManager.Gameplay,
+                        new Rectangle(122, 10, 85, GreedyKidGame.Height - 20),
+                        UIHelper.Instance.PixelRectangle,
+                        UIHelper.Instance.BackgroundColor);
+                }
+
+                // elements
+                int retireeX = -1;
+                int kidX = -1;
+                int hatX = -1;
+                if (_currentAnimationFrame == 0)
+                {
+                    retireeX = -21;
+                    kidX = 240;
+                    hatX = 201;
+                }
+                if (_currentAnimationFrame == 1)
+                {
+                    retireeX = -22;
+                    kidX = 241;
+                    hatX = 202;
+                }
+                if (_currentAnimationFrame >= 2)
+                {
+                    retireeX = -21;
+                    kidX = 240;
+                    hatX = 201;
+                }
+
+                if (retireeX != -1)
+                    spriteBatch.Draw(texture,
+                        new Rectangle(retireeX, 6, _animationFrames[1].Width, _animationFrames[1].Height),
+                        _animationFrames[1],
+                        Color.White);
+                if (kidX != -1)
+                    spriteBatch.Draw(texture,
+                        new Rectangle(kidX, 66, _animationFrames[2].Width, _animationFrames[2].Height),
+                        _animationFrames[2],
+                        Color.White);
+                if (hatX != -1)
+                    spriteBatch.Draw(texture,
+                        new Rectangle(hatX, 5, _animationFrames[3].Width, _animationFrames[3].Height),
+                        _animationFrames[3],
+                        Color.White);
+
+                // logo
+                int logoX = -1;
+                int logoY = -1;
+                int logoFrame = -1;
+
+                if (_currentAnimationFrame == 0)
+                {
+                    logoX = 119;
+                    logoY = 33;
+                    logoFrame = 11;
+                }
+                else if (_currentAnimationFrame == 1)
+                {
+                    logoX = 108;
+                    logoY = 31;
+                    logoFrame = 12;
+                }
+                else if (_currentAnimationFrame >= 2)
+                {
+                    logoX = 110;
+                    logoY = 32;
+                    logoFrame = 10;
+                }
+
+                if (logoFrame != -1)
+                    spriteBatch.Draw(texture,
+                        new Rectangle(logoX, logoY, _animationFrames[logoFrame].Width, _animationFrames[logoFrame].Height),
+                        _animationFrames[logoFrame],
+                        Color.White);
             }
             
 
@@ -723,16 +880,16 @@ namespace GreedyKid
                     Color.White);*/
 
             // text
-            if (_state == TitleScreenState.Main)
+            if (_state == TitleScreenState.Main && _currentAnimationFrame > 0)
             {
-                yStart = 115;
+                yStart = 122;
 
                 UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.Play, yStart, 0, _selectionOption);
                 UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.Settings, yStart + 15, 1, _selectionOption);
                 if (!Program.RunningOnConsole)
                     UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.Quit, yStart + 30, 2, _selectionOption);
             }
-            else if (_state == TitleScreenState.Play)
+            else if (_state == TitleScreenState.Play && _currentAnimationFrame > 0)
             {
                 yStart = 115;
 
@@ -1075,21 +1232,23 @@ namespace GreedyKid
             // commands
             if (_state == TitleScreenState.Title)
             {
-                if (_currentAnimationFrame >= 5)
-                {
-                    UIHelper.Instance.DrawCommand(spriteBatch, GreedyKidGame.Version, CommandType.None);
-                    UIHelper.Instance.DrawCommand(spriteBatch, TextManager.Instance.Press, CommandType.Select, CommandPosition.Center, (_currentAnimationFrame > 10 ? true : false));
-                }
+                if (_currentAnimationFrame >= 5)                
+                    UIHelper.Instance.DrawCommand(spriteBatch, GreedyKidGame.Version, CommandType.None);                                    
+                if (_currentAnimationFrame >= 6)
+                    UIHelper.Instance.DrawCommand(spriteBatch, TextManager.Instance.Press, CommandType.Select, CommandPosition.Center, (_currentAnimationFrame > 11 ? true : false));
             }
-            else if (_state != TitleScreenState.SteamWorkshop || (_state == TitleScreenState.SteamWorkshop && _workshopIdentifiers != null && _workshopIdentifiers.Length > 0))
+            else if ((_state != TitleScreenState.SteamWorkshop && _currentAnimationFrame > 1) ||
+                (_state == TitleScreenState.SteamWorkshop && _workshopIdentifiers != null && _workshopIdentifiers.Length > 0))
             {
-                UIHelper.Instance.DrawCommand(spriteBatch, TextManager.Instance.Select, CommandType.Select);
+                UIHelper.Instance.DrawCommand(spriteBatch, TextManager.Instance.Select, CommandType.Select, CommandPosition.Right, (_currentAnimationFrame == 2));
             }
 
-            if (_state != TitleScreenState.Title && _state != TitleScreenState.Main)
+            if (_state != TitleScreenState.Title && _currentAnimationFrame > 1)
             {
-                UIHelper.Instance.DrawCommand(spriteBatch, TextManager.Instance.Back, CommandType.Back, CommandPosition.Left);
+                UIHelper.Instance.DrawCommand(spriteBatch, TextManager.Instance.Back, CommandType.Back, CommandPosition.Left, (_currentAnimationFrame == 2));
             }
+            if (_state == TitleScreenState.Main || _state == TitleScreenState.Play)
+                UIHelper.Instance.DrawCommand(spriteBatch, GreedyKidGame.Version, CommandType.None);
 
             if (InputManager.PlayerDevice != null)
                 InputManager.PlayerDevice.Draw(spriteBatch);
