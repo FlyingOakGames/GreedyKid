@@ -13,6 +13,7 @@ namespace GreedyKid
         Title,
         Ingame,
         Intro,
+        Ending,
     }
 
     /// <summary>
@@ -38,6 +39,7 @@ namespace GreedyKid
         private SplashScreenManager _splashScreenManager;
         private TitleScreenManager _titleScreenManager;
         private IntroScreenManager _introScreenManager;
+        private EndingScreenManager _endingScreenManager;
         private GameplayManager _gameplayManager;
 
         // viewport handling
@@ -216,6 +218,7 @@ namespace GreedyKid
                        
                         _titleScreenManager = new TitleScreenManager();
                         _introScreenManager = new IntroScreenManager();
+                        _endingScreenManager = new EndingScreenManager();
 
                         _state = GameState.Title;
 
@@ -256,6 +259,12 @@ namespace GreedyKid
                             _introScreenManager.Reset();
                             _state = GameState.Intro;
                         }
+                        else if (_titleScreenManager.SelectedLevel >= _gameplayManager.Building.LevelCount)
+                        {
+                            _endingScreenManager.Reset();
+                            _state = GameState.Ending;
+                            TextureManager.LoadEnding(GraphicsDevice);
+                        }
 
                         _gameplayManager.IsWorkshopBuilding = _titleScreenManager.IsWorkshopBuilding;
                         _titleScreenManager = null;                                              
@@ -276,6 +285,26 @@ namespace GreedyKid
                         _state = GameState.Ingame;
 
                         GC.Collect();
+                    }
+
+                    break;
+                case GameState.Ending:
+
+                    _endingScreenManager.Update(gameTimeF);
+
+                    if (_endingScreenManager.ReturnToLevelSelection)
+                    {
+                        _titleScreenManager = new TitleScreenManager();
+                        _titleScreenManager.SetState(TitleScreenState.LevelSelection);
+                        _titleScreenManager.SetBuilding(_gameplayManager.Building, _gameplayManager.SelectedLevel);
+
+                        _titleScreenManager.IsWorkshopBuilding = _gameplayManager.IsWorkshopBuilding;
+
+                        _state = GameState.Title;
+
+                        GC.Collect();
+
+                        TransitionManager.Instance.AppearTransition();
                     }
 
                     break;
@@ -335,6 +364,11 @@ namespace GreedyKid
                     break;
                 case GameState.Intro:                
                     _introScreenManager.Draw(spriteBatch);
+                    // transition
+                    TransitionManager.Instance.Draw(spriteBatch);
+                    break;
+                case GameState.Ending:
+                    _endingScreenManager.Draw(spriteBatch);
                     // transition
                     TransitionManager.Instance.Draw(spriteBatch);
                     break;

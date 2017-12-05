@@ -15,6 +15,8 @@ namespace GreedyKid
 
         public static Texture2D Gameplay;
         public static Texture2D Intro;
+        public static Texture2D Ending1;
+        public static Texture2D Ending2;
         public static Texture2D Splash;
 
         public static SpriteFont LatinFont;
@@ -63,6 +65,42 @@ namespace GreedyKid
                         path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "Resources", "Content/Textures/");
                     }
                     Intro = Texture2D.FromStream(device, File.OpenRead(path + "intro.png"));
+                }
+            }
+        }
+
+        public static void LoadEnding(GraphicsDevice device)
+        {
+            if (Content != null)
+            {
+                try
+                {
+                    Ending1 = Content.Load<Texture2D>(@"Textures/end_part1");
+                }
+                catch (Exception)
+                {
+                    // development fallback
+                    string path = Content.RootDirectory + "/Textures/";
+                    if (!File.Exists(path + "end_part1.png")) // MacOS hack
+                    {
+                        path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "Resources", "Content/Textures/");
+                    }
+                    Ending1 = Texture2D.FromStream(device, File.OpenRead(path + "end_part1.png"));
+                }
+
+                try
+                {
+                    Ending2 = Content.Load<Texture2D>(@"Textures/end_part2");
+                }
+                catch (Exception)
+                {
+                    // development fallback
+                    string path = Content.RootDirectory + "/Textures/";
+                    if (!File.Exists(path + "end_part2.png")) // MacOS hack
+                    {
+                        path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "Resources", "Content/Textures/");
+                    }
+                    Ending2 = Texture2D.FromStream(device, File.OpenRead(path + "end_part2.png"));
                 }
             }
         }

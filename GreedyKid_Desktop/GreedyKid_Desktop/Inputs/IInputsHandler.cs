@@ -14,6 +14,8 @@ namespace GreedyKid
     {
         void HandleIntroInputs(IntroScreenManager manager);
 
+        void HandleEndingInputs(EndingScreenManager manager);
+
         void HandleIngameInputs(GameplayManager manager);
 
         void HandleTitleInputs(TitleScreenManager manager);

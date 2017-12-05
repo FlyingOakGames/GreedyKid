@@ -46,6 +46,7 @@
     <Compile Include="Helper\HashHelper.cs" />
     <Compile Include="Helper\SystemHelper.cs" />
     <Compile Include="Helper\UIHelper.cs" />
+    <Compile Include="Managers\EndingScreenManager.cs" />
     <Compile Include="Managers\GameplayManager.cs" />
     <Compile Include="Building\Building.cs" />
     <Compile Include="Building\Detail.cs" />

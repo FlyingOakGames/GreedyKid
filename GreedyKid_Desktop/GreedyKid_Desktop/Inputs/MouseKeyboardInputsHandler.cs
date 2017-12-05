@@ -557,10 +557,27 @@ namespace GreedyKid
             if ((ActionKey.IsPressed(mouseState, keyboardState) && ActionKey.IsReleased(_previousMouseState, _previousKeyboardState)) ||
                     (keyboardState.IsKeyDown(Keys.Enter) && _previousKeyboardState.IsKeyUp(Keys.Enter)) ||
                     (mouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released))
-                manager.SkipIntro();
+                manager.Skip();
             else if ((keyboardState.IsKeyDown(Keys.Escape) && _previousKeyboardState.IsKeyUp(Keys.Escape)) ||
                 (mouseState.RightButton == ButtonState.Pressed && _previousMouseState.RightButton == ButtonState.Released))
-                manager.SkipIntro();
+                manager.Skip();
+
+            _previousKeyboardState = keyboardState;
+            _previousMouseState = mouseState;
+        }
+
+        public void HandleEndingInputs(EndingScreenManager manager)
+        {
+            MouseState mouseState = Mouse.GetState();
+            KeyboardState keyboardState = Keyboard.GetState();
+
+            if ((ActionKey.IsPressed(mouseState, keyboardState) && ActionKey.IsReleased(_previousMouseState, _previousKeyboardState)) ||
+                    (keyboardState.IsKeyDown(Keys.Enter) && _previousKeyboardState.IsKeyUp(Keys.Enter)) ||
+                    (mouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released))
+                manager.Skip();
+            else if ((keyboardState.IsKeyDown(Keys.Escape) && _previousKeyboardState.IsKeyUp(Keys.Escape)) ||
+                (mouseState.RightButton == ButtonState.Pressed && _previousMouseState.RightButton == ButtonState.Released))
+                manager.Skip();
 
             _previousKeyboardState = keyboardState;
             _previousMouseState = mouseState;

@@ -44,6 +44,12 @@ namespace GreedyKid
             _gamepadHandler.HandleIntroInputs(manager);
         }
 
+        public void HandleEndingInputs(EndingScreenManager manager)
+        {
+            _keyboardHandler.HandleEndingInputs(manager);
+            _gamepadHandler.HandleEndingInputs(manager);
+        }
+
         public bool DetectKeyPress(out Microsoft.Xna.Framework.Input.Keys key, out MouseKeyboardInputsHandler.MouseButton mouseButton, out MouseKeyboardInputsHandler.MappingType type)
         {
             return _keyboardHandler.DetectKeyPress(out key, out mouseButton, out type);

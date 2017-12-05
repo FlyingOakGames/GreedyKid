@@ -3,9 +3,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace GreedyKid
 {
-    public sealed class IntroScreenManager
+    public sealed class EndingScreenManager
     {
-        public bool StartGame = false;
+        public bool ReturnToLevelSelection = false;
 
         // animation
         private Rectangle[] _animationFrames;
@@ -15,7 +15,7 @@ namespace GreedyKid
 
         private bool _waitForTransition = false;
 
-        public IntroScreenManager()
+        public EndingScreenManager()
         {
             _animationFrames = new Rectangle[219];
 
@@ -32,7 +32,7 @@ namespace GreedyKid
         {
             _currentFrame = 0;
             _currentFrameTime = 0.0f;
-            StartGame = false;
+            ReturnToLevelSelection = false;
             _waitForTransition = false;
             TransitionManager.Instance.AppearTransition(129, 70);
         }
@@ -46,15 +46,15 @@ namespace GreedyKid
         public void Update(float gameTime)
         {
             if (InputManager.PlayerDevice != null)
-                InputManager.PlayerDevice.HandleIntroInputs(this);
+                InputManager.PlayerDevice.HandleEndingInputs(this);
 
             if (!SaveManager.Instance.IsLevelDone(-1))
-                StartGame = false;
+                ReturnToLevelSelection = false;
 
             if (_waitForTransition && TransitionManager.Instance.IsDone)
             {
                 _waitForTransition = false;
-                StartGame = true;
+                ReturnToLevelSelection = true;
             }
 
             _currentFrameTime += gameTime;
@@ -63,6 +63,7 @@ namespace GreedyKid
                 _currentFrameTime -= _frameTime;
                 _currentFrame++;
 
+                /*
                 if (_currentFrame == 96)
                 {
                     SfxManager.Instance.Play(Sfx.Shout1 + RandomHelper.Next(5));
@@ -90,6 +91,7 @@ namespace GreedyKid
 
                 if (_currentFrame == 196)
                     SfxManager.Instance.Play(Sfx.HeavyHit);
+                */
 
                 if (_currentFrame == _animationFrames.Length - 3)
                     Skip();
@@ -101,11 +103,11 @@ namespace GreedyKid
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Begin(samplerState: SamplerState.PointWrap);            
+            spriteBatch.Begin(samplerState: SamplerState.PointWrap);
 
             Texture2D textureIntro = TextureManager.Intro;
 
-            spriteBatch.Draw(textureIntro,                
+            spriteBatch.Draw(textureIntro,
                 new Rectangle(
                     (GreedyKidGame.Width - _animationFrames[_currentFrame].Width) / 2,
                     (GreedyKidGame.Height - _animationFrames[_currentFrame].Height) / 2,

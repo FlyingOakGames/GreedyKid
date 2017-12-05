@@ -166,11 +166,26 @@ namespace GreedyKid
             _isConnected = currentState.IsConnected;
 
             if (currentState.Buttons.A == ButtonState.Pressed && _previousGamePadState.Buttons.A == ButtonState.Released)
-                manager.SkipIntro();
+                manager.Skip();
             else if (currentState.Buttons.B == ButtonState.Pressed && _previousGamePadState.Buttons.B == ButtonState.Released)
-                manager.SkipIntro();
+                manager.Skip();
             else if (currentState.Buttons.Start == ButtonState.Pressed && _previousGamePadState.Buttons.Start == ButtonState.Released)
-                manager.SkipIntro();
+                manager.Skip();
+
+            _previousGamePadState = currentState;
+        }
+
+        public void HandleEndingInputs(EndingScreenManager manager)
+        {
+            GamePadState currentState = GamePad.GetState(_playerIndex, GamePadDeadZone.IndependentAxes);
+            _isConnected = currentState.IsConnected;
+
+            if (currentState.Buttons.A == ButtonState.Pressed && _previousGamePadState.Buttons.A == ButtonState.Released)
+                manager.Skip();
+            else if (currentState.Buttons.B == ButtonState.Pressed && _previousGamePadState.Buttons.B == ButtonState.Released)
+                manager.Skip();
+            else if (currentState.Buttons.Start == ButtonState.Pressed && _previousGamePadState.Buttons.Start == ButtonState.Released)
+                manager.Skip();
 
             _previousGamePadState = currentState;
         }
