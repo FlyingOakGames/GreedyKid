@@ -297,15 +297,15 @@ namespace GreedyKid
             {
                 case TitleScreenState.Title: break;
                 case TitleScreenState.Main:
-                    if (y >= 115 && y < 130)
+                    if (y >= 122 && y < 137)
                     {
                         _selectionOption = 0;
                     }
-                    else if (y >= 130 && y < 145)
+                    else if (y >= 137 && y < 152)
                     {
                         _selectionOption = 1;
                     }
-                    else if (!Program.RunningOnConsole && y >= 145 && y < 160)
+                    else if (!Program.RunningOnConsole && y >= 152 && y < 167)
                     {
                         _selectionOption = 2;
                     }
@@ -314,15 +314,15 @@ namespace GreedyKid
                     SettingsManager.Instance.UpdateMouseSelection(x, y);
                     break;
                 case TitleScreenState.Play:
-                    if (y >= 115 && y < 130)
+                    if (y >= 122 && y < 137)
                     {
                         _selectionOption = 0;
                     }
-                    else if (y >= 130 && y < 145)
+                    else if (y >= 137 && y < 152)
                     {
                         _selectionOption = 1;
                     }
-                    else if (y >= 145 && y < 160)
+                    else if (y >= 152 && y < 167)
                     {
                         _selectionOption = 2;
                     }
@@ -914,7 +914,7 @@ namespace GreedyKid
             }
             else if (_state == TitleScreenState.Play && _currentAnimationFrame > 0)
             {
-                yStart = 115;
+                yStart = 122;
 
                 UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.Campaign, yStart, 0, _selectionOption);
                 UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.Workshop, yStart + 15, 1, _selectionOption);
