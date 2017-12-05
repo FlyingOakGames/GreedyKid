@@ -16,15 +16,20 @@ namespace GreedyKid
 
     public enum RequestedTransition
     {
-        ToMainMenu,
-        ToTitleScreen,
+        None,
         ToGameplay,
+        ToSettings,
+        ToMainMenu,
+        ToLevelSelection,
+        ToPlayMenuFromLevelSelection,
+        ToPlayMenuFromWorkshop,
+        ToWorkshopMenu,
     }
 
     public sealed class TitleScreenManager
     {
         private bool _waitForTransition = false;
-        private RequestedTransition _requestedTransition = RequestedTransition.ToMainMenu;
+        private RequestedTransition _requestedTransition = RequestedTransition.None;
         public bool StartGame = false;
         public bool ShouldLoadBuilding = false;
         public string RequiredBuildingIdentifier = "Default";
@@ -226,39 +231,60 @@ namespace GreedyKid
                 }
             }
 
-            /*if (_state == TitleScreenState.Title && InputManager.CheckEngagement() && !_waitForTransition)
-            {                
-                _requestedTransition = RequestedTransition.ToMainMenu;
-                _waitForTransition = true;
-                TransitionManager.Instance.DisappearTransition();
-            }
-            else if (InputManager.PlayerDevice != null && _state != TitleScreenState.Title && !_waitForTransition)
-            {
-                InputManager.PlayerDevice.Update(gameTime);
-                InputManager.PlayerDevice.HandleTitleInputs(this);
-                
-                if (_state == TitleScreenState.Settings)
-                {
-                    SettingsManager.Instance.Update(gameTime);
-                }
-            }    */        
-            else if (_waitForTransition && TransitionManager.Instance.IsDone)
+            if (_waitForTransition && TransitionManager.Instance.IsDone)
             {
                 _waitForTransition = false;
                 switch (_requestedTransition)
                 {
-                    /*
-                    case RequestedTransition.ToMainMenu:
-                        _state = TitleScreenState.Main;
-                        TransitionManager.Instance.AppearTransition();
-                        break;*/
                     case RequestedTransition.ToGameplay:
                         StartGame = true;
                         break;
-                   /* case RequestedTransition.ToTitleScreen:
-                        _state = TitleScreenState.Title;
+                    case RequestedTransition.ToSettings:
+                        _state = TitleScreenState.Settings;
+                        SettingsManager.Instance.Reset();
                         TransitionManager.Instance.AppearTransition();
-                        break;*/
+                        break;
+                    case RequestedTransition.ToMainMenu:
+                        _selectionOption = 1;
+                        _state = TitleScreenState.Main;
+                        SettingsManager.Instance.Save();
+                        TransitionManager.Instance.AppearTransition();
+                        break;
+                    case RequestedTransition.ToLevelSelection:
+                        _state = TitleScreenState.LevelSelection;
+                        // load building
+                        ShouldLoadBuilding = true;
+                        IsWorkshopBuilding = false;
+                        RequiredBuildingIdentifier = "Default";
+                        TransitionManager.Instance.AppearTransition();
+                        break;
+                    case RequestedTransition.ToWorkshopMenu:
+                        _selectionOption = 0;
+                        _state = TitleScreenState.SteamWorkshop;
+                        // scan folder and load level names
+                        _workshopOffset = 0;
+                        _workshopIdentifiers = null;
+                        _workshopBuildingNames = null;
+                        if (System.IO.Directory.Exists("Content/Workshop/"))
+                        {
+                            _workshopIdentifiers = System.IO.Directory.GetDirectories("Content/Workshop/");
+                            _workshopBuildingNames = new string[_workshopIdentifiers.Length];
+                            for (int i = 0; i < _workshopIdentifiers.Length; i++)
+                            {
+                                Building.GetName(_workshopIdentifiers[i], out _workshopIdentifiers[i], out _workshopBuildingNames[i]);
+                            }
+                        }
+                        TransitionManager.Instance.AppearTransition();
+                        break;
+                    case RequestedTransition.ToPlayMenuFromWorkshop:
+                        _selectionOption = 1;
+                        _state = TitleScreenState.Play;
+                        TransitionManager.Instance.AppearTransition();
+                        break;
+                    case RequestedTransition.ToPlayMenuFromLevelSelection:
+                        _state = TitleScreenState.Play;
+                        TransitionManager.Instance.AppearTransition();
+                        break;
                 }
             }
         }
@@ -345,10 +371,11 @@ namespace GreedyKid
                 case TitleScreenState.Main:
                     if (_selectionOption == 0)
                         _state = TitleScreenState.Play;
-                    else if (_selectionOption == 1)
+                    else if (_selectionOption == 1 && !_waitForTransition)
                     {
-                        _state = TitleScreenState.Settings;
-                        SettingsManager.Instance.Reset();
+                        _requestedTransition = RequestedTransition.ToSettings;
+                        _waitForTransition = true;
+                        TransitionManager.Instance.DisappearTransition();                        
                     }
                     else if (_selectionOption == 2)
                         GreedyKidGame.ShouldExit = true;
@@ -357,31 +384,17 @@ namespace GreedyKid
                     SettingsManager.Instance.PushSelect(fromMouse, mouseX);
                     break;
                 case TitleScreenState.Play:
-                    if (_selectionOption == 0)
+                    if (_selectionOption == 0 && !_waitForTransition)
                     {
-                        _state = TitleScreenState.LevelSelection;
-                        // load building
-                        ShouldLoadBuilding = true;
-                        IsWorkshopBuilding = false;
-                        RequiredBuildingIdentifier = "Default";
+                        _requestedTransition = RequestedTransition.ToLevelSelection;
+                        _waitForTransition = true;
+                        TransitionManager.Instance.DisappearTransition();
                     }
-                    else if (_selectionOption == 1)
+                    else if (_selectionOption == 1 && !_waitForTransition)
                     {
-                        _selectionOption = 0;
-                        _state = TitleScreenState.SteamWorkshop;
-                        // scan folder and load level names
-                        _workshopOffset = 0;
-                        _workshopIdentifiers = null;
-                        _workshopBuildingNames = null;
-                        if (System.IO.Directory.Exists("Content/Workshop/"))
-                        {
-                            _workshopIdentifiers = System.IO.Directory.GetDirectories("Content/Workshop/");
-                            _workshopBuildingNames = new string[_workshopIdentifiers.Length];
-                            for (int i = 0; i < _workshopIdentifiers.Length; i++)
-                            {
-                                Building.GetName(_workshopIdentifiers[i], out _workshopIdentifiers[i], out _workshopBuildingNames[i]);
-                            }
-                        }
+                        _requestedTransition = RequestedTransition.ToWorkshopMenu;
+                        _waitForTransition = true;
+                        TransitionManager.Instance.DisappearTransition();
                     }
                     else if (_selectionOption == 2)
                         PushBack(fromMouse);
@@ -389,7 +402,7 @@ namespace GreedyKid
                 case TitleScreenState.LevelSelection:
                     if (fromMouse)
                     {
-                        if (_selectionOption == 0)
+                        if (_selectionOption == 0 && !_waitForTransition)
                         {
                             _requestedTransition = RequestedTransition.ToGameplay;
                             _waitForTransition = true;
@@ -402,7 +415,7 @@ namespace GreedyKid
                         else
                             PushBack();
                     }
-                    else
+                    else if (!_waitForTransition)
                     {
                         _requestedTransition = RequestedTransition.ToGameplay;
                         _waitForTransition = true;
@@ -452,24 +465,34 @@ namespace GreedyKid
                     InputManager.PlayerDevice = null;
                     break;
                 case TitleScreenState.Settings:
-                    if (!SettingsManager.Instance.PushCancel(fromMouse))
+                    if (!SettingsManager.Instance.PushCancel(fromMouse) && !_waitForTransition)
                     {
-                        _selectionOption = 1;
-                        _state = TitleScreenState.Main;
-                        SettingsManager.Instance.Save();
+                        _requestedTransition = RequestedTransition.ToMainMenu;
+                        _waitForTransition = true;
+                        TransitionManager.Instance.DisappearTransition();
                     }
                     break;
-                case TitleScreenState.Play: _state = TitleScreenState.Main; break;
+                case TitleScreenState.Play:
+                    _state = TitleScreenState.Main;
+                    break;
                 case TitleScreenState.LevelSelection:
                     _selectionOption = 0;
                     if (IsWorkshopBuilding)
                         _state = TitleScreenState.SteamWorkshop;
-                    else
-                        _state = TitleScreenState.Play;
+                    else if (!_waitForTransition)
+                    {                        
+                        _requestedTransition = RequestedTransition.ToPlayMenuFromLevelSelection;
+                        _waitForTransition = true;
+                        TransitionManager.Instance.DisappearTransition();
+                    }
                     break;
                 case TitleScreenState.SteamWorkshop:
-                    _selectionOption = 1;
-                    _state = TitleScreenState.Play;
+                    if (!_waitForTransition)
+                    {
+                        _requestedTransition = RequestedTransition.ToPlayMenuFromWorkshop;
+                        _waitForTransition = true;
+                        TransitionManager.Instance.DisappearTransition();
+                    }
                     break;
             }
 
