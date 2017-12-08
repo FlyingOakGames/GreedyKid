@@ -13,30 +13,6 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin Textures/level.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=False
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Textures/level.png
-
-#begin Textures/splash.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=False
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Textures/splash.png
-
 #begin Fonts/latin.png
 /importer:TextureImporter
 /processor:FontTextureProcessor
@@ -45,77 +21,11 @@
 /processorParam:TextureFormat=Color
 /build:Fonts/latin.png
 
-#begin Sfx/MenuBlip.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sfx/MenuBlip.wav
-
-#begin Sfx/SplashBonus.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sfx/SplashBonus.wav
-
-#begin Sfx/SoundTest.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sfx/SoundTest.wav
-
 #begin Musics/1.wma
 /importer:WmaImporter
 /processor:SongProcessor
 /processorParam:Quality=Best
 /build:Musics/1.wma
-
-#begin Sfx/DoorOpenClose.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sfx/DoorOpenClose.wav
-
-#begin Sfx/DoorClose.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sfx/DoorClose.wav
-
-#begin Sfx/TaserHit.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sfx/TaserHit.wav
-
-#begin Sfx/RoboFire.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sfx/RoboFire.wav
-
-#begin Sfx/SwatFire.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sfx/SwatFire.wav
-
-#begin Sfx/WidowsBreak.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sfx/WidowsBreak.wav
-
-#begin Sfx/HeavyHit.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sfx/HeavyHit.wav
-
-#begin Sfx/CopSwing.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sfx/CopSwing.wav
 
 #begin Sfx/CopRoll.wav
 /importer:WavImporter
@@ -129,6 +39,12 @@
 /processorParam:Quality=Best
 /build:Sfx/CopSurprise.wav
 
+#begin Sfx/CopSwing.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/CopSwing.wav
+
 #begin Sfx/CopTaser.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -141,11 +57,23 @@
 /processorParam:Quality=Best
 /build:Sfx/Cry.wav
 
+#begin Sfx/DoorClose.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/DoorClose.wav
+
 #begin Sfx/DoorOpen.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sfx/DoorOpen.wav
+
+#begin Sfx/DoorOpenClose.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/DoorOpenClose.wav
 
 #begin Sfx/ElevatorOpen.wav
 /importer:WavImporter
@@ -165,6 +93,18 @@
 /processorParam:Quality=Best
 /build:Sfx/GrapplingUp.wav
 
+#begin Sfx/HealthPack.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/HealthPack.wav
+
+#begin Sfx/HeavyHit.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/HeavyHit.wav
+
 #begin Sfx/Help.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -182,6 +122,12 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sfx/Hit.wav
+
+#begin Sfx/MenuBlip.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/MenuBlip.wav
 
 #begin Sfx/MoneyGrab.wav
 /importer:WavImporter
@@ -279,17 +225,23 @@
 /processorParam:Quality=Best
 /build:Sfx/RKOH.wav
 
-#begin Sfx/RoboHit.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sfx/RoboHit.wav
-
 #begin Sfx/RoboDown.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sfx/RoboDown.wav
+
+#begin Sfx/RoboFire.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/RoboFire.wav
+
+#begin Sfx/RoboHit.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/RoboHit.wav
 
 #begin Sfx/RoboLanding.wav
 /importer:WavImporter
@@ -333,11 +285,41 @@
 /processorParam:Quality=Best
 /build:Sfx/Shout5.wav
 
+#begin Sfx/Show.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/Show.wav
+
+#begin Sfx/SoundTest.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/SoundTest.wav
+
+#begin Sfx/SplashBonus.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/SplashBonus.wav
+
+#begin Sfx/SwatFire.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/SwatFire.wav
+
 #begin Sfx/SwatHit.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sfx/SwatHit.wav
+
+#begin Sfx/TaserHit.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/TaserHit.wav
 
 #begin Sfx/Taunt1.wav
 /importer:WavImporter
@@ -351,17 +333,41 @@
 /processorParam:Quality=Best
 /build:Sfx/Taunt2.wav
 
-#begin Sfx/HealthPack.wav
+#begin Sfx/TV.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:Sfx/HealthPack.wav
+/build:Sfx/TV.wav
 
-#begin Sfx/Show.wav
+#begin Sfx/WidowsBreak.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:Sfx/Show.wav
+/build:Sfx/WidowsBreak.wav
+
+#begin Textures/end_part1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/end_part1.png
+
+#begin Textures/end_part2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=False
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/end_part2.png
 
 #begin Textures/intro.png
 /importer:TextureImporter
@@ -375,9 +381,27 @@
 /processorParam:TextureFormat=Color
 /build:Textures/intro.png
 
-#begin Sfx/TV.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sfx/TV.wav
+#begin Textures/level.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=False
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/level.png
+
+#begin Textures/splash.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=False
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/splash.png
 

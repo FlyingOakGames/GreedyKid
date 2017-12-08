@@ -39,8 +39,11 @@ namespace GreedyKid
 
         public void Skip()
         {
-            _waitForTransition = true;
-            TransitionManager.Instance.DisappearTransition(191, 70);
+            if (!_waitForTransition)
+            {
+                _waitForTransition = true;
+                TransitionManager.Instance.DisappearTransition(191, 70);
+            }
         }
 
         public void Update(float gameTime)

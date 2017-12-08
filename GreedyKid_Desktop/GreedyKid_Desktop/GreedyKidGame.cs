@@ -249,7 +249,16 @@ namespace GreedyKid
                     }
                     else if (_titleScreenManager.StartGame)
                     {
-                        if (_titleScreenManager.SelectedLevel >= 0)
+                        if (_titleScreenManager.SelectedLevel >= _gameplayManager.Building.LevelCount)
+                        {
+                            if (_titleScreenManager.SelectedLevel == _gameplayManager.Building.LevelCount)
+                                _endingScreenManager.Reset(EndingType.Normal);
+                            else
+                                _endingScreenManager.Reset(EndingType.Secret);
+                            _state = GameState.Ending;
+                            TextureManager.LoadEnding(GraphicsDevice);
+                        }
+                        else if (_titleScreenManager.SelectedLevel >= 0)
                         {
                             _gameplayManager.LoadLevel(_titleScreenManager.SelectedLevel);                            
                             _state = GameState.Ingame;
@@ -258,12 +267,6 @@ namespace GreedyKid
                         {
                             _introScreenManager.Reset();
                             _state = GameState.Intro;
-                        }
-                        else if (_titleScreenManager.SelectedLevel >= _gameplayManager.Building.LevelCount)
-                        {
-                            _endingScreenManager.Reset();
-                            _state = GameState.Ending;
-                            TextureManager.LoadEnding(GraphicsDevice);
                         }
 
                         _gameplayManager.IsWorkshopBuilding = _titleScreenManager.IsWorkshopBuilding;
@@ -294,9 +297,15 @@ namespace GreedyKid
 
                     if (_endingScreenManager.ReturnToLevelSelection)
                     {
+                        if (_endingScreenManager.Ending == EndingType.Normal)
+                            SaveManager.Instance.SetEnding1();
+                        else
+                            SaveManager.Instance.SetEnding2();
+                        SaveManager.Instance.Save(_gameplayManager.Building);
+
                         _titleScreenManager = new TitleScreenManager();
                         _titleScreenManager.SetState(TitleScreenState.LevelSelection);
-                        _titleScreenManager.SetBuilding(_gameplayManager.Building, _gameplayManager.SelectedLevel);
+                        _titleScreenManager.SetBuilding(_gameplayManager.Building, (_endingScreenManager.Ending == EndingType.Normal ? _gameplayManager.Building.LevelCount : _gameplayManager.Building.LevelCount + 1));
 
                         _titleScreenManager.IsWorkshopBuilding = _gameplayManager.IsWorkshopBuilding;
 

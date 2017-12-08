@@ -7,7 +7,7 @@ namespace GreedyKid
     public sealed class SaveManager
     {
         private string _savePath = "Scores";
-        private static int[] _minVersion = new int[] { 0, 75, 0, 0 };
+        private static int[] _minVersion = new int[] { 0, 80, 0, 0 };
 
         private static SaveManager _instance;
 
@@ -19,6 +19,8 @@ namespace GreedyKid
         private int[] _levelStars;
 
         private bool _hasSeenIntro = false;
+        private bool _hasSeenEnding1 = false;
+        private bool _hasSeenEnding2 = false;
 
         private SaveManager()
         {
@@ -31,7 +33,13 @@ namespace GreedyKid
         {
             if (level == -1)
                 return _hasSeenIntro;
-            return _isLevelDone[level];
+            else if (level < _isLevelDone.Length)
+                return _isLevelDone[level];
+            else if (level == _isLevelDone.Length)
+                return _hasSeenEnding1;
+            else if (level == _isLevelDone.Length + 1)
+                return _hasSeenEnding2;
+            return false;
         }
 
         public int LevelTime(int level)
@@ -79,6 +87,16 @@ namespace GreedyKid
             _hasSeenIntro = true;
         }
 
+        public void SetEnding1()
+        {
+            _hasSeenEnding1 = true;
+        }
+
+        public void SetEnding2()
+        {
+            _hasSeenEnding2 = true;
+        }
+
         public void Load(Building building)
         {
             if (_currentBuildingIdentifier == building.Identifier)
@@ -94,6 +112,8 @@ namespace GreedyKid
             _levelStars = new int[building.LevelCount];
 
             _hasSeenIntro = false;
+            _hasSeenEnding1 = false;
+            _hasSeenEnding2 = false;
 
 #if PLAYSTATION4
             path = PlatformHelper.PlayStation4.BeginSave(_statsPath, true);
@@ -165,6 +185,8 @@ namespace GreedyKid
                                         _levelStars[i] = reader.ReadInt32();
                                     }
                                     _hasSeenIntro = reader.ReadBoolean();
+                                    _hasSeenEnding1 = reader.ReadBoolean();
+                                    _hasSeenEnding2 = reader.ReadBoolean();
                                 }
                             }
                         }
@@ -222,6 +244,8 @@ namespace GreedyKid
                         }
 
                         writer.Write(_hasSeenIntro);
+                        writer.Write(_hasSeenEnding1);
+                        writer.Write(_hasSeenEnding2);
 
                         writer.Flush();
 #if DESKTOP || PLAYSTATION4

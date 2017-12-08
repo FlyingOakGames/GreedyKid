@@ -251,7 +251,7 @@ namespace GreedyKid
 
         // *********************** INTER LEVEL SCREEN ***********************
 
-        // 0% stageclear, time, money, nextstage
+        // 0% stageclear, time, money, nextstage, intro, ending1, ending2
 
         private string[] _stageClear = new string[] { "STAGE CLEAR", "NIVEAU TERMINÉ", "STAGE CLEAR", "STAGE CLEAR", "STAGE CLEAR", "STAGE CLEAR", "STAGE CLEAR" };
         public string StageClear { get { return _stageClear[(int)_language]; } }
@@ -264,6 +264,15 @@ namespace GreedyKid
 
         private string[] _money = new string[] { "MONEY  ", "ARGENT  ", "MONEY  ", "MONEY  ", "MONEY  ", "MONEY  ", "MONEY  " };
         public string Money { get { return _money[(int)_language]; } }
+
+        private string[] _intro = new string[] { "WATCH INTRODUCTION", "REGARDER L'INTRODUCTION", "WATCH INTRODUCTION", "WATCH INTRODUCTION", "WATCH INTRODUCTION", "WATCH INTRODUCTION", "WATCH INTRODUCTION" };
+        public string Intro { get { return _intro[(int)_language]; } }
+
+        private string[] _ending1 = new string[] { "WATCH ENDING", "REGARDER LA FIN", "WATCH ENDING", "WATCH ENDING", "WATCH ENDING", "WATCH ENDING", "WATCH ENDING" };
+        public string Ending1 { get { return _ending1[(int)_language]; } }
+
+        private string[] _ending2 = new string[] { "WATCH SECRET ENDING", "REGARDER LA FIN SECRÈTE", "WATCH SECRET ENDING", "WATCH SECRET ENDING", "WATCH SECRET ENDING", "WATCH SECRET ENDING", "WATCH SECRET ENDING" };
+        public string Ending2 { get { return _ending2[(int)_language]; } }
 
         // *********************** LANGUAGE LOADING ***********************
 
@@ -323,6 +332,9 @@ namespace GreedyKid
             _nextStage[i] = ConvertToGame(_nextStage[i]);
             _time[i] = ConvertToGame(_time[i]);
             _money[i] = ConvertToGame(_money[i]);
+            _intro[i] = ConvertToGame(_intro[i]);
+            _ending1[i] = ConvertToGame(_ending1[i]);
+            _ending2[i] = ConvertToGame(_ending2[i]);
         }
     }
 }

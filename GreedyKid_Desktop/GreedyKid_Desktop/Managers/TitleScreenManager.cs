@@ -185,7 +185,7 @@ namespace GreedyKid
 
             _completionString = "( " + (_completedLevels < 10 ? "0" : String.Empty) + _completedLevels + "/" + (_levelCount < 10 ? "0" : String.Empty) + _levelCount + " )";
 
-            if (_selectedLevel >= 0)
+            if (_selectedLevel >= 0 && _selectedLevel < _levelCount)
                 UpdateScoreStrings();
         }
 
@@ -578,7 +578,7 @@ namespace GreedyKid
                 if (previous != _selectedLevel)
                 {
                     SfxManager.Instance.Play(Sfx.MenuBlip);
-                    if (_selectedLevel >= 0)
+                    if (_selectedLevel >= 0 && _selectedLevel < _levelCount)
                         UpdateScoreStrings();
                 }
             }
@@ -592,17 +592,19 @@ namespace GreedyKid
             {
                 int previous = _selectedLevel;
 
-                if (SaveManager.Instance.IsLevelDone(_selectedLevel))
+                if ((_selectedLevel < _levelCount - 1 && SaveManager.Instance.IsLevelDone(_selectedLevel))
+                    || (_selectedLevel == _levelCount - 1 && SaveManager.Instance.IsLevelDone(_selectedLevel + 1))
+                    || (_selectedLevel == _levelCount && SaveManager.Instance.IsLevelDone(_selectedLevel + 1)))
                 {
                     _selectedLevel++;
-                    if (_selectedLevel >= _levelCount)
-                        _selectedLevel = _levelCount - 1;
+                    if (_selectedLevel >= _levelCount + 2)
+                        _selectedLevel = _levelCount + 1;
                 }
 
                 if (previous != _selectedLevel)
                 {
                     SfxManager.Instance.Play(Sfx.MenuBlip);
-                    if (_selectedLevel >= 0)
+                    if (_selectedLevel >= 0 && _selectedLevel < _levelCount)
                         UpdateScoreStrings();
                 }
             }
@@ -1013,7 +1015,14 @@ namespace GreedyKid
 
                     textWidth = _numberRectangle[e].Width;
 
-                    if (d > 0)
+                    if (_selectedLevel - 1 - i >= _levelCount || (d == 0 && e == 0))
+                    {
+                        spriteBatch.Draw(texture,
+                            new Rectangle(103 - i * 41 + _selectionRectangle[5].Width / 2 - textWidth / 2, 83, _numberRectangle[10].Width, _numberRectangle[10].Height),
+                            _numberRectangle[10],
+                            Color.White);
+                    }
+                    else if (d > 0)
                     {
                         textWidth += _numberRectangle[d].Width;
 
@@ -1027,13 +1036,6 @@ namespace GreedyKid
                             _numberRectangle[e],
                             Color.White);
                     }
-                    else if (d == 0 && e == 0)
-                    {
-                        spriteBatch.Draw(texture,
-                            new Rectangle(103 - i * 41 + _selectionRectangle[5].Width / 2 - textWidth / 2, 83, _numberRectangle[10].Width, _numberRectangle[10].Height),
-                            _numberRectangle[10],
-                            Color.White);
-                    }
                     else
                     {
                         spriteBatch.Draw(texture,
@@ -1042,7 +1044,7 @@ namespace GreedyKid
                             Color.White);
                     }
 
-                    if (d > 0 || e > 0)
+                    if ((d > 0 || e > 0) && _selectedLevel - 1 - i < _levelCount)
                     {
                         // small stars
                         stars = SaveManager.Instance.LevelStars(_selectedLevel - 1 - i);
@@ -1065,7 +1067,14 @@ namespace GreedyKid
 
                 textWidth = _numberRectangle[e].Width;
 
-                if (d > 0)
+                if ((d == 0 && e == 0) || _selectedLevel >= _levelCount)
+                {
+                    spriteBatch.Draw(texture,
+                        new Rectangle(144 + _selectionRectangle[5].Width / 2 - textWidth / 2, 83, _numberRectangle[10].Width, _numberRectangle[10].Height),
+                        _numberRectangle[10],
+                        Color.White);
+                }
+                else if (d > 0)
                 {
                     textWidth += _numberRectangle[d].Width;
 
@@ -1078,14 +1087,7 @@ namespace GreedyKid
                         new Rectangle(147 + _selectionRectangle[5].Width / 2 - textWidth / 2 + _numberRectangle[d].Width, 85, _numberRectangle[e].Width, _numberRectangle[e].Height),
                         _numberRectangle[e],
                         Color.White);
-                }
-                else if (d == 0 && e == 0)
-                {
-                    spriteBatch.Draw(texture,
-                        new Rectangle(144 + _selectionRectangle[5].Width / 2 - textWidth / 2, 83, _numberRectangle[10].Width, _numberRectangle[10].Height),
-                        _numberRectangle[10],
-                        Color.White);
-                }
+                }                
                 else
                 {
                     spriteBatch.Draw(texture,
@@ -1094,7 +1096,7 @@ namespace GreedyKid
                         Color.White);
                 }
 
-                if (_selectedLevel >= 0)
+                if (_selectedLevel >= 0 && _selectedLevel < _levelCount)
                 {
                     // small stars
                     stars = SaveManager.Instance.LevelStars(_selectedLevel);
@@ -1107,7 +1109,7 @@ namespace GreedyKid
                 // next levels
                 for (int i = 0; i < 3; i++)
                 {
-                    if (_selectedLevel + 1 + i >= _levelCount)
+                    if (_selectedLevel + 1 + i >= _levelCount + 2)
                         continue;
 
                     int locked = (SaveManager.Instance.IsLevelDone(_selectedLevel + 1 + i) ? 5 : 6);
@@ -1129,7 +1131,14 @@ namespace GreedyKid
 
                         textWidth = _numberRectangle[e].Width;
 
-                        if (d > 0)
+                        if (_selectedLevel + 1 + i >= _levelCount)
+                        {
+                            spriteBatch.Draw(texture,
+                                new Rectangle(185 + i * 41 + _selectionRectangle[5].Width / 2 - textWidth / 2, 83, _numberRectangle[10].Width, _numberRectangle[10].Height),
+                                _numberRectangle[10],
+                                Color.White);
+                        }
+                        else if (d > 0)
                         {
                             textWidth += _numberRectangle[d].Width;
 
@@ -1151,12 +1160,15 @@ namespace GreedyKid
                                 Color.White);
                         }
 
-                        // small stars
-                        stars = SaveManager.Instance.LevelStars(_selectedLevel + 1 + i);
-                        spriteBatch.Draw(texture,
-                            new Rectangle(188 + i * 41 + 6, 68 + 44, _selectionRectangle[stars].Width, _selectionRectangle[stars].Height),
-                            _selectionRectangle[stars],
-                            Color.White);
+                        if (_selectedLevel + 1 + i < _levelCount)
+                        {
+                            // small stars
+                            stars = SaveManager.Instance.LevelStars(_selectedLevel + 1 + i);
+                            spriteBatch.Draw(texture,
+                                new Rectangle(188 + i * 41 + 6, 68 + 44, _selectionRectangle[stars].Width, _selectionRectangle[stars].Height),
+                                _selectionRectangle[stars],
+                                Color.White);
+                        }
                     }
                 }
 
@@ -1175,7 +1187,7 @@ namespace GreedyKid
                     0.0f
                     );
 
-                if (_selectedLevel >= 0)
+                if (_selectedLevel >= 0 && _selectedLevel < _levelCount)
                 {
 
                     SpriteFont genericFont = TextManager.Instance.GenericFont;
@@ -1236,6 +1248,42 @@ namespace GreedyKid
                         _targetMoneyString,
                         new Vector2(moneyX + moneyWidth - (int)genericFont.MeasureString(_targetMoneyString).X, 151),
                         _targetScoreColor);
+                }
+                else if (_selectedLevel == -1)
+                {
+                    SpriteFont font = TextManager.Instance.Font;
+
+                    int width = (int)font.MeasureString(TextManager.Instance.Intro).X;
+                    int x = GreedyKidGame.Width / 2 - width / 2;
+
+                    spriteBatch.DrawString(font,
+                        TextManager.Instance.Intro,
+                        new Vector2(x, 136),
+                        Color.White);
+                }
+                else if (_selectedLevel == _levelCount)
+                {
+                    SpriteFont font = TextManager.Instance.Font;
+
+                    int width = (int)font.MeasureString(TextManager.Instance.Ending1).X;
+                    int x = GreedyKidGame.Width / 2 - width / 2;
+
+                    spriteBatch.DrawString(font,
+                        TextManager.Instance.Ending1,
+                        new Vector2(x, 136),
+                        Color.White);
+                }
+                else if (_selectedLevel == _levelCount + 1)
+                {
+                    SpriteFont font = TextManager.Instance.Font;
+
+                    int width = (int)font.MeasureString(TextManager.Instance.Ending2).X;
+                    int x = GreedyKidGame.Width / 2 - width / 2;
+
+                    spriteBatch.DrawString(font,
+                        TextManager.Instance.Ending2,
+                        new Vector2(x, 136),
+                        Color.White);
                 }
 
                 // arrows

@@ -13,6 +13,9 @@ namespace GreedyKid
         public const int IntroWidth = 2048;
         public const int IntroHeight = 1024;
 
+        public const int EndingWidth = 2048;
+        public const int EndingHeight = 2048;
+
         public static Texture2D Gameplay;
         public static Texture2D Intro;
         public static Texture2D Ending1;
