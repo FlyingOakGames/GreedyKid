@@ -97,6 +97,15 @@ namespace GreedyKid
             _hasSeenEnding2 = true;
         }
 
+        public bool HasAllStars()
+        {
+            int count = 0;
+            for (int i = 0; i < _levelStars.Length; i++)
+                count += _levelStars[i];
+
+            return count == _levelStars.Length * 3;
+        }
+
         public void Load(Building building)
         {
             if (_currentBuildingIdentifier == building.Identifier)
@@ -179,14 +188,14 @@ namespace GreedyKid
                                 {
                                     for (int i = 0; i < building.LevelCount; i++)
                                     {
-                                        _isLevelDone[i] = reader.ReadBoolean();
+                                        _isLevelDone[i] = reader.ReadBoolean(); _isLevelDone[i] = true;
                                         _levelTime[i] = reader.ReadInt32();
                                         _levelMoney[i] = reader.ReadInt32();
                                         _levelStars[i] = reader.ReadInt32();
                                     }
-                                    _hasSeenIntro = reader.ReadBoolean();
-                                    _hasSeenEnding1 = reader.ReadBoolean();
-                                    _hasSeenEnding2 = reader.ReadBoolean();
+                                    _hasSeenIntro = reader.ReadBoolean(); _hasSeenIntro = true;
+                                    _hasSeenEnding1 = reader.ReadBoolean(); _hasSeenEnding1 = true;
+                                    _hasSeenEnding2 = reader.ReadBoolean(); _hasSeenEnding2 = true;
                                 }
                             }
                         }

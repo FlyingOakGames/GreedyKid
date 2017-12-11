@@ -155,6 +155,7 @@ namespace GreedyKid
         private Rectangle[] _pauseBackgroundRectangles;
 
         public bool ReturnToLevelSelection = false;
+        public bool GoToEnding = false;
 
         // gameover
         private float _currentGameOverFrameTime = 0.0f;
@@ -498,6 +499,8 @@ namespace GreedyKid
 
             _toNextLevel = false;
             _toTitleScreen = false;
+
+            GoToEnding = false;
 
             // clean memory
             GC.Collect();
@@ -855,7 +858,7 @@ namespace GreedyKid
                     }
                     else
                     {
-                        ReturnToLevelSelection = true;
+                        GoToEnding = true;
                     }
                 }
             }

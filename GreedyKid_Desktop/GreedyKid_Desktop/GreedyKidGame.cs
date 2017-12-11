@@ -194,6 +194,7 @@ namespace GreedyKid
                 case GameState.None:
                     TextureManager.LoadGameplay(GraphicsDevice);
                     TextureManager.LoadIntro(GraphicsDevice);
+                    TextureManager.LoadEnding(GraphicsDevice);
                     TextureManager.LoadFont();
                     SfxManager.Instance.LoadGameplaySfx();                    
 
@@ -256,7 +257,6 @@ namespace GreedyKid
                             else
                                 _endingScreenManager.Reset(EndingType.Secret);
                             _state = GameState.Ending;
-                            TextureManager.LoadEnding(GraphicsDevice);
                         }
                         else if (_titleScreenManager.SelectedLevel >= 0)
                         {
@@ -297,10 +297,10 @@ namespace GreedyKid
 
                     if (_endingScreenManager.ReturnToLevelSelection)
                     {
-                        if (_endingScreenManager.Ending == EndingType.Normal)
-                            SaveManager.Instance.SetEnding1();
-                        else
+                        SaveManager.Instance.SetEnding1();
+                        if (_endingScreenManager.Ending == EndingType.Secret)
                             SaveManager.Instance.SetEnding2();
+                         
                         SaveManager.Instance.Save(_gameplayManager.Building);
 
                         _titleScreenManager = new TitleScreenManager();
@@ -336,6 +336,16 @@ namespace GreedyKid
                         GC.Collect();
 
                         TransitionManager.Instance.AppearTransition();
+                    }
+                    else if (_gameplayManager.GoToEnding)
+                    {
+                        _gameplayManager.GoToEnding = false;
+
+                        if (SaveManager.Instance.HasAllStars())
+                            _endingScreenManager.Reset(EndingType.Secret);
+                        else
+                            _endingScreenManager.Reset(EndingType.Normal);
+                        _state = GameState.Ending;
                     }
 
                     break;

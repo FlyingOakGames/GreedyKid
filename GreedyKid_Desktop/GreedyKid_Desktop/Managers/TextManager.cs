@@ -274,6 +274,14 @@ namespace GreedyKid
         private string[] _ending2 = new string[] { "WATCH SECRET ENDING", "REGARDER LA FIN SECRÈTE", "WATCH SECRET ENDING", "WATCH SECRET ENDING", "WATCH SECRET ENDING", "WATCH SECRET ENDING", "WATCH SECRET ENDING" };
         public string Ending2 { get { return _ending2[(int)_language]; } }
 
+        // *********************** ENDING ***********************
+
+        private string[] _later = new string[] { "YEARS LATER...", "DES ANNÉES PLUS TARD...", "YEARS LATER...", "YEARS LATER...", "YEARS LATER...", "YEARS LATER...", "YEARS LATER..." };
+        public string Later { get { return _later[(int)_language]; } }
+
+        private string[] _theEnd = new string[] { "THE END.", "FIN.", "THE END.", "THE END.", "THE END.", "THE END.", "THE END." };
+        public string TheEnd { get { return _theEnd[(int)_language]; } }
+
         // *********************** LANGUAGE LOADING ***********************
 
         private void LoadCyrillic()
@@ -335,6 +343,9 @@ namespace GreedyKid
             _intro[i] = ConvertToGame(_intro[i]);
             _ending1[i] = ConvertToGame(_ending1[i]);
             _ending2[i] = ConvertToGame(_ending2[i]);
+
+            _later[i] = ConvertToGame(_later[i]);
+            _theEnd[i] = ConvertToGame(_theEnd[i]);
         }
     }
 }

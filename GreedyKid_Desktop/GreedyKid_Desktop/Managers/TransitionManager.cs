@@ -24,6 +24,8 @@ namespace GreedyKid
         private int _transitionFocusY = 100;
         private Rectangle[] _transitionRectangle;
         private bool _isDone = false;
+        private string _text = null;
+        private const int _textDuration = 30;
 
         public static TransitionManager Instance
         {
@@ -87,7 +89,8 @@ namespace GreedyKid
                     _currentTransitionFrameTime -= _transitionFrameTime;
 
                     _currentTransitionFrame++;
-                    if (_currentTransitionFrame >= 3)
+                    if ((_currentTransitionFrame >= 3 && _text == null)
+                        || (_currentTransitionFrame >= 3 + _textDuration && _text != null))
                     {
                         _currentTransitionFrame = 2;
                         _transitionState = TransitionState.None; // should be hidden
@@ -97,7 +100,7 @@ namespace GreedyKid
             }
         }
 
-        public void DisappearTransition(int focusX = 0, int focusY = 0)
+        public void DisappearTransition(int focusX = 0, int focusY = 0, string text = null)
         {
             if (focusX == 0 && focusY == 0)
             {
@@ -105,15 +108,14 @@ namespace GreedyKid
                 focusY = (GreedyKidGame.Height - _transitionRectangle[1].Height) / 2;
             }
 
-            //if (_transitionState == TransitionState.None)
-            {
-                _isDone = false;
-                _transitionFocusX = focusX;
-                _transitionFocusY = focusY;
-                _transitionState = TransitionState.Disappearing;
-                _currentTransitionFrame = 0;
-                _currentTransitionFrameTime = 0.0f;
-            }
+            _isDone = false;
+            _transitionFocusX = focusX;
+            _transitionFocusY = focusY;
+            _transitionState = TransitionState.Disappearing;
+            _currentTransitionFrame = 0;
+            _currentTransitionFrameTime = 0.0f;
+
+            _text = text;
         }
 
         public void AppearTransition(int focusX = 0, int focusY = 0)
@@ -124,15 +126,14 @@ namespace GreedyKid
                 focusY = (GreedyKidGame.Height - _transitionRectangle[1].Height) / 2;
             }
 
-            //if (_transitionState == TransitionState.Hidden)
-            {
-                _isDone = false;
-                _transitionFocusX = focusX;
-                _transitionFocusY = focusY;
-                _transitionState = TransitionState.Appearing;
-                _currentTransitionFrame = 2;
-                _currentTransitionFrameTime = 0.0f;
-            }
+            _isDone = false;
+            _transitionFocusX = focusX;
+            _transitionFocusY = focusY;
+            _transitionState = TransitionState.Appearing;
+            _currentTransitionFrame = 2;
+            _currentTransitionFrameTime = 0.0f;
+
+            _text = null;
         }
 
         public void ForceAppear()
@@ -151,12 +152,24 @@ namespace GreedyKid
 
                 Texture2D textureTransition = TextureManager.Gameplay;
 
-                if (_currentTransitionFrame == 2) // full
+                if (_currentTransitionFrame >= 2) // full
                 {
                     spriteBatch.Draw(textureTransition,
                         new Rectangle(0, 0, GreedyKidGame.Width, GreedyKidGame.Height),
                         _transitionRectangle[0],
                         Color.White);
+
+                    if (_text != null)
+                    {
+                        SpriteFont font = TextManager.Instance.Font;
+                        Vector2 textSize = font.MeasureString(_text);
+                        int textWidth = (int)textSize.X;
+                        int textHeight = (int)textSize.Y;
+
+                        spriteBatch.DrawString(font, _text,
+                            new Vector2(GreedyKidGame.Width / 2 - textWidth / 2, GreedyKidGame.Height / 2 - textHeight / 2),
+                            Color.White);
+                    }
                 }
                 else
                 {

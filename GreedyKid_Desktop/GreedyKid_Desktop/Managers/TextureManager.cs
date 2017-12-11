@@ -114,7 +114,7 @@ namespace GreedyKid
                 Splash = Content.Load<Texture2D>(@"Textures/splash");
         }
 
-        public static void LoadLatinFont()
+        private static void LoadLatinFont()
         {
             if (Content != null)
             {
