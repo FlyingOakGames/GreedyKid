@@ -27,10 +27,10 @@ namespace GreedyKid
         private bool _waitForInnerTransition1 = false;
         private bool _waitForInnerTransition2 = false;
 
-        private const int _commonPartCount = 119;
-        private const int _endPart1Count = 23;
-        private const int _endPart2ACount = 70;
-        private const int _endPart2BCount = 38;
+        private const int _commonPartCount = 136;
+        private const int _endPart1Count = 47;
+        private const int _endPart2ACount = 78;
+        private const int _endPart2BCount = 63;
 
         private const int _part1Width = 280;
         private const int _part1Height = 73;
@@ -66,7 +66,7 @@ namespace GreedyKid
 
             // ending 2
             // 142-211
-            int rowMargin = (int)System.Math.Ceiling(_endPart1Count / (TextureManager.EndingWidth / (float)_part1Width));
+            int rowMargin = (int)System.Math.Ceiling(_endPart1Count / (float)(TextureManager.EndingWidth / _part1Width));
             for (int i = 0; i < _endPart2ACount; i++)
             {
                 int row = i / (TextureManager.EndingWidth / _part1Width);
@@ -75,7 +75,7 @@ namespace GreedyKid
                 _animationFrames[_commonPartCount + _endPart1Count + i] = new Rectangle(col * _part1Width, row * _part1Height + rowMargin * _part1Height, _part1Width, _part1Height);
             }
             // 212-249
-            rowMargin += (int)System.Math.Ceiling(_endPart2ACount / (TextureManager.EndingWidth / (float)_part1Width));
+            rowMargin += (int)System.Math.Ceiling(_endPart2ACount / (float)(TextureManager.EndingWidth / _part1Width));
             for (int i = 0; i < _endPart2BCount; i++)
             {
                 int row = i / (TextureManager.EndingWidth / _part2BWidth);
@@ -85,8 +85,8 @@ namespace GreedyKid
             }
 
             _backgrounds = new Rectangle[2];
-            _backgrounds[0] = new Rectangle(9, 1329, 310, 153);
-            _backgrounds[1] = new Rectangle(350, 1377, 279, 66);
+            _backgrounds[0] = new Rectangle(9, 1476  , 310, 153);
+            _backgrounds[1] = new Rectangle(350, 1524, 279, 66);
         }
 
         public void Reset(EndingType type)
