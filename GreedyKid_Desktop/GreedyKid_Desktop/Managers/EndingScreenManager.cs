@@ -27,6 +27,16 @@ namespace GreedyKid
         private bool _waitForInnerTransition1 = false;
         private bool _waitForInnerTransition2 = false;
 
+        private const int _commonPartCount = 119;
+        private const int _endPart1Count = 23;
+        private const int _endPart2ACount = 70;
+        private const int _endPart2BCount = 38;
+
+        private const int _part1Width = 280;
+        private const int _part1Height = 73;
+        private const int _part2BWidth = 258;
+        private const int _part2BHeight = 68;
+
         public EndingType Ending
         {
             get { return _type; }
@@ -34,42 +44,44 @@ namespace GreedyKid
 
         public EndingScreenManager()
         {
-            _animationFrames = new Rectangle[250];
+            _animationFrames = new Rectangle[_commonPartCount + _endPart1Count + _endPart2ACount + _endPart2BCount];
 
-            // common part 0-118
-            for (int i = 0; i < 119; i++)
+            // common part
+            for (int i = 0; i < _commonPartCount; i++)
             {
-                int row = i / (TextureManager.EndingWidth / 280);
-                int col = i % (TextureManager.EndingWidth / 280);
+                int row = i / (TextureManager.EndingWidth / _part1Width);
+                int col = i % (TextureManager.EndingWidth / _part1Width);
 
-                _animationFrames[i] = new Rectangle(col * 280, row * 73, 280, 73);
+                _animationFrames[i] = new Rectangle(col * _part1Width, row * _part1Height, _part1Width, _part1Height);
             }
 
-            // ending 1 119-141
-            for (int i = 0; i < 23; i++)
+            // ending 1
+            for (int i = 0; i < _endPart1Count; i++)
             {
-                int row = i / (TextureManager.EndingWidth / 280);
-                int col = i % (TextureManager.EndingWidth / 280);
+                int row = i / (TextureManager.EndingWidth / _part1Width);
+                int col = i % (TextureManager.EndingWidth / _part1Width);
 
-                _animationFrames[119 + i] = new Rectangle(col * 280, row * 73, 280, 73);
+                _animationFrames[_commonPartCount + i] = new Rectangle(col * _part1Width, row * _part1Height, _part1Width, _part1Height);
             }
 
             // ending 2
             // 142-211
-            for (int i = 0; i < 70; i++)
+            int rowMargin = (int)System.Math.Ceiling(_endPart1Count / (TextureManager.EndingWidth / (float)_part1Width));
+            for (int i = 0; i < _endPart2ACount; i++)
             {
-                int row = i / (TextureManager.EndingWidth / 280);
-                int col = i % (TextureManager.EndingWidth / 280);
+                int row = i / (TextureManager.EndingWidth / _part1Width);
+                int col = i % (TextureManager.EndingWidth / _part1Width);
 
-                _animationFrames[119 + 23 + i] = new Rectangle(col * 280, row * 73 + 4 * 73, 280, 73);
+                _animationFrames[_commonPartCount + _endPart1Count + i] = new Rectangle(col * _part1Width, row * _part1Height + rowMargin * _part1Height, _part1Width, _part1Height);
             }
             // 212-249
-            for (int i = 0; i < 38; i++)
+            rowMargin += (int)System.Math.Ceiling(_endPart2ACount / (TextureManager.EndingWidth / (float)_part1Width));
+            for (int i = 0; i < _endPart2BCount; i++)
             {
-                int row = i / (TextureManager.EndingWidth / 258);
-                int col = i % (TextureManager.EndingWidth / 280);
+                int row = i / (TextureManager.EndingWidth / _part2BWidth);
+                int col = i % (TextureManager.EndingWidth / _part2BWidth);
 
-                _animationFrames[119 + 23 + 70 + i] = new Rectangle(col * 258, row * 68 + 4 * 73 + 10 * 73, 258, 68);
+                _animationFrames[_commonPartCount + _endPart1Count + _endPart2ACount + i] = new Rectangle(col * _part2BWidth, row * _part2BHeight + rowMargin * _part1Height, _part2BWidth, _part2BHeight);
             }
 
             _backgrounds = new Rectangle[2];
@@ -121,7 +133,7 @@ namespace GreedyKid
             {
                 _waitForInnerTransition1 = false;
                 _waitForInnerTransition2 = true;
-                _currentFrame = 212;
+                _currentFrame = _commonPartCount + _endPart1Count + _endPart2ACount;
                 TransitionManager.Instance.AppearTransition(217, 80);
             }
             if (_waitForInnerTransition2 && TransitionManager.Instance.IsDone)
@@ -136,53 +148,23 @@ namespace GreedyKid
                 _currentFrameTime -= _frameTime;
                 _currentFrame++;
 
-                if (_currentFrame == 208 && _type == EndingType.Secret)
+                if (_currentFrame == _commonPartCount + _endPart1Count + _endPart2ACount - 4 && _type == EndingType.Secret)
                 {
                     _waitForInnerTransition1 = true;
                     TransitionManager.Instance.DisappearTransition(238, 86, TextManager.Instance.Later);
                 }
                 // jump to ending 2
-                if (_currentFrame == 119 && _type == EndingType.Secret)
-                    _currentFrame = 142;
-
-                /*
-                if (_currentFrame == 96)
-                {
-                    SfxManager.Instance.Play(Sfx.Shout1 + RandomHelper.Next(5));
-                    SfxManager.Instance.Play(Sfx.RKOH);
-                    SfxManager.Instance.Play(Sfx.ElevatorOpen);
-                }
-
-                if (_currentFrame == 5 || _currentFrame == 21 || _currentFrame == 37 || _currentFrame == 53 || _currentFrame == 69 || _currentFrame == 85)
-                    SfxManager.Instance.Play(Sfx.TV);
-
-                if (_currentFrame == 115 || _currentFrame == 118 || _currentFrame == 133 || _currentFrame == 140)
-                    SfxManager.Instance.Play(Sfx.MoneyGrab);
-
-                if (_currentFrame == 143 || _currentFrame == 147)
-                    SfxManager.Instance.Play(Sfx.Taunt1);
-
-                if (_currentFrame == 145 || _currentFrame == 149)
-                    SfxManager.Instance.Play(Sfx.Taunt2);
-
-                if (_currentFrame == 173)
-                    SfxManager.Instance.Play(Sfx.HealthPack);
-
-                if (_currentFrame == 179)
-                    SfxManager.Instance.Play(Sfx.CopTaser);
-
-                if (_currentFrame == 196)
-                    SfxManager.Instance.Play(Sfx.HeavyHit);
-                */
+                if (_currentFrame == _commonPartCount && _type == EndingType.Secret)
+                    _currentFrame = _commonPartCount + _endPart1Count;
 
                 // end animation
-                if (_type == EndingType.Normal && _currentFrame == 141 - 3)
+                if (_type == EndingType.Normal && _currentFrame == _commonPartCount + _endPart1Count - 4)
                     Skip();
                 else if (_type == EndingType.Secret && _currentFrame == _animationFrames.Length - 3)
                     Skip();
 
-                if (_type == EndingType.Normal && _currentFrame >= 142)
-                    _currentFrame = 141; // end of ending 1
+                if (_type == EndingType.Normal && _currentFrame >= _commonPartCount + _endPart1Count)
+                    _currentFrame = _commonPartCount + _endPart1Count - 1; // end of ending 1
                 else if (_type == EndingType.Secret && _currentFrame >= _animationFrames.Length)
                     _currentFrame = _animationFrames.Length - 1; // end of ending 2
             }
@@ -192,10 +174,10 @@ namespace GreedyKid
         {
             spriteBatch.Begin(samplerState: SamplerState.PointWrap);
 
-            Texture2D texture = (_currentFrame < 119 ? TextureManager.Ending1 : TextureManager.Ending2);
+            Texture2D texture = (_currentFrame < _commonPartCount ? TextureManager.Ending1 : TextureManager.Ending2);
             Texture2D bgTexture = TextureManager.Ending1;
 
-            if (_currentFrame < 212)
+            if (_currentFrame < _commonPartCount + _endPart1Count + _endPart2ACount)
             {
                 spriteBatch.Draw(bgTexture,
                     new Rectangle(9, 16, _backgrounds[0].Width, _backgrounds[0].Height),
