@@ -486,6 +486,11 @@ namespace GreedyKidEditor
 
         private void MenuItem_Click_1(object sender, ExecutedRoutedEventArgs e)
         {
+            SaveAsOrSave();
+        }
+
+        private void SaveAsOrSave()
+        {
             if (_saveFile == String.Empty)
             {
                 System.Windows.Forms.SaveFileDialog saveFileDialog = new System.Windows.Forms.SaveFileDialog();
@@ -889,11 +894,29 @@ namespace GreedyKidEditor
             return rooms;
         }
 
-        private void MenuItem_Click_6(object sender, RoutedEventArgs e)
+        private bool Export(bool forWorkshop = false)
         {
             if (CheckExport())
             {
                 string path = AppDomain.CurrentDomain.BaseDirectory + "..\\Content\\Workshop\\" + _building.Identifier;
+                if (forWorkshop)
+                {
+                    path = Path.GetTempPath() + "GreedyKidWorkshopUpload";
+
+                    if (Directory.Exists(path))
+                    {
+                        DirectoryInfo di = new DirectoryInfo(path);
+
+                        foreach (FileInfo file in di.GetFiles())
+                        {
+                            file.Delete();
+                        }
+                        foreach (DirectoryInfo dir in di.GetDirectories())
+                        {
+                            dir.Delete(true);
+                        }
+                    }
+                }
                 if (!Directory.Exists(path))
                     Directory.CreateDirectory(path);
 
@@ -926,16 +949,19 @@ namespace GreedyKidEditor
                 loadedFile.Text = DateTime.Now.ToString("HH:mm") + ": Exported " + _building.Name + " (path to file: " + path + ")";
 
                 System.Media.SystemSounds.Beep.Play();
+
+                return true;
             }
             else
             {
                 MessageBox.Show("The building hasn't been exported because of the listed warning(s).");
+                return false;
             }
         }
 
-        private void MenuItem_Click_7(object sender, RoutedEventArgs e)
+        private void MenuItem_Click_6(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Not available yet, but you can share levels exported as test.");
+            Export();
         }
 
         private void checkBox_Checked(object sender, RoutedEventArgs e)
@@ -1207,6 +1233,28 @@ namespace GreedyKidEditor
                 level.RobocopCount--;
                 level.RobocopCount = Math.Max(level.RobocopCount, 0);
                 robocopTextBox.Text = level.RobocopCount.ToString();
+            }
+        }
+
+        private void MenuItem_Click_7(object sender, RoutedEventArgs e)
+        {
+            // save first
+            if (MessageBox.Show("Your building will be saved first, do you wish to continue?", "Steam Workshop upload", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                SaveAsOrSave();
+
+                // then export to temp upload folder and report errors
+                if (Export(true))
+                {
+                    // show upload configuration
+
+                    // verify preview image
+
+                    // save
+
+                    // upload
+                    //SteamworksHelper.Instance.UploadBuilding(_building);
+                }
             }
         }
     }
