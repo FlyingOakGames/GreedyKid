@@ -1,17 +1,25 @@
-﻿using System.Collections.Generic;
+﻿using GreedyKidEditor.Helpers;
+using System.Collections.Generic;
 using System.IO;
 
 namespace GreedyKidEditor
 {
     public sealed class Building
     {
+        // workshop data
 #if DEVMODE
         public string Identifier = "Default";
 #else
         public string Identifier = "NotUploadedToWorkshopYet";
 #endif
-        public string Name = "";
+        public string Description = "Describe your building here";
+        public string LanguageCode = "english";
+        public WorkshopItemVisibility Visibility = WorkshopItemVisibility.Private;
+        public string PreviewImagePath = "";
 
+
+        public string Name = "";
+        
         public List<Level> Levels = new List<Level>();
 
         public Building()
@@ -28,6 +36,10 @@ namespace GreedyKidEditor
         public void Save(BinaryWriter writer, bool export = false)
         {
             writer.Write(Identifier);
+            writer.Write(Description);
+            writer.Write(LanguageCode);
+            writer.Write((int)Visibility);
+            writer.Write(PreviewImagePath);
 
             writer.Write(Name);
 
@@ -54,6 +66,10 @@ namespace GreedyKidEditor
             Levels.Clear();
 
             Identifier = reader.ReadString();
+            Description = reader.ReadString();
+            LanguageCode = reader.ReadString();
+            Visibility = (WorkshopItemVisibility)reader.ReadInt32();
+            PreviewImagePath = reader.ReadString();
 
             Name = reader.ReadString();
 
