@@ -12,6 +12,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Windows.Media;
+using GreedyKidEditor.Helpers;
 
 namespace GreedyKidEditor
 {
@@ -153,6 +154,20 @@ namespace GreedyKidEditor
             exportSeparator.Visibility = Visibility.Collapsed;
 #else
             this.Title = this.Title + " - DEV MODE";
+#endif
+
+            SteamworksReturn steam = SteamworksHelper.Instance.Init();
+            if (steam == SteamworksReturn.RestartingThroughSteam)
+            {
+                MessageBox.Show(this, "Steam must be running, it will now be started and the editor will restart.", "Steam required", MessageBoxButton.OK);
+                this.Close();
+            }
+#if !DEBUG
+            else if (steam == SteamworksReturn.CantInit)
+            {
+                MessageBox.Show(this, "Steam could not be found. Try starting Steam before starting the game. If the error persists, please visit the Steam forum.", "Error", MessageBoxButton.OK);
+                this.Close();
+            }
 #endif
         }
 

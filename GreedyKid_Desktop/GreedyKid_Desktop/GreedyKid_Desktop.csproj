@@ -43,7 +43,9 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Helper\AchievementHelper.cs" />
     <Compile Include="Helper\HashHelper.cs" />
+    <Compile Include="Helper\Platform\SteamworksHelper.cs" />
     <Compile Include="Helper\SystemHelper.cs" />
     <Compile Include="Helper\UIHelper.cs" />
     <Compile Include="Managers\EndingScreenManager.cs" />

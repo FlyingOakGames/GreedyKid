@@ -124,6 +124,7 @@
     <Compile Include="Building\Room.cs" />
     <Compile Include="Building\RoomDoor.cs" />
     <Compile Include="Helpers\HashHelper.cs" />
+    <Compile Include="Helpers\SteamworksHelper.cs" />
     <Compile Include="Helpers\SystemHelper.cs" />
     <Compile Include="TextInputDialog.xaml.cs">
       <DependentUpon>TextInputDialog.xaml</DependentUpon>
@@ -185,9 +186,9 @@
     <Resource Include="Resources\Icon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="steam_appid.txt">
+    <None Include="steam_appid.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
+    </None>
     <None Include="x64\CSteamworks.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

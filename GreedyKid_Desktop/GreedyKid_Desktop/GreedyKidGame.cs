@@ -141,6 +141,12 @@ namespace GreedyKid
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            float gameTimeF = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+#if DESKTOP
+            Helper.SteamworksHelper.Instance.Update(gameTimeF);
+#endif
+
             if (ShouldExit)
                 Exit();
 
@@ -177,9 +183,7 @@ namespace GreedyKid
 
             previousKeyboardState = keyboardState;
 #endif
-
-            float gameTimeF = (float)gameTime.ElapsedGameTime.TotalSeconds;
-
+            
             MicrophoneManager.Instance.Update(gameTimeF);
             MusicManager.Instance.Update(gameTimeF);
 

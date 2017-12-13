@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GreedyKid.Helper;
+using System;
 
 namespace GreedyKid
 {
@@ -20,13 +21,18 @@ namespace GreedyKid
         [STAThread]
         static void Main(string[] args)
         {
-#if PLAYSTATION4
-            Inputs.GamePadInputsHandler.PreferredButtonType = Inputs.ButtonType.PlayStation;
-            PlatformHelper.PlayStation4.InitilizaServices();
-#elif XBOXONE
-            PlatformHelper.XboxOne.InitializeUserEvents();
-            PlatformHelper.XboxOne.InitializeStatsAndEvents();
-            Inputs.GamePadInputsHandler.PreferredButtonType = Inputs.ButtonType.Xbox;
+#if DESKTOP
+            SteamworksReturn steam = SteamworksHelper.Instance.Init();
+            if (steam == SteamworksReturn.RestartingThroughSteam)
+                return;
+#if !DEBUG && DESKTOP
+            else if (steam == SteamworksReturn.CantInit)
+            {
+                SDL_ShowSimpleMessageBox((uint)SDL_MessageBoxFlags.SDL_MESSAGEBOX_ERROR, "Error", "Steam could not be found. Try starting Steam before starting the game. If the error persists, please visit the Steam forum.", IntPtr.Zero);
+                return;
+            }
+#endif
+
 #endif
 
 #if !DEBUG && DESKTOP

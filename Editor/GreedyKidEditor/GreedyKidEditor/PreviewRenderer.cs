@@ -454,6 +454,10 @@ namespace GreedyKidEditor
 
         protected override void Update(GameTime gameTime)
         {
+            float elaspedSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            Helpers.SteamworksHelper.Instance.Update(elaspedSeconds);
+
             _form.Location = new System.Drawing.Point(-4000, -4000);
             if (Width != graphics.PreferredBackBufferWidth || Height != graphics.PreferredBackBufferHeight)
             {
@@ -536,9 +540,7 @@ namespace GreedyKidEditor
                     _lockedRoom.RightMargin = 37 - (_mouseState.Position.X - 12) / 8;
                     _lockedRoom.RightMargin = Math.Max(0, _lockedRoom.RightMargin);
                 }
-            }
-
-            float elaspedSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            }            
 
             _currentFrameTime += elaspedSeconds;
             if (_currentFrameTime > 0.1f)
