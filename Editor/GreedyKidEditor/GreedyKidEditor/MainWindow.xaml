@@ -79,7 +79,7 @@
                     </Button.RenderTransform>
                 </Button>
 
-                <GroupBox x:Name="groupBox_Copy8" Header="Cops spwan" Margin="10,0,10,234" VerticalAlignment="Bottom" Height="137" FontWeight="Bold">
+                <GroupBox x:Name="groupBox_Copy8" Header="Cops spawn" Margin="10,0,10,234" VerticalAlignment="Bottom" Height="137" FontWeight="Bold">
                     <Grid>
                         <Slider x:Name="timeBeforeCopSlider" Margin="10,36,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="123" Maximum="239" SmallChange="1" ValueChanged="timeBeforeCopSlider_ValueChanged"/>
                         <Label x:Name="label1" Content="Spawn time (sec)" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" FontWeight="Normal"/>
@@ -115,7 +115,7 @@
                         <Label x:Name="label1_Copy1" Content="Cops (taser)" HorizontalAlignment="Left" Margin="10,87,0,0" VerticalAlignment="Top" FontWeight="Normal"/>
                     </Grid>
                 </GroupBox>
-                <GroupBox x:Name="groupBox_Copy9" Header="Tactical Cops spwan" Margin="10,0,10,122" VerticalAlignment="Bottom" Height="107" FontWeight="Bold">
+                <GroupBox x:Name="groupBox_Copy9" Header="Tactical Cops spawn" Margin="10,0,10,122" VerticalAlignment="Bottom" Height="107" FontWeight="Bold">
                     <Grid>
                         <Slider x:Name="timeBeforeSwatSlider" Margin="10,36,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="123" Maximum="239" SmallChange="1" ValueChanged="timeBeforeSwatSlider_ValueChanged"/>
                         <Label x:Name="label2" Content="Spawn time (sec)" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" FontWeight="Normal"/>
@@ -137,7 +137,7 @@
                         <Label x:Name="label1_Copy2" Content="Tactical cops" HorizontalAlignment="Left" Margin="10,56,0,0" VerticalAlignment="Top" FontWeight="Normal"/>
                     </Grid>
                 </GroupBox>
-                <GroupBox x:Name="groupBox_Copy10" Header="Robot-Cop spwan" Margin="10,0,10,10" VerticalAlignment="Bottom" Height="107" FontWeight="Bold">
+                <GroupBox x:Name="groupBox_Copy10" Header="Robot-Cop spawn" Margin="10,0,10,10" VerticalAlignment="Bottom" Height="107" FontWeight="Bold">
                     <Grid>
                         <Slider x:Name="timeBeforeRobocopSlider" Margin="10,36,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="123" Maximum="239" SmallChange="1" ValueChanged="timeBeforeRobocopSlider_ValueChanged"/>
                         <Label x:Name="label3" Content="Spawn time (sec)" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" FontWeight="Normal"/>
