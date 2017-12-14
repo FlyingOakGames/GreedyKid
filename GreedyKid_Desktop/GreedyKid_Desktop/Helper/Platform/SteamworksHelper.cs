@@ -223,6 +223,16 @@ namespace GreedyKid.Helper
             }
         }
 
+        // ************************* STEAM WORKSHOP *************************
+
+        public string WorkshopPath
+        {
+            get
+            {
+                return "../../workshop/content/770630/";
+            }
+        }
+
         // ************ ACHIEVEMENTS ****************
 
         private Callback<UserStatsReceived_t> m_UserStatsReceived;

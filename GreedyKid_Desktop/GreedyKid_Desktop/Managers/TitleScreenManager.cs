@@ -33,6 +33,7 @@ namespace GreedyKid
         public bool StartGame = false;
         public bool ShouldLoadBuilding = false;
         public string RequiredBuildingIdentifier = "Default";
+        public bool IsSteamWorkshopBuilding = false;
 
         public bool IsWorkshopBuilding = false;
 
@@ -63,6 +64,7 @@ namespace GreedyKid
 
         private string[] _workshopIdentifiers = null;
         private string[] _workshopBuildingNames = null;
+        private bool[] _workshopSteamFolder = null;
         private int _workshopOffset = 0;
         private int _workshopMaxItem = 8;
 
@@ -129,16 +131,63 @@ namespace GreedyKid
             }
             _numberRectangle[10] = new Rectangle(212, TextureManager.GameplayHeight - 198, 17, 13);
 
+            ScanWorkshop();
+        }
+
+        private void ScanWorkshop()
+        {
             // workshop scan
+            _workshopOffset = 0;
             _workshopIdentifiers = null;
             _workshopBuildingNames = null;
+            _workshopSteamFolder = null;
+
+            // local files
+            string[] localWorkshopIdentifiers = new string[0];
+            string[] localWorkshopBuildingNames = new string[0];
             if (System.IO.Directory.Exists("Content/Workshop/"))
             {
-                _workshopIdentifiers = System.IO.Directory.GetDirectories("Content/Workshop/");
-                _workshopBuildingNames = new string[_workshopIdentifiers.Length];
-                for (int i = 0; i < _workshopIdentifiers.Length; i++)
+                localWorkshopIdentifiers = System.IO.Directory.GetDirectories("Content/Workshop/");
+                localWorkshopBuildingNames = new string[localWorkshopIdentifiers.Length];
+                for (int i = 0; i < localWorkshopIdentifiers.Length; i++)
                 {
-                    Building.GetName(_workshopIdentifiers[i], out _workshopIdentifiers[i], out _workshopBuildingNames[i]);
+                    Building.GetName(localWorkshopIdentifiers[i], out localWorkshopIdentifiers[i], out localWorkshopBuildingNames[i]);
+                }
+            }
+
+            // steam files
+            string[] steamWorkshopIdentifiers = new string[0];
+            string[] steamWorkshopBuildingNames = new string[0];
+            string workshopPath = Helper.SteamworksHelper.Instance.WorkshopPath;
+            if (System.IO.Directory.Exists(workshopPath)) // dir ?
+            {
+                steamWorkshopIdentifiers = System.IO.Directory.GetDirectories(workshopPath);
+                steamWorkshopBuildingNames = new string[steamWorkshopIdentifiers.Length];
+                for (int i = 0; i < steamWorkshopIdentifiers.Length; i++)
+                {
+                    Building.GetName(steamWorkshopIdentifiers[i], out steamWorkshopIdentifiers[i], out steamWorkshopBuildingNames[i]);
+                }
+            }
+
+            // mergning
+            if (localWorkshopIdentifiers.Length + steamWorkshopIdentifiers.Length > 0)
+            {
+                _workshopIdentifiers = new string[localWorkshopIdentifiers.Length + steamWorkshopIdentifiers.Length];
+                _workshopBuildingNames = new string[localWorkshopBuildingNames.Length + steamWorkshopBuildingNames.Length];
+                _workshopSteamFolder = new bool[localWorkshopBuildingNames.Length + steamWorkshopBuildingNames.Length];
+
+                for (int i = 0; i < localWorkshopIdentifiers.Length; i++)
+                {
+                    _workshopIdentifiers[i] = localWorkshopIdentifiers[i];
+                    _workshopBuildingNames[i] = localWorkshopBuildingNames[i];
+                    _workshopSteamFolder[i] = false;
+                }
+
+                for (int i = 0; i < steamWorkshopIdentifiers.Length; i++)
+                {
+                    _workshopIdentifiers[localWorkshopIdentifiers.Length + i] = steamWorkshopIdentifiers[i];
+                    _workshopBuildingNames[localWorkshopIdentifiers.Length + i] = steamWorkshopBuildingNames[i];
+                    _workshopSteamFolder[localWorkshopIdentifiers.Length + i] = true;
                 }
             }
         }
@@ -261,19 +310,8 @@ namespace GreedyKid
                     case RequestedTransition.ToWorkshopMenu:
                         _selectionOption = 0;
                         _state = TitleScreenState.SteamWorkshop;
-                        // scan folder and load level names
-                        _workshopOffset = 0;
-                        _workshopIdentifiers = null;
-                        _workshopBuildingNames = null;
-                        if (System.IO.Directory.Exists("Content/Workshop/"))
-                        {
-                            _workshopIdentifiers = System.IO.Directory.GetDirectories("Content/Workshop/");
-                            _workshopBuildingNames = new string[_workshopIdentifiers.Length];
-                            for (int i = 0; i < _workshopIdentifiers.Length; i++)
-                            {
-                                Building.GetName(_workshopIdentifiers[i], out _workshopIdentifiers[i], out _workshopBuildingNames[i]);
-                            }
-                        }
+                        // scan folder and load level names                        
+                        ScanWorkshop();
                         TransitionManager.Instance.AppearTransition();
                         break;
                     case RequestedTransition.ToPlayMenuFromWorkshop:
@@ -444,6 +482,7 @@ namespace GreedyKid
                         ShouldLoadBuilding = true;
                         IsWorkshopBuilding = true;
                         RequiredBuildingIdentifier = _workshopIdentifiers[_selectionOption + _workshopOffset];
+                        IsSteamWorkshopBuilding = _workshopSteamFolder[_selectionOption + _workshopOffset];
                     }
                     break;
             }

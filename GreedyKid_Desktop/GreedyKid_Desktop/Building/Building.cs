@@ -36,15 +36,24 @@ namespace GreedyKid
             }
         }
 
-        public void Load(string buildingIdentifier)
+        public void Load(string buildingIdentifier, bool isSteamWorkshop)
         {
             _currentBuildingPath = _defaultBuildingPath;
             _currentLevelPath = _defaultLevelPath;
 
             if (buildingIdentifier != "Default")
             {
-                _currentBuildingPath = "Content\\Workshop\\" + buildingIdentifier + "\\building";
-                _currentLevelPath = "Content\\Workshop\\" + buildingIdentifier + "\\level_";
+                if (isSteamWorkshop)
+                {
+                    string workshopPath = Helper.SteamworksHelper.Instance.WorkshopPath;
+                    _currentBuildingPath = workshopPath + buildingIdentifier + "/building"; // wrong dir
+                    _currentLevelPath = workshopPath + buildingIdentifier + "/level_"; // wrong dir
+                }
+                else
+                {
+                    _currentBuildingPath = "Content/Workshop/" + buildingIdentifier + "/building";
+                    _currentLevelPath = "Content/Workshop/" + buildingIdentifier + "/level_";
+                }
             }
 
             using (GZipStream gzipStream = new GZipStream(TitleContainer.OpenStream(_currentBuildingPath), CompressionMode.Decompress))

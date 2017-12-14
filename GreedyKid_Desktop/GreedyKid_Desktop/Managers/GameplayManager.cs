@@ -388,10 +388,10 @@ namespace GreedyKid
             }
         }
 
-        public void LoadBuilding(string identifier)
+        public void LoadBuilding(string identifier, bool isSteamWorkshop)
         {            
             _building = new Building();
-            _building.Load(identifier);
+            _building.Load(identifier, isSteamWorkshop);
 
             SaveManager.Instance.Load(_building);      
         }

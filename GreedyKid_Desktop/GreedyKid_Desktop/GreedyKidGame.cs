@@ -244,7 +244,7 @@ namespace GreedyKid
                         if (_gameplayManager == null || _gameplayManager.BuildingIdentifier != _titleScreenManager.RequiredBuildingIdentifier)
                         {
                             _gameplayManager = new GameplayManager();
-                            _gameplayManager.LoadBuilding(_titleScreenManager.RequiredBuildingIdentifier);                            
+                            _gameplayManager.LoadBuilding(_titleScreenManager.RequiredBuildingIdentifier, _titleScreenManager.IsSteamWorkshopBuilding);                            
                             _titleScreenManager.SetBuilding(_gameplayManager.Building);
                         }
 
