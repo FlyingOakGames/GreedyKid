@@ -42,7 +42,7 @@
                     </MenuItem.InputBindings>
                 </MenuItem>
                 <MenuItem Header="Export to test in-game (will appear in workshop menu)" Click="MenuItem_Click_6" />
-                <MenuItem Header="Upload to Steam Workshop" Click="MenuItem_Click_7" />
+                <MenuItem x:Name="workshopMenu" Header="Upload to Steam Workshop" Click="MenuItem_Click_7" />
                 <Separator x:Name="exportSeparator"/>
                 <MenuItem Header="Exit" Click="MenuItem_Click"/>
             </MenuItem>

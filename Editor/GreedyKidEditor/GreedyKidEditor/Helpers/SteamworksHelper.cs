@@ -63,9 +63,14 @@ namespace GreedyKidEditor.Helpers
 
         // ************************* STEAM INIT *************************
 
-        public bool _steamworksReady = false;
+        private bool _steamworksReady = false;
 
         private CGameID m_GameID;
+
+        public bool IsReady
+        {
+            get { return _steamworksReady; }
+        }
 
         public SteamworksReturn Init()
         {
@@ -237,7 +242,6 @@ namespace GreedyKidEditor.Helpers
         // ************************* WORKSHOP UPLOAD *************************
 
         private Building _buildingToUpload = null;
-        private string _buildingPath = "";
 
         private CallResult<CreateItemResult_t> m_createItemResult;
         private CallResult<SubmitItemUpdateResult_t> m_submitItemUpdateResult;
@@ -245,14 +249,28 @@ namespace GreedyKidEditor.Helpers
         private WorkshopUploadStatus _uploadStatus = WorkshopUploadStatus.None;
         private WorkshopUploadReturn _uploadResult = WorkshopUploadReturn.None;
 
-        public void UploadBuilding(Building building, string exportedPath)
+        public WorkshopUploadStatus UploadStatus
+        {
+            get { return _uploadStatus; }
+        }
+
+        public WorkshopUploadReturn UploadResult
+        {
+            get { return _uploadResult; }
+        }
+
+        public string UploadID
+        {
+            get { return _buildingToUpload.Identifier; }
+        }
+
+        public void UploadBuilding(Building building)
         {
             if (_uploadStatus == WorkshopUploadStatus.None)
             {
                 _uploadStatus = WorkshopUploadStatus.Uploading;
                 _uploadResult = WorkshopUploadReturn.None;
                 _buildingToUpload = building;
-                _buildingPath = exportedPath;
 
                 PublishedFileId_t itemID = new PublishedFileId_t();
                 bool exist = false;
@@ -335,7 +353,7 @@ namespace GreedyKidEditor.Helpers
                         && SteamUGC.SetItemDescription(UGCHandle, _buildingToUpload.Description)
                         && SteamUGC.SetItemUpdateLanguage(UGCHandle, _buildingToUpload.LanguageCode)
                         && SteamUGC.SetItemVisibility(UGCHandle, visibility)
-                        && SteamUGC.SetItemContent(UGCHandle, "C:\\Temp")
+                        && SteamUGC.SetItemContent(UGCHandle, System.IO.Path.GetTempPath() + "GreedyKidWorkshopUpload")
                         && SteamUGC.SetItemPreview(UGCHandle, _buildingToUpload.PreviewImagePath))
                     {
                         // upload
@@ -390,6 +408,9 @@ namespace GreedyKidEditor.Helpers
             // everything's fine
             _uploadStatus = WorkshopUploadStatus.Success;
             _uploadResult = WorkshopUploadReturn.None;
+
+            if (pCallback.m_bUserNeedsToAcceptWorkshopLegalAgreement)
+                _uploadResult = WorkshopUploadReturn.NeedLegalAgreement;
         }
     }
 }

@@ -452,6 +452,8 @@ namespace GreedyKidEditor
             base.UnloadContent();
         }
 
+        public static bool BlockClick = false;
+
         protected override void Update(GameTime gameTime)
         {
             float elaspedSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -490,18 +492,18 @@ namespace GreedyKidEditor
             _hasBDown = false;
             _hasNDown = false;
 
-            if (_prevMouseState.ScrollWheelValue == 0 && _mouseState.ScrollWheelValue < _prevMouseState.ScrollWheelValue)
+            if (_prevMouseState.ScrollWheelValue == 0 && _mouseState.ScrollWheelValue < _prevMouseState.ScrollWheelValue && !BlockClick)
                 _hasWheelDown = true;
-            else if (_prevMouseState.ScrollWheelValue == 0 && _mouseState.ScrollWheelValue > _prevMouseState.ScrollWheelValue)
+            else if (_prevMouseState.ScrollWheelValue == 0 && _mouseState.ScrollWheelValue > _prevMouseState.ScrollWheelValue && !BlockClick)
                 _hasWheelUp = true;
 
-            if (_prevMouseState.LeftButton == ButtonState.Released && _mouseState.LeftButton == ButtonState.Pressed)
+            if (_prevMouseState.LeftButton == ButtonState.Released && _mouseState.LeftButton == ButtonState.Pressed && !BlockClick)
                 _hasLeftClick = true;
 
-            if (_prevMouseState.RightButton == ButtonState.Released && _mouseState.RightButton == ButtonState.Pressed)
+            if (_prevMouseState.RightButton == ButtonState.Released && _mouseState.RightButton == ButtonState.Pressed && !BlockClick)
                 _hasRightClick = true;
 
-            if (!_prevSpaceState && SpaceState)
+            if (!_prevSpaceState && SpaceState && !BlockClick)
                 _hasSpaceDown = true;
             else if (!SpaceState)
             {
@@ -509,13 +511,13 @@ namespace GreedyKidEditor
                 _lockedRoom = null;
             }
 
-            if (!_prevCState && CState)
+            if (!_prevCState && CState && !BlockClick)
                 _hasCDown = true;
-            if (!_prevVState && VState)
+            if (!_prevVState && VState && !BlockClick)
                 _hasVDown = true;
-            if (!_prevBState && BState)
+            if (!_prevBState && BState && !BlockClick)
                 _hasBDown = true;
-            if (!_prevNState && NState)
+            if (!_prevNState && NState && !BlockClick)
                 _hasNDown = true;
 
             _prevMouseState = _mouseState;

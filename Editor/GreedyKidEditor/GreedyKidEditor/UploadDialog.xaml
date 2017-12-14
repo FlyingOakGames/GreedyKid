@@ -1,0 +1,26 @@
+﻿<Window x:Class="GreedyKidEditor.UploadDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GreedyKidEditor"
+        mc:Ignorable="d"
+        Title="Uploading..." Height="195.938" Width="546.562" ResizeMode="NoResize">
+    <Grid>
+        <Label x:Name="label" Content="Please wait while your building is being uploaded..." HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="521"/>
+        <Button x:Name="button" Content="Close" HorizontalAlignment="Left" Margin="229,122,0,0" VerticalAlignment="Top" Width="75" Click="button_Click" Visibility="Hidden"/>
+        <Label x:Name="label2" Content="" HorizontalAlignment="Left" Margin="10,62,0,0" VerticalAlignment="Top" Width="521"/>
+        <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="16,65,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Visibility="Hidden">
+            <Run>You must agree with the </Run>
+            <Hyperlink x:Name="hyperlink" Click="hyperlink_Click">Steam Workshop Legal Agreement</Hyperlink>
+            <Run> before your building can be visible online (you must open this link in your web browser while being logged in Steam).</Run>
+        </TextBlock>
+        <TextBlock x:Name="textBlock2" HorizontalAlignment="Left" Margin="16,65,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Visibility="Hidden">
+            <Run>You can review your Workshop item </Run>
+            <Hyperlink x:Name="hyperlink2" Click="hyperlink2_Click">here</Hyperlink>
+            <Run> (you must open this link in your web browser while being logged in Steam).</Run>
+        </TextBlock>
+        <ProgressBar x:Name="progressBar" HorizontalAlignment="Left" Height="21" Margin="16,36,0,0" VerticalAlignment="Top" Width="503"/>
+
+    </Grid>
+</Window>

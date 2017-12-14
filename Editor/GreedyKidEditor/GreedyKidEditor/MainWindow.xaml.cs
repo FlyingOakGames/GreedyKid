@@ -169,6 +169,10 @@ namespace GreedyKidEditor
                 this.Close();
             }
 #endif
+            if (SteamworksHelper.Instance.IsReady)
+                workshopMenu.Visibility = Visibility.Visible;
+            else
+                workshopMenu.Visibility = Visibility.Collapsed;
         }
 
         protected override void OnSourceInitialized(EventArgs e)
@@ -1239,6 +1243,7 @@ namespace GreedyKidEditor
         private void MenuItem_Click_7(object sender, RoutedEventArgs e)
         {
             // save first
+            PreviewRenderer.BlockClick = true;
             if (MessageBox.Show("Your building will be saved first, do you wish to continue?", "Steam Workshop upload", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 SaveAsOrSave();
@@ -1247,15 +1252,38 @@ namespace GreedyKidEditor
                 if (Export(true))
                 {
                     // show upload configuration
+                    WorkshopConfigDialog dialog = new WorkshopConfigDialog();
+                    dialog.ItemName = _building.Name;
+                    dialog.ItemDescription = _building.Description;
+                    dialog.ItemVisibility = _building.Visibility;
+                    dialog.ItemLanguageCode = _building.LanguageCode;
+                    dialog.ItemPreviewPath = _building.PreviewImagePath;
+                    dialog.ItemAlreadyExist = false;
+                    try
+                    {
+                        long.Parse(_building.Identifier);
+                        dialog.ItemAlreadyExist = true;
+                    }
+                    catch (Exception) { }
 
-                    // verify preview image
+                    if (dialog.ShowDialog() == true)
+                    {
+                        _building.Name = dialog.ItemName;
+                        _building.Description = dialog.ItemDescription;
+                        _building.Visibility = dialog.ItemVisibility;
+                        _building.LanguageCode = dialog.ItemLanguageCode;
+                        _building.PreviewImagePath = dialog.ItemPreviewPath;
 
-                    // save
+                        SaveAsOrSave();
 
-                    // upload
-                    //SteamworksHelper.Instance.UploadBuilding(_building);
+                        // upload
+                        SteamworksHelper.Instance.UploadBuilding(_building);
+                        UploadDialog uploadDialog = new UploadDialog();
+                        uploadDialog.ShowDialog();                                               
+                    }
                 }
             }
+            PreviewRenderer.BlockClick = false;
         }
     }
 }

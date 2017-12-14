@@ -129,6 +129,9 @@
     <Compile Include="TextInputDialog.xaml.cs">
       <DependentUpon>TextInputDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UploadDialog.xaml.cs">
+      <DependentUpon>UploadDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WorkshopConfigDialog.xaml.cs">
       <DependentUpon>WorkshopConfigDialog.xaml</DependentUpon>
     </Compile>
@@ -148,6 +151,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="TextInputDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UploadDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

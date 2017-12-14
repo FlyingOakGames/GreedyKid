@@ -68,6 +68,17 @@ namespace GreedyKidEditor
             get { return pathLabel.Content.ToString(); }
         }
 
+        public bool ItemAlreadyExist
+        {
+            set
+            {
+                if (value)
+                    label9.Visibility = Visibility.Visible;
+                else
+                    label9.Visibility = Visibility.Hidden;
+            }
+        }
+
         public string ItemLanguageCode
         {
             set
@@ -96,6 +107,12 @@ namespace GreedyKidEditor
         private void button_Click(object sender, RoutedEventArgs e)
         {
             // openfiledialog            
+            System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            openFileDialog.Filter = "Image file (*.png;*.jpg;*.gif)|*.png;*.jpg;*.gif";
+            if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                ItemPreviewPath = openFileDialog.FileName;
+            }
         }
 
         private void button2_Click(object sender, RoutedEventArgs e)
@@ -105,9 +122,23 @@ namespace GreedyKidEditor
 
         private void button1_Click(object sender, RoutedEventArgs e)
         {
-            // check that nothing is empty and that preview exists
+            bool ok = true;
 
-            DialogResult = true;
+            // check that nothing is empty and that preview exists
+            if (ItemName.Length == 0 || ItemDescription.Length == 0)
+            {
+                MessageBox.Show(this, "Name and description can't be empty.", "Missing information");
+                ok = false;
+            }
+
+            if (!System.IO.File.Exists(ItemPreviewPath))
+            {
+                MessageBox.Show(this, "Preview image can't be found.", "Missing information");
+                ok = false;
+            }
+
+            if (ok)
+                DialogResult = true;
         }
     }
 }
