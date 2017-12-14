@@ -640,6 +640,7 @@ namespace GreedyKidEditor
                     {
                         using (BinaryWriter writer = new BinaryWriter(gzipStream))
                         {
+                            _building.Identifier = "Default";
                             _building.Save(writer, true);
                         }
                     }
