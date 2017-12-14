@@ -26,11 +26,11 @@ namespace GreedyKidEditor
 
         private Thread mouseThread;        
 
-        private string _saveFile = "";
+        private static string _saveFile = "";
 
         private const string _latestSave = "latest";
 
-        private Building _building = new Building("New building");        
+        private static Building _building = new Building("New building");        
 
 #if !DEBUG
         private void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs unhandledExceptionEventArgs)
@@ -490,12 +490,13 @@ namespace GreedyKidEditor
 
         private void MenuItem_Click_1(object sender, ExecutedRoutedEventArgs e)
         {
-            SaveAsOrSave();
+           if (SaveAsOrSave())
+                loadedFile.Text = DateTime.Now.ToString("HH:mm") + ": Saved " + _building.Name + " (path to file: " + _saveFile + ")";
         }
 
-        private void SaveAsOrSave()
+        public static bool SaveAsOrSave(bool forceSaveAs = false)
         {
-            if (_saveFile == String.Empty)
+            if (_saveFile == String.Empty || forceSaveAs)
             {
                 System.Windows.Forms.SaveFileDialog saveFileDialog = new System.Windows.Forms.SaveFileDialog();
                 saveFileDialog.Filter = "Building file (*.gdk)|*.gdk";
@@ -504,27 +505,20 @@ namespace GreedyKidEditor
                     _saveFile = saveFileDialog.FileName;
                 }
                 else
-                    return;
+                    return false;
             }
 
             Save();
+            return true;
         }
 
         private void MenuItem_Click_3(object sender, RoutedEventArgs e)
         {
-            System.Windows.Forms.SaveFileDialog saveFileDialog = new System.Windows.Forms.SaveFileDialog();
-            saveFileDialog.Filter = "Building file (*.gdk)|*.gdk";
-            if (saveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                _saveFile = saveFileDialog.FileName;
-
-                Save();
-            }
-            else
-                return;
+            if (SaveAsOrSave(true))
+                loadedFile.Text = DateTime.Now.ToString("HH:mm") + ": Saved " + _building.Name + " (path to file: " + _saveFile + ")";
         }
 
-        private void Save()
+        private static void Save()
         {
             using (FileStream fs = new FileStream(_saveFile, FileMode.OpenOrCreate))
             {
@@ -545,7 +539,7 @@ namespace GreedyKidEditor
                 }
             }
 
-            loadedFile.Text = DateTime.Now.ToString("HH:mm") + ": Saved " + _building.Name + " (path to file: " + _saveFile + ")";
+            
 
             System.Media.SystemSounds.Beep.Play();
         }
@@ -1246,40 +1240,44 @@ namespace GreedyKidEditor
             PreviewRenderer.BlockClick = true;
             if (MessageBox.Show("Your building will be saved first, do you wish to continue?", "Steam Workshop upload", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                SaveAsOrSave();
-
-                // then export to temp upload folder and report errors
-                if (Export(true))
+                if (SaveAsOrSave())
                 {
-                    // show upload configuration
-                    WorkshopConfigDialog dialog = new WorkshopConfigDialog();
-                    dialog.ItemName = _building.Name;
-                    dialog.ItemDescription = _building.Description;
-                    dialog.ItemVisibility = _building.Visibility;
-                    dialog.ItemLanguageCode = _building.LanguageCode;
-                    dialog.ItemPreviewPath = _building.PreviewImagePath;
-                    dialog.ItemAlreadyExist = false;
-                    try
+                    loadedFile.Text = DateTime.Now.ToString("HH:mm") + ": Saved " + _building.Name + " (path to file: " + _saveFile + ")";
+
+                    // then export to temp upload folder and report errors
+                    if (Export(true))
                     {
-                        long.Parse(_building.Identifier);
-                        dialog.ItemAlreadyExist = true;
-                    }
-                    catch (Exception) { }
+                        // show upload configuration
+                        WorkshopConfigDialog dialog = new WorkshopConfigDialog();
+                        dialog.ItemName = _building.Name;
+                        dialog.ItemDescription = _building.Description;
+                        dialog.ItemVisibility = _building.Visibility;
+                        dialog.ItemLanguageCode = _building.LanguageCode;
+                        dialog.ItemPreviewPath = _building.PreviewImagePath;
+                        dialog.ItemAlreadyExist = false;
+                        try
+                        {
+                            long.Parse(_building.Identifier);
+                            dialog.ItemAlreadyExist = true;
+                        }
+                        catch (Exception) { }
 
-                    if (dialog.ShowDialog() == true)
-                    {
-                        _building.Name = dialog.ItemName;
-                        _building.Description = dialog.ItemDescription;
-                        _building.Visibility = dialog.ItemVisibility;
-                        _building.LanguageCode = dialog.ItemLanguageCode;
-                        _building.PreviewImagePath = dialog.ItemPreviewPath;
+                        if (dialog.ShowDialog() == true)
+                        {
+                            _building.Name = dialog.ItemName;
+                            _building.Description = dialog.ItemDescription;
+                            _building.Visibility = dialog.ItemVisibility;
+                            _building.LanguageCode = dialog.ItemLanguageCode;
+                            _building.PreviewImagePath = dialog.ItemPreviewPath;
 
-                        SaveAsOrSave();
+                            SaveAsOrSave();
 
-                        // upload
-                        SteamworksHelper.Instance.UploadBuilding(_building);
-                        UploadDialog uploadDialog = new UploadDialog();
-                        uploadDialog.ShowDialog();                                               
+                            // upload
+                            SteamworksHelper.Instance.UploadBuilding(_building);
+                            UploadDialog uploadDialog = new UploadDialog();
+                            uploadDialog.Reset();
+                            uploadDialog.ShowDialog();
+                        }
                     }
                 }
             }

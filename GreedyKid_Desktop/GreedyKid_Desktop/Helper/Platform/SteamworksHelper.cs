@@ -32,7 +32,7 @@ namespace GreedyKid.Helper
 
         // ************************* STEAM INIT *************************
 
-        public bool _steamworksReady = false;
+        private bool _steamworksReady = false;
 
         private CGameID m_GameID;
 

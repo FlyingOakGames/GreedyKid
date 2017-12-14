@@ -65,6 +65,8 @@ namespace GreedyKidEditor
 
         private void ProcessResult()
         {
+            MainWindow.SaveAsOrSave();
+
             UpdateProgress(-1);
 
             button.Visibility = Visibility.Visible;

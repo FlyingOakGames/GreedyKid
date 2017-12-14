@@ -266,7 +266,7 @@ namespace GreedyKidEditor.Helpers
 
         public void UploadBuilding(Building building)
         {
-            if (_uploadStatus == WorkshopUploadStatus.None)
+            if (_uploadStatus != WorkshopUploadStatus.Uploading)
             {
                 _uploadStatus = WorkshopUploadStatus.Uploading;
                 _uploadResult = WorkshopUploadReturn.None;
