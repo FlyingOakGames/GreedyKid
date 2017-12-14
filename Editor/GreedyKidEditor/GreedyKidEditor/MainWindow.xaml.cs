@@ -433,7 +433,7 @@ namespace GreedyKidEditor
         {
             int margin = 16;
 
-            float ratio = PreviewRenderer.Width / (float)PreviewRenderer.Height;
+            float ratio = PreviewRenderer.RenderingWidth / (float)PreviewRenderer.RenderingHeight;
 
             float canvasRatio = canvasW / (float)canvasH;
 
@@ -441,11 +441,11 @@ namespace GreedyKidEditor
 
             if (_11scale)
             {
-                wfHost.Width = PreviewRenderer.Width;
-                wfHost.Height = PreviewRenderer.Height;
+                wfHost.Width = PreviewRenderer.RenderingWidth;
+                wfHost.Height = PreviewRenderer.RenderingHeight;
             }
 
-            else if (PreviewRenderer.Width < PreviewRenderer.Height)
+            else if (PreviewRenderer.RenderingWidth < PreviewRenderer.RenderingHeight)
             {
                 // bound to width
                 wfHost.Width = Math.Max(2, canvasW - margin * 2);
@@ -456,7 +456,7 @@ namespace GreedyKidEditor
                     wfHost.Height = Math.Max(2, canvasH - margin * 2);
                 }
             }
-            else if (PreviewRenderer.Height < PreviewRenderer.Width)
+            else if (PreviewRenderer.RenderingHeight < PreviewRenderer.RenderingWidth)
             {
                 // bound to height
                 wfHost.Width = Math.Max(2, canvasH - margin * 2) * ratio;

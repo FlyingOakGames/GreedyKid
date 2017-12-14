@@ -33,10 +33,15 @@ namespace GreedyKidEditor
 
         System.Windows.Forms.Form _form;
 
-        public static int Width = 328; // 312
-        public static int Height = 184; // 176
+        public const int RenderingWidth = 1280;
+        public const int RenderingHeight = 720;
+
+        public const int Width = 328;
+        public const int Height = 184;
 
         Texture2D _levelTexture;
+
+        RenderTarget2D _renderTarget;
         
         Rectangle[][][] _roomRectangle;
         Rectangle[][] _detailRectangle;
@@ -221,8 +226,8 @@ namespace GreedyKidEditor
             Content.RootDirectory = "Content";
             TargetElapsedTime = new TimeSpan(0, 0, 0, 0, 33);
 
-            graphics.PreferredBackBufferHeight = Width;
-            graphics.PreferredBackBufferWidth = Height;
+            graphics.PreferredBackBufferHeight = RenderingWidth;
+            graphics.PreferredBackBufferWidth = RenderingHeight;
             IsMouseVisible = true;
 
             _selectionColor.A = 255;
@@ -266,6 +271,7 @@ namespace GreedyKidEditor
             _levelTexture = Content.Load<Texture2D>("Textures\\level");
 #endif
 
+            _renderTarget = new RenderTarget2D(GraphicsDevice, Width, Height);
 
             _roomRectangle = new Rectangle[Room.PaintCount][][]; // colors
             _detailRectangle = new Rectangle[Room.PaintCount][];
@@ -461,10 +467,10 @@ namespace GreedyKidEditor
             Helpers.SteamworksHelper.Instance.Update(elaspedSeconds);
 
             _form.Location = new System.Drawing.Point(-4000, -4000);
-            if (Width != graphics.PreferredBackBufferWidth || Height != graphics.PreferredBackBufferHeight)
+            if (RenderingWidth != graphics.PreferredBackBufferWidth || RenderingHeight != graphics.PreferredBackBufferHeight)
             {
-                graphics.PreferredBackBufferHeight = Height;
-                graphics.PreferredBackBufferWidth = Width;
+                graphics.PreferredBackBufferHeight = RenderingHeight;
+                graphics.PreferredBackBufferWidth = RenderingWidth;
                 graphics.ApplyChanges();                
             }
 
@@ -630,7 +636,9 @@ namespace GreedyKidEditor
         }
 
         protected override void Draw(GameTime gameTime)
-        {
+        {         
+            GraphicsDevice.SetRenderTarget(_renderTarget);
+
             GraphicsDevice.Clear(_fillColor);
 
             spriteBatch.Begin(samplerState: SamplerState.PointWrap);
@@ -1656,6 +1664,14 @@ namespace GreedyKidEditor
                 MoveCameraToFloor(_currentCameraFloor);
             }
 
+            spriteBatch.End();
+
+            GraphicsDevice.SetRenderTarget(null);
+
+            GraphicsDevice.Clear(_fillColor);
+
+            spriteBatch.Begin(samplerState: SamplerState.PointWrap);
+            spriteBatch.Draw(_renderTarget, GraphicsDevice.Viewport.Bounds, Color.White);
             spriteBatch.End();
 
             base.Draw(gameTime);
