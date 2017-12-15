@@ -1,4 +1,24 @@
-﻿V.5 (alpha)					18th August 2017
+﻿V.6	(beta)					?
+
+	Notice:
+		Due to new levels and change in the save format, all saves prior to this version will be erased
+
+	New:
+		Steam Workshop support (for the Steam version of the game and editor)
+		Endings
+		New characters and levels
+
+	Changes:
+		Revamped the title screen and main menu
+		Auto-pause the game if a gamepad is disconnected
+
+	Fixes:
+		Fixes high DPI support for the editor
+		Fixes high DPI support on Windows 10
+		Fixes editor rendering on Windows 10 (it is no more blurry)
+
+
+V.5 (alpha)					18th August 2017
 
 	Notice:
 		Due to new levels and change in the save format, all saves prior to this version will be erased
