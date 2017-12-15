@@ -211,7 +211,9 @@ namespace GreedyKid
                                     }
                                 }
 
-                                if (goodVersion)
+                                string buildingIdentifier = reader.ReadString();
+
+                                if (goodVersion && _currentBuildingIdentifier == buildingIdentifier)
                                 {
                                     for (int i = 0; i < building.LevelCount; i++)
                                     {
@@ -270,6 +272,8 @@ namespace GreedyKid
                                     .ToString();
 
                         writer.Write(currentVersion);
+
+                        writer.Write(_currentBuildingIdentifier);
 
                         for (int i = 0; i < building.LevelCount; i++)
                         {
