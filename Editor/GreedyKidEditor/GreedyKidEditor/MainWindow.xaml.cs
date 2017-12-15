@@ -151,7 +151,7 @@ namespace GreedyKidEditor
 
 #if !DEVMODE
             exportMenu.Visibility = Visibility.Collapsed;
-            exportSeparator.Visibility = Visibility.Collapsed;
+            //exportSeparator.Visibility = Visibility.Collapsed;
 #else
             this.Title = this.Title + " - DEV MODE";
 #endif

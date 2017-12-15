@@ -180,6 +180,8 @@ namespace GreedyKid
                 SfxManager.Instance.LoadGameplaySfx(true);
                 GC.Collect();
             }
+            if (keyboardState.IsKeyDown(Keys.F1) && previousKeyboardState.IsKeyUp(Keys.F1))
+                SaveManager.Instance.DebugUnlockNextLevel();
 
             previousKeyboardState = keyboardState;
 #endif
@@ -325,9 +327,10 @@ namespace GreedyKid
 
                     _gameplayManager.Update(gameTimeF);
 
-                    if (_gameplayManager.ReturnToLevelSelection)
+                    if (_gameplayManager.ReturnToLevelSelection || (_gameplayManager.IsWorkshopBuilding && _gameplayManager.GoToEnding))
                     {
                         _gameplayManager.ReturnToLevelSelection = false;
+                        _gameplayManager.GoToEnding = false;
 
                         _titleScreenManager = new TitleScreenManager();
                         _titleScreenManager.SetState(TitleScreenState.LevelSelection);

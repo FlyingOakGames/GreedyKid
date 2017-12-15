@@ -319,6 +319,9 @@ namespace GreedyKid
             if (selectedLevel != -1)
                 _selectedLevel = selectedLevel;
 
+            if (IsWorkshopBuilding && !SaveManager.Instance.IsLevelDone(-1))
+                SaveManager.Instance.SetIntro();
+
             if (!SaveManager.Instance.IsLevelDone(-1))
                 _selectedLevel = -1;
 
@@ -708,8 +711,10 @@ namespace GreedyKid
                 int previous = _selectedLevel;
 
                 _selectedLevel--;
-                if (_selectedLevel < -1)
+                if (!IsWorkshopBuilding && _selectedLevel < -1)
                     _selectedLevel = -1;
+                else if (IsWorkshopBuilding && _selectedLevel < 0)
+                    _selectedLevel = 0;
 
                 if (previous != _selectedLevel)
                 {
@@ -728,13 +733,25 @@ namespace GreedyKid
             {
                 int previous = _selectedLevel;
 
-                if ((_selectedLevel < _levelCount - 1 && SaveManager.Instance.IsLevelDone(_selectedLevel))
-                    || (_selectedLevel == _levelCount - 1 && SaveManager.Instance.IsLevelDone(_selectedLevel + 1))
-                    || (_selectedLevel == _levelCount && SaveManager.Instance.IsLevelDone(_selectedLevel + 1)))
+                if (!IsWorkshopBuilding)
                 {
-                    _selectedLevel++;
-                    if (_selectedLevel >= _levelCount + 2)
-                        _selectedLevel = _levelCount + 1;
+                    if ((_selectedLevel < _levelCount - 1 && SaveManager.Instance.IsLevelDone(_selectedLevel))
+                        || (_selectedLevel == _levelCount - 1 && SaveManager.Instance.IsLevelDone(_selectedLevel + 1))
+                        || (_selectedLevel == _levelCount && SaveManager.Instance.IsLevelDone(_selectedLevel + 1)))
+                    {
+                        _selectedLevel++;
+                        if (_selectedLevel >= _levelCount + 2)
+                            _selectedLevel = _levelCount + 1;
+                    }
+                }
+                else
+                {
+                    if (_selectedLevel < _levelCount - 1 && SaveManager.Instance.IsLevelDone(_selectedLevel))
+                    {
+                        _selectedLevel++;
+                        if (_selectedLevel >= _levelCount)
+                            _selectedLevel = _levelCount - 1;
+                    }
                 }
 
                 if (previous != _selectedLevel)
@@ -1146,7 +1163,9 @@ namespace GreedyKid
                 // previous levels
                 for (int i = 0; i < 3; i++)
                 {
-                    if (_selectedLevel - 1 - i < -1)
+                    if (!IsWorkshopBuilding && _selectedLevel - 1 - i < -1)
+                        continue;
+                    else if (IsWorkshopBuilding && _selectedLevel - 1 - i < 0)
                         continue;
 
                     // box
@@ -1255,13 +1274,19 @@ namespace GreedyKid
                 // next levels
                 for (int i = 0; i < 3; i++)
                 {
-                    if (_selectedLevel + 1 + i >= _levelCount + 2)
+                    if (!IsWorkshopBuilding && _selectedLevel + 1 + i >= _levelCount + 2)
+                        continue;
+                    else if (IsWorkshopBuilding && _selectedLevel + 1 + i >= _levelCount)
                         continue;
 
                     int locked = (SaveManager.Instance.IsLevelDone(_selectedLevel + 1 + i) ? 5 : 6);
-                    if (locked == 6 && _selectedLevel + 2 + i < _levelCount && !SaveManager.Instance.IsLevelDone(_selectedLevel + 2 + i) &&
-                        _selectedLevel + i >= 0 && SaveManager.Instance.IsLevelDone(_selectedLevel + i))
-                        locked = 5;
+                    if (locked == 6)
+                    {
+                        if (_selectedLevel + 1 + i < _levelCount && SaveManager.Instance.IsLevelDone(_selectedLevel + i))
+                            locked = 5;
+                        else if (_selectedLevel + 1 + i >= _levelCount && SaveManager.Instance.IsLevelDone(_selectedLevel + 1 + i))
+                            locked = 5;
+                    }
 
                     // current level
                     spriteBatch.Draw(texture,

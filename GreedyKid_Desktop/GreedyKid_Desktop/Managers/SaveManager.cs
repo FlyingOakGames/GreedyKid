@@ -42,6 +42,33 @@ namespace GreedyKid
             return false;
         }
 
+        public void DebugUnlockNextLevel()
+        {
+            if (!_hasSeenIntro)
+                _hasSeenIntro = true;
+            else
+            {
+                bool hasIncreased = false;
+                for (int i = 0; i < _isLevelDone.Length; i++)
+                {
+                    if (_isLevelDone[i] == false)
+                    {
+                        _isLevelDone[i] = true;
+                        _levelStars[i] = 3;
+                        hasIncreased = true;
+                        break;
+                    }
+                }
+                if (!hasIncreased)
+                {
+                    if (!_hasSeenEnding1)
+                        _hasSeenEnding1 = true;
+                    else if (!_hasSeenEnding2)
+                        _hasSeenEnding2 = true;
+                }
+            }
+        }
+
         public int LevelTime(int level)
         {
             return _levelTime[level];

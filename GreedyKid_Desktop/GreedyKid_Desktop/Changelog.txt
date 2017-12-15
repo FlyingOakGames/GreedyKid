@@ -11,6 +11,7 @@
 	Changes:
 		Revamped the title screen and main menu
 		Auto-pause the game if a gamepad is disconnected
+		Removed intro and endings from custom campaigns
 
 	Fixes:
 		Fixes high DPI support for the editor
