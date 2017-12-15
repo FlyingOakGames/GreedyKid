@@ -847,16 +847,28 @@ namespace GreedyKid
                 }
                 else
                 {
-                    if (!_toNextLevel && !_toTitleScreen)
+                    if (!_toNextLevel && !_toTitleScreen) // restart
                     {
                         LoadLevel(SelectedLevel);
                     }
-                    else if (_toNextLevel && SelectedLevel < _building.LevelCount - 1)
+                    else if (_toNextLevel && SelectedLevel < _building.LevelCount - 1) // go to next level
                     {
                         SelectedLevel++;
                         LoadLevel(SelectedLevel);
                     }
-                    else
+                    else if (_toTitleScreen) // go to title screen (but possibly finished game)
+                    {                       
+                        ReturnToLevelSelection = true;
+                        // unlock ending if need be
+                        if ((SelectedLevel == _building.LevelCount - 1 && !SaveManager.Instance.IsLevelDone(_building.LevelCount))
+                            || (SelectedLevel == _building.LevelCount - 1 && SaveManager.Instance.IsLevelDone(_building.LevelCount) && !SaveManager.Instance.IsLevelDone(_building.LevelCount + 1) && SaveManager.Instance.HasAllStars())
+                            )
+                        {
+                            ReturnToLevelSelection = false;
+                            GoToEnding = true;
+                        }
+                    }
+                    else // finished game
                     {
                         GoToEnding = true;
                     }
