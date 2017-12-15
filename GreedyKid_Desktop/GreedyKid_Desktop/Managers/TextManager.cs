@@ -152,7 +152,7 @@ namespace GreedyKid
 
         // *********************** PLAY SCREEN ***********************
 
-        // 0% campaign, workshop
+        // 0% campaign, workshop, custom
 
         private string[] _campaign = new string[] { "MAIN CAMPAIGN", "CAMPAGNE PRINCIPALE", "MAIN CAMPAIGN", "MAIN CAMPAIGN", "MAIN CAMPAIGN", "MAIN CAMPAIGN", "MAIN CAMPAIGN" };
         public string Campaign { get { return _campaign[(int)_language]; } }
@@ -160,9 +160,12 @@ namespace GreedyKid
         private string[] _workshop = new string[] { "STEAM WORKSHOP", "WORKSHOP STEAM", "STEAM WORKSHOP", "STEAM WORKSHOP", "STEAM WORKSHOP", "STEAM WORKSHOP", "STEAM WORKSHOP" };
         public string Workshop { get { return _workshop[(int)_language]; } }
 
+        private string[] _custom = new string[] { "COMMUNITY LEVELS", "CAMPAGNES COMMUNAUTAIRES", "STEAM WORKSHOP", "STEAM WORKSHOP", "STEAM WORKSHOP", "STEAM WORKSHOP", "STEAM WORKSHOP" };
+        public string Custom { get { return _custom[(int)_language]; } }
+
         // *********************** WORKSHOP ***********************
 
-        // 0% workshopNotice1, workshopNotice2, workshopNotice3
+        // 0% workshopNotice1, workshopNotice2, workshopNotice3, workshopNotice4, workshopNotice5, workshopNotice6
 
         private string[] _workshopNotice1 = new string[] { "THERE'S NO WORKSHOP ITEM", "THERE'S NO WORKSHOP ITEM", "THERE'S NO WORKSHOP ITEM", "THERE'S NO WORKSHOP ITEM", "THERE'S NO WORKSHOP ITEM", "THERE'S NO WORKSHOP ITEM", "THERE'S NO WORKSHOP ITEM" };
         public string WorkshopNotice1 { get { return _workshopNotice1[(int)_language]; } }
@@ -172,6 +175,15 @@ namespace GreedyKid
 
         private string[] _workshopNotice3 = new string[] { "AND SUBSCRIBE TO ITEMS TO SEE THEM HERE", "AND SUBSCRIBE TO ITEMS TO SEE THEM HERE", "AND SUBSCRIBE TO ITEMS TO SEE THEM HERE", "AND SUBSCRIBE TO ITEMS TO SEE THEM HERE", "AND SUBSCRIBE TO ITEMS TO SEE THEM HERE", "AND SUBSCRIBE TO ITEMS TO SEE THEM HERE", "AND SUBSCRIBE TO ITEMS TO SEE THEM HERE" };
         public string WorkshopNotice3 { get { return _workshopNotice3[(int)_language]; } }
+
+        private string[] _workshopNotice4 = new string[] { "THERE'S NO CUSTOM LEVELS", "THERE'S NO WORKSHOP ITEM", "THERE'S NO WORKSHOP ITEM", "THERE'S NO WORKSHOP ITEM", "THERE'S NO WORKSHOP ITEM", "THERE'S NO WORKSHOP ITEM", "THERE'S NO WORKSHOP ITEM" };
+        public string WorkshopNotice4 { get { return _workshopNotice1[(int)_language]; } }
+
+        private string[] _workshopNotice5 = new string[] { "DOWNLOAD AND INSTALL LEVELS", "GO TO THE STEAM WORKSHOP", "GO TO THE STEAM WORKSHOP", "GO TO THE STEAM WORKSHOP", "GO TO THE STEAM WORKSHOP", "GO TO THE STEAM WORKSHOP", "GO TO THE STEAM WORKSHOP" };
+        public string WorkshopNotice5 { get { return _workshopNotice2[(int)_language]; } }
+
+        private string[] _workshopNotice6 = new string[] { "TO SEE THEM HERE", "AND SUBSCRIBE TO ITEMS TO SEE THEM HERE", "AND SUBSCRIBE TO ITEMS TO SEE THEM HERE", "AND SUBSCRIBE TO ITEMS TO SEE THEM HERE", "AND SUBSCRIBE TO ITEMS TO SEE THEM HERE", "AND SUBSCRIBE TO ITEMS TO SEE THEM HERE", "AND SUBSCRIBE TO ITEMS TO SEE THEM HERE" };
+        public string WorkshopNotice6 { get { return _workshopNotice3[(int)_language]; } }
 
         // *********************** SETTINGS SCREEN ***********************
 

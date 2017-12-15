@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.IO;
 
 namespace GreedyKid
 {
@@ -10,7 +11,7 @@ namespace GreedyKid
         Main,
         Play,
         LevelSelection,
-        SteamWorkshop,
+        Workshop,
         Settings,
     }
 
@@ -65,6 +66,7 @@ namespace GreedyKid
         private string[] _workshopIdentifiers = null;
         private string[] _workshopBuildingNames = null;
         private bool[] _workshopSteamFolder = null;
+        private bool[] _workshopIsDownloading = null;
         private int _workshopOffset = 0;
         private int _workshopMaxItem = 8;
 
@@ -134,24 +136,35 @@ namespace GreedyKid
             ScanWorkshop();
         }
 
-        private void ScanWorkshop()
+        private void ScanWorkshop(bool resetSelection = false)
         {
+            if (resetSelection)
+                _selectionOption = 0;
+
             // workshop scan
             _workshopOffset = 0;
             _workshopIdentifiers = null;
             _workshopBuildingNames = null;
             _workshopSteamFolder = null;
+            _workshopIsDownloading = null;
 
             // local files
             string[] localWorkshopIdentifiers = new string[0];
             string[] localWorkshopBuildingNames = new string[0];
-            if (System.IO.Directory.Exists("Content/Workshop/"))
+            if (System.IO.Directory.Exists(Building.LocalWorkshopPath))
             {
-                localWorkshopIdentifiers = System.IO.Directory.GetDirectories("Content/Workshop/");
+                localWorkshopIdentifiers = System.IO.Directory.GetDirectories(Building.LocalWorkshopPath);
                 localWorkshopBuildingNames = new string[localWorkshopIdentifiers.Length];
                 for (int i = 0; i < localWorkshopIdentifiers.Length; i++)
                 {
-                    Building.GetName(localWorkshopIdentifiers[i], out localWorkshopIdentifiers[i], out localWorkshopBuildingNames[i]);
+                    try
+                    {
+                        Building.GetName(localWorkshopIdentifiers[i], out localWorkshopIdentifiers[i], out localWorkshopBuildingNames[i]);
+                    }
+                    catch (Exception)
+                    {
+                        localWorkshopBuildingNames[i] = "DOWNLOADING...";
+                    }
                 }
             }
 
@@ -164,8 +177,15 @@ namespace GreedyKid
                 steamWorkshopIdentifiers = System.IO.Directory.GetDirectories(workshopPath);
                 steamWorkshopBuildingNames = new string[steamWorkshopIdentifiers.Length];
                 for (int i = 0; i < steamWorkshopIdentifiers.Length; i++)
-                {
-                    Building.GetName(steamWorkshopIdentifiers[i], out steamWorkshopIdentifiers[i], out steamWorkshopBuildingNames[i]);
+                {                    
+                    try
+                    {
+                        Building.GetName(steamWorkshopIdentifiers[i], out steamWorkshopIdentifiers[i], out steamWorkshopBuildingNames[i]);
+                    }
+                    catch (Exception)
+                    {
+                        steamWorkshopBuildingNames[i] = "DOWNLOADING...";
+                    }
                 }
             }
 
@@ -175,12 +195,17 @@ namespace GreedyKid
                 _workshopIdentifiers = new string[localWorkshopIdentifiers.Length + steamWorkshopIdentifiers.Length];
                 _workshopBuildingNames = new string[localWorkshopBuildingNames.Length + steamWorkshopBuildingNames.Length];
                 _workshopSteamFolder = new bool[localWorkshopBuildingNames.Length + steamWorkshopBuildingNames.Length];
+                _workshopIsDownloading = new bool[localWorkshopBuildingNames.Length + steamWorkshopBuildingNames.Length];
 
                 for (int i = 0; i < localWorkshopIdentifiers.Length; i++)
                 {
                     _workshopIdentifiers[i] = localWorkshopIdentifiers[i];
                     _workshopBuildingNames[i] = localWorkshopBuildingNames[i];
                     _workshopSteamFolder[i] = false;
+                    if (_workshopBuildingNames[i] == "DOWNLOADING...")
+                        _workshopIsDownloading[i] = true;
+                    else
+                        _workshopIsDownloading[i] = false;
                 }
 
                 for (int i = 0; i < steamWorkshopIdentifiers.Length; i++)
@@ -188,8 +213,73 @@ namespace GreedyKid
                     _workshopIdentifiers[localWorkshopIdentifiers.Length + i] = steamWorkshopIdentifiers[i];
                     _workshopBuildingNames[localWorkshopIdentifiers.Length + i] = steamWorkshopBuildingNames[i];
                     _workshopSteamFolder[localWorkshopIdentifiers.Length + i] = true;
+                    if (_workshopBuildingNames[i] == "DOWNLOADING...")
+                        _workshopIsDownloading[i] = true;
+                    else
+                        _workshopIsDownloading[i] = false;
                 }
             }
+        }
+
+        private bool _localWorkshopWatched = false;
+        private bool _steamWorkshopWatched = false;
+
+        private void WatchWorkshopFolders()
+        {
+            if (_localWorkshopWatched == false)
+            {
+                try
+                {
+                    CreateFileWatcher(Building.LocalWorkshopPath);
+                    _localWorkshopWatched = true;
+                }
+                catch (Exception) { }
+            }
+
+            if (_steamWorkshopWatched == false)
+            { 
+                try
+                {
+                    CreateFileWatcher(Helper.SteamworksHelper.Instance.WorkshopPath);
+                    _steamWorkshopWatched = true;
+                }
+                catch (Exception) { }                
+            }    
+        }
+
+        private void CreateFileWatcher(string path)
+        {
+            // Create a new FileSystemWatcher and set its properties.
+            FileSystemWatcher watcher = new FileSystemWatcher();
+            watcher.Path = path;
+            /* Watch for changes in LastAccess and LastWrite times, and 
+               the renaming of files or directories. */
+            watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
+               | NotifyFilters.FileName | NotifyFilters.DirectoryName | NotifyFilters.Size;
+            // Only watch text files.
+            watcher.Filter = "*.*";
+
+            // Add event handlers.
+            watcher.Changed += new FileSystemEventHandler(OnWorkshopChanged);
+            watcher.Created += new FileSystemEventHandler(OnWorkshopChanged);
+            watcher.Deleted += new FileSystemEventHandler(OnWorkshopChanged);
+            watcher.Renamed += new RenamedEventHandler(OnWorkshopRenamed);
+
+            // Begin watching.
+            watcher.EnableRaisingEvents = true;
+        }
+
+        // Define the event handlers.
+        private void OnWorkshopChanged(object source, FileSystemEventArgs e)
+        {
+            if (_state == TitleScreenState.Workshop)
+                ScanWorkshop(true);
+        }
+
+        private void OnWorkshopRenamed(object source, RenamedEventArgs e)
+        {
+            if (_state == TitleScreenState.Workshop)
+                ScanWorkshop(true);
         }
 
         public int SelectedLevel
@@ -307,11 +397,11 @@ namespace GreedyKid
                         RequiredBuildingIdentifier = "Default";
                         TransitionManager.Instance.AppearTransition();
                         break;
-                    case RequestedTransition.ToWorkshopMenu:
-                        _selectionOption = 0;
-                        _state = TitleScreenState.SteamWorkshop;
+                    case RequestedTransition.ToWorkshopMenu:                        
+                        _state = TitleScreenState.Workshop;
                         // scan folder and load level names                        
-                        ScanWorkshop();
+                        ScanWorkshop(true);
+                        WatchWorkshopFolders();
                         TransitionManager.Instance.AppearTransition();
                         break;
                     case RequestedTransition.ToPlayMenuFromWorkshop:
@@ -375,7 +465,7 @@ namespace GreedyKid
                             _selectionOption = 2;
                     }
                     break;
-                case TitleScreenState.SteamWorkshop:
+                case TitleScreenState.Workshop:
                     if (_workshopBuildingNames == null || _workshopBuildingNames.Length == 0)
                     {
                         _selectionOption = 0;
@@ -460,7 +550,7 @@ namespace GreedyKid
                         TransitionManager.Instance.DisappearTransition();
                     }                                        
                     break;
-                case TitleScreenState.SteamWorkshop:
+                case TitleScreenState.Workshop:
                     if (_selectionOption == _workshopMaxItem) // down
                     {
                         if (_workshopBuildingNames != null && _workshopBuildingNames.Length > _workshopMaxItem && _workshopOffset + _workshopMaxItem < _workshopBuildingNames.Length)
@@ -477,12 +567,15 @@ namespace GreedyKid
                     }
                     else if (_workshopIdentifiers != null && _workshopIdentifiers.Length > 0)
                     {
-                        _state = TitleScreenState.LevelSelection;
-                        // load building
-                        ShouldLoadBuilding = true;
-                        IsWorkshopBuilding = true;
-                        RequiredBuildingIdentifier = _workshopIdentifiers[_selectionOption + _workshopOffset];
-                        IsSteamWorkshopBuilding = _workshopSteamFolder[_selectionOption + _workshopOffset];
+                        if (_workshopIsDownloading[_selectionOption + _workshopOffset] == false)
+                        {
+                            _state = TitleScreenState.LevelSelection;
+                            // load building
+                            ShouldLoadBuilding = true;
+                            IsWorkshopBuilding = true;
+                            RequiredBuildingIdentifier = _workshopIdentifiers[_selectionOption + _workshopOffset];
+                            IsSteamWorkshopBuilding = _workshopSteamFolder[_selectionOption + _workshopOffset];
+                        }
                     }
                     break;
             }
@@ -517,15 +610,19 @@ namespace GreedyKid
                 case TitleScreenState.LevelSelection:
                     _selectionOption = 0;
                     if (IsWorkshopBuilding)
-                        _state = TitleScreenState.SteamWorkshop;
+                    {
+                        _state = TitleScreenState.Workshop;
+                        ScanWorkshop(true);
+                        WatchWorkshopFolders();
+                    }
                     else if (!_waitForTransition)
-                    {                        
+                    {
                         _requestedTransition = RequestedTransition.ToPlayMenuFromLevelSelection;
                         _waitForTransition = true;
                         TransitionManager.Instance.DisappearTransition();
                     }
                     break;
-                case TitleScreenState.SteamWorkshop:
+                case TitleScreenState.Workshop:
                     if (!_waitForTransition)
                     {
                         _requestedTransition = RequestedTransition.ToPlayMenuFromWorkshop;
@@ -556,7 +653,7 @@ namespace GreedyKid
                     case TitleScreenState.Settings: break;
                     case TitleScreenState.Play: _selectionOption = 2; break;
                     case TitleScreenState.LevelSelection: _selectionOption = 0; break;
-                    case TitleScreenState.SteamWorkshop:
+                    case TitleScreenState.Workshop:
                         if (_selectionOption == -1 && _workshopOffset > 0)
                         {
                             _workshopOffset--;
@@ -586,7 +683,7 @@ namespace GreedyKid
                 case TitleScreenState.Settings: SettingsManager.Instance.PushDown(); break;
                 case TitleScreenState.Play: _selectionOption %= 3; break;
                 case TitleScreenState.LevelSelection: _selectionOption %= 1; break;
-                case TitleScreenState.SteamWorkshop:
+                case TitleScreenState.Workshop:
                     if (_selectionOption == _workshopMaxItem && _workshopBuildingNames != null && _workshopBuildingNames.Length > _workshopMaxItem && _workshopOffset + _workshopMaxItem < _workshopBuildingNames.Length)
                     {
                         _workshopOffset++;
@@ -695,7 +792,7 @@ namespace GreedyKid
                     _animationFrames[0],
                     Color.White);
             }
-            else if (_state == TitleScreenState.LevelSelection || _state == TitleScreenState.SteamWorkshop)
+            else if (_state == TitleScreenState.LevelSelection || _state == TitleScreenState.Workshop)
             {
                 spriteBatch.Draw(texture,
                     new Rectangle(17, 17, _backgroundRectangles[2].Width, _backgroundRectangles[2].Height),
@@ -926,7 +1023,7 @@ namespace GreedyKid
             {
                 yStart = 30;
             }
-            else if (_state == TitleScreenState.Settings || _state == TitleScreenState.LevelSelection || _state == TitleScreenState.SteamWorkshop)
+            else if (_state == TitleScreenState.Settings || _state == TitleScreenState.LevelSelection || _state == TitleScreenState.Workshop)
             {
                 yStart = -1;
             }
@@ -958,19 +1055,19 @@ namespace GreedyKid
                 yStart = 122;
 
                 UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.Campaign, yStart, 0, _selectionOption);
-                UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.Workshop, yStart + 15, 1, _selectionOption);
+                UIHelper.Instance.DrawCenteredText(spriteBatch, (Helper.SteamworksHelper.Instance.IsReady ? TextManager.Instance.Workshop : TextManager.Instance.Custom), yStart + 15, 1, _selectionOption);
                 UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.Back, yStart + 30, 2, _selectionOption);
             }            
             else if (_state == TitleScreenState.Settings)
             {
                 SettingsManager.Instance.Draw(spriteBatch);
             }
-            else if (_state == TitleScreenState.SteamWorkshop)
+            else if (_state == TitleScreenState.Workshop)
             {
                 yStart = 30;
 
                 // title
-                UIHelper.Instance.DrawTitle(spriteBatch, TextManager.Instance.Workshop);
+                UIHelper.Instance.DrawTitle(spriteBatch, (Helper.SteamworksHelper.Instance.IsReady ? TextManager.Instance.Workshop : TextManager.Instance.Custom));
 
                 if (_workshopIdentifiers != null && _workshopIdentifiers.Length > 0)
                 {
@@ -993,10 +1090,20 @@ namespace GreedyKid
                 else
                 {
                     // no workshop level
-                    UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.WorkshopNotice1, 45, -1, 0);
+                    if (Helper.SteamworksHelper.Instance.IsReady)
+                    {
+                        UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.WorkshopNotice1, 45, -1, 0);
 
-                    UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.WorkshopNotice2, 80, -1, 0);
-                    UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.WorkshopNotice3, 90, -1, 0);
+                        UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.WorkshopNotice2, 80, -1, 0);
+                        UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.WorkshopNotice3, 90, -1, 0);
+                    }
+                    else
+                    {
+                        UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.WorkshopNotice4, 45, -1, 0);
+
+                        UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.WorkshopNotice5, 80, -1, 0);
+                        UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.WorkshopNotice6, 90, -1, 0);
+                    }
                 }
             }
             else if (_state == TitleScreenState.LevelSelection)
@@ -1347,8 +1454,8 @@ namespace GreedyKid
                 if (_currentAnimationFrame >= 6)
                     UIHelper.Instance.DrawCommand(spriteBatch, TextManager.Instance.Press, CommandType.Select, CommandPosition.Center, (_currentAnimationFrame > 11 ? true : false));
             }
-            else if ((_state != TitleScreenState.SteamWorkshop && _currentAnimationFrame > 1) ||
-                (_state == TitleScreenState.SteamWorkshop && _workshopIdentifiers != null && _workshopIdentifiers.Length > 0))
+            else if ((_state != TitleScreenState.Workshop && _currentAnimationFrame > 1) ||
+                (_state == TitleScreenState.Workshop && _workshopIdentifiers != null && _workshopIdentifiers.Length > 0))
             {
                 UIHelper.Instance.DrawCommand(spriteBatch, TextManager.Instance.Select, CommandType.Select, CommandPosition.Right, (_currentAnimationFrame == 2));
             }

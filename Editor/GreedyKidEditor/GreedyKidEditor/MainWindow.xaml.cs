@@ -926,7 +926,11 @@ namespace GreedyKidEditor
                     {
                         using (BinaryWriter writer = new BinaryWriter(gzipStream))
                         {
+                            string name = _building.Name;
+                            if (!forWorkshop)
+                                _building.Name = name + " (TEST)";
                             _building.Save(writer, true);
+                            _building.Name = name;
                         }
                     }
                 }

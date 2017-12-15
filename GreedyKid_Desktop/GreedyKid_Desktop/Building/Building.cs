@@ -7,6 +7,7 @@ namespace GreedyKid
 {
     public sealed class Building
     {
+        public const string LocalWorkshopPath = "Content/Workshop/";
         private const string _defaultBuildingPath = "Content\\building";
         private const string _defaultLevelPath = "Content\\level_";
 
@@ -51,8 +52,8 @@ namespace GreedyKid
                 }
                 else
                 {
-                    _currentBuildingPath = "Content/Workshop/" + buildingIdentifier + "/building";
-                    _currentLevelPath = "Content/Workshop/" + buildingIdentifier + "/level_";
+                    _currentBuildingPath = LocalWorkshopPath + buildingIdentifier + "/building";
+                    _currentLevelPath = LocalWorkshopPath + buildingIdentifier + "/level_";
                 }
             }
 

@@ -36,6 +36,11 @@ namespace GreedyKid.Helper
 
         private CGameID m_GameID;
 
+        public bool IsReady
+        {
+            get { return _steamworksReady; }
+        }
+
         public SteamworksReturn Init()
         {
             _steamworksReady = false;

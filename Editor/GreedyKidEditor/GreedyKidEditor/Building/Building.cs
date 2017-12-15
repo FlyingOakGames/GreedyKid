@@ -36,10 +36,14 @@ namespace GreedyKidEditor
         public void Save(BinaryWriter writer, bool export = false)
         {
             writer.Write(Identifier);
-            writer.Write(Description);
-            writer.Write(LanguageCode);
-            writer.Write((int)Visibility);
-            writer.Write(PreviewImagePath);
+
+            if (!export)
+            {
+                writer.Write(Description);
+                writer.Write(LanguageCode);
+                writer.Write((int)Visibility);
+                writer.Write(PreviewImagePath);
+            }
 
             writer.Write(Name);
 
