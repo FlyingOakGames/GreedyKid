@@ -25,6 +25,19 @@ namespace GreedyKidEditor
 
     class PreviewRenderer : Game
     {
+        string[] _modeText = new string[]
+        {
+            "ROOMS",
+            "DECORATIONS",
+            "SEPARATIONS",
+            "FLOOR DOORS",
+            "FURNITURE",
+            "ELEVATORS",
+            "RETIREES",
+            "NURSES",
+            "COPS"
+        };
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         
@@ -40,6 +53,7 @@ namespace GreedyKidEditor
         public const int Height = 184;
 
         Texture2D _levelTexture;
+        SpriteFont _font;
 
         RenderTarget2D _renderTarget;
         
@@ -267,8 +281,13 @@ namespace GreedyKidEditor
             {
                 _levelTexture = Content.Load<Texture2D>("Textures\\level");
             }
+
+            _font = Content.Load<SpriteFont>("Fonts\\latin");
+            _font.Spacing = 1;
 #else
             _levelTexture = Content.Load<Texture2D>("Textures\\level");
+            _font = Content.Load<SpriteFont>("Fonts\\latin");
+            _font.Spacing = 1;
 #endif
 
             _renderTarget = new RenderTarget2D(GraphicsDevice, Width, Height);
@@ -1617,6 +1636,22 @@ namespace GreedyKidEditor
 
                 if (IsHover(destination, true) && (_hasLeftClick || _hasRightClick))
                     SelectionMode = (SelectionMode)i;
+
+                if (_font != null && IsHover(destination, true) && i < (int)SelectionMode.Selection)
+                {
+                    int textWidth = (int)_font.MeasureString(_modeText[i]).X;
+                    
+                    //spriteBatch.DrawString(_font, _modeText[i], new Vector2(destination.X - textWidth, destination.Y), Color.Black);
+                    spriteBatch.Draw(_levelTexture,
+                        new Rectangle(destination.X - textWidth - 2,
+                        destination.Y + 2,
+                        textWidth + 2,
+                        9),
+                        _1x1,
+                        new Color(0.0f, 0.0f, 0.0f, 0.75f));
+
+                    spriteBatch.DrawString(_font, _modeText[i], new Vector2(destination.X - textWidth - 1, destination.Y - 1), Color.White);
+                }
 
                 if (SelectionMode == (SelectionMode)i)
                 {
