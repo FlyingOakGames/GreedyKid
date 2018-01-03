@@ -268,22 +268,30 @@ namespace GreedyKidEditor
 
             }
 
+            
+
             // delete stuff
             if (PreviewRenderer.SelectedLevel >= 0 && renderer.RoomToRemoveFloor >= 0 && renderer.RoomToRemove >= 0 &&
-                PreviewRenderer.SelectedLevel < _building.Levels.Count && renderer.RoomToRemoveFloor < _building.Levels[PreviewRenderer.SelectedLevel].Floors.Count && renderer.RoomToRemove < _building.Levels[PreviewRenderer.SelectedLevel].Floors[renderer.RoomToRemoveFloor].Rooms.Count &&
-                MessageBox.Show(this, "The room and ALL of its content will be removed permanently, are you sure?", "Are you sure?", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                PreviewRenderer.SelectedLevel < _building.Levels.Count && renderer.RoomToRemoveFloor < _building.Levels[PreviewRenderer.SelectedLevel].Floors.Count && renderer.RoomToRemove < _building.Levels[PreviewRenderer.SelectedLevel].Floors[renderer.RoomToRemoveFloor].Rooms.Count)
             {
-                _building.Levels[PreviewRenderer.SelectedLevel].Floors[renderer.RoomToRemoveFloor].Rooms.RemoveAt(renderer.RoomToRemove);
-
-                // empty floor above last non empty floor?
-                for (int f = _building.Levels[PreviewRenderer.SelectedLevel].Floors.Count - 1; f >= 0; f--)
+                PreviewRenderer.BlockClick = true;
+                if (MessageBox.Show(this, "The room and ALL of its content will be removed permanently, are you sure?", "Are you sure?", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
-                    if (_building.Levels[PreviewRenderer.SelectedLevel].Floors[f].Rooms.Count == 0)
-                        _building.Levels[PreviewRenderer.SelectedLevel].Floors.RemoveAt(f);
-                    else
-                        break;
+                    _building.Levels[PreviewRenderer.SelectedLevel].Floors[renderer.RoomToRemoveFloor].Rooms.RemoveAt(renderer.RoomToRemove);
+
+                    // empty floor above last non empty floor?
+                    for (int f = _building.Levels[PreviewRenderer.SelectedLevel].Floors.Count - 1; f >= 0; f--)
+                    {
+                        if (_building.Levels[PreviewRenderer.SelectedLevel].Floors[f].Rooms.Count == 0)
+                            _building.Levels[PreviewRenderer.SelectedLevel].Floors.RemoveAt(f);
+                        else
+                            break;
+                    }
                 }
+                PreviewRenderer.BlockClick = false;
             }
+
+            
 
             renderer.RoomToRemoveFloor = -1;
             renderer.RoomToRemove = -1;
@@ -671,6 +679,8 @@ namespace GreedyKidEditor
 
         private bool CheckExport()
         {
+            PreviewRenderer.BlockClick = true;
+
             bool noError = true;
 
             // verification
@@ -849,6 +859,8 @@ namespace GreedyKidEditor
                 }
             }
 
+            PreviewRenderer.BlockClick = false;
+
             return noError;
         }
 
@@ -957,7 +969,9 @@ namespace GreedyKidEditor
             }
             else
             {
+                PreviewRenderer.BlockClick = true;
                 MessageBox.Show("The building hasn't been exported because of the listed warning(s).");
+                PreviewRenderer.BlockClick = false;
                 return false;
             }
         }
@@ -1002,7 +1016,11 @@ namespace GreedyKidEditor
                 levelListBox.SelectedIndex = _building.Levels.Count - 1;
             }
             else
+            {
+                PreviewRenderer.BlockClick = true;
                 MessageBox.Show("Warning: You can't make more than 99 levels.");
+                PreviewRenderer.BlockClick = false;
+            }
         }
 
         private void removeButton_Click(object sender, RoutedEventArgs e)
@@ -1050,6 +1068,8 @@ namespace GreedyKidEditor
                 TextInputDialog dialog = new TextInputDialog();
                 dialog.Owner = this;
 
+                PreviewRenderer.BlockClick = true;
+
                 if (dialog.ShowDialog() == true)
                 {
                     string name = dialog.ResponseText;
@@ -1061,15 +1081,19 @@ namespace GreedyKidEditor
                     else
                         levelListBox.Items[levelListBox.SelectedIndex] = "Level " + (levelListBox.SelectedIndex + 1);
                 }
+
+                PreviewRenderer.BlockClick = false;
             }            
         }
 
         private void renameBuildingButton_Click(object sender, RoutedEventArgs e)
         {
+            PreviewRenderer.BlockClick = true;
+
             MessageBox.Show("Names are limited to latin characters.");
 
             TextInputDialog dialog = new TextInputDialog();
-            dialog.Owner = this;
+            dialog.Owner = this;            
 
             if (dialog.ShowDialog() == true)
             {
@@ -1083,6 +1107,8 @@ namespace GreedyKidEditor
                 }
                 buildingLabel.Content = _building.Name;
             }
+
+            PreviewRenderer.BlockClick = false;
         }
 
         private void levelListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -1254,6 +1280,7 @@ namespace GreedyKidEditor
                     {
                         // show upload configuration
                         WorkshopConfigDialog dialog = new WorkshopConfigDialog();
+                        dialog.Owner = this;
                         dialog.ItemName = _building.Name;
                         dialog.ItemDescription = _building.Description;
                         dialog.ItemVisibility = _building.Visibility;
@@ -1280,6 +1307,7 @@ namespace GreedyKidEditor
                             // upload
                             SteamworksHelper.Instance.UploadBuilding(_building);
                             UploadDialog uploadDialog = new UploadDialog();
+                            uploadDialog.Owner = this;
                             uploadDialog.Reset();
                             uploadDialog.ShowDialog();
                         }
