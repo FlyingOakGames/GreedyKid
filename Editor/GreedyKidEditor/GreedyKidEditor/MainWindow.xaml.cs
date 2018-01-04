@@ -691,7 +691,7 @@ namespace GreedyKidEditor
             }
             if (_building.Name.Length == 0)
             {
-                MessageBox.Show("Warning: Your level must have a name.");
+                MessageBox.Show("Warning: Your building must have a name.");
                 noError = false;
             }
             // entrance / exit
@@ -1273,6 +1273,7 @@ namespace GreedyKidEditor
             {
                 if (SaveAsOrSave())
                 {
+                    PreviewRenderer.BlockClick = true;
                     loadedFile.Text = DateTime.Now.ToString("HH:mm") + ": Saved " + _building.Name + " (path to file: " + _saveFile + ")";
 
                     // then export to temp upload folder and report errors
@@ -1303,6 +1304,8 @@ namespace GreedyKidEditor
                             _building.PreviewImagePath = dialog.ItemPreviewPath;
 
                             SaveAsOrSave();
+
+                            PreviewRenderer.BlockClick = true;
 
                             // upload
                             SteamworksHelper.Instance.UploadBuilding(_building);
