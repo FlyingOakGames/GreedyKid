@@ -1,0 +1,396 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boo! Greedy Kid editor manual</title>
+<link rel="stylesheet" href="https://stackedit.io/res-min/themes/base.css" />
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body><div class="container"><h1 id="boo-greedy-kid-editor-manual-windows-only"><em>Boo! Greedy Kid</em> editor manual (Windows only)</h1>
+
+<blockquote>
+  <p><strong>Note</strong>: The <em>Boo! Greedy Kid</em> editor is only available on <em>Windows</em> and there is no plan to port the editor to <em>Mac OS</em> or <em>Linux</em>.</p>
+</blockquote>
+
+<p><strong>Manual version</strong>: 1.0 <br>
+<strong>Last modified</strong>: 4th december 2018</p>
+
+<p><i class="icon-globe"></i> <strong>Online version</strong>: <a href="http://greedy-kid.com/editor_manual/">http://greedy-kid.com/editor_manual/</a></p>
+
+<p><i class="icon-mail"></i> <strong>Contact and support</strong>: <a href="http://steamcommunity.com/app/770630/discussions/"><em>Boo! Greedy Kid</em> editor <em>Steam</em> forums</a></p>
+
+<p align="center"><img src="images/editor.png" width="600"></p>
+
+<h2 id="table-of-contents">Table of contents</h2>
+
+<p><div class="toc">
+<ul>
+<li><a href="#boo-greedy-kid-editor-manual-windows-only">Boo! Greedy Kid editor manual (Windows only)</a><ul>
+<li><a href="#table-of-contents">Table of contents</a></li>
+<li><a href="#introduction-to-the-editor">Introduction to the editor</a><ul>
+<li><ul>
+<li><a href="#requirements">Requirements</a></li>
+<li><a href="#launching-the-editor">Launching the editor</a><ul>
+<li><a href="#from-steam"> From Steam</a></li>
+<li><a href="#from-disk"> From disk</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#creating-a-building-and-managing-its-levels">Creating a building and managing its levels</a><ul>
+<li><ul>
+<li><a href="#understanding-the-game-structure">Understanding the game structure</a></li>
+<li><a href="#setting-up-a-new-building">Setting up a new building</a></li>
+<li><a href="#managing-levels-add-remove-re-order">Managing levels (add / remove / re-order)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#editing-a-level-and-understanding-the-creation-modes">Editing a level and understanding the creation modes</a><ul>
+<li><ul>
+<li><a href="#the-level-editing-space">The level editing space</a></li>
+<li><a href="#room-mode"> Room mode</a></li>
+<li><a href="#decoration-mode"> Decoration mode</a></li>
+<li><a href="#separation-white-door-mode"> Separation (white) door mode</a></li>
+<li><a href="#colored-floor-door-mode"> (Colored) Floor door mode</a></li>
+<li><a href="#furniture-mode"> Furniture mode</a></li>
+<li><a href="#elevator-mode"> Elevator mode</a></li>
+<li><a href="#retiree-mode"> Retiree mode</a></li>
+<li><a href="#nurse-mode"> Nurse mode</a></li>
+<li><a href="#cop-mode"> Cop mode</a></li>
+<li><a href="#setting-the-target-time-for-scoring"> Setting the target time for scoring</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#testing-your-buildings-in-game"> Testing your buildings in-game</a><ul>
+<li><ul>
+<li><a href="#level-design-rules"> Level design rules</a></li>
+<li><a href="#exporting-a-test-building"> Exporting a test building</a></li>
+<li><a href="#live-testing-without-restarting-the-game"> Live testing without restarting the game</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#uploading-your-buildings-to-the-steam-workshop"> Uploading your buildings to the Steam Workshop</a><ul>
+<li><ul>
+<li><a href="#initial-upload">Initial upload</a></li>
+<li><a href="#updating-a-building-already-uploaded"> Updating a building already uploaded</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</p>
+
+
+
+<h2 id="introduction-to-the-editor">Introduction to the editor</h2>
+
+<p>Welcome to the <em>Boo! Greedy Kid</em> editor!</p>
+
+<p>This tool allows you to create your own buildings (with up to 99 levels per building) and to upload them on the <a href="http://steamcommunity.com/app/770630/workshop/"><em>Steam Workshop</em></a> <i class="icon-globe"></i> of the game.</p>
+
+<p>Through this document, you will learn how to do all of this. <br>
+Let’s get started!</p>
+
+<h4 id="requirements">Requirements</h4>
+
+<p>The editor requires a <em>Direct3D 10</em> compliant graphics card and drivers, as well as the <em>.Net Framework 4.5</em> (or newer).</p>
+
+<p>If you’re running the editor from <em>Steam</em>, you shouldn’t need to install anything else.</p>
+
+<p>If the editor fails to launch, it most probably means that your graphics card or drivers are not compatible.</p>
+
+<blockquote>
+  <p><strong>Note</strong>: The editor and the game don’t use the same technology, hence they both have different requirements. Please refer to the game’s <em>Steam</em> page for its own requirements.</p>
+</blockquote>
+
+<h4 id="launching-the-editor">Launching the editor</h4>
+
+
+
+<h5 id="from-steam"><i class="icon-cloud"></i> From <em>Steam</em></h5>
+
+<p>When starting <em>Boo! Greedy Kid</em> from your <em>Steam</em> library, a pop-up window will appear and will propose you to either start the game, or the editor.</p>
+
+<p align="center"><img src="images/launch.png"></p>
+
+<p>Select the editor (you will be able to start the game directly from the editor if need be).</p>
+
+<h5 id="from-disk"><i class="icon-hdd"></i> From disk</h5>
+
+<p>The editor is located in the game installation folder, in the <strong>Editor</strong> <i class="icon-folder"></i> sub-folder. Double-click on <strong>GreedyKidEditor.exe</strong> <i class="icon-file"></i> to launch it.</p>
+
+<p>If you are using the <em>Steam</em> version of the game, the editor may require that <em>Steam</em> is launched before it can run.</p>
+
+<h2 id="creating-a-building-and-managing-its-levels">Creating a building and managing its levels</h2>
+
+
+
+<h4 id="understanding-the-game-structure">Understanding the game structure</h4>
+
+<p>In <em>Boo! Greedy Kid</em>, the action takes place in a single building (also nammed “campaign” in-game).</p>
+
+<p>Each building can have up to 99 levels. These levels are what you need to design individually and what makes gameplay space.</p>
+
+<p>The editor save your building in a special file format with the <strong>.gdk</strong> <i class="icon-file"></i> extension. These files are only readable by the editor.</p>
+
+
+
+<h4 id="setting-up-a-new-building">Setting up a new building</h4>
+
+<p>You may create a new building by clicking on the <strong>File</strong> menu and select <strong>New</strong>.</p>
+
+<p>Then, rename your building by clicking on the top left <strong>Rename</strong> button. This is the name that will appear on the <em>Steam Workshop</em> as well as in-game.</p>
+
+
+
+<h4 id="managing-levels-add-remove-re-order">Managing levels (add / remove / re-order)</h4>
+
+<p>On the left of the editor, you can see your building configuration <i class="icon-list"></i>. By default, it only has one level, but you can <strong>Add</strong> more, <strong>Remove</strong> them, or adjust their order with the up <i class="icon-up"></i> and down <i class="icon-down"></i> buttons.</p>
+
+<p align="center"><img src="images/level_manager.png" width="250"></p>
+
+<p>You can also <strong>Rename</strong> levels, but their name will not appear in-game or on the <em>Steam Workshop</em>. Their name is only for your personal organization and comments.</p>
+
+<p>We are now ready to start creating a level. Click on the first level to make it the active level.</p>
+
+
+
+<h2 id="editing-a-level-and-understanding-the-creation-modes">Editing a level and understanding the creation modes</h2>
+
+
+
+<h4 id="the-level-editing-space">The level editing space</h4>
+
+<p>All the editing is done within the <strong>live preview zone</strong>.</p>
+
+<p align="center"><img src="images/live_preview.png" width="600"></p>
+
+<p>On the right, you can access the <strong>creation toolbox</strong> <i class="icon-wrench"></i>. Each icons represent a mode to progressively build your level.</p>
+
+<p align="center"><img src="images/toolbox.png" width="200"></p>
+
+
+
+<h4 id="room-mode"><img src="images/mode1.png" height="20"> Room mode</h4>
+
+<p>The first mode is the room mode. <strong>Left click</strong> <i class="icon-up-hand"></i> on it, and you may now create empty room by left clicking somewhere on the live preview zone.</p>
+
+<p align="center"><img src="images/add_room.gif" width="450"></p>
+
+<p>You can adjust a room’s size by hovering one of its walls, and press + maintain the <strong>space bar</strong> <i class="icon-keyboard"></i>. You can now adjust its size as long as you maintain the space bar.</p>
+
+<p align="center"><img src="images/resize_room.gif" width="450"></p>
+
+<p>You can customize the appearance of a room by hovering its outer or inner walls and using the <strong>mouse wheel</strong> <i class="icon-up-hand"></i>.</p>
+
+<p align="center"><img src="images/custom_room.gif" width="450"></p>
+
+<p>If need be, you can totally remove a room and its content by hovering it and <strong>right click</strong> <i class="icon-up-hand"></i> on it. A confirmation message will appear before fully removing a room to prevent any unwanted clicks.</p>
+
+<h4 id="decoration-mode"><img src="images/mode2.png" height="20"> Decoration mode</h4>
+
+<p>The second creation mode is the decoration mode.</p>
+
+<p>Once selected, you can add decorations by <strong>left clicking</strong> <i class="icon-up-hand"></i> on a room. To change between the different decoration available, you can use the <strong>mouse wheel</strong> <i class="icon-up-hand"></i> while hovering a decoration.</p>
+
+<p>If you’d like to move a decoration, hover it and maintain the <strong>space bar</strong> <i class="icon-keyboard"></i> just like room size adjustment.</p>
+
+<p align="center"><img src="images/decoration.gif" width="450"></p>
+
+<p>You can also remove a decoration by right clicking on it.</p>
+
+<p>If you have two decorations overlapping and wish to adjust which one should be over another one, you can use the <strong>C</strong> <i class="icon-keyboard"></i> and <strong>V</strong> <i class="icon-keyboard"></i> keys while hovering a decoration to change its layer.</p>
+
+<p align="center"><img src="images/layer.gif" width="450"></p>
+
+<h4 id="separation-white-door-mode"><img src="images/mode3.png" height="20"> Separation (white) door mode</h4>
+
+<p>This mode allows you to add white doors to divide a room into multiple spaces. NPC can’t go through those doors when they are closed.</p>
+
+<p>Adding, removing or moving a door works just like the other modes by using the <strong>mouse buttons</strong> <i class="icon-up-hand"></i> and the <strong>space bar</strong> <i class="icon-keyboard"></i> while hovering a door.</p>
+
+<p align="center"><img src="images/separation.gif" width="450"></p>
+
+<h4 id="colored-floor-door-mode"><img src="images/mode4.png" height="20"> (Colored) Floor door mode</h4>
+
+<p>This mode allows you to add doors that will connect together to navigate to other rooms. NPC can go through these doors.</p>
+
+<p>To select which room leads to another one, both doors must have the same color. To add a door use the <strong>left click</strong> <i class="icon-up-hand"></i>, and to change a room’s color, use the <strong>mouse wheel</strong> <i class="icon-up-hand"></i> while hovering it. For instance, if you change two doors to orange, they will connect.</p>
+
+<p align="center"><img src="images/floor_door.gif" width="450"></p>
+
+<p>There can only be two doors with the same color in a level. But this rule doesn’t apply to grey doors. Grey doors don’t work with colors, but instead with vertical alignment.</p>
+
+<p>When you move a grey door, you will see vertical guidelines to help you align them. If two grey doors are perfectly aligned (to the pixel), they will connect.</p>
+
+<p align="center"><img src="images/grey_door.gif" width="450"></p>
+
+<p>Sounds complicated? Don’t worry, the editor will tell you if there’s anything wrong with your doors.</p>
+
+<h4 id="furniture-mode"><img src="images/mode5.png" height="20"> Furniture mode</h4>
+
+<p>Furniture are objects behind which the kid can hide.</p>
+
+<p>You can add, change, or move furniture like any other modes, by using your mouse buttons / wheel and the space bar.</p>
+
+<p align="center"><img src="images/furniture.gif" width="450"></p>
+
+<p>Like the decorations, you can adjust their layer with the <strong>C</strong> <i class="icon-keyboard"></i> and <strong>V</strong> <i class="icon-keyboard"></i> keys if you’d like to fine tune overlapping furnitures.</p>
+
+<h4 id="elevator-mode"><img src="images/mode6.png" height="20"> Elevator mode</h4>
+
+<p>Each level must have an entrance elevator, and an exit elevator.</p>
+
+<p>To place an entrance, <strong>left click</strong> <i class="icon-up-hand"></i> where you’d like to add it. To place an exit, use the <strong>right mouse button</strong> <i class="icon-up-hand"></i>.</p>
+
+<p align="center"><img src="images/elevator.gif" width="450"></p>
+
+<h4 id="retiree-mode"><img src="images/mode7.png" height="20"> Retiree mode</h4>
+
+<p>In this mode you can place retirees in the level.</p>
+
+<p>You can customize their appearance with the <strong>mouse wheel</strong> <i class="icon-up-hand"></i>.</p>
+
+<p align="center"><img src="images/retiree.gif" width="450"></p>
+
+<p>You can also adjust their life with the <strong>C</strong> <i class="icon-keyboard"></i> and <strong>V</strong> <i class="icon-keyboard"></i> keys while hovering them, or adjust their money with the <strong>B</strong> <i class="icon-keyboard"></i> and <strong>N</strong> <i class="icon-keyboard"></i> keys.</p>
+
+<p>Life points represent the number of time it is required to scare them.</p>
+
+<h4 id="nurse-mode"><img src="images/mode8.png" height="20"> Nurse mode</h4>
+
+<p>This mode is for placing nurses, and works just like the retiree mode (to the exception that nurses don’t drop money).</p>
+
+<p align="center"><img src="images/nurse.gif" width="450"></p>
+
+<p>Life points represent the number of time it is required to scare them.</p>
+
+<h4 id="cop-mode"><img src="images/mode9.png" height="20"> Cop mode</h4>
+
+<p>The cop mode allows you to add cops who will be present in the level right from the start of the level.</p>
+
+<p>You can change the cop type by using the <strong>mouse wheel</strong> <i class="icon-up-hand"></i> while hovering a cop.</p>
+
+<p align="center"><img src="images/cop.gif" width="450"></p>
+
+<p>If you prefer to add a timer before cops will enter the level, have a look at the lower left of the editor.</p>
+
+<p align="center"><img src="images/cop_timer.png" width="350"></p>
+
+<p>Here you can adjust how many seconds from the start of the level are required for cops to spawn, and which kind of cops should arrive.</p>
+
+<p>Note that you can have cops already in the level and cops arriving later at the same time (e.g. you can have two cops wandering from the start, and another one arriving after 10 seconds).</p>
+
+<blockquote>
+  <p><strong>Note 1</strong>: Cops always spawn in the following order: <br>
+  1. Normal cops <br>
+  2. Tactical cops <br>
+  3. Robot-cops</p>
+  
+  <p><strong>Note 2</strong>: The time sliders are cumulative. <i class="icon-attention"></i> This means that if you set the cop slider to 5 seconds, and the tactical cop slider to 10 seconds, the normal cops will arrive after 5 seconds, but the tactical cops will arrive after 15 seconds (i.e. 10 seconds after the normal cops).</p>
+  
+  <p><strong>Note 3</strong>: You can spawn only specific cops by leaving sliders to 0. For example, if you want to spawn only tactical cops, set the normal cop slider to 0 and none will spawn.</p>
+</blockquote>
+
+<h4 id="setting-the-target-time-for-scoring"><i class="icon-award"></i> Setting the target time for scoring</h4>
+
+<p>When players complete a level, they are awarded up to 3 stars <i class="icon-star"></i><i class="icon-star"></i><i class="icon-star"></i>depending on the following:</p>
+
+<ul>
+<li>1 star <i class="icon-star"></i> for completing the level;</li>
+<li>1 star <i class="icon-star"></i> for collecting all the money without loosing any;</li>
+<li>1 star <i class="icon-star"></i> for completing the level under the target time. </li>
+</ul>
+
+<p>The target time is a value that you must set yourself in the editor. It is represented by the timer at the top of the live preview zone.</p>
+
+<p>You can change the target time by hovering it and use the mouse wheel (to adjust it by 1 second at a time) or the left / right mouse buttons (to adjust it by 5 seconds at a time).</p>
+
+<p align="center"><img src="images/timer.gif" width="450"></p>
+
+<p><strong>Be sure to thoroughly test your level target time to make sure that the score is beatable</strong>. <i class="icon-attention"></i></p>
+
+<h2 id="testing-your-buildings-in-game"><i class="icon-gamepad"></i> Testing your buildings in-game</h2>
+
+
+
+<h4 id="level-design-rules"><i class="icon-ok-circled"></i> Level design rules</h4>
+
+<p>For a level to work in-game, it must follow these design rules:</p>
+
+<ul>
+<li>Your building must have a name;</li>
+<li>All levels must have an entrance elevator and an exit elevator;</li>
+<li>The exit elevator must be reachable by the player;</li>
+<li>All retirees must be reachable by the player;</li>
+<li>All doors must be connected (no single door are allowed);</li>
+<li>Doors can’t be connected to more than one door;</li>
+<li>Spawn timers can not be set if there is no cop count assigned to them.</li>
+</ul>
+
+<blockquote>
+  <p>You don’t have to remember these rules as the editor will warn you of any errors and will prevent any export or upload of broken levels.</p>
+</blockquote>
+
+<h4 id="exporting-a-test-building"><i class="icon-hdd"></i> Exporting a test building</h4>
+
+<p>If all the design rules are met, you are now all set to test your building in-game!</p>
+
+<p>First save your building through the <strong>File</strong> menu.</p>
+
+<p>To test your level in game, use the <strong>File</strong> menu and click on <strong>Export to test in-game</strong>.</p>
+
+<p>This will add your building only to your game and you can now start the game and test it. You can start the game directly from the editor.</p>
+
+<h4 id="live-testing-without-restarting-the-game"><i class="icon-gamepad"></i> Live testing without restarting the game</h4>
+
+<p>To test your freshly exported level, start the game and go to the <em>Steam Workshop</em> menu. Your building should appear here and be labeled as “test” after its name.</p>
+
+<blockquote>
+  <p><strong>Note</strong>: You can keep the game running and go back to the <em>Steam Workshop</em> menu while you edit your levels in the editor. If you export new buildings they will automatically appear without the need to restart the game.</p>
+</blockquote>
+
+<p><strong>Don’t forget to export your building each time you are making changes to try them</strong>. <i class="icon-attention"></i></p>
+
+<h2 id="uploading-your-buildings-to-the-steam-workshop"><i class="icon-upload-cloud"></i> Uploading your buildings to the <em>Steam Workshop</em></h2>
+
+<p>When you are satisfied with your building, you can share it with the world!</p>
+
+
+
+<h4 id="initial-upload">Initial upload</h4>
+
+<p>Click on the <strong>File</strong> menu and select <strong>Upload to Steam Workshop</strong>. <br>
+Complete your upload by adding a description <i class="icon-pencil"></i>, selecting a language and adding a 16:9 preview image (e.g. a 1280x720 PNG file), and hit the upload button.</p>
+
+<p align="center"><img src="images/workshop_config.png" width="400"></p>
+
+<p>If everything went well, your level is now available on the Steam Workshop!</p>
+
+<p align="center"><img src="images/progress.gif" width="400"></p>
+
+<blockquote>
+  <p><strong>Note</strong>: If it’s you’re first time uploading something to the <em>Steam Workshop</em>, you will have to accept the <em>Steam Workshop End-User Agreement</em> before your item can be public. The editor should guide you if this should happen.</p>
+</blockquote>
+
+<h4 id="updating-a-building-already-uploaded"><i class="icon-refresh"></i> Updating a building already uploaded</h4>
+
+<p>If you try to re-upload a building using the same <strong>.gdk</strong> <i class="icon-file"></i> file, the editor will automatically proceed with an update of the existing <em>Steam Workshop</em> item based on the .gdk internal identifier.</p>
+
+<blockquote>
+  <p><strong>Note</strong>: When you first upload a building to the <em>Steam Workshop</em>, your building is attributed a unique identifier that is stored in your building’s .gdk file.</p>
+  
+  <p>This identifier is then used to update an existing <em>Steam Workshop</em> item.</p>
+  
+  <p>This identifier can not be edited or viewed. This means that if you want to be able to update an existing <em>Steam Workshop</em> item, <strong>you must not loose the original .gdk file used for the first upload</strong>. <i class="icon-attention"></i></p>
+</blockquote></div></body>
+</html>

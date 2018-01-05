@@ -1,13 +1,13 @@
 _Boo! Greedy Kid_ editor manual (Windows only)
 ==========================
-> **Note**: the _Boo! Greedy Kid_ editor is only available on _Windows_ and there is no plan to port the editor to _Mac OS_ or _Linux_.
+> **Note**: The _Boo! Greedy Kid_ editor is only available on _Windows_ and there is no plan to port the editor to _Mac OS_ or _Linux_.
 
 **Manual version**: 1.0
 **Last modified**: 4th december 2018
 
-<i class="icon-globe"></i> **Online version**: http://greedy-kid.com/editor_manual/
+<i class="icon-globe"></i> **Online version**: [http://greedy-kid.com/editor_manual/](http://greedy-kid.com/editor_manual/)
 
-<i class="icon-mail"></i> **Contact and support**: _Boo! Greedy Kid_ editor _Steam_ forums
+<i class="icon-mail"></i> **Contact and support**: [_Boo! Greedy Kid_ editor _Steam_ forums](http://steamcommunity.com/app/770630/discussions/)
 
 <p align="center"><img src="http://greedy-kid.com/editor_manual/images/editor.png" width="600"></p>
 
@@ -19,7 +19,7 @@ Introduction to the editor
 ------------------------------------
 Welcome to the _Boo! Greedy Kid_ editor!
 
-This tool allows you to create your own buildings (with up to 99 levels per building) and to upload them on the _Steam Workshop_ of the game.
+This tool allows you to create your own buildings (with up to 99 levels per building) and to upload them on the [_Steam Workshop_](http://steamcommunity.com/app/770630/workshop/) <i class="icon-globe"></i> of the game.
 
 Through this document, you will learn how to do all of this.
 Let's get started!
@@ -31,19 +31,19 @@ If you're running the editor from _Steam_, you shouldn't need to install anythin
 
 If the editor fails to launch, it most probably means that your graphics card or drivers are not compatible.
 
-> **Note**: the editor and the game don't use the same technology, hence they both have different requirements. Please refer to the game's _Steam_ page for its own requirements.
+> **Note**: The editor and the game don't use the same technology, hence they both have different requirements. Please refer to the game's _Steam_ page for its own requirements.
 
 #### Launching the editor
 
 ##### <i class="icon-cloud"></i> From _Steam_
 When starting _Boo! Greedy Kid_ from your _Steam_ library, a pop-up window will appear and will propose you to either start the game, or the editor.
 
-IMG STEAM POP-UP
+<p align="center"><img src="http://greedy-kid.com/editor_manual/images/launch.png"></p>
 
 Select the editor (you will be able to start the game directly from the editor if need be).
 
 ##### <i class="icon-hdd"></i> From disk
-The editor is located in the game installation folder, in the **Editor** <i class="icon-folder"></i> sub-folder. Double-click on "GreedyKidEditor.exe" to launch it.
+The editor is located in the game installation folder, in the **Editor** <i class="icon-folder"></i> sub-folder. Double-click on **GreedyKidEditor.exe** <i class="icon-file"></i> to launch it.
 
 If you are using the _Steam_ version of the game, the editor may require that _Steam_ is launched before it can run.
 
@@ -83,39 +83,55 @@ On the right, you can access the **creation toolbox** <i class="icon-wrench"></i
 <p align="center"><img src="http://greedy-kid.com/editor_manual/images/toolbox.png" width="200"></p>
 
 #### <img src="http://greedy-kid.com/editor_manual/images/mode1.png" height="20"> Room mode
-The first mode is the room mode. Click on it, and you may now create empty room by left clicking somewhere on the live preview zone.
+The first mode is the room mode. **Left click** <i class="icon-up-hand"></i> on it, and you may now create empty room by left clicking somewhere on the live preview zone.
 
-You can adjust a room's size by hovering one of its walls, and press + maintain the space bar. You can now adjust its size as long as you maintain the space bar.
+<p align="center"><img src="http://greedy-kid.com/editor_manual/images/add_room.gif" width="450"></p>
 
-You can customize the appearance of a room by hovering its outer or inner walls and using the mouse wheel.
+You can adjust a room's size by hovering one of its walls, and press + maintain the **space bar** <i class="icon-keyboard"></i>. You can now adjust its size as long as you maintain the space bar.
 
-If need be, you can totally remove a room and its content by hovering it and right click on it. A confirmation message will appear before fully removing a room to prevent any unwanted clicks.
+<p align="center"><img src="http://greedy-kid.com/editor_manual/images/resize_room.gif" width="450"></p>
+
+You can customize the appearance of a room by hovering its outer or inner walls and using the **mouse wheel** <i class="icon-up-hand"></i>.
+
+<p align="center"><img src="http://greedy-kid.com/editor_manual/images/custom_room.gif" width="450"></p>
+
+If need be, you can totally remove a room and its content by hovering it and **right click** <i class="icon-up-hand"></i> on it. A confirmation message will appear before fully removing a room to prevent any unwanted clicks.
 
 #### <img src="http://greedy-kid.com/editor_manual/images/mode2.png" height="20"> Decoration mode
 The second creation mode is the decoration mode.
 
-Once selected, you can add decorations by left clicking on a room. To change between the different decoration available, you can use the mouse wheel while hovering a decoration.
+Once selected, you can add decorations by **left clicking** <i class="icon-up-hand"></i> on a room. To change between the different decoration available, you can use the **mouse wheel** <i class="icon-up-hand"></i> while hovering a decoration.
 
-If you'd like to move a decoration, hover it and maintain the space bar just like room size adjustment.
+If you'd like to move a decoration, hover it and maintain the **space bar** <i class="icon-keyboard"></i> just like room size adjustment.
+
+<p align="center"><img src="http://greedy-kid.com/editor_manual/images/decoration.gif" width="450"></p>
 
 You can also remove a decoration by right clicking on it.
 
-If you have two decorations overlapping and wish to adjust which one should be over another one, you can use the C and V keys while hovering a decoration to change its layer.
+If you have two decorations overlapping and wish to adjust which one should be over another one, you can use the **C** <i class="icon-keyboard"></i> and **V** <i class="icon-keyboard"></i> keys while hovering a decoration to change its layer.
+
+<p align="center"><img src="http://greedy-kid.com/editor_manual/images/layer.gif" width="450"></p>
 
 #### <img src="http://greedy-kid.com/editor_manual/images/mode3.png" height="20"> Separation (white) door mode
 This mode allows you to add white doors to divide a room into multiple spaces. NPC can't go through those doors when they are closed.
 
-Adding, removing or moving a door works just like the other modes by using the mouse buttons and the space bar while hovering a door.
+Adding, removing or moving a door works just like the other modes by using the **mouse buttons** <i class="icon-up-hand"></i> and the **space bar** <i class="icon-keyboard"></i> while hovering a door.
+
+<p align="center"><img src="http://greedy-kid.com/editor_manual/images/separation.gif" width="450"></p>
 
 #### <img src="http://greedy-kid.com/editor_manual/images/mode4.png" height="20"> (Colored) Floor door mode
 
 This mode allows you to add doors that will connect together to navigate to other rooms. NPC can go through these doors.
 
-To select which room leads to another one, both doors must have the same color. To change a room's color, use the mouse wheel while hovering it. For instance, if you change two doors to orange, they will connect.
+To select which room leads to another one, both doors must have the same color. To add a door use the **left click** <i class="icon-up-hand"></i>, and to change a room's color, use the **mouse wheel** <i class="icon-up-hand"></i> while hovering it. For instance, if you change two doors to orange, they will connect.
+
+<p align="center"><img src="http://greedy-kid.com/editor_manual/images/floor_door.gif" width="450"></p>
 
 There can only be two doors with the same color in a level. But this rule doesn't apply to grey doors. Grey doors don't work with colors, but instead with vertical alignment.
 
 When you move a grey door, you will see vertical guidelines to help you align them. If two grey doors are perfectly aligned (to the pixel), they will connect.
+
+<p align="center"><img src="http://greedy-kid.com/editor_manual/images/grey_door.gif" width="450"></p>
 
 Sounds complicated? Don't worry, the editor will tell you if there's anything wrong with your doors.
 
@@ -124,37 +140,58 @@ Furniture are objects behind which the kid can hide.
 
 You can add, change, or move furniture like any other modes, by using your mouse buttons / wheel and the space bar.
 
-Like the decorations, you can adjust their layer with the C and V keys if you'd like to fine tune overlapping furnitures.
+<p align="center"><img src="http://greedy-kid.com/editor_manual/images/furniture.gif" width="450"></p>
+
+Like the decorations, you can adjust their layer with the **C** <i class="icon-keyboard"></i> and **V** <i class="icon-keyboard"></i> keys if you'd like to fine tune overlapping furnitures.
 
 #### <img src="http://greedy-kid.com/editor_manual/images/mode6.png" height="20"> Elevator mode
 Each level must have an entrance elevator, and an exit elevator.
 
-To place an entrance, left click where you'd like to add it. To place an exit, use the right mouse button.
+To place an entrance, **left click** <i class="icon-up-hand"></i> where you'd like to add it. To place an exit, use the **right mouse button** <i class="icon-up-hand"></i>.
+
+<p align="center"><img src="http://greedy-kid.com/editor_manual/images/elevator.gif" width="450"></p>
 
 #### <img src="http://greedy-kid.com/editor_manual/images/mode7.png" height="20"> Retiree mode
 In this mode you can place retirees in the level.
 
-You can customize their appearance with the mouse wheel.
+You can customize their appearance with the **mouse wheel** <i class="icon-up-hand"></i>.
 
-You can also adjust their life with the C and V keys while hovering them, or adjust their money with the B and N keys.
+<p align="center"><img src="http://greedy-kid.com/editor_manual/images/retiree.gif" width="450"></p>
+
+You can also adjust their life with the **C** <i class="icon-keyboard"></i> and **V** <i class="icon-keyboard"></i> keys while hovering them, or adjust their money with the **B** <i class="icon-keyboard"></i> and **N** <i class="icon-keyboard"></i> keys.
 
 Life points represent the number of time it is required to scare them.
 
 #### <img src="http://greedy-kid.com/editor_manual/images/mode8.png" height="20"> Nurse mode
 This mode is for placing nurses, and works just like the retiree mode (to the exception that nurses don't drop money).
 
+<p align="center"><img src="http://greedy-kid.com/editor_manual/images/nurse.gif" width="450"></p>
+
 Life points represent the number of time it is required to scare them.
 
 #### <img src="http://greedy-kid.com/editor_manual/images/mode9.png" height="20"> Cop mode
 The cop mode allows you to add cops who will be present in the level right from the start of the level.
 
-You can change the cop type by using the mouse wheel while hovering a cop.
+You can change the cop type by using the **mouse wheel** <i class="icon-up-hand"></i> while hovering a cop.
+
+<p align="center"><img src="http://greedy-kid.com/editor_manual/images/cop.gif" width="450"></p>
 
 If you prefer to add a timer before cops will enter the level, have a look at the lower left of the editor.
+
+<p align="center"><img src="http://greedy-kid.com/editor_manual/images/cop_timer.png" width="350"></p>
 
 Here you can adjust how many seconds from the start of the level are required for cops to spawn, and which kind of cops should arrive.
 
 Note that you can have cops already in the level and cops arriving later at the same time (e.g. you can have two cops wandering from the start, and another one arriving after 10 seconds).
+
+> **Note 1**: Cops always spawn in the following order:
+> 1. Normal cops
+> 2. Tactical cops
+> 3. Robot-cops
+
+> **Note 2**: The time sliders are cumulative. <i class="icon-attention"></i> This means that if you set the cop slider to 5 seconds, and the tactical cop slider to 10 seconds, the normal cops will arrive after 5 seconds, but the tactical cops will arrive after 15 seconds (i.e. 10 seconds after the normal cops).
+
+> **Note 3**: You can spawn only specific cops by leaving sliders to 0. For example, if you want to spawn only tactical cops, set the normal cop slider to 0 and none will spawn.
 
 #### <i class="icon-award"></i> Setting the target time for scoring
 When players complete a level, they are awarded up to 3 stars <i class="icon-star"></i><i class="icon-star"></i><i class="icon-star"></i>depending on the following:
@@ -167,7 +204,9 @@ The target time is a value that you must set yourself in the editor. It is repre
 
 You can change the target time by hovering it and use the mouse wheel (to adjust it by 1 second at a time) or the left / right mouse buttons (to adjust it by 5 seconds at a time).
 
-Be sure to thoroughly test your level target time to make sure that the score is beatable.
+<p align="center"><img src="http://greedy-kid.com/editor_manual/images/timer.gif" width="450"></p>
+
+**Be sure to thoroughly test your level target time to make sure that the score is beatable**. <i class="icon-attention"></i>
 
 <i class="icon-gamepad"></i> Testing your buildings in-game
 --------------------------------------------
@@ -183,31 +222,31 @@ For a level to work in-game, it must follow these design rules:
 - Doors can't be connected to more than one door;
 - Spawn timers can not be set if there is no cop count assigned to them.
 
-You don't have to remember these rules as the editor will warn you of any errors and will prevent any export or upload of broken levels.
+> You don't have to remember these rules as the editor will warn you of any errors and will prevent any export or upload of broken levels.
 
 #### <i class="icon-hdd"></i> Exporting a test building
 If all the design rules are met, you are now all set to test your building in-game!
 
-First save your building through the "File" menu.
+First save your building through the **File** menu.
 
-To test your level in game, use the "File" menu and click on "Export to test in-game".
+To test your level in game, use the **File** menu and click on **Export to test in-game**.
 
 This will add your building only to your game and you can now start the game and test it. You can start the game directly from the editor.
 
 #### <i class="icon-gamepad"></i> Live testing without restarting the game
 To test your freshly exported level, start the game and go to the _Steam Workshop_ menu. Your building should appear here and be labeled as "test" after its name.
 
-Note that you can keep the game running and go back to the _Steam Workshop_ menu while you edit your levels in the editor. If you export new buildings they will automatically appear without the need to restart the game.
+> **Note**: You can keep the game running and go back to the _Steam Workshop_ menu while you edit your levels in the editor. If you export new buildings they will automatically appear without the need to restart the game.
 
-Don't forget to export your building each time you are making changes to try them.
+**Don't forget to export your building each time you are making changes to try them**. <i class="icon-attention"></i>
 
 <i class="icon-upload-cloud"></i> Uploading your buildings to the _Steam Workshop_
 -------------------------------------------------------
 When you are satisfied with your building, you can share it with the world!
 
 #### Initial upload
-Click on the "File" menu and select "Upload to Steam Workshop".
-Complete your upload by adding a description, selecting a language and adding a 16:9 preview image (e.g. a 1280x720 PNG file), and hit the upload button.
+Click on the **File** menu and select **Upload to Steam Workshop**.
+Complete your upload by adding a description <i class="icon-pencil"></i>, selecting a language and adding a 16:9 preview image (e.g. a 1280x720 PNG file), and hit the upload button.
 
 <p align="center"><img src="http://greedy-kid.com/editor_manual/images/workshop_config.png" width="400"></p>
 
@@ -215,11 +254,14 @@ If everything went well, your level is now available on the Steam Workshop!
 
 <p align="center"><img src="http://greedy-kid.com/editor_manual/images/progress.gif" width="400"></p>
 
+> **Note**: If it's you're first time uploading something to the _Steam Workshop_, you will have to accept the _Steam Workshop End-User Agreement_ before your item can be public. The editor should guide you if this should happen.
+
 #### <i class="icon-refresh"></i> Updating a building already uploaded
-When you first upload a building to the _Steam Workshop_, your building is attributed a unique identifier that is stored in your building's .gdk file.
 
-This identifier is then used to update an existing _Steam Workshop_ item.
+If you try to re-upload a building using the same **.gdk** <i class="icon-file"></i> file, the editor will automatically proceed with an update of the existing _Steam Workshop_ item based on the .gdk internal identifier.
 
-If you try to re-upload a building using the same .gdk file, the editor will automatically proceed with an update of the existing _Steam Workshop_ item based on the .gdk internal identifier.
+> **Note**: When you first upload a building to the _Steam Workshop_, your building is attributed a unique identifier that is stored in your building's .gdk file.
 
-This identifier can not be edited or viewed. This means that if you want to be able to update an existing _Steam Workshop_ item, **you must not loose the original .gdk file used for the first upload**. <i class="icon-attention"></i>
+> This identifier is then used to update an existing _Steam Workshop_ item.
+
+> This identifier can not be edited or viewed. This means that if you want to be able to update an existing _Steam Workshop_ item, **you must not loose the original .gdk file used for the first upload**. <i class="icon-attention"></i>
