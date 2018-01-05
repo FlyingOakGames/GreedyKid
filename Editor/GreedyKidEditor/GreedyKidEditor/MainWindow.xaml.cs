@@ -24,11 +24,13 @@ namespace GreedyKidEditor
         private PreviewRenderer renderer;
         private Thread rendererThread;
 
-        private Thread mouseThread;        
+        private Thread mouseThread;
+
+        private string SaveDirectory = "";
 
         private static string _saveFile = "";
 
-        private const string _latestSave = "latest";
+        private static string _latestSave = "EditorPreferences";
 
         private static Building _building = new Building("New building");        
 
@@ -99,15 +101,11 @@ namespace GreedyKidEditor
                     // 404
                 }
             }
-        }
-
-        private string SaveDirectory = "";
+        }        
 #endif
 
         public MainWindow()
-        {
-#if !DEBUG
-            // crash reporter
+        {            
             string userHome = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
             if (Environment.OSVersion.Platform == PlatformID.MacOSX || (Environment.OSVersion.Platform == PlatformID.Unix && SystemHelper.IsMac))
@@ -119,7 +117,8 @@ namespace GreedyKidEditor
 
             if (!Directory.Exists(SaveDirectory))
                 Directory.CreateDirectory(SaveDirectory);
-
+#if !DEBUG
+            // crash reporter
             AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
 #endif
 
@@ -134,6 +133,8 @@ namespace GreedyKidEditor
             IntPtr handle = monoGameRenderPanel.Handle;
             rendererThread = new Thread(new ThreadStart(() => { renderer = new PreviewRenderer(handle, this); renderer.Run(); }));
             rendererThread.Start();
+
+            _latestSave = System.IO.Path.Combine(SaveDirectory, _latestSave);
 
             // check for last saved file
             if (File.Exists(_latestSave))
@@ -1318,6 +1319,42 @@ namespace GreedyKidEditor
                 }
             }
             PreviewRenderer.BlockClick = false;
+        }
+
+        private void MenuItem_Click_8(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                System.Diagnostics.Process.Start("file://" + AppDomain.CurrentDomain.BaseDirectory + "Manual\\index.html");
+            }
+            catch { }
+        }
+
+        private void MenuItem_Click_9(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                FileInfo info = new FileInfo(AppDomain.CurrentDomain.BaseDirectory + "..\\GreedyKid.exe");
+                string path = AppDomain.CurrentDomain.BaseDirectory + "..\\GreedyKid.exe";
+                path = path.Replace("Editor\\..\\", "");
+                System.Diagnostics.Process.Start("file://" + path, "-forceWindowed");
+            }
+            catch { }
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (!File.Exists(_latestSave))
+            {
+                if (MessageBox.Show(this, "It seems to be your first time here. Would you like to see the editor tutorial?", "First time", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                {
+                    try
+                    {
+                        System.Diagnostics.Process.Start("file://" + AppDomain.CurrentDomain.BaseDirectory + "Manual\\index.html");
+                    }
+                    catch { }
+                }
+            }
         }
     }
 }

@@ -77,11 +77,19 @@ namespace GreedyKid
 
             graphics.PreferredBackBufferWidth = settingsManager.ResolutionX;
             graphics.PreferredBackBufferHeight = settingsManager.ResolutionY;
-            switch(settingsManager.FullScreenMode)
+            if (Program.ForceWindowed)
             {
-                case FullScreenMode.No: graphics.IsFullScreen = false; graphics.HardwareModeSwitch = false; break;
-                case FullScreenMode.Bordeless: graphics.HardwareModeSwitch = false; graphics.IsFullScreen = true; break;
-                case FullScreenMode.Real: graphics.HardwareModeSwitch = true; graphics.IsFullScreen = true; break;
+                graphics.IsFullScreen = false;
+                graphics.HardwareModeSwitch = false;
+            }
+            else
+            {
+                switch (settingsManager.FullScreenMode)
+                {
+                    case FullScreenMode.No: graphics.IsFullScreen = false; graphics.HardwareModeSwitch = false; break;
+                    case FullScreenMode.Bordeless: graphics.HardwareModeSwitch = false; graphics.IsFullScreen = true; break;
+                    case FullScreenMode.Real: graphics.HardwareModeSwitch = true; graphics.IsFullScreen = true; break;
+                }
             }
 
             graphics.ApplyChanges();

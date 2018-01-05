@@ -11,8 +11,10 @@ namespace GreedyKid
 
 #if XBOXONE || PLAYSTATION4
         public const bool RunningOnConsole = true;
+        public const bool ForceWindowed = false;
 #else
         public static bool RunningOnConsole = false;
+        public static bool ForceWindowed = false;
 #endif
 
         /// <summary>
@@ -45,6 +47,8 @@ namespace GreedyKid
             {
                 if (args[i] == "-emulateConsole")
                     RunningOnConsole = true;
+                else if (args[i] == "-forceWindowed")
+                    ForceWindowed = true;
             }
 #endif
 

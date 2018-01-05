@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:GreedyKidEditor"
         xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
         mc:Ignorable="d"
-        Title="Boo! Greedy Kid - Editor v1" Icon="Resources/Icon.ico" Height="1080" Width="1920" Closing="Window_Closing" WindowStartupLocation="CenterScreen" WindowState="Maximized">
+        Title="Boo! Greedy Kid - Editor v1" Icon="Resources/Icon.ico" Height="1080" Width="1920" Closing="Window_Closing" WindowStartupLocation="CenterScreen" WindowState="Maximized" Loaded="Window_Loaded">
     <Window.Resources>
         <RoutedUICommand x:Key="SaveCmd" Text="Save">
             <RoutedUICommand.InputGestures>
@@ -45,6 +45,12 @@
                 <MenuItem x:Name="workshopMenu" Header="Upload to Steam Workshop" Click="MenuItem_Click_7" />
                 <Separator x:Name="exportSeparator"/>
                 <MenuItem Header="Exit" Click="MenuItem_Click"/>
+            </MenuItem>
+            <MenuItem Header="Launch game" Click="MenuItem_Click_9">
+                
+            </MenuItem>
+            <MenuItem Header="Help" Click="MenuItem_Click_8">
+                
             </MenuItem>
         </Menu>
         <Grid Margin="0,23,0,23">
