@@ -5,6 +5,7 @@
 
 	New:
 		Steam Workshop support (for the Steam version of the game and editor)
+		Editor manual
 		Endings
 		New characters and levels
 
