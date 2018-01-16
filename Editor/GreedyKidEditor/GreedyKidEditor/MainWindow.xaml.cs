@@ -128,10 +128,21 @@ namespace GreedyKidEditor
             InitializeComponent();
 
             mouseThread = new Thread(MouseWorker);
+            mouseThread.IsBackground = true;
             mouseThread.Start();
 
             IntPtr handle = monoGameRenderPanel.Handle;
-            rendererThread = new Thread(new ThreadStart(() => { renderer = new PreviewRenderer(handle, this); renderer.Run(); }));
+            rendererThread = new Thread(
+                new ThreadStart(
+                    () =>
+                    {
+                        renderer = new PreviewRenderer(handle, this);
+                        renderer.Run();
+                        Console.WriteLine("Renderer exited");
+                    }
+                )
+            );
+            rendererThread.IsBackground = true;
             rendererThread.Start();
 
             _latestSave = System.IO.Path.Combine(SaveDirectory, _latestSave);
@@ -196,14 +207,16 @@ namespace GreedyKidEditor
             Console.WriteLine("Mouse thread has exited");
         }
 
-        bool _stopThread = false;       
+        volatile bool _stopThread = false;       
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
+            Console.WriteLine("Stopping all threads...");
             _stopThread = true;
 
             renderer.Exit();
-            rendererThread.Join();            
+
+            //rendererThread.Join(); // should exit after renderer.Exit();
         }
 
         // convert to DPI scaled coordinates
