@@ -282,8 +282,8 @@ namespace GreedyKidEditor
                 _levelTexture = Content.Load<Texture2D>("Textures\\level");
             }
 
-            _font = Content.Load<SpriteFont>("Fonts\\latin");
-            _font.Spacing = 1;
+            //_font = Content.Load<SpriteFont>("Fonts\\latin");
+            //_font.Spacing = 1;
 #else
             _levelTexture = Content.Load<Texture2D>("Textures\\level");
             _font = Content.Load<SpriteFont>("Fonts\\latin");
