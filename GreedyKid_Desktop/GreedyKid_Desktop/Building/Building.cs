@@ -7,6 +7,8 @@ namespace GreedyKid
 {
     public sealed class Building
     {
+        public const string MainCampaignIdentifier = "MainCampaign";
+
         public const string LocalWorkshopPath = "Content/Workshop/";
         private const string _defaultBuildingPath = "Content\\building";
         private const string _defaultLevelPath = "Content\\level_";
@@ -15,6 +17,7 @@ namespace GreedyKid
         private string _currentLevelPath = "";
 
         public string Identifier = "";
+        public uint Version = 0;
         public string Name = "";
         public int LevelCount = 0;
 
@@ -42,7 +45,7 @@ namespace GreedyKid
             _currentBuildingPath = _defaultBuildingPath;
             _currentLevelPath = _defaultLevelPath;
 
-            if (buildingIdentifier != "Default")
+            if (buildingIdentifier != MainCampaignIdentifier)
             {
                 if (isSteamWorkshop)
                 {
@@ -62,6 +65,7 @@ namespace GreedyKid
                 using (BinaryReader reader = new BinaryReader(gzipStream))
                 {
                     Identifier = reader.ReadString();
+                    Version = reader.ReadUInt32();
 
                     Name = reader.ReadString();
 
@@ -95,6 +99,9 @@ namespace GreedyKid
                 {
                     CurrentLevel = new Level();
                     CurrentLevel.Load(reader);
+
+                    if (CurrentLevel.Version != Version || CurrentLevel.Identifier != Identifier)
+                        throw new Exception("Tentative to hack levels.");
                 }
             }
         }

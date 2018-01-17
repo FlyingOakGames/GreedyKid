@@ -25,7 +25,7 @@ namespace GreedyKidEditor
         // score
         public int TargetTime = 1;
 
-        public void Save(BinaryWriter writer)
+        public void Save(BinaryWriter writer, string buildingIdentifier, uint version)
         {
             // removing empty floors
             for (int f = Floors.Count - 1; f >= 0; f--)
@@ -35,6 +35,9 @@ namespace GreedyKidEditor
                 else
                     break;
             }
+
+            writer.Write(buildingIdentifier);
+            writer.Write(version);
 
             writer.Write(Name);
 
@@ -59,6 +62,9 @@ namespace GreedyKidEditor
 
         public void Load(BinaryReader reader)
         {
+            string identifier = reader.ReadString();
+            uint version = reader.ReadUInt32();
+
             Name = reader.ReadString();
 
             TargetTime = reader.ReadInt32();

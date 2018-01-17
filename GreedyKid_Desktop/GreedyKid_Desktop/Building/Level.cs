@@ -4,6 +4,8 @@ namespace GreedyKid
 {
     public sealed class Level
     {
+        public string Identifier = "";
+        public uint Version = 0;
         public string Name = "";
 
         public Floor[] Floors;
@@ -28,6 +30,9 @@ namespace GreedyKid
         public void Load(BinaryReader reader)
         {
             TargetMoney = 0;
+
+            Identifier = reader.ReadString();
+            Version = reader.ReadUInt32();
 
             Name = reader.ReadString();
 

@@ -6,12 +6,15 @@ namespace GreedyKidEditor
 {
     public sealed class Building
     {
+        public const string MainCampaignIdentifier = "MainCampaign";
+
         // workshop data
 #if DEVMODE
-        public string Identifier = "Default";
+        public string Identifier = MainCampaignIdentifier;
 #else
         public string Identifier = "NotUploadedToWorkshopYet";
 #endif
+        public uint Version = 0;
         public string Description = "Describe your building here";
         public string LanguageCode = "english";
         public WorkshopItemVisibility Visibility = WorkshopItemVisibility.Private;
@@ -35,7 +38,10 @@ namespace GreedyKidEditor
 
         public void Save(BinaryWriter writer, bool export = false)
         {
+            Version++;
+
             writer.Write(Identifier);
+            writer.Write(Version);
 
             if (!export)
             {
@@ -52,7 +58,7 @@ namespace GreedyKidEditor
             if (!export)
             {
                 for (int i = 0; i < Levels.Count; i++)
-                    Levels[i].Save(writer);
+                    Levels[i].Save(writer, Identifier, Version);
             }
             else
             {
@@ -65,11 +71,17 @@ namespace GreedyKidEditor
             }
         }
 
+        public void SaveLevel(BinaryWriter writer, int l)
+        {
+            Levels[l].Save(writer, Identifier, Version);
+        }
+
         public void Load(BinaryReader reader)
         {
             Levels.Clear();
 
             Identifier = reader.ReadString();
+            Version = reader.ReadUInt32();
             Description = reader.ReadString();
             LanguageCode = reader.ReadString();
             Visibility = (WorkshopItemVisibility)reader.ReadInt32();

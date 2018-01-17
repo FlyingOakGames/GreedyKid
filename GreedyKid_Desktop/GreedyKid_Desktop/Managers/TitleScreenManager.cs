@@ -33,7 +33,7 @@ namespace GreedyKid
         private RequestedTransition _requestedTransition = RequestedTransition.None;
         public bool StartGame = false;
         public bool ShouldLoadBuilding = false;
-        public string RequiredBuildingIdentifier = "Default";
+        public string RequiredBuildingIdentifier = Building.MainCampaignIdentifier;
         public bool IsSteamWorkshopBuilding = false;
 
         public bool IsWorkshopBuilding = false;
@@ -397,7 +397,7 @@ namespace GreedyKid
                         // load building
                         ShouldLoadBuilding = true;
                         IsWorkshopBuilding = false;
-                        RequiredBuildingIdentifier = "Default";
+                        RequiredBuildingIdentifier = Building.MainCampaignIdentifier;
                         TransitionManager.Instance.AppearTransition();
                         break;
                     case RequestedTransition.ToWorkshopMenu:                        

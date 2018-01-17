@@ -662,7 +662,7 @@ namespace GreedyKidEditor
                     {
                         using (BinaryWriter writer = new BinaryWriter(gzipStream))
                         {
-                            _building.Identifier = "Default";
+                            _building.Identifier = Building.MainCampaignIdentifier;
                             _building.Save(writer, true);
                         }
                     }
@@ -676,7 +676,7 @@ namespace GreedyKidEditor
                         {
                             using (BinaryWriter writer = new BinaryWriter(gzipStream))
                             {
-                                _building.Levels[l].Save(writer);
+                                _building.SaveLevel(writer, l);
                             }
                         }
                     }
@@ -955,6 +955,11 @@ namespace GreedyKidEditor
                             string name = _building.Name;
                             if (!forWorkshop)
                                 _building.Name = name + " (TEST)";
+                            if (_building.Identifier == Building.MainCampaignIdentifier)
+                            {
+                                Random r = new Random();
+                                _building.Identifier = "Building" + r.Next().ToString();
+                            }
                             _building.Save(writer, true);
                             _building.Name = name;
                         }
@@ -969,7 +974,7 @@ namespace GreedyKidEditor
                         {
                             using (BinaryWriter writer = new BinaryWriter(gzipStream))
                             {
-                                _building.Levels[l].Save(writer);
+                                _building.SaveLevel(writer, l);
                             }
                         }
                     }
