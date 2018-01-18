@@ -136,56 +136,56 @@ namespace GreedyKid
             }
         }
 
-        public void DrawBorders(SpriteBatch spriteBatch)
+        public void DrawBorders(SpriteBatch spriteBatch, Vector2 offset)
         {
             Texture2D texture = TextureManager.Gameplay;
 
             // ****** BORDERS ******
             // up
             spriteBatch.Draw(texture,
-                new Rectangle(0, 0, GreedyKidGame.Width, _bordersRectangle[4].Height),
+                new Rectangle(0 + (int)offset.X, 0 + (int)offset.Y, GreedyKidGame.Width, _bordersRectangle[4].Height),
                 _bordersRectangle[4],
                 Color.White);
 
             // down
             spriteBatch.Draw(texture,
-                new Rectangle(0, GreedyKidGame.Height - _bordersRectangle[5].Height, GreedyKidGame.Width, _bordersRectangle[5].Height),
+                new Rectangle(0 + (int)offset.X, GreedyKidGame.Height - _bordersRectangle[5].Height + (int)offset.Y, GreedyKidGame.Width, _bordersRectangle[5].Height),
                 _bordersRectangle[5],
                 Color.White);
 
             // left
             spriteBatch.Draw(texture,
-                new Rectangle(0, 0, _bordersRectangle[6].Width, GreedyKidGame.Height),
+                new Rectangle(0 + (int)offset.X, 0 + (int)offset.Y, _bordersRectangle[6].Width, GreedyKidGame.Height),
                 _bordersRectangle[6],
                 Color.White);
 
             // right
             spriteBatch.Draw(texture,
-                new Rectangle(GreedyKidGame.Width - _bordersRectangle[7].Width, 0, _bordersRectangle[6].Width, GreedyKidGame.Height),
+                new Rectangle(GreedyKidGame.Width - _bordersRectangle[7].Width + (int)offset.X, 0 + (int)offset.Y, _bordersRectangle[6].Width, GreedyKidGame.Height),
                 _bordersRectangle[7],
                 Color.White);
 
             // upper left
             spriteBatch.Draw(texture,
-                new Rectangle(0, 0, _bordersRectangle[0].Width, _bordersRectangle[0].Height),
+                new Rectangle(0 + (int)offset.X, 0 + (int)offset.Y, _bordersRectangle[0].Width, _bordersRectangle[0].Height),
                 _bordersRectangle[0],
                 Color.White);
 
             // upper right
             spriteBatch.Draw(texture,
-                new Rectangle(GreedyKidGame.Width - _bordersRectangle[1].Width, 0, _bordersRectangle[1].Width, _bordersRectangle[1].Height),
+                new Rectangle(GreedyKidGame.Width - _bordersRectangle[1].Width + (int)offset.X, 0 + (int)offset.Y, _bordersRectangle[1].Width, _bordersRectangle[1].Height),
                 _bordersRectangle[1],
                 Color.White);
 
             // lower left
             spriteBatch.Draw(texture,
-                new Rectangle(0, GreedyKidGame.Height - _bordersRectangle[2].Height, _bordersRectangle[2].Width, _bordersRectangle[2].Height),
+                new Rectangle(0 + (int)offset.X, GreedyKidGame.Height - _bordersRectangle[2].Height + (int)offset.Y, _bordersRectangle[2].Width, _bordersRectangle[2].Height),
                 _bordersRectangle[2],
                 Color.White);
 
             // lower right
             spriteBatch.Draw(texture,
-                new Rectangle(GreedyKidGame.Width - _bordersRectangle[3].Width, GreedyKidGame.Height - _bordersRectangle[3].Height, _bordersRectangle[3].Width, _bordersRectangle[3].Height),
+                new Rectangle(GreedyKidGame.Width - _bordersRectangle[3].Width + (int)offset.X, GreedyKidGame.Height - _bordersRectangle[3].Height + (int)offset.Y, _bordersRectangle[3].Width, _bordersRectangle[3].Height),
                 _bordersRectangle[3],
                 Color.White);
         }
@@ -251,7 +251,7 @@ namespace GreedyKid
             
         }
 
-        public void DrawMicrophoneVolume(SpriteBatch spriteBatch)
+        public void DrawMicrophoneVolume(SpriteBatch spriteBatch, Vector2 screenshake)
         {
             if (MicrophoneManager.Instance.Working)
             {
@@ -261,7 +261,7 @@ namespace GreedyKid
                 int micLevel = Math.Min(9, MicrophoneManager.Instance.LeveledVolume);
                 int posY = GreedyKidGame.Height / 2 - _microphoneRectangle[0].Height / 2;
                 spriteBatch.Draw(texture,
-                    new Rectangle(6, posY, _microphoneRectangle[0].Width, _microphoneRectangle[0].Height),
+                    new Rectangle(6 + (int)screenshake.X, posY + (int)screenshake.Y, _microphoneRectangle[0].Width, _microphoneRectangle[0].Height),
                      _microphoneRectangle[micLevel],
                      Color.White,
                      0.0f,
@@ -269,7 +269,7 @@ namespace GreedyKid
                      SpriteEffects.FlipHorizontally,
                      0.0f);
                 spriteBatch.Draw(texture,
-                    new Rectangle(GreedyKidGame.Width - 8, posY, _microphoneRectangle[0].Width, _microphoneRectangle[0].Height),
+                    new Rectangle(GreedyKidGame.Width - 8 + (int)screenshake.X, posY + (int)screenshake.Y, _microphoneRectangle[0].Width, _microphoneRectangle[0].Height),
                      _microphoneRectangle[micLevel],
                      Color.White);
             }

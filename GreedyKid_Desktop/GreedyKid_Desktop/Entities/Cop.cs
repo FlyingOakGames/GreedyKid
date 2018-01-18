@@ -463,6 +463,7 @@ namespace GreedyKid
             _currentWindowFrameTime = 0.0f;
 
             SfxManager.Instance.Play(Sfx.WidowsBreak);
+            Helper.ScreenShakeHelper.Instance.ShakeScreen(Helper.ScreenShakeHelper.MediumForce, Helper.ScreenShakeHelper.ShortDuration);
 
             Roll();
         }
@@ -739,6 +740,8 @@ namespace GreedyKid
                     _smokeX = (int)X;
                     _smokeY = 128 - 40 * Room.Y + 9 + 16;
                     _smokeOrientation = Orientation;
+
+                    Helper.ScreenShakeHelper.Instance.ShakeScreen(Helper.ScreenShakeHelper.MediumForce, Helper.ScreenShakeHelper.MediumDuration);
                 }
                 else if (State == EntityState.HookingDown && _currentFrame == 3)
                 {

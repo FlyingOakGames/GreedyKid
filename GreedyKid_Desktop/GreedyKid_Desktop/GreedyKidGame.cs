@@ -417,21 +417,23 @@ namespace GreedyKid
             float targetRatio = Width / (float)Height;
             float gameRatio = GraphicsDevice.Viewport.Bounds.Width / (float)GraphicsDevice.Viewport.Bounds.Height;
 
+            Vector2 screenShake = Helper.ScreenShakeHelper.Instance.ScreenShake;
+
             if (gameRatio > targetRatio)
             {
                 // black border width
                 Viewport.Width = (int)(GraphicsDevice.Viewport.Bounds.Height * targetRatio);
                 Viewport.Height = GraphicsDevice.Viewport.Bounds.Height;
-                Viewport.X = (GraphicsDevice.Viewport.Bounds.Width - Viewport.Width) / 2;
-                Viewport.Y = 0;                
+                Viewport.X = (GraphicsDevice.Viewport.Bounds.Width - Viewport.Width) / 2 + (int)screenShake.X;
+                Viewport.Y = 0 + (int)screenShake.Y;                
             }
             else if (gameRatio < targetRatio)
             {
                 // black border height
                 Viewport.Width = GraphicsDevice.Viewport.Bounds.Width;
                 Viewport.Height = (int)(GraphicsDevice.Viewport.Bounds.Width / targetRatio);
-                Viewport.X = 0;
-                Viewport.Y = (GraphicsDevice.Viewport.Bounds.Height - Viewport.Height) / 2;
+                Viewport.X = 0 + (int)screenShake.X;
+                Viewport.Y = (GraphicsDevice.Viewport.Bounds.Height - Viewport.Height) / 2 + (int)screenShake.Y;
             }
             else
             {

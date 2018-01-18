@@ -120,7 +120,7 @@ namespace GreedyKid
             spriteBatch.End();
 
             spriteBatch.Begin(samplerState: SamplerState.PointWrap);
-            UIHelper.Instance.DrawBorders(spriteBatch);
+            UIHelper.Instance.DrawBorders(spriteBatch, Vector2.Zero);
             spriteBatch.End();
         }
     }

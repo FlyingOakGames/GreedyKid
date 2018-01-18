@@ -71,7 +71,7 @@ namespace GreedyKid
         {
             get
             {
-                return TextureManager.LatinFont;
+                return TextureManager.LatinFont; // depend on the language
             }
         }
 

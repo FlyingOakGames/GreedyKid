@@ -705,6 +705,8 @@ namespace GreedyKid
 
             Life--;
 
+            Helper.ScreenShakeHelper.Instance.ShakeBorders(Helper.ScreenShakeHelper.SmallForce, Helper.ScreenShakeHelper.ShortDuration);
+
             SfxManager.Instance.Play(Sfx.Hit);
 
             if (Life > 0)
@@ -754,6 +756,8 @@ namespace GreedyKid
             State = EntityState.SlamingDoor;
             _currentFrame = 0;
             _currentFrameTime = 0.0f;
+
+            Helper.ScreenShakeHelper.Instance.ShakeScreen(Helper.ScreenShakeHelper.SmallForce, Helper.ScreenShakeHelper.ShortDuration);
         }
 
         public void HitRobocop(SpriteEffects orientation)
@@ -819,6 +823,8 @@ namespace GreedyKid
                     SfxManager.Instance.Play(Sfx.Shout1 + RandomHelper.Next(5));
                 _moveDirection = 0;
                 _shouting = true;
+
+                Helper.ScreenShakeHelper.Instance.ShakeScreen(Helper.ScreenShakeHelper.SmallForce, Helper.ScreenShakeHelper.ShortDuration);
             }
         }
 

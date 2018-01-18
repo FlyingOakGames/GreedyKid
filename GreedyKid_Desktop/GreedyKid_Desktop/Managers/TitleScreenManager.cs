@@ -794,11 +794,11 @@ namespace GreedyKid
 
             Texture2D texture = TextureManager.Gameplay;
 
-            UIHelper.Instance.DrawBorders(spriteBatch);
+            UIHelper.Instance.DrawBorders(spriteBatch, Vector2.Zero);
 
             if (_state != TitleScreenState.Title)
             {
-                UIHelper.Instance.DrawMicrophoneVolume(spriteBatch);
+                UIHelper.Instance.DrawMicrophoneVolume(spriteBatch, Vector2.Zero);
             }
 
             // background

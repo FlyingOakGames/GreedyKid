@@ -403,6 +403,8 @@ namespace GreedyKid
 
         public void LoadLevel(int level)
         {
+            Helper.ScreenShakeHelper.Instance.Reset();
+
             SelectedLevel = level;
 
             _building.LoadLevel(SelectedLevel);            
@@ -594,6 +596,7 @@ namespace GreedyKid
         {
             if (Player != null && Player.Life > 0)
             {
+                Helper.ScreenShakeHelper.Instance.Reset();
                 _pause = true;
                 _pauseOption = 0;
                 _inSettings = false;
@@ -769,6 +772,7 @@ namespace GreedyKid
             else
             {
                 _pause = false;
+                Helper.ScreenShakeHelper.Instance.Reset();
             }
         }
 
@@ -877,6 +881,8 @@ namespace GreedyKid
             
             if (_building.CurrentLevel != null && Player != null && SelectedLevel >= 0 && SelectedLevel < _building.LevelCount)
             {
+                int previousLife = Player.Life;
+
                 int prevPlayerY = Player.Room.Y;
                 Player.Update(gameTime);
                 int playerY = Player.Room.Y;
@@ -889,6 +895,8 @@ namespace GreedyKid
                     else if (playerY < prevPlayerY && _cameraPositionY > (playerY - 1) * 40.0f)
                         MoveCamera((playerY - 1) * 40.0f);                    
                 }
+
+                Helper.ScreenShakeHelper.Instance.Update(gameTime);
 
                 // gameover
                 if (Player.Life <= 0)
@@ -2436,49 +2444,51 @@ namespace GreedyKid
                 if (_currentGameOverFrame > 0)
                     DrawGameoverBox(spriteBatch, 117, _currentGameOverFrame - 1);
             }
-            
+
+            Vector2 borderShake = Helper.ScreenShakeHelper.Instance.BorderShake;
+
             // ****** UI ******
             if (IsIngame)
             {
                 // floor mask
                 spriteBatch.Draw(texture,
-                    new Rectangle(0, 0, GreedyKidGame.Width, 14),
+                    new Rectangle(0 + (int)borderShake.X, 0 + (int)borderShake.Y, GreedyKidGame.Width, 14),
                     _maskRectangle[3],
                     Color.White);
                 spriteBatch.Draw(texture,
-                    new Rectangle(0, 14, GreedyKidGame.Width, 2),
+                    new Rectangle(0 + (int)borderShake.X, 14 + (int)borderShake.Y, GreedyKidGame.Width, 2),
                     _maskRectangle[4],
                     Color.White);
                 spriteBatch.Draw(texture,
-                    new Rectangle(0, GreedyKidGame.Height - 12, GreedyKidGame.Width, 12),
+                    new Rectangle(0 + (int)borderShake.X, GreedyKidGame.Height - 12 + (int)borderShake.Y, GreedyKidGame.Width, 12),
                     _maskRectangle[3],
                     Color.White);
                 spriteBatch.Draw(texture,
-                    new Rectangle(0, GreedyKidGame.Height - 14, GreedyKidGame.Width, 2),
+                    new Rectangle(0 + (int)borderShake.X, GreedyKidGame.Height - 14 + (int)borderShake.Y, GreedyKidGame.Width, 2),
                     _maskRectangle[4],
                     Color.White);
             }
 
-            UIHelper.Instance.DrawBorders(spriteBatch);
+            UIHelper.Instance.DrawBorders(spriteBatch, borderShake);
 
             // masks
             spriteBatch.Draw(texture,
-                new Rectangle(19, 0, _maskRectangle[0].Width, _maskRectangle[0].Height),
+                new Rectangle(19 + (int)borderShake.X, 0 + (int)borderShake.Y, _maskRectangle[0].Width, _maskRectangle[0].Height),
                 _maskRectangle[0],
                 Color.White);
             if (!_pause && !Gameover)
             {
                 spriteBatch.Draw(texture,
-                    new Rectangle(136, 0, _maskRectangle[1].Width, _maskRectangle[1].Height),
+                    new Rectangle(136 + (int)borderShake.X, 0 + (int)borderShake.Y, _maskRectangle[1].Width, _maskRectangle[1].Height),
                     _maskRectangle[1],
                     Color.White);
             }
             spriteBatch.Draw(texture,
-                new Rectangle(257, 0, _maskRectangle[2].Width, _maskRectangle[2].Height),
+                new Rectangle(257 + (int)borderShake.X, 0 + (int)borderShake.Y, _maskRectangle[2].Width, _maskRectangle[2].Height),
                 _maskRectangle[2],
                 Color.White);
 
-            UIHelper.Instance.DrawMicrophoneVolume(spriteBatch);
+            UIHelper.Instance.DrawMicrophoneVolume(spriteBatch, borderShake);
 
             // cop timer
             if (IsIngame && !_pause && _totalCopTimer > 0 && !Gameover)
@@ -2487,8 +2497,8 @@ namespace GreedyKid
                 int minX = 15;
                 // warning
                 spriteBatch.Draw(texture,
-                    new Rectangle(maxX,
-                        GreedyKidGame.Height - _copTimerRectangle[12].Height - 1,
+                    new Rectangle(maxX + (int)borderShake.X,
+                        GreedyKidGame.Height - _copTimerRectangle[12].Height - 1 + (int)borderShake.Y,
                         _copTimerRectangle[12].Width,
                         _copTimerRectangle[12].Height),
                     _copTimerRectangle[12],
@@ -2503,8 +2513,9 @@ namespace GreedyKid
 
                     // icon
                     spriteBatch.Draw(texture,
-                       new Rectangle(minX - 1 + _copTimerRectangle[0].Width + (int)(distance - distance * ((time - _currentSeconds) / _totalCopTimer)),
-                           GreedyKidGame.Height - _copTimerRectangle[11].Height - 1,
+                       new Rectangle(
+                           minX - 1 + _copTimerRectangle[0].Width + (int)(distance - distance * ((time - _currentSeconds) / _totalCopTimer)) + (int)borderShake.X,
+                           GreedyKidGame.Height - _copTimerRectangle[11].Height - 1 + (int)borderShake.Y,
                            _copTimerRectangle[11].Width,
                            _copTimerRectangle[11].Height),
                        _copTimerRectangle[11],
@@ -2512,8 +2523,8 @@ namespace GreedyKid
 
                     // count
                     spriteBatch.Draw(texture,
-                      new Rectangle(minX + (int)(distance - distance * ((time - _currentSeconds) / _totalCopTimer)),
-                          GreedyKidGame.Height - _copTimerRectangle[9].Height - 1,
+                      new Rectangle(minX + (int)(distance - distance * ((time - _currentSeconds) / _totalCopTimer)) + (int)borderShake.X,
+                          GreedyKidGame.Height - _copTimerRectangle[9].Height - 1 + (int)borderShake.Y,
                           _copTimerRectangle[0].Width,
                           _copTimerRectangle[0].Height),
                       _copTimerRectangle[_building.CurrentLevel.RobocopCount - 1],
@@ -2526,8 +2537,8 @@ namespace GreedyKid
 
                     // icon
                     spriteBatch.Draw(texture,
-                       new Rectangle(minX - 1 + _copTimerRectangle[0].Width + (int)(distance - distance * ((time - _currentSeconds) / _totalCopTimer)),
-                           GreedyKidGame.Height - _copTimerRectangle[10].Height - 1,
+                       new Rectangle(minX - 1 + _copTimerRectangle[0].Width + (int)(distance - distance * ((time - _currentSeconds) / _totalCopTimer)) + (int)borderShake.X,
+                           GreedyKidGame.Height - _copTimerRectangle[10].Height - 1 + (int)borderShake.Y,
                            _copTimerRectangle[10].Width,
                            _copTimerRectangle[10].Height),
                        _copTimerRectangle[10],
@@ -2535,8 +2546,8 @@ namespace GreedyKid
 
                     // count
                     spriteBatch.Draw(texture,
-                      new Rectangle(minX + (int)(distance - distance * ((time - _currentSeconds) / _totalCopTimer)),
-                          GreedyKidGame.Height - _copTimerRectangle[9].Height - 1,
+                      new Rectangle(minX + (int)(distance - distance * ((time - _currentSeconds) / _totalCopTimer)) + (int)borderShake.X,
+                          GreedyKidGame.Height - _copTimerRectangle[9].Height - 1 + (int)borderShake.Y,
                           _copTimerRectangle[0].Width,
                           _copTimerRectangle[0].Height),
                       _copTimerRectangle[_building.CurrentLevel.Swat1Count - 1],
@@ -2549,8 +2560,8 @@ namespace GreedyKid
 
                     // icon
                     spriteBatch.Draw(texture,
-                       new Rectangle(minX - 1 + _copTimerRectangle[0].Width + (int)(distance - distance * ((time - _currentSeconds) / _totalCopTimer)),
-                           GreedyKidGame.Height - _copTimerRectangle[9].Height - 1,
+                       new Rectangle(minX - 1 + _copTimerRectangle[0].Width + (int)(distance - distance * ((time - _currentSeconds) / _totalCopTimer)) + (int)borderShake.X,
+                           GreedyKidGame.Height - _copTimerRectangle[9].Height - 1 + (int)borderShake.Y,
                            _copTimerRectangle[9].Width,
                            _copTimerRectangle[9].Height),
                        _copTimerRectangle[9],
@@ -2558,8 +2569,8 @@ namespace GreedyKid
 
                     // count
                     spriteBatch.Draw(texture,
-                      new Rectangle(minX + (int)(distance - distance * ((time - _currentSeconds) / _totalCopTimer)),
-                          GreedyKidGame.Height - _copTimerRectangle[9].Height - 1,
+                      new Rectangle(minX + (int)(distance - distance * ((time - _currentSeconds) / _totalCopTimer)) + (int)borderShake.X,
+                          GreedyKidGame.Height - _copTimerRectangle[9].Height - 1 + (int)borderShake.Y,
                           _copTimerRectangle[0].Width,
                           _copTimerRectangle[0].Height),
                       _copTimerRectangle[_initialNormalCopCount - 1],
@@ -2574,7 +2585,7 @@ namespace GreedyKid
                 {
                     // full
                     spriteBatch.Draw(texture,
-                        new Rectangle(24 + h * _iconRectangle[0].Width, 0, _iconRectangle[0].Width, _iconRectangle[0].Height),
+                        new Rectangle(24 + h * _iconRectangle[0].Width + (int)borderShake.X, 0 + (int)borderShake.Y, _iconRectangle[0].Width, _iconRectangle[0].Height),
                         _iconRectangle[0],
                         Color.White);
                 }
@@ -2582,7 +2593,7 @@ namespace GreedyKid
                 {
                     // half
                     spriteBatch.Draw(texture,
-                        new Rectangle(24 + h * _iconRectangle[1].Width, 0, _iconRectangle[1].Width, _iconRectangle[1].Height),
+                        new Rectangle(24 + h * _iconRectangle[1].Width + (int)borderShake.X, 0 + (int)borderShake.Y, _iconRectangle[1].Width, _iconRectangle[1].Height),
                         _iconRectangle[1],
                         Color.White);
                 }
@@ -2590,7 +2601,7 @@ namespace GreedyKid
                 {
                     // empty
                     spriteBatch.Draw(texture,
-                        new Rectangle(24 + h * _iconRectangle[2].Width, 0, _iconRectangle[2].Width, _iconRectangle[2].Height),
+                        new Rectangle(24 + h * _iconRectangle[2].Width + (int)borderShake.X, 0 + (int)borderShake.Y, _iconRectangle[2].Width, _iconRectangle[2].Height),
                         _iconRectangle[2],
                         Color.White);
                 }
@@ -2612,7 +2623,7 @@ namespace GreedyKid
                 {
                     Rectangle source = _numberRectangle[_encodedTime[t]];
                     spriteBatch.Draw(texture,
-                        new Rectangle(140 + textX, 0, source.Width, source.Height),
+                        new Rectangle(140 + textX + (int)borderShake.X, 0 + (int)borderShake.Y, source.Width, source.Height),
                         source,
                         Color.White);
 
@@ -2681,7 +2692,7 @@ namespace GreedyKid
             {
                 Rectangle source = _numberRectangle[_encodedScore[s]];
                 spriteBatch.Draw(texture,
-                    new Rectangle(261 + textX, 0, source.Width, source.Height),
+                    new Rectangle(261 + textX + (int)borderShake.X, 0 + (int)borderShake.Y, source.Width, source.Height),
                     source,
                     Color.White);
 
