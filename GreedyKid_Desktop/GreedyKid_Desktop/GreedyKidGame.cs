@@ -9,6 +9,7 @@ namespace GreedyKid
     public enum GameState
     {
         None,
+        Disclaimer,
         Splash,
         Title,
         Ingame,
@@ -36,6 +37,7 @@ namespace GreedyKid
         private GameState _state = GameState.None;
 
         // managers
+        private DisclaimerManager _disclaimerManager;
         private SplashScreenManager _splashScreenManager;
         private TitleScreenManager _titleScreenManager;
         private IntroScreenManager _introScreenManager;
@@ -206,18 +208,26 @@ namespace GreedyKid
             switch (_state)
             {
                 case GameState.None:
-                    TextureManager.LoadGameplay(GraphicsDevice);
-                    TextureManager.LoadIntro(GraphicsDevice);
-                    TextureManager.LoadEnding(GraphicsDevice);
-                    TextureManager.LoadFont();
-                    SfxManager.Instance.LoadGameplaySfx();                    
+                    TextureManager.LoadTextures(GraphicsDevice);
+                    SfxManager.Instance.LoadGameplaySfx();
 
+                    _disclaimerManager = new DisclaimerManager();
                     _splashScreenManager = new SplashScreenManager();
 
-                    MusicManager.Instance.LoadSong(1);
-                    MusicManager.Instance.Play();
+                    MusicManager.Instance.LoadSong(1);                    
 
-                    _state = GameState.Splash;                        
+                    _state = GameState.Disclaimer;                        
+                    break;
+                case GameState.Disclaimer:
+
+                    _disclaimerManager.Update(gameTimeF);
+
+                    if (_disclaimerManager.SkipToSplash)
+                    {
+                        _state = GameState.Splash;
+                        MusicManager.Instance.Play();
+                    }
+
                     break;
                 case GameState.Splash:
 
@@ -237,6 +247,7 @@ namespace GreedyKid
 
                         _state = GameState.Title;
 
+                        _disclaimerManager = null;
                         _splashScreenManager = null;
 
                         GC.Collect();
@@ -383,6 +394,9 @@ namespace GreedyKid
             // do all the rendering here            
             switch (_state)
             {
+                case GameState.Disclaimer:
+                    _disclaimerManager.Draw(spriteBatch);
+                    break;
                 case GameState.Splash:
                     _splashScreenManager.Draw(spriteBatch);
                     break;

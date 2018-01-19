@@ -49,6 +49,7 @@
     <Compile Include="Helper\ScreenShakeHelper.cs" />
     <Compile Include="Helper\SystemHelper.cs" />
     <Compile Include="Helper\UIHelper.cs" />
+    <Compile Include="Managers\DisclaimerManager.cs" />
     <Compile Include="Managers\EndingScreenManager.cs" />
     <Compile Include="Managers\GameplayManager.cs" />
     <Compile Include="Building\Building.cs" />

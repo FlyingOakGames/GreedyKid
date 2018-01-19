@@ -30,7 +30,16 @@ namespace GreedyKid
             set;
         }
 
-        public static void LoadGameplay(GraphicsDevice device)
+        public static void LoadTextures(GraphicsDevice device)
+        {
+            LoadSplash();
+            LoadGameplay(device);
+            LoadIntro(device);
+            LoadEnding(device);
+            LoadFont();
+        }
+
+        private static void LoadGameplay(GraphicsDevice device)
         {
             if (Content != null)
             {
@@ -51,7 +60,7 @@ namespace GreedyKid
             }
         }
 
-        public static void LoadIntro(GraphicsDevice device)
+        private static void LoadIntro(GraphicsDevice device)
         {
             if (Content != null)
             {
@@ -72,7 +81,7 @@ namespace GreedyKid
             }
         }
 
-        public static void LoadEnding(GraphicsDevice device)
+        private static void LoadEnding(GraphicsDevice device)
         {
             if (Content != null)
             {
@@ -108,7 +117,7 @@ namespace GreedyKid
             }
         }
 
-        public static void LoadSplash()
+        private static void LoadSplash()
         {
             if (Content != null)
                 Splash = Content.Load<Texture2D>(@"Textures/splash");
@@ -123,7 +132,7 @@ namespace GreedyKid
             }
         }
 
-        public static void LoadFont()
+        private static void LoadFont()
         {
             LoadLatinFont();
         }

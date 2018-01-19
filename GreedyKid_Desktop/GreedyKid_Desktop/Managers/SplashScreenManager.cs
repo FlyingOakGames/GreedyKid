@@ -24,8 +24,6 @@ namespace GreedyKid
         private const float _frameTime = 0.067f;
         private int _scoreFrame = -1;
 
-        private const float _timeBeforeRendering = 1.0f;
-        private float _currentTimeBeforeRendering = 0.0f;
         private float _fadeInTime = 0.0f;
         private const float _fadeTime = 0.35f;
         private const float _maxSplashTime = 3.5f;
@@ -33,8 +31,7 @@ namespace GreedyKid
         private float _fadeOutTime = -1.0f;
 
         public SplashScreenManager()
-        {
-            TextureManager.LoadSplash();
+        {            
             SfxManager.Instance.LoadSplashSfx();
 
             _backgroundRectangles = new Rectangle[4];
@@ -97,12 +94,6 @@ namespace GreedyKid
 
         public void Update(float gameTime)
         {
-            if (_currentTimeBeforeRendering < _timeBeforeRendering)
-            {
-                _currentTimeBeforeRendering += gameTime;
-                return;
-            }
-
             _currentSplashTime += gameTime;
 
             // fade in/out
@@ -159,11 +150,6 @@ namespace GreedyKid
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            if (_currentTimeBeforeRendering < _timeBeforeRendering)
-            {
-                return;
-            }
-
             spriteBatch.Begin(samplerState: SamplerState.PointWrap);
 
             Texture2D texture = TextureManager.Splash;
