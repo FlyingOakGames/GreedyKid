@@ -18,9 +18,15 @@ namespace GreedyKid.Helper
         private float _bordersShakeForce = 0.0f;
         private Vector2 _currentBordersShake = Vector2.Zero;
 
+        // HP shake
+        private float _HPShakeTime = 0.5f;
+        private float _currentHPShakeTime = 0.0f;
+        private float _HPShakeForce = 0.0f;
+        private Vector2 _currentHPShake = Vector2.Zero;
+
         // consts
-        public const float SmallForce = 5.0f;
-        public const float MediumForce = 10.0f;
+        public const float SmallForce = 7.5f;
+        public const float MediumForce = 12.5f;
         public const float ShortDuration = 0.25f;
         public const float MediumDuration = 0.5f;
 
@@ -52,6 +58,12 @@ namespace GreedyKid.Helper
             _currentBordersShakeTime = 0.0f;
             _bordersShakeForce = 0.0f;
             _currentBordersShake = Vector2.Zero;
+
+            // HP shake
+            _HPShakeTime = 0.5f;
+            _currentHPShakeTime = 0.0f;
+            _HPShakeForce = 0.0f;
+            _currentHPShake = Vector2.Zero;
         }
 
         public void Update(float gameTime)
@@ -61,7 +73,7 @@ namespace GreedyKid.Helper
                 _currentScreenShakeTime += gameTime;
                 float progress = _currentScreenShakeTime / _screenShakeTime;
                 float magnitude = _screenShakeForce * (1f - (progress * progress));
-                _currentScreenShake = new Vector2(RandomHelper.Next(), RandomHelper.Next()) * magnitude;
+                _currentScreenShake = new Vector2(-0.5f + RandomHelper.Next(), -0.5f + RandomHelper.Next()) * magnitude;
             }
             else
                 _screenShakeForce = 0.0f;
@@ -71,10 +83,20 @@ namespace GreedyKid.Helper
                 _currentBordersShakeTime += gameTime;
                 float progress = _currentBordersShakeTime / _bordersShakeTime;
                 float magnitude = _bordersShakeForce * (1f - (progress * progress));
-                _currentBordersShake = new Vector2(RandomHelper.Next(), RandomHelper.Next()) * magnitude;
+                _currentBordersShake = new Vector2(-0.5f + RandomHelper.Next(), -0.5f + RandomHelper.Next()) * magnitude;
             }
             else
                 _bordersShakeForce = 0.0f;
+
+            if (_currentHPShakeTime < _HPShakeTime)
+            {
+                _currentHPShakeTime += gameTime;
+                float progress = _currentHPShakeTime / _HPShakeTime;
+                float magnitude = _HPShakeForce * (1f - (progress * progress));
+                _currentHPShake = new Vector2(-0.5f + RandomHelper.Next(), -0.5f + RandomHelper.Next()) * magnitude;
+            }
+            else
+                _HPShakeForce = 0.0f;
         }
 
         public void ShakeScreen(float force, float duration)
@@ -94,6 +116,26 @@ namespace GreedyKid.Helper
                 _bordersShakeForce = force;
                 _bordersShakeTime = duration;
                 _currentBordersShakeTime = 0.0f;
+            }
+        }
+
+        public void ShakeHP(float force, float duration)
+        {
+            if (force >= _HPShakeForce)
+            {
+                _HPShakeForce = force;
+                _HPShakeTime = duration;
+                _currentHPShakeTime = 0.0f;
+            }
+        }
+
+        public Vector2 HPShake
+        {
+            get
+            {
+                if (_screenShakeForce > 0.0f || _bordersShakeForce > 0.0f)
+                    return Vector2.Zero;
+                return _currentHPShake;
             }
         }
 

@@ -168,6 +168,10 @@ namespace GreedyKid
         private const int _frameBeforeGameOver = 10;
         private const float _gameOverFrameTime = 0.1f;
 
+        // HP shake
+        private float _currentHPShakeTime = 0.0f;
+        private const float _HPShakeTime = 1.0f;
+
         public bool IsWorkshopBuilding = false;
 
         public GameplayManager()
@@ -921,6 +925,17 @@ namespace GreedyKid
                             if (_currentGameOverFrame > 7)
                                 _currentGameOverFrame = 4;
                         }
+                    }
+                }
+
+                // HP shake
+                if (Player.Life == 1)
+                {
+                    _currentHPShakeTime += gameTime;
+                    if (_currentHPShakeTime >= _HPShakeTime)
+                    {
+                        _currentHPShakeTime -= _HPShakeTime;
+                        Helper.ScreenShakeHelper.Instance.ShakeHP(Helper.ScreenShakeHelper.SmallForce, Helper.ScreenShakeHelper.ShortDuration);
                     }
                 }
 
@@ -2630,9 +2645,12 @@ namespace GreedyKid
                 }
                 else if (Player != null && (Player.Life - h * 2) % ((h + 1) * 2) >= 1)
                 {
+                    Vector2 HPShake = Helper.ScreenShakeHelper.Instance.HPShake;
+                    if (Player.Life > 1)
+                        HPShake = Vector2.Zero;
                     // half
                     spriteBatch.Draw(texture,
-                        new Rectangle(24 + h * _iconRectangle[1].Width + (int)borderShake.X, 0 + (int)borderShake.Y, _iconRectangle[1].Width, _iconRectangle[1].Height),
+                        new Rectangle(24 + h * _iconRectangle[1].Width + (int)borderShake.X + (int)HPShake.X, 0 + (int)borderShake.Y + (int)HPShake.Y, _iconRectangle[1].Width, _iconRectangle[1].Height),
                         _iconRectangle[1],
                         Color.White);
                 }
