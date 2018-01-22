@@ -183,11 +183,23 @@
 /processorParam:Quality=Best
 /build:Sfx/OneStar.wav
 
+#begin Sfx/Pause.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/Pause.wav
+
 #begin Sfx/PlayerRoll.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sfx/PlayerRoll.wav
+
+#begin Sfx/PushStart.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/PushStart.wav
 
 #begin Sfx/RAngryF.wav
 /importer:WavImporter

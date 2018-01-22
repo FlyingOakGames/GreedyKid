@@ -600,6 +600,7 @@ namespace GreedyKid
         {
             if (Player != null && Player.Life > 0)
             {
+                SfxManager.Instance.Play(Sfx.Pause);
                 Helper.ScreenShakeHelper.Instance.Reset();
                 _pause = true;
                 _pauseOption = 0;

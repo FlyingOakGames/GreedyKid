@@ -76,6 +76,9 @@ namespace GreedyKid
         TwoStars,
         ThreeStars,
 
+        PushStart,
+        Pause,
+
         Count,              
     }
 

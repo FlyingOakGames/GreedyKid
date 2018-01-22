@@ -361,6 +361,7 @@ namespace GreedyKid
                 _currentAnimationFrameTime = 0.0f;
                 _state = TitleScreenState.Main;
                 _reverseToTitle = false;
+                SfxManager.Instance.Play(Sfx.PushStart);
             }
             else if (InputManager.PlayerDevice != null && _state != TitleScreenState.Title && _currentAnimationFrame >= 3)
             {
