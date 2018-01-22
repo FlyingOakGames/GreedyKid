@@ -112,6 +112,10 @@ namespace GreedyKid
         private const float _elevatorKidFrameTime = 0.1f;
         private bool _toNextLevel = false;
         private bool _toTitleScreen = false;
+        private float _currentStarsFrameTime = 0.0f;
+        private int _currentStarsFrame = 0;
+        private const int _starsFrameCount = 17;
+        private const float _starsFrameTime = 0.1f;
 
         private string _timeString;
         private string _moneyString;
@@ -833,6 +837,9 @@ namespace GreedyKid
                     if (Player.Money >= _targetMoney)
                         stars++;
 
+                    _currentStarsFrame = 0;
+                    _currentStarsFrameTime = 0.0f;
+
                     // score
                     _score = Player.Money;
 
@@ -1347,6 +1354,36 @@ namespace GreedyKid
                     _currentElevatorKidFrameTime -= _elevatorKidFrameTime;
                     _currentElevatorKidFrame++;
                     _currentElevatorKidFrame %= _elevatorKidFrameCount;
+                }
+
+                // stars
+                int stars = 1;
+                if (Time <= _targetTime)
+                    stars++;
+                if (_score >= _targetMoney)
+                    stars++;
+
+                _currentStarsFrameTime += gameTime;
+                if (_currentStarsFrameTime >= _starsFrameTime)
+                {
+                    _currentStarsFrameTime -= _starsFrameTime;
+                    _currentStarsFrame++;
+                    if (_currentStarsFrame == 6 && stars >= 1)
+                    {
+                        SfxManager.Instance.Play(Sfx.OneStar);
+                    }
+                    else if (_currentStarsFrame == 8 && stars >= 2)
+                    {
+                        SfxManager.Instance.Play(Sfx.TwoStars);
+                    }
+                    else if (_currentStarsFrame == 10 && stars >= 3)
+                    {
+                        SfxManager.Instance.Play(Sfx.ThreeStars);
+                    }
+                    else if (_currentStarsFrame >= _starsFrameCount)
+                    {
+                        _currentStarsFrame = _starsFrameCount - 1;
+                    }
                 }
             }
 
@@ -2314,13 +2351,14 @@ namespace GreedyKid
                 if (_score >= _targetMoney)
                     stars++;
 
+                // 1 start stops at 
                 spriteBatch.Draw(texture,
                     new Rectangle(
-                        recapX + recapWidth / 2 - scoreRectangle[0].Width / 2,
-                        recapY,
-                        scoreRectangle[0].Width,
-                        scoreRectangle[0].Height),
-                    scoreRectangle[stars],
+                        recapX + recapWidth / 2 - scoreRectangle[7].Width / 2,
+                        recapY - 17,
+                        scoreRectangle[7].Width,
+                        scoreRectangle[7].Height),
+                    scoreRectangle[7 + _starsFrameCount * (stars - 1) + _currentStarsFrame],
                     Color.White);
 
                 // stage clear

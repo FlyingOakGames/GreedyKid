@@ -72,6 +72,10 @@ namespace GreedyKid
 
         TV,
 
+        OneStar,
+        TwoStars,
+        ThreeStars,
+
         Count,              
     }
 

@@ -109,7 +109,7 @@ namespace GreedyKid
             _1x1Rectangle = new Rectangle(1, 1963, 1, 1);
 
             // score
-            _scoreRectangle = new Rectangle[7];
+            _scoreRectangle = new Rectangle[58];
             _scoreRectangle[0] = new Rectangle(449, TextureManager.GameplayHeight - 232, 33, 11); // no star
             _scoreRectangle[1] = new Rectangle(449, TextureManager.GameplayHeight - 232 + 12, 33, 11); // 1 star
             _scoreRectangle[2] = new Rectangle(449, TextureManager.GameplayHeight - 232 + 24, 33, 11); // 2 stars
@@ -117,6 +117,14 @@ namespace GreedyKid
             _scoreRectangle[4] = new Rectangle(492, TextureManager.GameplayHeight - 240, 14, 9); // check
             _scoreRectangle[5] = new Rectangle(507, TextureManager.GameplayHeight - 240, 14, 9); // no check
             _scoreRectangle[6] = new Rectangle(323, TextureManager.GameplayHeight - 240, 125, 10); // separation
+            // stars animation 
+            for (int i = 0; i < 17; i++)
+            {
+                int j = (i <= 2 ? 0 : i - 2);
+                _scoreRectangle[7 + i] = new Rectangle(0 + j * 51, TextureManager.GameplayHeight - 374, 51, 28);
+                _scoreRectangle[24 + i] = new Rectangle(0 + j * 51, TextureManager.GameplayHeight - 345, 51, 28);
+                _scoreRectangle[41 + i] = new Rectangle(0 + j * 51, TextureManager.GameplayHeight - 316, 51, 28);
+            }
 
             // gamevoer
             _gameoverRectangle = new Rectangle[4];           
