@@ -76,6 +76,12 @@ namespace GreedyKid
         private const float _hitShowTime = 0.1f;
         private DamageType _lastDamageType = DamageType.Normal;
 
+        // walking smoke
+        private int _walkSmokeX = 0;
+        private int _currentWalkSmokeFrame = -1;
+        private float _currentWalkSmokeFrameTime = 0.0f;
+        private SpriteEffects _walkSmokeOrientation = SpriteEffects.FlipHorizontally;
+
         public Player()
         {
             _frames = new Rectangle[(int)EntityState.Count][];
@@ -212,6 +218,14 @@ namespace GreedyKid
             }
             _frameDuration[(int)EntityState.Splash] = 0.1f;
 
+            // smoke
+            _frames[(int)EntityState.WalkSmoke] = new Rectangle[3];
+            for (int f = 0; f < _frames[(int)EntityState.WalkSmoke].Length; f++)
+            {
+                _frames[(int)EntityState.WalkSmoke][f] = new Rectangle(f * 32 + 60 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine, 32, 32);
+            }
+            _frameDuration[(int)EntityState.WalkSmoke] = 0.1f;
+
 
             // hiding before entering
             _isVisible = false;
@@ -246,6 +260,12 @@ namespace GreedyKid
                 if (State == EntityState.Taunting && _currentFrame == 2)
                 {
                     SfxManager.Instance.Play(Sfx.Taunt2);
+                }
+
+                // walk smoke
+                if (State == EntityState.Running && _currentFrame == 1)
+                {
+                    WalkSmoke();
                 }
 
                 if (_currentFrame == _frames[(int)State].Length)
@@ -322,6 +342,22 @@ namespace GreedyKid
                     if (_currentSmokeFrame == _frames[(int)EntityState.Smoke].Length)
                     {
                         _currentSmokeFrame = -1;
+                    }
+                }
+            }
+
+            // walk smoke anim
+            if (_currentWalkSmokeFrame >= 0)
+            {
+                _currentWalkSmokeFrameTime += gameTime;
+                if (_currentWalkSmokeFrameTime > _frameDuration[(int)EntityState.WalkSmoke])
+                {
+                    _currentWalkSmokeFrameTime -= _frameDuration[(int)EntityState.WalkSmoke];
+                    _currentWalkSmokeFrame++;
+
+                    if (_currentWalkSmokeFrame == _frames[(int)EntityState.WalkSmoke].Length)
+                    {
+                        _currentWalkSmokeFrame = -1;
                     }
                 }
             }
@@ -636,6 +672,18 @@ namespace GreedyKid
                     Orientation,
                     0.0f);
 
+            if (_currentWalkSmokeFrame >= 0)
+            {
+                spriteBatch.Draw(texture,
+                new Rectangle(_walkSmokeX, 128 - 40 * Room.Y + 9 + cameraPosY, 32, 32),
+                _frames[(int)EntityState.WalkSmoke][_currentWalkSmokeFrame],
+                Color.White,
+                0.0f,
+                Vector2.Zero,
+                _walkSmokeOrientation,
+                0.0f);
+            }
+
             if (_currentSmokeFrame >= 0)
             {
                 spriteBatch.Draw(texture,
@@ -889,6 +937,14 @@ namespace GreedyKid
             _currentSmokeFrame = 0;
             _currentSmokeFrameTime = 0.0f;
             _smokeX = (int)X;
+        }
+
+        private void WalkSmoke()
+        {
+            _currentWalkSmokeFrame = 0;
+            _currentWalkSmokeFrameTime = 0.0f;
+            _walkSmokeX = (int)X;
+            _walkSmokeOrientation = Orientation;
         }
 
         public bool IsShouting
