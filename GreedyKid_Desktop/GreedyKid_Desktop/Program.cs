@@ -12,9 +12,11 @@ namespace GreedyKid
 #if XBOXONE || PLAYSTATION4
         public const bool RunningOnConsole = true;
         public const bool ForceWindowed = false;
+        //public const bool EditorMode = false;
 #else
         public static bool RunningOnConsole = false;
         public static bool ForceWindowed = false;
+        //public static bool EditorMode = false;
 #endif
 
         /// <summary>
@@ -24,6 +26,17 @@ namespace GreedyKid
         static void Main(string[] args)
         {
 #if DESKTOP
+            // manage hidden settings
+            for (int i = 0; i < args.Length; i++)
+            {
+                if (args[i] == "-emulateConsole")
+                    RunningOnConsole = true;
+                else if (args[i] == "-forceWindowed")
+                    ForceWindowed = true;
+                //else if (args[i] == "-editorMode")
+                //    EditorMode = true;
+            }
+
             SteamworksReturn steam = SteamworksHelper.Instance.Init();
             if (steam == SteamworksReturn.RestartingThroughSteam)
                 return;
@@ -39,17 +52,6 @@ namespace GreedyKid
 
 #if !DEBUG && DESKTOP
             AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
-#endif
-
-#if DESKTOP
-            // manage hidden settings
-            for (int i = 0; i < args.Length; i++)
-            {
-                if (args[i] == "-emulateConsole")
-                    RunningOnConsole = true;
-                else if (args[i] == "-forceWindowed")
-                    ForceWindowed = true;
-            }
 #endif
 
 #if XBOXONE

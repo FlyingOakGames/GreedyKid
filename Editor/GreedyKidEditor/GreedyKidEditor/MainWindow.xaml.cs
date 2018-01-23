@@ -1350,14 +1350,20 @@ namespace GreedyKidEditor
 
         private void MenuItem_Click_9(object sender, RoutedEventArgs e)
         {
+            string path = "";
             try
             {
                 FileInfo info = new FileInfo(AppDomain.CurrentDomain.BaseDirectory + "..\\GreedyKid.exe");
-                string path = AppDomain.CurrentDomain.BaseDirectory + "..\\GreedyKid.exe";
+                path = AppDomain.CurrentDomain.BaseDirectory + "..\\GreedyKid.exe";
                 path = path.Replace("Editor\\..\\", "");
+                path = path.Replace("\\.\\", "\\"); // steam hack
                 System.Diagnostics.Process.Start("file://" + path, "-forceWindowed");
+                loadedFile.Text = DateTime.Now.ToString("HH:mm") + ": Game launched for testing";
             }
-            catch { }
+            catch (Exception ex)
+            {
+                loadedFile.Text = DateTime.Now.ToString("HH:mm") + ": Launch failed - " + ex.Message + " " + path;
+            }
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)

@@ -47,6 +47,14 @@ namespace GreedyKid.Helper
 
             InitDllDirectory();
 
+            /*
+            if (Program.EditorMode)
+            {
+                Console.WriteLine("STEAM: Starting from editor");
+                return SteamworksReturn.SteamworksNotAvailable;
+            }
+            */
+
             if (!Packsize.Test())
             {
                 Console.WriteLine("STEAM: Wrong Packsize");
