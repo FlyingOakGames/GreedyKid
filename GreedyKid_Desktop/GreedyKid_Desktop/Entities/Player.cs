@@ -82,6 +82,12 @@ namespace GreedyKid
         private float _currentWalkSmokeFrameTime = 0.0f;
         private SpriteEffects _walkSmokeOrientation = SpriteEffects.FlipHorizontally;
 
+        // rolling smoke
+        private int _rollSmokeX = 0;
+        private int _currentRollSmokeFrame = -1;
+        private float _currentRollSmokeFrameTime = 0.0f;
+        private SpriteEffects _rollSmokeOrientation = SpriteEffects.FlipHorizontally;
+
         public Player()
         {
             _frames = new Rectangle[(int)EntityState.Count][];
@@ -121,6 +127,14 @@ namespace GreedyKid
                 _frames[(int)EntityState.Rolling][f] = new Rectangle(f * 32 + 12 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine, 32, 32);
             }
             _frameDuration[(int)EntityState.Rolling] = 0.1f;
+
+            // rolling smoke
+            _frames[(int)EntityState.RollSmoke] = new Rectangle[3];
+            for (int f = 0; f < _frames[(int)EntityState.RollSmoke].Length; f++)
+            {
+                _frames[(int)EntityState.RollSmoke][f] = new Rectangle(f * 32 + 17 * 32, Room.PaintCount * 48 + Room.PaintCount * 48 * nbDoorLine + 48 + Room.PaintCount * 48 * nbFurnitureLine, 32, 32);
+            }
+            _frameDuration[(int)EntityState.RollSmoke] = 0.1f;
 
             // shouting
             _frames[(int)EntityState.Shouting] = new Rectangle[4];
@@ -218,7 +232,7 @@ namespace GreedyKid
             }
             _frameDuration[(int)EntityState.Splash] = 0.1f;
 
-            // smoke
+            // walk smoke
             _frames[(int)EntityState.WalkSmoke] = new Rectangle[3];
             for (int f = 0; f < _frames[(int)EntityState.WalkSmoke].Length; f++)
             {
@@ -266,6 +280,12 @@ namespace GreedyKid
                 if (State == EntityState.Running && _currentFrame == 1)
                 {
                     WalkSmoke();
+                }
+
+                // roll smoke
+                if (State == EntityState.Rolling && _currentFrame == 3)
+                {
+                    RollSmoke();
                 }
 
                 if (_currentFrame == _frames[(int)State].Length)
@@ -358,6 +378,22 @@ namespace GreedyKid
                     if (_currentWalkSmokeFrame == _frames[(int)EntityState.WalkSmoke].Length)
                     {
                         _currentWalkSmokeFrame = -1;
+                    }
+                }
+            }
+
+            // roll smoke anim
+            if (_currentRollSmokeFrame >= 0)
+            {
+                _currentRollSmokeFrameTime += gameTime;
+                if (_currentRollSmokeFrameTime > _frameDuration[(int)EntityState.RollSmoke])
+                {
+                    _currentRollSmokeFrameTime -= _frameDuration[(int)EntityState.RollSmoke];
+                    _currentRollSmokeFrame++;
+
+                    if (_currentRollSmokeFrame == _frames[(int)EntityState.RollSmoke].Length)
+                    {
+                        _currentRollSmokeFrame = -1;
                     }
                 }
             }
@@ -684,6 +720,18 @@ namespace GreedyKid
                 0.0f);
             }
 
+            if (_currentRollSmokeFrame >= 0)
+            {
+                spriteBatch.Draw(texture,
+                new Rectangle(_rollSmokeX, 128 - 40 * Room.Y + 9 + cameraPosY, 32, 32),
+                _frames[(int)EntityState.RollSmoke][_currentRollSmokeFrame],
+                Color.White,
+                0.0f,
+                Vector2.Zero,
+                _rollSmokeOrientation,
+                0.0f);
+            }
+
             if (_currentSmokeFrame >= 0)
             {
                 spriteBatch.Draw(texture,
@@ -731,6 +779,8 @@ namespace GreedyKid
                 State = EntityState.Rolling;
                 _currentFrame = 0;
                 _currentFrameTime = 0.0f;
+
+                RollSmoke();
             }
         }
 
@@ -945,6 +995,14 @@ namespace GreedyKid
             _currentWalkSmokeFrameTime = 0.0f;
             _walkSmokeX = (int)X;
             _walkSmokeOrientation = Orientation;
+        }
+
+        private void RollSmoke()
+        {
+            _currentRollSmokeFrame = 0;
+            _currentRollSmokeFrameTime = 0.0f;
+            _rollSmokeX = (int)X;
+            _rollSmokeOrientation = Orientation;
         }
 
         public bool IsShouting

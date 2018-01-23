@@ -6,6 +6,7 @@ namespace GreedyKid
         Idle,
         Running,
         Rolling,
+        RollSmoke,
         Shouting,
         Entering,
         Exiting,
