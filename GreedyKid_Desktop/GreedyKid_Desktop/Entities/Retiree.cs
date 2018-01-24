@@ -526,7 +526,9 @@ namespace GreedyKid
                 Orientation = SpriteEffects.FlipHorizontally;
             else
                 Orientation = SpriteEffects.None;
-            
+
+            SaveManager.Instance.AddBoo();
+
             if (Life <= 0)
             {
                 State = EntityState.KO;

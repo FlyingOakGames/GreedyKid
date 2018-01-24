@@ -22,6 +22,12 @@ namespace GreedyKid
         private bool _hasSeenEnding1 = false;
         private bool _hasSeenEnding2 = false;
 
+        // stats
+        private uint _accumalatedMoney = 0;
+        private uint _booCount = 0;
+        private uint _hideCount = 0;
+        private uint _rollCount = 0;
+
         private SaveManager()
         {
 #if DESKTOP
@@ -82,6 +88,30 @@ namespace GreedyKid
         public int LevelStars(int level)
         {
             return _levelStars[level];
+        }
+
+        public void AddMoney(int money)
+        {
+            if (_currentBuildingIdentifier == Building.MainCampaignIdentifier)
+                _accumalatedMoney += (uint)money;
+        }
+
+        public void AddBoo()
+        {
+            if (_currentBuildingIdentifier == Building.MainCampaignIdentifier)
+                _booCount++;
+        }
+
+        public void AddHide()
+        {
+            if (_currentBuildingIdentifier == Building.MainCampaignIdentifier)
+                _hideCount++;
+        }
+
+        public void AddRoll()
+        {
+            if (_currentBuildingIdentifier == Building.MainCampaignIdentifier)
+                _rollCount++;
         }
 
         public static SaveManager Instance
@@ -225,6 +255,14 @@ namespace GreedyKid
                                     _hasSeenIntro = reader.ReadBoolean();
                                     _hasSeenEnding1 = reader.ReadBoolean();
                                     _hasSeenEnding2 = reader.ReadBoolean();
+
+                                    if (_currentBuildingIdentifier == Building.MainCampaignIdentifier)
+                                    {
+                                        _accumalatedMoney = reader.ReadUInt32();
+                                        _booCount = reader.ReadUInt32();
+                                        _hideCount = reader.ReadUInt32();
+                                        _rollCount = reader.ReadUInt32();
+                                    }
                                 }
                             }
                         }
@@ -286,6 +324,14 @@ namespace GreedyKid
                         writer.Write(_hasSeenIntro);
                         writer.Write(_hasSeenEnding1);
                         writer.Write(_hasSeenEnding2);
+
+                        if (_currentBuildingIdentifier == Building.MainCampaignIdentifier)
+                        {
+                            writer.Write(_accumalatedMoney);
+                            writer.Write(_booCount);
+                            writer.Write(_hideCount);
+                            writer.Write(_rollCount);
+                        }
 
                         writer.Flush();
 #if DESKTOP || PLAYSTATION4

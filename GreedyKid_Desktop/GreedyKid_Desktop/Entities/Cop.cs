@@ -1050,6 +1050,8 @@ namespace GreedyKid
                     Orientation = SpriteEffects.FlipHorizontally;
                 else
                     Orientation = SpriteEffects.None;
+
+                SaveManager.Instance.AddBoo();
             }
 
             SfxManager.Instance.Play(Sfx.CopSurprise);

@@ -848,6 +848,8 @@ namespace GreedyKid
                     // score
                     _score = Player.Money;
 
+                    SaveManager.Instance.AddMoney(Player.Money);
+
                     // save score
                     SaveManager.Instance.SetScore(SelectedLevel, Player.Money, Time, stars);
                     SaveManager.Instance.Save(_building);

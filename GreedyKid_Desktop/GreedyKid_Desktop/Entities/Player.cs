@@ -781,6 +781,8 @@ namespace GreedyKid
                 _currentFrameTime = 0.0f;
 
                 RollSmoke();
+
+                SaveManager.Instance.AddRoll();
             }
         }
 
@@ -973,6 +975,8 @@ namespace GreedyKid
             // generate smoke
             Smoke();
             SfxManager.Instance.Play(Sfx.Hide);
+
+            SaveManager.Instance.AddHide();
         }
 
         private void Show()
