@@ -531,6 +531,8 @@ namespace GreedyKid
 
             if (Life <= 0)
             {
+                Helper.AchievementHelper.Instance.UnlockAchievement(Helper.Achievement.GD_ACHIEVEMENT_1);
+
                 State = EntityState.KO;
 
                 if (Money > 0)
@@ -582,6 +584,8 @@ namespace GreedyKid
             SfxManager.Instance.Play(Sfx.RAngryH + (_isFemale ? 1 : 0));
 
             Walk();
+
+            Helper.AchievementHelper.Instance.UnlockAchievement(Helper.Achievement.GD_ACHIEVEMENT_13);
         }
 
         private void NextAction()
@@ -649,6 +653,8 @@ namespace GreedyKid
             }
 
             SfxManager.Instance.Play(Sfx.RBooH + (_isFemale ? 1 : 0));
+
+            Helper.AchievementHelper.Instance.UnlockAchievement(Helper.Achievement.GD_ACHIEVEMENT_16);
         }
 
         public void Ressurect()

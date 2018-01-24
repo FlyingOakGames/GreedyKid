@@ -848,6 +848,9 @@ namespace GreedyKid
                     // score
                     _score = Player.Money;
 
+                    if (Player.Life == 1)
+                        Helper.AchievementHelper.Instance.UnlockAchievement(Helper.Achievement.GD_ACHIEVEMENT_19);
+
                     SaveManager.Instance.AddMoney(Player.Money);
 
                     // save score

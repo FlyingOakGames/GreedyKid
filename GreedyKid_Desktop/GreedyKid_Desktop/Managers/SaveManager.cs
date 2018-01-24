@@ -93,25 +93,37 @@ namespace GreedyKid
         public void AddMoney(int money)
         {
             if (_currentBuildingIdentifier == Building.MainCampaignIdentifier)
+            {
                 _accumalatedMoney += (uint)money;
+                if (_accumalatedMoney >= Helper.AchievementHelper.MoneyThreshold)
+                    Helper.AchievementHelper.Instance.UnlockAchievement(Helper.Achievement.GD_ACHIEVEMENT_18);
+            }
         }
 
         public void AddBoo()
         {
             if (_currentBuildingIdentifier == Building.MainCampaignIdentifier)
+            {
                 _booCount++;
+                if (_booCount == Helper.AchievementHelper.BooThreshold)
+                    Helper.AchievementHelper.Instance.UnlockAchievement(Helper.Achievement.GD_ACHIEVEMENT_2);
+            }
         }
 
         public void AddHide()
         {
             if (_currentBuildingIdentifier == Building.MainCampaignIdentifier)
                 _hideCount++;
+            if (_hideCount == Helper.AchievementHelper.HideThreshold)
+                Helper.AchievementHelper.Instance.UnlockAchievement(Helper.Achievement.GD_ACHIEVEMENT_10);
         }
 
         public void AddRoll()
         {
             if (_currentBuildingIdentifier == Building.MainCampaignIdentifier)
                 _rollCount++;
+            if (_rollCount == Helper.AchievementHelper.RollThreshold)
+                Helper.AchievementHelper.Instance.UnlockAchievement(Helper.Achievement.GD_ACHIEVEMENT_11);
         }
 
         public static SaveManager Instance
@@ -136,6 +148,35 @@ namespace GreedyKid
                 else
                     _levelTime[level] = time;
                 _levelStars[level] = stars;
+            }
+
+            if (_currentBuildingIdentifier == Building.MainCampaignIdentifier)
+            {
+                Helper.AchievementHelper.Instance.UnlockAchievement(Helper.Achievement.GD_ACHIEVEMENT_3);
+
+                int completedLevels = 0;
+                int totalStars = 0;
+                for (int i = 0; i < 0; i++)
+                {
+                    if (_isLevelDone[i])
+                        completedLevels++;
+                    totalStars += _levelStars[i];
+                }
+
+                if (completedLevels >= _isLevelDone.Length / 3)
+                    Helper.AchievementHelper.Instance.UnlockAchievement(Helper.Achievement.GD_ACHIEVEMENT_4);
+                if (completedLevels >= _isLevelDone.Length * 2 / 3)
+                    Helper.AchievementHelper.Instance.UnlockAchievement(Helper.Achievement.GD_ACHIEVEMENT_5);
+                if (completedLevels == _isLevelDone.Length)
+                    Helper.AchievementHelper.Instance.UnlockAchievement(Helper.Achievement.GD_ACHIEVEMENT_6);
+
+                if (totalStars >= _isLevelDone.Length)
+                    Helper.AchievementHelper.Instance.UnlockAchievement(Helper.Achievement.GD_ACHIEVEMENT_7);
+                if (totalStars >= _isLevelDone.Length * 2)
+                    Helper.AchievementHelper.Instance.UnlockAchievement(Helper.Achievement.GD_ACHIEVEMENT_8);
+                if (totalStars == _isLevelDone.Length * 3)
+                    Helper.AchievementHelper.Instance.UnlockAchievement(Helper.Achievement.GD_ACHIEVEMENT_9);
+
             }
         }
 

@@ -584,6 +584,8 @@ namespace GreedyKid
                 Room.AddDrop(ObjectType.HealthPack, X);
 
                 SfxManager.Instance.Play(Sfx.NKOH + (_isFemale ? 1 : 0));
+
+                Helper.AchievementHelper.Instance.UnlockAchievement(Helper.Achievement.GD_ACHIEVEMENT_12);
             }
             else
             {
@@ -610,6 +612,8 @@ namespace GreedyKid
             SfxManager.Instance.Play(Sfx.NAngryH + (_isFemale ? 1 : 0));
 
             Walk();
+
+            Helper.AchievementHelper.Instance.UnlockAchievement(Helper.Achievement.GD_ACHIEVEMENT_13);
         }
 
         private void Panic()
@@ -713,6 +717,8 @@ namespace GreedyKid
             }
 
             SfxManager.Instance.Play(Sfx.NBooH + (_isFemale ? 1 : 0));
+
+            Helper.AchievementHelper.Instance.UnlockAchievement(Helper.Achievement.GD_ACHIEVEMENT_16);
         }
 
         private void WaitSpecial()

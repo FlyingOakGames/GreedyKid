@@ -1052,6 +1052,9 @@ namespace GreedyKid
                     Orientation = SpriteEffects.None;
 
                 SaveManager.Instance.AddBoo();
+
+                if (Type >= NormalCopCount)
+                    Helper.AchievementHelper.Instance.UnlockAchievement(Helper.Achievement.GD_ACHIEVEMENT_20);
             }
 
             SfxManager.Instance.Play(Sfx.CopSurprise);
@@ -1140,6 +1143,8 @@ namespace GreedyKid
             _hasJustTurned = false;
             _wantsToOpenDoor = false;
             _wantsToHookRoom = false;
+
+            Helper.AchievementHelper.Instance.UnlockAchievement(Helper.Achievement.GD_ACHIEVEMENT_16);
         }        
 
         private void WaitSpecial()

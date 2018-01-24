@@ -517,6 +517,7 @@ namespace GreedyKid
                     if (roomDoor.CanClose && targetOrientation == Orientation)
                     {
                         roomDoor.Close();
+                        Helper.AchievementHelper.Instance.UnlockAchievement(Helper.Achievement.GD_ACHIEVEMENT_17);
                     }
                 }
             }
@@ -875,6 +876,7 @@ namespace GreedyKid
             {
                 SfxManager.Instance.Play(Sfx.TaserHit);
                 State = EntityState.Tased;
+                Helper.AchievementHelper.Instance.UnlockAchievement(Helper.Achievement.GD_ACHIEVEMENT_14);
             }
             else if (_lastDamageType == DamageType.Gun)
             {
@@ -885,6 +887,7 @@ namespace GreedyKid
             {
                 SfxManager.Instance.Play(Sfx.RoboHit);
                 State = EntityState.Splash;
+                Helper.AchievementHelper.Instance.UnlockAchievement(Helper.Achievement.GD_ACHIEVEMENT_15);
             }
             else
             {
