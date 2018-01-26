@@ -157,6 +157,38 @@ namespace GreedyKid
                 if (_currentFrame == _commonPartCount && _type == EndingType.Secret)
                     _currentFrame = _commonPartCount + _endPart1Count;
 
+                // sfx
+                if (!_waitForInnerTransition1 && !_waitForTransition)
+                {
+                    if (_currentFrame == 26)
+                        SfxManager.Instance.Play(Sfx.CopSwing);
+                    if (_currentFrame == 28 || _currentFrame == 37 || _currentFrame == 43 || _currentFrame == 47)
+                        SfxManager.Instance.Play(Sfx.SmallHit);
+                    if (_currentFrame == 29)
+                        SfxManager.Instance.Play(Sfx.HeavyHit);
+                    if (_currentFrame == 61)
+                        SfxManager.Instance.Play(Sfx.ElevatorOpen);
+                    if (_currentFrame == 66)
+                        SfxManager.Instance.Play(Sfx.PlayerRoll);
+                    if (_currentFrame == 78)
+                        SfxManager.Instance.Play(Sfx.HeavyHit);
+                    if (_currentFrame == 130)
+                        SfxManager.Instance.Play(Sfx.DoorClose);
+                    if (_currentFrame == 133 || _currentFrame == 279)
+                        SfxManager.Instance.Play(Sfx.RoboLanding);
+                    if (_currentFrame == 150 || _currentFrame == 213)
+                        SfxManager.Instance.Play(Sfx.RoboFire);
+                    if (_currentFrame == 196 || _currentFrame == 227)
+                        SfxManager.Instance.Play(Sfx.Throw);
+                    if (_currentFrame == 295 || _currentFrame == 305 || _currentFrame == 315)
+                        SfxManager.Instance.Play(Sfx.Taunt2);
+                    if (_currentFrame == 290 || _currentFrame == 300 || _currentFrame == 310 || _currentFrame == 320)
+                        SfxManager.Instance.Play(Sfx.Taunt1);
+                    if (_currentFrame == 263 || _currentFrame == 266 || _currentFrame == 269 || _currentFrame == 272 || _currentFrame == 275 || _currentFrame == 278 || _currentFrame == 281 || _currentFrame == 284)
+                        SfxManager.Instance.Play(Sfx.Button);
+                }
+
+
                 // end animation
                 if (_type == EndingType.Normal && _currentFrame == _commonPartCount + _endPart1Count - 4)
                     Skip();

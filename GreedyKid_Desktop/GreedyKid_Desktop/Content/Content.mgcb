@@ -27,6 +27,12 @@
 /processorParam:Quality=Best
 /build:Musics/1.wma
 
+#begin Sfx/Button.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/Button.wav
+
 #begin Sfx/CopRoll.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -309,6 +315,12 @@
 /processorParam:Quality=Best
 /build:Sfx/Show.wav
 
+#begin Sfx/SmallHit.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/SmallHit.wav
+
 #begin Sfx/SoundTest.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -356,6 +368,12 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sfx/ThreeStars.wav
+
+#begin Sfx/Throw.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sfx/Throw.wav
 
 #begin Sfx/TV.wav
 /importer:WavImporter

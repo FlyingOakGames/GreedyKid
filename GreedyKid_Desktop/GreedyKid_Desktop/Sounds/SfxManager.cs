@@ -79,6 +79,10 @@ namespace GreedyKid
         PushStart,
         Pause,
 
+        Throw,
+        SmallHit,
+        Button,
+
         Count,              
     }
 
