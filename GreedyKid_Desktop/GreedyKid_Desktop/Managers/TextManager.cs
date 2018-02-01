@@ -147,42 +147,42 @@ namespace GreedyKid
         private string[] _back = new string[] { "BACK", "RETOUR", "ZURÜCK", "НАЗАД", "VOLVER", "RETORNAR", "INDIETRO" };
         public string Back { get { return _back[(int)_language]; } }
 
-        private string[] _press = new string[] { "PRESS", "APPUYER", "DRÜCKEN", "НАЖАТЬ", "PULSA", "RETORNAR", "INDIETRO" };
+        private string[] _press = new string[] { "PRESS", "APPUYER", "DRÜCKEN", "НАЖАТЬ", "PULSA", "RETORNAR", "PREMI" };
         public string Press { get { return _press[(int)_language]; } }
 
         // *********************** PLAY SCREEN ***********************
 
         // 0% campaign, workshop, custom
 
-        private string[] _campaign = new string[] { "MAIN CAMPAIGN", "CAMPAGNE PRINCIPALE", "HAUPTKAMPAGNE", "ГЛАВНАЯ КАМПАНИЯ", "CAMPAÑA PRINCIPAL", "MAIN CAMPAIGN", "MAIN CAMPAIGN" };
+        private string[] _campaign = new string[] { "MAIN CAMPAIGN", "CAMPAGNE PRINCIPALE", "HAUPTKAMPAGNE", "ГЛАВНАЯ КАМПАНИЯ", "CAMPAÑA PRINCIPAL", "MAIN CAMPAIGN", "CAMPAGNA PRINCIPALE" };
         public string Campaign { get { return _campaign[(int)_language]; } }
 
         private string[] _workshop = new string[] { "STEAM WORKSHOP", "WORKSHOP STEAM", "STEAM WORKSHOP", "STEAM WORKSHOP", "STEAM WORKSHOP", "STEAM WORKSHOP", "STEAM WORKSHOP" };
         public string Workshop { get { return _workshop[(int)_language]; } }
 
-        private string[] _custom = new string[] { "COMMUNITY LEVELS", "CAMPAGNES COMMUNAUTAIRES", "COMMUNITY-LEVELS", "УРОВНИ СООБЩЕСТВА", "NIVELES DE LA COMUNIDAD", "STEAM WORKSHOP", "STEAM WORKSHOP" };
+        private string[] _custom = new string[] { "COMMUNITY LEVELS", "CAMPAGNES COMMUNAUTAIRES", "COMMUNITY-LEVELS", "УРОВНИ СООБЩЕСТВА", "NIVELES DE LA COMUNIDAD", "STEAM WORKSHOP", "LIVELLI DELLA COMUNITÀ" };
         public string Custom { get { return _custom[(int)_language]; } }
 
         // *********************** WORKSHOP ***********************
 
         // 0% workshopNotice1, workshopNotice2, workshopNotice3, workshopNotice4, workshopNotice5, workshopNotice6
 
-        private string[] _workshopNotice1 = new string[] { "THERE'S NO WORKSHOP ITEM", "IL N'Y A AUCUN NIVEAU INSTALLÉ", "ES GIBT KEINE WORKSHOP-GEGENSTÄNDE", "В МАСТЕРСКОЙ ОТСУТСТВУЮТ ЭЛЕМЕНТЫ", "NO HAY ARTÍCULOS DEL WORKSHOP", "THERE'S NO WORKSHOP ITEM", "THERE'S NO WORKSHOP ITEM" };
+        private string[] _workshopNotice1 = new string[] { "THERE'S NO WORKSHOP ITEM", "IL N'Y A AUCUN NIVEAU INSTALLÉ", "ES GIBT KEINE WORKSHOP-GEGENSTÄNDE", "В МАСТЕРСКОЙ ОТСУТСТВУЮТ ЭЛЕМЕНТЫ", "NO HAY ARTÍCULOS DEL WORKSHOP", "THERE'S NO WORKSHOP ITEM", "NON CI SONO OGGETTI NEL WORKSHOP" };
         public string WorkshopNotice1 { get { return _workshopNotice1[(int)_language]; } }
 
-        private string[] _workshopNotice2 = new string[] { "GO TO THE STEAM WORKSHOP", "ALLEZ SUR LE STEAM WORKSHOP ET ABONNEZ VOUS", "GEHE ZUM STEAM WORKSHOP", "ПЕРЕЙТИ В МАСТЕРСКУЮ STEAM", "VE AL STEAM WORKSHOP", "GO TO THE STEAM WORKSHOP", "GO TO THE STEAM WORKSHOP" };
+        private string[] _workshopNotice2 = new string[] { "GO TO THE STEAM WORKSHOP", "ALLEZ SUR LE STEAM WORKSHOP ET ABONNEZ VOUS", "GEHE ZUM STEAM WORKSHOP", "ПЕРЕЙТИ В МАСТЕРСКУЮ STEAM", "VE AL STEAM WORKSHOP", "GO TO THE STEAM WORKSHOP", "VAI ALLO STEAM WORKSHOP" };
         public string WorkshopNotice2 { get { return _workshopNotice2[(int)_language]; } }
 
-        private string[] _workshopNotice3 = new string[] { "AND SUBSCRIBE TO ITEMS TO SEE THEM HERE", "À DES NIVEAUX POUR LES VOIR ICI", "UND ABONNIERE GEGENSTÄNDE, UM SIE HIER ZU SEHEN", "И ОФОРМИТЬ ПОДПИСКУ НА ЭЛЕМЕНТЫ, ЧТОБЫ УВИДЕТЬ ИХ ЗДЕСЬ", "Y SUSCRÍBETE A LOS ARTÍCULOS PARA VERLOS AQUÍ", "AND SUBSCRIBE TO ITEMS TO SEE THEM HERE", "AND SUBSCRIBE TO ITEMS TO SEE THEM HERE" };
+        private string[] _workshopNotice3 = new string[] { "AND SUBSCRIBE TO ITEMS TO SEE THEM HERE", "À DES NIVEAUX POUR LES VOIR ICI", "UND ABONNIERE GEGENSTÄNDE, UM SIE HIER ZU SEHEN", "И ОФОРМИТЬ ПОДПИСКУ НА ЭЛЕМЕНТЫ, ЧТОБЫ УВИДЕТЬ ИХ ЗДЕСЬ", "Y SUSCRÍBETE A LOS ARTÍCULOS PARA VERLOS AQUÍ", "AND SUBSCRIBE TO ITEMS TO SEE THEM HERE", "E REGISTRATI PER VEDERE GLI OGGETTI QUI" };
         public string WorkshopNotice3 { get { return _workshopNotice3[(int)_language]; } }
 
-        private string[] _workshopNotice4 = new string[] { "THERE'S NO CUSTOM LEVELS", "IL N'Y A AUCUN NIVEAU INSTALLÉ", "ES GIBT KEINE BENUTZERDEFINIERTEN LEVELS", "ПОЛЬЗОВАТЕЛЬСКИЕ УРОВНИ ОТСУТСТВУЮТ", "NO HAY NIVELES PERSONALIZADOS", "THERE'S NO WORKSHOP ITEM", "THERE'S NO WORKSHOP ITEM" };
+        private string[] _workshopNotice4 = new string[] { "THERE'S NO CUSTOM LEVELS", "IL N'Y A AUCUN NIVEAU INSTALLÉ", "ES GIBT KEINE BENUTZERDEFINIERTEN LEVELS", "ПОЛЬЗОВАТЕЛЬСКИЕ УРОВНИ ОТСУТСТВУЮТ", "NO HAY NIVELES PERSONALIZADOS", "THERE'S NO WORKSHOP ITEM", "NON CI SONO LIVELLI PERSONALIZZATI" };
         public string WorkshopNotice4 { get { return _workshopNotice1[(int)_language]; } }
 
-        private string[] _workshopNotice5 = new string[] { "DOWNLOAD AND INSTALL LEVELS", "TÉLÉCHARGEZ ET INSTALLEZ DES NIVEAUX", "DOWNLOADE UND INSTALLIERE LEVELS,", "ЗАГРУЗИТЬ И УСТАНОВИТЬ УРОВНИ,", "DESCARGA E INSTALA NIVELES", "GO TO THE STEAM WORKSHOP", "GO TO THE STEAM WORKSHOP" };
+        private string[] _workshopNotice5 = new string[] { "DOWNLOAD AND INSTALL LEVELS", "TÉLÉCHARGEZ ET INSTALLEZ DES NIVEAUX", "DOWNLOADE UND INSTALLIERE LEVELS,", "ЗАГРУЗИТЬ И УСТАНОВИТЬ УРОВНИ,", "DESCARGA E INSTALA NIVELES", "GO TO THE STEAM WORKSHOP", "SCARICA E INSTALLA LIVELLI" };
         public string WorkshopNotice5 { get { return _workshopNotice2[(int)_language]; } }
 
-        private string[] _workshopNotice6 = new string[] { "TO SEE THEM HERE", "POUR LES VOIR ICI", "UM SIE HIER ZU SEHEN", "ЧТОБЫ УВИДЕТЬ ИХ ЗДЕСЬ", "PARA VERLOS AQUÍ", "AND SUBSCRIBE TO ITEMS TO SEE THEM HERE", "AND SUBSCRIBE TO ITEMS TO SEE THEM HERE" };
+        private string[] _workshopNotice6 = new string[] { "TO SEE THEM HERE", "POUR LES VOIR ICI", "UM SIE HIER ZU SEHEN", "ЧТОБЫ УВИДЕТЬ ИХ ЗДЕСЬ", "PARA VERLOS AQUÍ", "AND SUBSCRIBE TO ITEMS TO SEE THEM HERE", "PER VEDERLI QUI" };
         public string WorkshopNotice6 { get { return _workshopNotice3[(int)_language]; } }
 
         // *********************** SETTINGS SCREEN ***********************
@@ -212,7 +212,7 @@ namespace GreedyKid
         public string Keyboard { get { return _keyboard[(int)_language]; } }
         private string[] _remap = new string[] { "CHANGE MAPPING", "PERSONALISER", "BELEGUNG ÄNDERN", "ИЗМЕНИТЬ НАЗНАЧЕНИЯ", "PERSONALIZAR", "PERSONALIZAR", "CAMBIA MAPPA" };
         public string Remap { get { return _remap[(int)_language]; } }
-        private string[] _microphone = new string[] { "MICROPHONE", "MICROPHONE", "MIKROFON", "МИКРОФОН", "MICRÓFONO", "MICROPHONE", "MICROPHONE" };
+        private string[] _microphone = new string[] { "MICROPHONE", "MICROPHONE", "MIKROFON", "МИКРОФОН", "MICRÓFONO", "MICROPHONE", "MICROFONO" };
         public string Microphone { get { return _microphone[(int)_language]; } }
 
         private string[] _music = new string[] { "MUSIC VOLUME", "VOLUME DES MUSIQUES", "MUSIKLAUTSTÄRKE", "ГРОМКОСТЬ МУЗЫКИ", "VOLUMEN DE MÚSICA", "VOLUME DA MÚSICA", "VOLUME MUSICA" };
@@ -233,13 +233,13 @@ namespace GreedyKid
         private string[] _right = new string[] { "RIGHT", "DROITE", "RECHTS", "ВПРАВО", "DERECHA", "DIREITA", "DESTRA" };
         public string Right { get { return _right[(int)_language]; } }
 
-        private string[] _shout = new string[] { "SHOUT", "CRIER", "RUFEN", "КРИЧАТЬ", "GRITAR", "SHOUT", "SHOUT" };
+        private string[] _shout = new string[] { "SHOUT", "CRIER", "RUFEN", "КРИЧАТЬ", "GRITAR", "SHOUT", "URLO" };
         public string Shout { get { return _shout[(int)_language]; } }
-        private string[] _interact = new string[] { "INTERACT", "INTERAGIR", "INTERAGIEREN", "ВЗАИМОДЕЙСТВОВАТЬ", "INTERACTUAR", "INTERACT", "INTERACT" };
+        private string[] _interact = new string[] { "INTERACT", "INTERAGIR", "INTERAGIEREN", "ВЗАИМОДЕЙСТВОВАТЬ", "INTERACTUAR", "INTERACT", "INTERAGISCI" };
         public string Interact { get { return _interact[(int)_language]; } }
-        private string[] _roll = new string[] { "DODGE ROLL", "ROULADE", "AUSWEICHROLLE", "УВЕРНУТЬСЯ", "ESQUIVAR RODANDO", "DODGE ROLL", "DODGE ROLL" };
+        private string[] _roll = new string[] { "DODGE ROLL", "ROULADE", "AUSWEICHROLLE", "УВЕРНУТЬСЯ", "ESQUIVAR RODANDO", "DODGE ROLL", "ROTOLA PER SCHIVARE" };
         public string Roll { get { return _roll[(int)_language]; } }
-        private string[] _taunt = new string[] { "TAUNT", "PROVOQUER", "VERHÖHNEN", "ДРАЗНИТЬ", "BURLA", "TAUNT", "TAUNT" };
+        private string[] _taunt = new string[] { "TAUNT", "PROVOQUER", "VERHÖHNEN", "ДРАЗНИТЬ", "BURLA", "TAUNT", "DISPETTO" };
         public string Taunt { get { return _taunt[(int)_language]; } }
 
         private string[] _restore = new string[] { "RESTORE DEFAULT", "RÉ-INITIALISER", "STANDARD WIEDERHERSTELLEN", "ВОCСТАНОВИТЬ ПО УМОЛЧАНИЮ", "REINICIALIZAR", "REINICIALIZAR", "RIPRISTINA IMPOSTAZIONI PREDEFINITE" };
@@ -249,10 +249,10 @@ namespace GreedyKid
 
         // 33% pause, restart
 
-        private string[] _pause = new string[] { "PAUSE", "PAUSE", "PAUSE", "ПАУЗА", "PAUSA", "PAUSE", "PAUSE" };
+        private string[] _pause = new string[] { "PAUSE", "PAUSE", "PAUSE", "ПАУЗА", "PAUSA", "PAUSE", "PAUSA" };
         public string Pause { get { return _pause[(int)_language]; } }
 
-        private string[] _restart = new string[] { "RESTART", "RECOMMENCER", "NEUSTART", "ПЕРЕЗАПУСТИТЬ", "RECOMENZAR", "RESTART", "RESTART" };
+        private string[] _restart = new string[] { "RESTART", "RECOMMENCER", "NEUSTART", "ПЕРЕЗАПУСТИТЬ", "RECOMENZAR", "RESTART", "REINIZIALIZZA" };
         public string Restart { get { return _restart[(int)_language]; } }
 
         private string[] _resume = new string[] { "RESUME", "REPRENDRE", "WEITER", "ПРОДОЛЖИТЬ", "REANUDAR", "RETOMAR", "RIPRENDI" };
@@ -265,33 +265,33 @@ namespace GreedyKid
 
         // 0% stageclear, time, money, nextstage, intro, ending1, ending2
 
-        private string[] _stageClear = new string[] { "STAGE CLEAR", "NIVEAU TERMINÉ", "ABSCHNITT ABGESCHLOSSEN", "УРОВЕНЬ ПРОЙДЕН", "NIVEL SUPERADO", "STAGE CLEAR", "STAGE CLEAR" };
+        private string[] _stageClear = new string[] { "STAGE CLEAR", "NIVEAU TERMINÉ", "ABSCHNITT ABGESCHLOSSEN", "УРОВЕНЬ ПРОЙДЕН", "NIVEL SUPERADO", "STAGE CLEAR", "LIVELLO SUPERATO" };
         public string StageClear { get { return _stageClear[(int)_language]; } }
 
-        private string[] _nextStage = new string[] { "NEXT STAGE", "NIVEAU SUIVANT", "NÄCHSTER ABSCHNITT", "СЛЕДУЮЩИЙ УРОВЕНЬ", "SIGUIENTE NIVEL", "NEXT STAGE", "NEXT STAGE" };
+        private string[] _nextStage = new string[] { "NEXT STAGE", "NIVEAU SUIVANT", "NÄCHSTER ABSCHNITT", "СЛЕДУЮЩИЙ УРОВЕНЬ", "SIGUIENTE NIVEL", "NEXT STAGE", "PROSSIMO LIVELLO" };
         public string NextStage { get { return _nextStage[(int)_language]; } }
 
-        private string[] _time = new string[] { "TIME  ", "TEMPS  ", "ZEIT  ", "ВРЕМЯ  ", "TIEMPO  ", "TIME  ", "TIME  " };
+        private string[] _time = new string[] { "TIME  ", "TEMPS  ", "ZEIT  ", "ВРЕМЯ  ", "TIEMPO  ", "TIME  ", "TEMPO  " };
         public string Time { get { return _time[(int)_language]; } }
 
-        private string[] _money = new string[] { "MONEY  ", "ARGENT  ", "GELD  ", "ДЕНЬГИ  ", "DINERO  ", "MONEY  ", "MONEY  " };
+        private string[] _money = new string[] { "MONEY  ", "ARGENT  ", "GELD  ", "ДЕНЬГИ  ", "DINERO  ", "MONEY  ", "DENARO  " };
         public string Money { get { return _money[(int)_language]; } }
 
-        private string[] _intro = new string[] { "WATCH INTRODUCTION", "REGARDER L'INTRODUCTION", "EINLEITUNG ANSEHEN", "СМОТРЕТЬ ВСТУПЛЕНИЕ", "VER PRESENTACIÓN", "WATCH INTRODUCTION", "WATCH INTRODUCTION" };
+        private string[] _intro = new string[] { "WATCH INTRODUCTION", "REGARDER L'INTRODUCTION", "EINLEITUNG ANSEHEN", "СМОТРЕТЬ ВСТУПЛЕНИЕ", "VER PRESENTACIÓN", "WATCH INTRODUCTION", "GUARDA INTRODUZIONE" };
         public string Intro { get { return _intro[(int)_language]; } }
 
-        private string[] _ending1 = new string[] { "WATCH ENDING", "REGARDER LA FIN", "ENDE ANSEHEN", "СМОТРЕТЬ ОКОНЧАНИЕ", "VER FINAL", "WATCH ENDING", "WATCH ENDING" };
+        private string[] _ending1 = new string[] { "WATCH ENDING", "REGARDER LA FIN", "ENDE ANSEHEN", "СМОТРЕТЬ ОКОНЧАНИЕ", "VER FINAL", "WATCH ENDING", "GUARDA FINALE" };
         public string Ending1 { get { return _ending1[(int)_language]; } }
 
-        private string[] _ending2 = new string[] { "WATCH SECRET ENDING", "REGARDER LA FIN SECRÈTE", "GEHEIMES ENDE ANSEHEN", "СМОТРЕТЬ СЕКРЕТНОЕ ОКОНЧАНИЕ", "VER EL FINAL SECRETO", "WATCH SECRET ENDING", "WATCH SECRET ENDING" };
+        private string[] _ending2 = new string[] { "WATCH SECRET ENDING", "REGARDER LA FIN SECRÈTE", "GEHEIMES ENDE ANSEHEN", "СМОТРЕТЬ СЕКРЕТНОЕ ОКОНЧАНИЕ", "VER EL FINAL SECRETO", "WATCH SECRET ENDING", "GUARDA FINALE SEGRETO" };
         public string Ending2 { get { return _ending2[(int)_language]; } }
 
         // *********************** ENDING ***********************
 
-        private string[] _later = new string[] { "YEARS LATER...", "DES ANNÉES PLUS TARD...", "JAHRE SPÄTER...", "НЕСКОЛЬКО ЛЕТ СПУСТЯ...", "AÑOS DESPUÉS...", "YEARS LATER...", "YEARS LATER..." };
+        private string[] _later = new string[] { "YEARS LATER...", "DES ANNÉES PLUS TARD...", "JAHRE SPÄTER...", "НЕСКОЛЬКО ЛЕТ СПУСТЯ...", "AÑOS DESPUÉS...", "YEARS LATER...", "ANNI DOPO..." };
         public string Later { get { return _later[(int)_language]; } }
 
-        private string[] _theEnd = new string[] { "THE END.", "FIN.", "DAS ENDE.", "КОНЕЦ.", "FIN.", "THE END.", "THE END." };
+        private string[] _theEnd = new string[] { "THE END.", "FIN.", "DAS ENDE.", "КОНЕЦ.", "FIN.", "THE END.", "FINE." };
         public string TheEnd { get { return _theEnd[(int)_language]; } }
 
         // *********************** LANGUAGE LOADING ***********************

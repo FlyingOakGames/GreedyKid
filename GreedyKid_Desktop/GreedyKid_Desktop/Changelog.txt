@@ -4,15 +4,17 @@
 		Due to new levels and change in the save format, all saves prior to this version will be erased
 
 	New:
+		All localizations are fully implemented
 		Steam Workshop support (for the Steam version of the game and editor)
 		Editor manual
 		Endings
-		New characters and levels
+		New characters and levels		
 
 	Changes:
 		Revamped the title screen and main menu
 		Auto-pause the game if a gamepad is disconnected
 		Removed intro and endings from custom campaigns
+		Reworked game feel
 
 	Fixes:
 		Fixes high DPI support for the editor
