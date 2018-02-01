@@ -1113,14 +1113,14 @@ namespace GreedyKid
                         UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.WorkshopNotice1, 45, -1, 0);
 
                         UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.WorkshopNotice2, 80, -1, 0);
-                        UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.WorkshopNotice3, 90, -1, 0);
+                        UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.WorkshopNotice3, 92, -1, 0);
                     }
                     else
                     {
                         UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.WorkshopNotice4, 45, -1, 0);
 
                         UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.WorkshopNotice5, 80, -1, 0);
-                        UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.WorkshopNotice6, 90, -1, 0);
+                        UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.WorkshopNotice6, 92, -1, 0);
                     }
                 }
             }
