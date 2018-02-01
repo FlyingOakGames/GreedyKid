@@ -24,7 +24,7 @@ namespace GreedyKid
             _rectangles = new Rectangle[(int)Language.Count];
             for (int i = 0; i < _rectangles.Length; i++)
             {
-                _rectangles[i] = new Rectangle(198 * i, 1644, 198, 101);
+                _rectangles[i] = new Rectangle(240 * i, 1644, 240, 101);
             }            
 
             _1x1 = new Rectangle(0, 1644, 1, 1);
@@ -76,9 +76,9 @@ namespace GreedyKid
             // render
             spriteBatch.Draw(texture,
                 new Rectangle(
-                    (GreedyKidGame.Width - 198) / 2,
+                    (GreedyKidGame.Width - 240) / 2,
                     (GreedyKidGame.Height - 101) / 2,
-                    198, 101),
+                    240, 101),
                 _rectangles[(int)TextManager.Instance.Language],
                 Color.White);
 
