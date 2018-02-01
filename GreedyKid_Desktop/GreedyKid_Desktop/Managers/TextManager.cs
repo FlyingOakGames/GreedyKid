@@ -120,10 +120,24 @@ namespace GreedyKid
                 text = TransposeCyrillic(text);
             }
 
-            // remove anything that isn't in the font table [32-255]
+            // remove anything that isn't in the font table [32-383]
             text = System.Text.RegularExpressions.Regex.Replace(text, @"[^\u0020-\u017F]", string.Empty);
 
             return text;
+        }        
+
+        public string SafeConvert(string text)
+        {
+            // force uppercase
+            text = text.ToUpperInvariant();
+
+            // transpose cyrillic to decidated font table space
+            text = TransposeCyrillic(text);
+
+            // remove anything that isn't in the font table [32-255]
+            text = System.Text.RegularExpressions.Regex.Replace(text, @"[^\u0020-\u00FF]", string.Empty);
+
+            return text.Trim();
         }
 
         private string TransposeCyrillic(string text)

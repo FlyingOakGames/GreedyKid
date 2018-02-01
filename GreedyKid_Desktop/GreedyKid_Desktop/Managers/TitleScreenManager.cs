@@ -206,6 +206,8 @@ namespace GreedyKid
                         _workshopIsDownloading[i] = true;
                     else
                         _workshopIsDownloading[i] = false;
+
+                    _workshopBuildingNames[i] = TextManager.Instance.SafeConvert(_workshopBuildingNames[i]);
                 }
 
                 for (int i = 0; i < steamWorkshopIdentifiers.Length; i++)
@@ -217,6 +219,8 @@ namespace GreedyKid
                         _workshopIsDownloading[i] = true;
                     else
                         _workshopIsDownloading[i] = false;
+
+                    _workshopBuildingNames[i] = TextManager.Instance.SafeConvert(_workshopBuildingNames[i]);
                 }
             }
         }
