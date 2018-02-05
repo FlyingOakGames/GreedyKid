@@ -121,9 +121,9 @@ namespace GreedyKid
             for (int i = 0; i < 17; i++)
             {
                 int j = (i <= 2 ? 0 : i - 2);
-                _scoreRectangle[7 + i] = new Rectangle(0 + j * 51, TextureManager.GameplayHeight - 374, 51, 28);
-                _scoreRectangle[24 + i] = new Rectangle(0 + j * 51, TextureManager.GameplayHeight - 345, 51, 28);
-                _scoreRectangle[41 + i] = new Rectangle(0 + j * 51, TextureManager.GameplayHeight - 316, 51, 28);
+                _scoreRectangle[7 + i] = new Rectangle(0 + j * 51, TextureManager.GameplayHeight - 375, 51, 28);
+                _scoreRectangle[24 + i] = new Rectangle(0 + j * 51, TextureManager.GameplayHeight - 346, 51, 28);
+                _scoreRectangle[41 + i] = new Rectangle(0 + j * 51, TextureManager.GameplayHeight - 317, 51, 28);
             }
 
             // gamevoer
