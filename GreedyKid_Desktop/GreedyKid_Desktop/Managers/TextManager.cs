@@ -54,6 +54,7 @@ namespace GreedyKid
                     }
                     break;
                 case "it": _language = Language.IT; break;
+                case "zh": _language = Language.CN; break;
             }
 #elif XBOXONE
             switch (PlatformHelper.XboxOne.GetDefaultLocale())
@@ -65,6 +66,7 @@ namespace GreedyKid
                 case 4: _language = Language.SP; break;
                 case 5: _language = Language.BR; break;
                 case 6: _language = Language.IT; break;
+                case 7: _language = Language.CN; break;
             }
 #endif
         }

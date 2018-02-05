@@ -199,6 +199,10 @@ namespace GreedyKid
                         {
                             TextManager.Instance.Language = Language.IT;
                         }
+                        else if (elem[1] == "CN")
+                        {
+                            TextManager.Instance.Language = Language.CN;
+                        }
                         break;
                 }
             }
