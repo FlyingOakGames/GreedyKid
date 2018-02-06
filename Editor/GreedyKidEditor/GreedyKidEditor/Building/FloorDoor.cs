@@ -4,7 +4,7 @@ namespace GreedyKidEditor
 {
     public sealed class FloorDoor : IMovable
     {
-        public const int DoorCount = 5;
+        public const int DoorCount = 6;
         public const int DoorPerLine = 6;
 
         public const int DoorFrames = 6;
