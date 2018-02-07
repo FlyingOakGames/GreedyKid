@@ -36,6 +36,8 @@
                 </MenuItem>
                 <MenuItem Header="Save as" Click="MenuItem_Click_3" />
                 <Separator/>
+                <MenuItem Header="Import levels from another building" Click="MenuItem_Click_10" />
+                <Separator/>
                 <MenuItem x:Name="exportMenu" Header="_Export main campaign (dev mode)" InputGestureText="Crtl+E" Command="{StaticResource ExportCmd}">
                     <MenuItem.InputBindings>
                         <KeyBinding Key="E" Modifiers="control"/>

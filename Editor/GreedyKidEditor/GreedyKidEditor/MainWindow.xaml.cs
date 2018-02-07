@@ -1380,5 +1380,56 @@ namespace GreedyKidEditor
                 }
             }
         }
+
+        private void MenuItem_Click_10(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            openFileDialog.Filter = "Building file (*.gdk)|*.gdk|All files|*";
+            if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                // load
+                Building building = new Building("New building");
+                if (File.Exists(openFileDialog.FileName))
+                {
+                    try
+                    {
+                        using (FileStream fs = new FileStream(_saveFile, FileMode.Open))
+                        {
+                            using (GZipStream gzipStream = new GZipStream(fs, CompressionMode.Decompress))
+                            {
+                                using (BinaryReader reader = new BinaryReader(gzipStream))
+                                {
+                                    building.Load(reader);
+                                }
+                            }
+                        }
+
+                        for (int i = 0; i < building.Levels.Count; i++)
+                        {
+                            building.Levels[i].Name = building.Levels[i].Name + " (imported)";
+                            if (_building != null)
+                                _building.Levels.Add(building.Levels[i]);
+                        }
+                    }
+                    catch (Exception)
+                    {
+
+                    }
+
+                    RefreshLevelListBox();
+
+                    if (levelListBox.Items.Count > 0)
+                        levelListBox.SelectedIndex = 0;
+
+                    loadedFile.Text = DateTime.Now.ToString("HH:mm") + ": Imported " + building.Name + " (path to file: " + openFileDialog.FileName + ")";
+                }
+                else
+                {
+                    loadedFile.Text = DateTime.Now.ToString("HH:mm") + ": Failed importing this building (path to file: " + openFileDialog.FileName + ")";
+                }
+
+                System.Media.SystemSounds.Beep.Play();
+            }            
+        }
     }
 }
