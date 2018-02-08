@@ -25,6 +25,38 @@ namespace GreedyKidEditor
 
     class PreviewRenderer : Game
     {
+        bool[][] _allowedDeco = new bool[][]
+        {
+            new bool[]
+            {
+                true, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, true, false, false, false, false,
+#if DEVMODE
+                true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, 
+#endif
+            },
+            new bool[]
+            {
+                true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, true, true, true, true, false,
+#if DEVMODE
+                true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, 
+#endif
+            },
+            new bool[]
+            {
+                true, true, true, true, true, true, true, false, false, true, true, true, false, false, false, false, false, false, false, true, true, false, false, false, false, false, false, false,
+#if DEVMODE
+                true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, 
+#endif
+            },
+            new bool[]
+            {
+                true, true, true, false, true, false, true, true, true, true, false, false, false, false, false, true, true, true, false, true, true, true, true, true, true, true, true, true,
+#if DEVMODE
+                true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, 
+#endif
+            },
+        };
+
         string[] _modeText = new string[]
         {
             "ROOMS",
@@ -726,6 +758,7 @@ namespace GreedyKidEditor
                         }
 
                         // update
+                        int prevColor = room.BackgroundColor;
                         if (isAnySliceHovered && SelectionMode == SelectionMode.Room && _hasWheelUp)
                         {
                             room.BackgroundColor++;
@@ -735,6 +768,19 @@ namespace GreedyKidEditor
                         {
                             room.BackgroundColor--;
                             room.BackgroundColor = Math.Max(room.BackgroundColor, 0);
+                        }
+
+                        // check round consistancy
+                        if (prevColor != room.BackgroundColor)
+                        {
+                            // should we erase all previous decorations?
+                            for (int d = 0; d < room.Details.Count; d++)
+                            {
+                                while (_allowedDeco[room.BackgroundColor][room.Details[d].Type] == false)
+                                {
+                                    room.Details[d].Type--;
+                                }
+                            }
                         }
 
                         for (int s = 0; s < nbSlice; s++)
@@ -840,17 +886,40 @@ namespace GreedyKidEditor
                             // update
                             if (IsHover(selectionDestination) && SelectionMode == SelectionMode.Detail && _hasWheelUp)
                             {
+                                int prev = detail.Type;
+
                                 detail.Type++;
 #if DEVMODE
                                 detail.Type = Math.Min(detail.Type, Detail.NormalDetailCount + Detail.AnimatedDetailCount + Detail.TutorialCount - 1);
 #else
                                 detail.Type = Math.Min(detail.Type, Detail.NormalDetailCount + Detail.AnimatedDetailCount - 1);
 #endif
+
+                                // check allowed detail
+                                if (detail.Type < _allowedDeco[room.BackgroundColor].Length && _allowedDeco[room.BackgroundColor][detail.Type] == false)
+                                {
+                                    while (_allowedDeco[room.BackgroundColor][detail.Type] == false)
+                                    {
+                                        detail.Type++;
+                                        if (detail.Type == _allowedDeco[room.BackgroundColor].Length)
+                                            detail.Type = prev;
+                                    }
+                                }
                             }
                             else if (IsHover(selectionDestination) && SelectionMode == SelectionMode.Detail && _hasWheelDown)
                             {
                                 detail.Type--;
                                 detail.Type = Math.Max(detail.Type, 0);
+
+                                // check allowed detail
+                                if (detail.Type < _allowedDeco[room.BackgroundColor].Length && _allowedDeco[room.BackgroundColor][detail.Type] == false)
+                                {
+                                    while (_allowedDeco[room.BackgroundColor][detail.Type] == false)
+                                    {
+                                        detail.Type--;
+                                    }
+                                }
+                                
                             }
 
                             // remove
