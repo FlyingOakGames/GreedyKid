@@ -87,7 +87,9 @@ namespace GreedyKid
 
         public int LevelStars(int level)
         {
-            return _levelStars[level];
+            if(_levelStars[level] < 4)
+                return _levelStars[level];
+            return 0;
         }
 
         public void AddMoney(int money)
