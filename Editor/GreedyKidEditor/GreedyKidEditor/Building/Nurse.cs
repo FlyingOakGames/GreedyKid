@@ -9,7 +9,7 @@ namespace GreedyKidEditor
         public int Type = 0;
         public int X = 0;
 
-        public int Life = 1;
+        public int Life = 2;
 
         public Nurse()
         {

@@ -1296,11 +1296,21 @@ namespace GreedyKidEditor
                             {
                                 retiree.Type++;
                                 retiree.Type = Math.Min(retiree.Type, Retiree.RetireeCount - 1);
+
+                                if (retiree.Type % 2 == 0)
+                                    retiree.Life = 2;
+                                else
+                                    retiree.Life = 1;
                             }
                             else if (IsHover(destination, true) && SelectionMode == SelectionMode.Retiree && _hasWheelDown)
                             {
                                 retiree.Type--;
                                 retiree.Type = Math.Max(retiree.Type, 0);
+
+                                if (retiree.Type % 2 == 0)
+                                    retiree.Life = 2;
+                                else
+                                    retiree.Life = 1;
                             }
                             if (IsHover(destination, true) && SelectionMode == SelectionMode.Retiree && _hasCDown)
                             {

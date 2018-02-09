@@ -10,17 +10,19 @@ namespace GreedyKidEditor
         public int Type = 0;
         public int X = 0;
 
-        public int Life = 1;
-        public int Money = 0;
+        public int Life = 2;
+        public int Money = 5;
 
         public Retiree()
         {
-
+            
         }
 
         public Retiree(int x)
         {
             X = x;
+            System.Random r = new System.Random();
+            Money = r.Next(1, MaxMoney);
         }
 
         public void Move(int x)
