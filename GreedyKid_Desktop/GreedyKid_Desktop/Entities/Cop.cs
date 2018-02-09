@@ -838,11 +838,11 @@ namespace GreedyKid
             {
                 RoomDoor roomDoor = Room.RoomDoors[d];
 
-                if (Type >= NormalCopCount + SwatCopCount && X < roomDoor.X + 16 && X > roomDoor.X - 16)
+                if (Type >= NormalCopCount + SwatCopCount && X < roomDoor.X + 16 && X > roomDoor.X - 16 && (roomDoor.IsOpenLeft || roomDoor.IsOpenRight))
                 {
                     roomDoor.CanClose = false;
                     roomDoor.IsRobocopBlocked = true;
-                    continue;
+                    //continue;
                 }
 
                 // check if player in sight
