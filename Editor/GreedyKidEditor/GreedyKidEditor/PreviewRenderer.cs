@@ -967,7 +967,7 @@ namespace GreedyKidEditor
                             }
 
                             // swap 
-                            if (IsHover(selectionDestination) && SelectionMode == SelectionMode.Detail && _hasCDown)
+                            if (IsHover(selectionDestination) && SelectionMode == SelectionMode.Detail && _hasVDown)
                             {
                                 if (d < room.Details.Count - 1)
                                 {
@@ -975,7 +975,7 @@ namespace GreedyKidEditor
                                     swap2 = d + 1;
                                 }
                             }
-                            else if (IsHover(selectionDestination) && SelectionMode == SelectionMode.Detail && _hasVDown)
+                            else if (IsHover(selectionDestination) && SelectionMode == SelectionMode.Detail && _hasCDown)
                             {
                                 if (d > 0)
                                 {
@@ -1175,7 +1175,7 @@ namespace GreedyKidEditor
                             }
 
                             // swap 
-                            if (IsHover(destination) && SelectionMode == SelectionMode.Furniture && _hasCDown)
+                            if (IsHover(destination) && SelectionMode == SelectionMode.Furniture && _hasVDown)
                             {
                                 if (ff < room.Furnitures.Count - 1)
                                 {
@@ -1183,7 +1183,7 @@ namespace GreedyKidEditor
                                     swap2 = ff + 1;
                                 }
                             }
-                            else if (IsHover(destination) && SelectionMode == SelectionMode.Furniture && _hasVDown)
+                            else if (IsHover(destination) && SelectionMode == SelectionMode.Furniture && _hasCDown)
                             {
                                 if (ff > 0)
                                 {
@@ -1366,22 +1366,22 @@ namespace GreedyKidEditor
                                 else
                                     retiree.Life = 1;
                             }
-                            if (IsHover(destination, true) && SelectionMode == SelectionMode.Retiree && _hasCDown)
+                            if (IsHover(destination, true) && SelectionMode == SelectionMode.Retiree && _hasVDown)
                             {
                                 retiree.Life++;
                                 retiree.Life = Math.Min(retiree.Life, 3);
                             }
-                            else if (IsHover(destination, true) && SelectionMode == SelectionMode.Retiree && _hasVDown)
+                            else if (IsHover(destination, true) && SelectionMode == SelectionMode.Retiree && _hasCDown)
                             {
                                 retiree.Life--;
                                 retiree.Life = Math.Max(retiree.Life, 1);
                             }
-                            if (IsHover(destination, true) && SelectionMode == SelectionMode.Retiree && _hasBDown)
+                            if (IsHover(destination, true) && SelectionMode == SelectionMode.Retiree && _hasNDown)
                             {
                                 retiree.Money++;
                                 retiree.Money = Math.Min(retiree.Money, Retiree.MaxMoney);
                             }
-                            else if (IsHover(destination, true) && SelectionMode == SelectionMode.Retiree && _hasNDown)
+                            else if (IsHover(destination, true) && SelectionMode == SelectionMode.Retiree && _hasBDown)
                             {
                                 retiree.Money--;
                                 retiree.Money = Math.Max(retiree.Money, 0);
@@ -1451,12 +1451,12 @@ namespace GreedyKidEditor
                                 nurse.Type--;
                                 nurse.Type = Math.Max(nurse.Type, 0);
                             }
-                            if (IsHover(destination, true) && SelectionMode == SelectionMode.Nurse && _hasCDown)
+                            if (IsHover(destination, true) && SelectionMode == SelectionMode.Nurse && _hasVDown)
                             {
                                 nurse.Life++;
                                 nurse.Life = Math.Min(nurse.Life, 3);
                             }
-                            else if (IsHover(destination, true) && SelectionMode == SelectionMode.Nurse && _hasVDown)
+                            else if (IsHover(destination, true) && SelectionMode == SelectionMode.Nurse && _hasCDown)
                             {
                                 nurse.Life--;
                                 nurse.Life = Math.Max(nurse.Life, 1);
