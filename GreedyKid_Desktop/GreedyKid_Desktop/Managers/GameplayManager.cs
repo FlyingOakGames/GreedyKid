@@ -1675,6 +1675,13 @@ namespace GreedyKid
             }
             int rRoom = RandomHelper.Next(_building.CurrentLevel.Floors[rFloor].Rooms.Length);
             Room room = _building.CurrentLevel.Floors[rFloor].Rooms[rRoom];
+            // avoid rooms with no door
+            while (room.FloorDoors.Length == 0)
+            {
+                rRoom++;
+                rRoom %= _building.CurrentLevel.Floors[rFloor].Rooms.Length;
+                room = _building.CurrentLevel.Floors[rFloor].Rooms[rRoom];
+            }
             // find correct X
             int roomSize = (304 - room.RightMargin * 8 + 8 - 64 - (room.LeftMargin * 8 + 16 + 32));
             int x = room.LeftMargin * 8 + 16 + 32 + RandomHelper.Next(roomSize);
@@ -1720,8 +1727,15 @@ namespace GreedyKid
                 rFloor++;
                 rFloor %= _building.CurrentLevel.Floors.Length;
             }
-            int rRoom = RandomHelper.Next(_building.CurrentLevel.Floors[rFloor].Rooms.Length);
+            int rRoom = RandomHelper.Next(_building.CurrentLevel.Floors[rFloor].Rooms.Length);            
             Room room = _building.CurrentLevel.Floors[rFloor].Rooms[rRoom];
+            // avoid rooms with no door
+            while (room.FloorDoors.Length == 0)
+            {
+                rRoom++;
+                rRoom %= _building.CurrentLevel.Floors[rFloor].Rooms.Length;
+                room = _building.CurrentLevel.Floors[rFloor].Rooms[rRoom];
+            }
 
             swat.Room = room;
             room.Cops.Add(swat);
