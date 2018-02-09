@@ -57,6 +57,30 @@ namespace GreedyKidEditor
             },
         };
 
+        bool[][] _allowedFurniture = new bool[][]
+        {
+            new bool[]
+            {
+                true, true, true, false,
+                false, false, false, false,
+            },
+            new bool[]
+            {
+                true, true, true, false,
+                false, false, false, false,
+            },
+            new bool[]
+            {
+                true, true, true, false,
+                false, false, false, false,
+            },
+            new bool[]
+            {
+                true, true, true, false,
+                false, false, false, false,
+            },
+        };
+
         string[] _modeText = new string[]
         {
             "ROOMS",
@@ -781,6 +805,14 @@ namespace GreedyKidEditor
                                     room.Details[d].Type--;
                                 }
                             }
+
+                            for (int d = 0; d < room.Furnitures.Count; d++)
+                            {
+                                while (_allowedFurniture[room.BackgroundColor][room.Furnitures[d].Type] == false)
+                                {
+                                    room.Furnitures[d].Type--;
+                                }
+                            }
                         }
 
                         for (int s = 0; s < nbSlice; s++)
@@ -1099,13 +1131,35 @@ namespace GreedyKidEditor
                             // update
                             if (IsHover(destination) && SelectionMode == SelectionMode.Furniture && _hasWheelUp)
                             {
+                                int prev = furniture.Type;
+
                                 furniture.Type++;
                                 furniture.Type = Math.Min(furniture.Type, Furniture.FurnitureCount - 1);
+
+                                // check allowed furniture
+                                if (furniture.Type < _allowedFurniture[room.BackgroundColor].Length && _allowedFurniture[room.BackgroundColor][furniture.Type] == false)
+                                {
+                                    while (_allowedFurniture[room.BackgroundColor][furniture.Type] == false)
+                                    {
+                                        furniture.Type++;
+                                        if (furniture.Type == _allowedFurniture[room.BackgroundColor].Length)
+                                            furniture.Type = prev;
+                                    }
+                                }
                             }
                             else if (IsHover(destination) && SelectionMode == SelectionMode.Furniture && _hasWheelDown)
                             {
                                 furniture.Type--;
                                 furniture.Type = Math.Max(furniture.Type, 0);
+
+                                // check allowed furniture
+                                if (furniture.Type < _allowedFurniture[room.BackgroundColor].Length && _allowedFurniture[room.BackgroundColor][furniture.Type] == false)
+                                {
+                                    while (_allowedFurniture[room.BackgroundColor][furniture.Type] == false)
+                                    {
+                                        furniture.Type--;
+                                    }
+                                }
                             }
 
                             // remove
