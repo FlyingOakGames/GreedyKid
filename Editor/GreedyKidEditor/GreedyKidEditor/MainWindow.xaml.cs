@@ -1393,7 +1393,7 @@ namespace GreedyKidEditor
                 {
                     try
                     {
-                        using (FileStream fs = new FileStream(_saveFile, FileMode.Open))
+                        using (FileStream fs = new FileStream(openFileDialog.FileName, FileMode.Open))
                         {
                             using (GZipStream gzipStream = new GZipStream(fs, CompressionMode.Decompress))
                             {
