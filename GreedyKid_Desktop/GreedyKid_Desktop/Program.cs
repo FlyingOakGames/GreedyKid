@@ -12,10 +12,12 @@ namespace GreedyKid
 #if XBOXONE || PLAYSTATION4
         public const bool RunningOnConsole = true;
         public const bool ForceWindowed = false;
+        public const bool UnlockFPS = false;
         //public const bool EditorMode = false;
 #else
         public static bool RunningOnConsole = false;
         public static bool ForceWindowed = false;
+        public static bool UnlockFPS = false;
         //public static bool EditorMode = false;
 #endif
 
@@ -33,6 +35,8 @@ namespace GreedyKid
                     RunningOnConsole = true;
                 else if (args[i] == "-forceWindowed")
                     ForceWindowed = true;
+                else if (args[i] == "-unlockFPS")
+                    UnlockFPS = true;
                 //else if (args[i] == "-editorMode")
                 //    EditorMode = true;
             }

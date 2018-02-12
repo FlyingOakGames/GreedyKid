@@ -70,6 +70,12 @@ namespace GreedyKid
 #if DESKTOP
             settingsManager.Load();
 
+            if (Program.UnlockFPS)
+            {
+                graphics.SynchronizeWithVerticalRetrace = false;
+                this.IsFixedTimeStep = false;
+            }
+
             Window.AllowUserResizing = true;
 
             if (settingsManager.ResolutionX == -1 || settingsManager.ResolutionY == -1)
