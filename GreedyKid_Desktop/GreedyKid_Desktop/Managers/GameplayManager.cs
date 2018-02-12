@@ -2580,7 +2580,7 @@ namespace GreedyKid
                 int distance = maxX - _copTimerRectangle[9].Width - _copTimerRectangle[0].Width + 2 - minX;
                 int time = 0;
 
-                if (_building.CurrentLevel.TimeBeforeRobocop > 0)
+                if (_building.CurrentLevel.TimeBeforeRobocop > 0 && _building.CurrentLevel.RobocopCount > 0)
                 {
                     time = _building.CurrentLevel.TimeBeforeRobocop + _building.CurrentLevel.TimeBeforeSwat + _building.CurrentLevel.TimeBeforeCop;
 
@@ -2604,7 +2604,7 @@ namespace GreedyKid
                       Color.White);                    
                 }
 
-                if (_building.CurrentLevel.TimeBeforeSwat > 0)
+                if (_building.CurrentLevel.TimeBeforeSwat > 0 && _building.CurrentLevel.Swat1Count > 0)
                 {
                     time = _building.CurrentLevel.TimeBeforeSwat + _building.CurrentLevel.TimeBeforeCop;
 
@@ -2627,7 +2627,7 @@ namespace GreedyKid
                       Color.White);
                 }
 
-                if (_building.CurrentLevel.TimeBeforeCop > 0)
+                if (_building.CurrentLevel.TimeBeforeCop > 0 && _initialNormalCopCount > 0)
                 {
                     time = _building.CurrentLevel.TimeBeforeCop;
 
