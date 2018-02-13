@@ -616,7 +616,7 @@ namespace GreedyKid
                 {
                     Cop cop = Room.Cops[c];
 
-                    if (cop.IsHitting && Math.Abs(cop.X - X) <= Cop.HitRange)
+                    if (cop.IsHitting && cop.Type < Cop.NonFiringCopCount && Math.Abs(cop.X - X) <= Cop.HitRange)
                     {
                         SfxManager.Instance.Play(Sfx.HeavyHit);
                         Hit((cop.Orientation == SpriteEffects.None ? SpriteEffects.FlipHorizontally : SpriteEffects.None), DamageType.Normal);
