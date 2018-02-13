@@ -60,6 +60,13 @@ namespace GreedyKid
         public void Load(BinaryReader reader)
         {
             X = reader.ReadInt32();
+            _state = (RoomDoorState)reader.ReadInt32();
+            switch(_state)
+            {
+                case RoomDoorState.Closed: Frame = 0; break;
+                case RoomDoorState.OpenLeft: Frame = 13; break;
+                case RoomDoorState.OpenRight: Frame = 4; break;
+            }
         }
 
         public void Update(float gameTime)

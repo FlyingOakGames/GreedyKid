@@ -1075,7 +1075,12 @@ namespace GreedyKidEditor
                         for (int d = 0; d < room.RoomDoors.Count; d++)
                         {
                             RoomDoor roomDoor = room.RoomDoors[d];
-                            source = _roomDoorRectangle[room.BackgroundColor][_roomDoorSequence[_currentRoomDoorFrame]];
+                            int frame = 0;
+                            if (roomDoor.State == RoomDoorState.OpenLeft)
+                                frame = 13;
+                            else if (roomDoor.State == RoomDoorState.OpenRight)
+                                frame = 4;
+                            source = _roomDoorRectangle[room.BackgroundColor][frame];
                             destination = new Rectangle(roomDoor.X, 128 - 40 * f + cameraPosY, source.Width, source.Height);
 
                             Color color = (IsHover(destination) && SelectionMode == SelectionMode.RoomDoor ? _selectionColor : Color.White);
@@ -1086,6 +1091,22 @@ namespace GreedyKidEditor
                                 destination,
                                 source,
                                 color);
+
+                            // update
+                            if (IsHover(destination) && SelectionMode == SelectionMode.RoomDoor && _hasWheelUp)
+                            {
+                                if (roomDoor.State == RoomDoorState.Closed)
+                                    roomDoor.State = RoomDoorState.OpenRight;
+                                else if (roomDoor.State == RoomDoorState.OpenLeft)
+                                    roomDoor.State = RoomDoorState.Closed;
+                            }
+                            else if (IsHover(destination) && SelectionMode == SelectionMode.RoomDoor && _hasWheelDown)
+                            {
+                                if (roomDoor.State == RoomDoorState.Closed)
+                                    roomDoor.State = RoomDoorState.OpenLeft;
+                                else if (roomDoor.State == RoomDoorState.OpenRight)
+                                    roomDoor.State = RoomDoorState.Closed;
+                            }
 
                             // remove
                             if (IsHover(destination) && SelectionMode == SelectionMode.RoomDoor && _hasRightClick)

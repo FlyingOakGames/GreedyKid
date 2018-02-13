@@ -2,8 +2,8 @@ _Boo! Greedy Kid_ editor manual (Windows only)
 ==========================
 > **Note**: The _Boo! Greedy Kid_ editor is only available on _Windows_ and there is no plan to port the editor to _Mac OS_ or _Linux_.
 
-**Manual version**: 1.0
-**Last modified**: 4th december 2018
+**Manual version**: 1.01
+**Last modified**: 13th february 2018
 
 <i class="icon-globe"></i> **Online version**: [http://greedy-kid.com/editor_manual/](http://greedy-kid.com/editor_manual/)
 
@@ -118,6 +118,8 @@ This mode allows you to add white doors to divide a room into multiple spaces. N
 Adding, removing or moving a door works just like the other modes by using the **mouse buttons** <i class="icon-up-hand"></i> and the **space bar** <i class="icon-keyboard"></i> while hovering a door.
 
 <p align="center"><img src="http://greedy-kid.com/editor_manual/images/separation.gif" width="450"></p>
+
+You can also change its default state (closed or open), by using the **mouse wheel** <i class="icon-up-hand"></i> while hovering a door.
 
 #### <img src="http://greedy-kid.com/editor_manual/images/mode4.png" height="20"> (Colored) Floor door mode
 
