@@ -1675,12 +1675,27 @@ namespace GreedyKid
             }
             int rRoom = RandomHelper.Next(_building.CurrentLevel.Floors[rFloor].Rooms.Length);
             Room room = _building.CurrentLevel.Floors[rFloor].Rooms[rRoom];
+            int initialRoom = rRoom;
             // avoid rooms with no door
             while (room.FloorDoors.Length == 0)
             {
                 rRoom++;
                 rRoom %= _building.CurrentLevel.Floors[rFloor].Rooms.Length;
                 room = _building.CurrentLevel.Floors[rFloor].Rooms[rRoom];
+
+                if (rRoom == initialRoom) // oups, all rooms of this floor are doorless
+                {
+                    rFloor++; // look for the next floor
+                    rFloor %= _building.CurrentLevel.Floors.Length;
+                    while (_building.CurrentLevel.Floors[rFloor].Rooms.Length == 0) // avoid empty floor
+                    {
+                        rFloor++;
+                        rFloor %= _building.CurrentLevel.Floors.Length;
+                    }
+                    rRoom = RandomHelper.Next(_building.CurrentLevel.Floors[rFloor].Rooms.Length);
+                    room = _building.CurrentLevel.Floors[rFloor].Rooms[rRoom];
+                    initialRoom = rRoom;
+                }
             }
             // find correct X
             int roomSize = (304 - room.RightMargin * 8 + 8 - 64 - (room.LeftMargin * 8 + 16 + 32));
@@ -1729,12 +1744,27 @@ namespace GreedyKid
             }
             int rRoom = RandomHelper.Next(_building.CurrentLevel.Floors[rFloor].Rooms.Length);            
             Room room = _building.CurrentLevel.Floors[rFloor].Rooms[rRoom];
+            int initialRoom = rRoom;
             // avoid rooms with no door
             while (room.FloorDoors.Length == 0)
             {
                 rRoom++;
                 rRoom %= _building.CurrentLevel.Floors[rFloor].Rooms.Length;
                 room = _building.CurrentLevel.Floors[rFloor].Rooms[rRoom];
+
+                if (rRoom == initialRoom) // oups, all rooms of this floor are doorless
+                {
+                    rFloor++; // look for the next floor
+                    rFloor %= _building.CurrentLevel.Floors.Length;
+                    while (_building.CurrentLevel.Floors[rFloor].Rooms.Length == 0) // avoid empty floor
+                    {
+                        rFloor++;
+                        rFloor %= _building.CurrentLevel.Floors.Length;
+                    }
+                    rRoom = RandomHelper.Next(_building.CurrentLevel.Floors[rFloor].Rooms.Length);
+                    room = _building.CurrentLevel.Floors[rFloor].Rooms[rRoom];
+                    initialRoom = rRoom;
+                }
             }
 
             swat.Room = room;
