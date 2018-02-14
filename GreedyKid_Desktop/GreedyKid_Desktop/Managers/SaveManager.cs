@@ -7,7 +7,7 @@ namespace GreedyKid
     public sealed class SaveManager
     {
         private string _savePath = "Scores";
-        private static int[] _minVersion = new int[] { 1, 0, 0, 0 };
+        private static int[] _minVersion = new int[] { 1, 7, 0, 0 };
 
         private static SaveManager _instance;
 
@@ -295,6 +295,16 @@ namespace GreedyKid
                                         _levelMoney[i] = reader.ReadInt32();
                                         _levelStars[i] = reader.ReadInt32();
                                     }
+
+                                    // read false levels
+                                    for (int i = building.LevelCount; i < 99; i++)
+                                    {
+                                        reader.ReadBoolean();
+                                        reader.ReadInt32();
+                                        reader.ReadInt32();
+                                        reader.ReadInt32();
+                                    }
+
                                     _hasSeenIntro = reader.ReadBoolean();
                                     _hasSeenEnding1 = reader.ReadBoolean();
                                     _hasSeenEnding2 = reader.ReadBoolean();
@@ -362,6 +372,16 @@ namespace GreedyKid
                             writer.Write(_levelTime[i]);
                             writer.Write(_levelMoney[i]);
                             writer.Write(_levelStars[i]);
+                        }
+
+                        // write blank levels
+
+                        for (int i = building.LevelCount; i < 99; i++)
+                        {
+                            writer.Write(false);
+                            writer.Write((int)0);
+                            writer.Write((int)0);
+                            writer.Write((int)0);
                         }
 
                         writer.Write(_hasSeenIntro);

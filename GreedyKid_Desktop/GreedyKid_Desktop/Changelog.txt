@@ -1,4 +1,13 @@
-﻿V.6	(beta)					14th February 2018
+﻿V.7	(gold)					14th February 2018
+
+	Notice:
+		Due to new levels and change in the save format, all saves prior to this version will be erased
+
+	Fixes:
+		Fixes a problem with workshop level saves getting corrupted if the number of levels changes
+
+
+V.6	(beta)					14th February 2018
 
 	Notice:
 		Due to new levels and change in the save format, all saves prior to this version will be erased
