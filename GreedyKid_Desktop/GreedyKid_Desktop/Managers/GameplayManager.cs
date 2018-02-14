@@ -61,6 +61,7 @@ namespace GreedyKid
         private int[] _encodedScore = new int[] { 0, 0, 0 };
         public int Time = 0;
         private int[] _encodedTime = new int[] { 0, 0, 10, 0, 0 };
+        private int _lastPlayerHP = 0;
 
         private float _currentSeconds = 0.0f;
 
@@ -851,6 +852,8 @@ namespace GreedyKid
                     if (Player.Life == 1)
                         Helper.AchievementHelper.Instance.UnlockAchievement(Helper.Achievement.GD_ACHIEVEMENT_19);
 
+                    _lastPlayerHP = Player.Life;
+
                     SaveManager.Instance.AddMoney(Player.Money);
 
                     // save score
@@ -1314,8 +1317,8 @@ namespace GreedyKid
                             {
                                 if (drop.Type == ObjectType.HealthPack)
                                 {
-                                    Player.Life += 2;
-                                    Player.Life = Math.Min(Player.Life, 6);
+                                    Player.Life += 1;
+                                    Player.Life = Math.Min(Player.Life, 3);
                                     SfxManager.Instance.Play(Sfx.HealthPack);
                                 }
                                 else
@@ -2684,14 +2687,18 @@ namespace GreedyKid
             // player life
             for (int h = 0; h < 3; h++)
             {
-                if (Player != null && Player.Life / ((h + 1) * 2) >= 1)
+                if ((Player != null && Player.Life >= h + 1) || (Player == null && _lastPlayerHP >= h + 1))
                 {
+                    Vector2 HPShake = Helper.ScreenShakeHelper.Instance.HPShake;
+                    if (Player == null || Player.Life > 1)
+                        HPShake = Vector2.Zero;
                     // full
                     spriteBatch.Draw(texture,
-                        new Rectangle(24 + h * _iconRectangle[0].Width + (int)borderShake.X, 0 + (int)borderShake.Y, _iconRectangle[0].Width, _iconRectangle[0].Height),
+                        new Rectangle(24 + h * _iconRectangle[0].Width + (int)borderShake.X + (int)HPShake.X, 0 + (int)borderShake.Y + (int)HPShake.Y, _iconRectangle[0].Width, _iconRectangle[0].Height),
                         _iconRectangle[0],
                         Color.White);
                 }
+                /*
                 else if (Player != null && (Player.Life - h * 2) % ((h + 1) * 2) >= 1)
                 {
                     Vector2 HPShake = Helper.ScreenShakeHelper.Instance.HPShake;
@@ -2703,6 +2710,7 @@ namespace GreedyKid
                         _iconRectangle[1],
                         Color.White);
                 }
+                */
                 else
                 {
                     // empty
