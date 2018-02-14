@@ -1406,9 +1406,11 @@ namespace GreedyKidEditor
 
                         for (int i = 0; i < building.Levels.Count; i++)
                         {
+                            if (_building.Levels.Count == 99)
+                                break;
                             building.Levels[i].Name = building.Levels[i].Name + " (imported)";
                             if (_building != null)
-                                _building.Levels.Add(building.Levels[i]);
+                                _building.Levels.Add(building.Levels[i]);                            
                         }
                     }
                     catch (Exception)
