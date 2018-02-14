@@ -1677,7 +1677,7 @@ namespace GreedyKid
             Room room = _building.CurrentLevel.Floors[rFloor].Rooms[rRoom];
             int initialRoom = rRoom;
             // avoid rooms with no door
-            while (room.FloorDoors.Length == 0)
+            while (room.FloorDoors.Length == 0 && room.HasExit == false && room.HasStart == false)
             {
                 rRoom++;
                 rRoom %= _building.CurrentLevel.Floors[rFloor].Rooms.Length;
@@ -1746,7 +1746,7 @@ namespace GreedyKid
             Room room = _building.CurrentLevel.Floors[rFloor].Rooms[rRoom];
             int initialRoom = rRoom;
             // avoid rooms with no door
-            while (room.FloorDoors.Length == 0)
+            while (room.FloorDoors.Length == 0 && room.HasExit == false && room.HasStart == false)
             {
                 rRoom++;
                 rRoom %= _building.CurrentLevel.Floors[rFloor].Rooms.Length;
