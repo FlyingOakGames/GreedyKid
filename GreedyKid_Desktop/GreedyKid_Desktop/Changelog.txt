@@ -1,4 +1,15 @@
-﻿V.7	(gold)					14th February 2018
+﻿V.8							15th February 2018
+
+	Changes:
+		Balanced time requirements for level 25, 42
+
+	Fixes:
+		Fixes a few sound incompatibility issues on Windows
+		Fixes global star counter to reflect a 100% progression instead of a any%
+		Fixes retirees having a non-angry animation after being healed while still being angry
+
+
+V.7	(gold)					14th February 2018
 
 	Notice:
 		Due to new levels and change in the save format, all saves prior to this version will be erased
