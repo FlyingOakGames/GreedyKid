@@ -311,7 +311,7 @@ namespace GreedyKid
             {                
                 _targetTime[i] = building.TargetTime[i];
                 _targetMoney[i] = building.TargetMoney[i];
-                if (SaveManager.Instance.IsLevelDone(i))
+                if (SaveManager.Instance.IsLevelDone(i) && SaveManager.Instance.LevelStars(i) == 3)
                     _completedLevels++;
                 if (_selectedLevel == -1 && !SaveManager.Instance.IsLevelDone(i))
                     _selectedLevel = i;
