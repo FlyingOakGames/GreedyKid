@@ -678,13 +678,12 @@ namespace GreedyKid
             _wantsToOpenDoor = false;
             _actionTime = 0.0f;
 
-            SfxManager.Instance.Play(Sfx.Revive + (_isFemale ? 1 : 0));
-
-            NextAction();
+            SfxManager.Instance.Play(Sfx.Revive + (_isFemale ? 1 : 0));            
 
             if (RandomHelper.Next() > 0.5f)
             {
-                _angryTime = RandomHelper.Next() * 5.0f + 3.0f;                
+                _angryTime = RandomHelper.Next() * 5.0f + 3.0f;
+                NextAction();
             }
             else
                 Stun();            
