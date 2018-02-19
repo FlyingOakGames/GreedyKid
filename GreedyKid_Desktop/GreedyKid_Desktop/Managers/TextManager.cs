@@ -42,31 +42,31 @@ namespace GreedyKid
 #if DESKTOP || PLAYSTATION4
             switch (System.Globalization.CultureInfo.InstalledUICulture.TwoLetterISOLanguageName)
             {
-                case "en": _language = Language.EN; break;
-                case "fr": _language = Language.FR; break;
-                case "de": _language = Language.DE; break;
-                case "ru": _language = Language.RU; break;
-                case "es": _language = Language.SP; break;
+                case "en": Language = Language.EN; break;
+                case "fr": Language = Language.FR; break;
+                case "de": Language = Language.DE; break;
+                case "ru": Language = Language.RU; break;
+                case "es": Language = Language.SP; break;
                 case "pt":
                     if (System.Globalization.CultureInfo.InstalledUICulture.LCID == 1046)
                     {
-                        _language = Language.BR;
+                        Language = Language.BR;
                     }
                     break;
-                case "it": _language = Language.IT; break;
-                case "zh": _language = Language.CN; break;
+                case "it": Language = Language.IT; break;
+                case "zh": Language = Language.CN; break;
             }
 #elif XBOXONE
             switch (PlatformHelper.XboxOne.GetDefaultLocale())
             {
-                case 0: _language = Language.EN; break;
-                case 1: _language = Language.FR; break;
-                case 2: _language = Language.DE; break;
-                case 3: _language = Language.RU; break;
-                case 4: _language = Language.SP; break;
-                case 5: _language = Language.BR; break;
-                case 6: _language = Language.IT; break;
-                case 7: _language = Language.CN; break;
+                case 0: Language = Language.EN; break;
+                case 1: Language = Language.FR; break;
+                case 2: Language = Language.DE; break;
+                case 3: Language = Language.RU; break;
+                case 4: Language = Language.SP; break;
+                case 5: Language = Language.BR; break;
+                case 6: Language = Language.IT; break;
+                case 7: Language = Language.CN; break;
             }
 #endif
         }
