@@ -693,6 +693,7 @@ namespace GreedyKidEditor
 
         private bool CheckExport()
         {
+            bool isAlreadyBlocked = PreviewRenderer.BlockClick;
             PreviewRenderer.BlockClick = true;
 
             bool noError = true;
@@ -873,7 +874,8 @@ namespace GreedyKidEditor
                 }
             }
 
-            PreviewRenderer.BlockClick = false;
+            if (!isAlreadyBlocked)
+                PreviewRenderer.BlockClick = false;
 
             return noError;
         }
