@@ -1,4 +1,10 @@
-﻿V.8							15th February 2018
+﻿V.9							?
+
+	Fixes:
+		Fixes Russian text alignment
+
+
+V.8							15th February 2018
 
 	Changes:
 		Balanced time requirements for level 25, 42
