@@ -1,7 +1,11 @@
-﻿V.9							?
+﻿V.9							19th February 2018
+
+	Changes:
+		You can now use the "interact" key in the main menu
 
 	Fixes:
 		Fixes Russian text alignment
+		Fixes game crashing when starting the game on a Russian or Chinese system
 
 
 V.8							15th February 2018

@@ -387,7 +387,8 @@ namespace GreedyKid
             KeyboardState keyboardState = Keyboard.GetState();
 
             if ((keyboardState.IsKeyDown(Keys.Enter) && _previousKeyboardState.IsKeyUp(Keys.Enter)) ||
-                (mouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released))
+                (mouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) ||
+                ActionKey.IsPressed(mouseState, keyboardState) && ActionKey.IsReleased(_previousMouseState, _previousKeyboardState))
                 manager.PushSelect(
                     mouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released,
                     (int)((mouseState.Position.X - GreedyKidGame.Viewport.X) * (GreedyKidGame.Width / (float)GreedyKidGame.Viewport.Width)));
