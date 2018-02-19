@@ -28,14 +28,18 @@ namespace GreedyKid
 
         public static void GetName(string buildingFolder, out string identifier, out string name)
         {
-            using (GZipStream gzipStream = new GZipStream(TitleContainer.OpenStream(buildingFolder + "\\building"), CompressionMode.Decompress, false, true))
+            using (FileStream stream = new FileStream(buildingFolder + "\\building", FileMode.Open))
             {
-                using (BinaryReader reader = new BinaryReader(gzipStream))
+                using (GZipStream gzipStream = new GZipStream(stream, CompressionMode.Decompress, false, true))
                 {
-                    identifier = reader.ReadString();
+                    using (BinaryReader reader = new BinaryReader(gzipStream))
+                    {
+                        identifier = reader.ReadString();
+                        reader.ReadUInt32(); // version
 
-                    name = reader.ReadString();
-                    name = name.ToUpperInvariant();
+                        name = reader.ReadString();
+                        name = name.ToUpperInvariant();
+                    }
                 }
             }
         }
@@ -60,27 +64,30 @@ namespace GreedyKid
                 }
             }
 
-            using (GZipStream gzipStream = new GZipStream(TitleContainer.OpenStream(_currentBuildingPath), CompressionMode.Decompress))
+            using (FileStream stream = new FileStream(_currentBuildingPath, FileMode.Open))
             {
-                using (BinaryReader reader = new BinaryReader(gzipStream))
+                using (GZipStream gzipStream = new GZipStream(stream, CompressionMode.Decompress))
                 {
-                    Identifier = reader.ReadString();
-                    Version = reader.ReadUInt32();
-
-                    Name = reader.ReadString();
-
-                    LevelCount = reader.ReadInt32();
-
-                    TargetTime = new int[LevelCount];
-                    for (int i = 0; i < LevelCount; i++)
+                    using (BinaryReader reader = new BinaryReader(gzipStream))
                     {
-                        TargetTime[i] = reader.ReadInt32();
-                    }
+                        Identifier = reader.ReadString();
+                        Version = reader.ReadUInt32();
 
-                    TargetMoney = new int[LevelCount];
-                    for (int i = 0; i < LevelCount; i++)
-                    {
-                        TargetMoney[i] = reader.ReadInt32();
+                        Name = reader.ReadString();
+
+                        LevelCount = reader.ReadInt32();
+
+                        TargetTime = new int[LevelCount];
+                        for (int i = 0; i < LevelCount; i++)
+                        {
+                            TargetTime[i] = reader.ReadInt32();
+                        }
+
+                        TargetMoney = new int[LevelCount];
+                        for (int i = 0; i < LevelCount; i++)
+                        {
+                            TargetMoney[i] = reader.ReadInt32();
+                        }
                     }
                 }
             }
@@ -93,15 +100,18 @@ namespace GreedyKid
 
         public void LoadLevel(int level)
         {
-            using (GZipStream gzipStream = new GZipStream(TitleContainer.OpenStream(_currentLevelPath + level), CompressionMode.Decompress))
+            using (FileStream stream = new FileStream(_currentLevelPath + level, FileMode.Open))
             {
-                using (BinaryReader reader = new BinaryReader(gzipStream))
+                using (GZipStream gzipStream = new GZipStream(stream, CompressionMode.Decompress))
                 {
-                    CurrentLevel = new Level();
-                    CurrentLevel.Load(reader);
+                    using (BinaryReader reader = new BinaryReader(gzipStream))
+                    {
+                        CurrentLevel = new Level();
+                        CurrentLevel.Load(reader);
 
-                    if (CurrentLevel.Version != Version || CurrentLevel.Identifier != Identifier)
-                        throw new Exception("Tentative to hack levels.");
+                        if (CurrentLevel.Version != Version || CurrentLevel.Identifier != Identifier)
+                            throw new Exception("Tentative to hack levels.");
+                    }
                 }
             }
         }

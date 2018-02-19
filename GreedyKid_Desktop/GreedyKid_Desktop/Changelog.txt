@@ -5,6 +5,7 @@
 		The time during which characters are angry is now fixed to 5.5s instead of being random
 
 	Fixes:
+		Fixes workshop level not appearing correctly in-game
 		Fixes angry characters being slam by door to be still angy will being dizzy and possible after that
 		Fixes Russian text alignment
 		Fixes game crashing when starting the game on a Russian or Chinese system
