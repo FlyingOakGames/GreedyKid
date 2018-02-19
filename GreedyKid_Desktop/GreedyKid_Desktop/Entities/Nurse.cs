@@ -710,6 +710,8 @@ namespace GreedyKid
             _hasJustTurned = false;
             _wantsToOpenDoor = false;
 
+            _angryTime = 0.0f;
+
             if (Life > 1)
             {
                 Life--;
