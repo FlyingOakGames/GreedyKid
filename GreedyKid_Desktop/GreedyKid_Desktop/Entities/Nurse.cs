@@ -43,6 +43,7 @@ namespace GreedyKid
 
         // angry
         private float _angryTime = 0.0f;
+        private const float _angryDuration = 5.5f;
         public int LastKnownPlayerPosition = -1;
 
         // ressurecting retiree
@@ -593,7 +594,8 @@ namespace GreedyKid
 
                 SfxManager.Instance.Play(Sfx.NAngryH + (_isFemale ? 1 : 0));
 
-                _angryTime = RandomHelper.Next() * 5.0f + 3.0f;
+                //_angryTime = RandomHelper.Next() * 5.0f + 3.0f;
+                _angryTime = _angryDuration;
 
                 State = EntityState.Boo;
             }
@@ -607,7 +609,8 @@ namespace GreedyKid
             _currentFrameTime = 0.0f;
             _actionTime = 0.0f;
             _hasJustTurned = false;
-            _angryTime = RandomHelper.Next() * 5.0f + 3.0f;
+            //_angryTime = RandomHelper.Next() * 5.0f + 3.0f;
+            _angryTime = _angryDuration;
 
             SfxManager.Instance.Play(Sfx.NAngryH + (_isFemale ? 1 : 0));
 

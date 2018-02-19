@@ -2,6 +2,7 @@
 
 	Changes:
 		You can now use the "interact" key in the main menu
+		The time during which characters are angry is now fixed to 5.5s instead of being random
 
 	Fixes:
 		Fixes angry characters being slam by door to be still angy will being dizzy and possible after that
