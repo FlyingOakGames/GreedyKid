@@ -238,10 +238,16 @@ namespace GreedyKid.Helper
 
         // ************************* STEAM WORKSHOP *************************
 
+        private string _macPath = null;
+
         public string WorkshopPath
         {
             get
             {
+                if (_macPath == null)
+                    _macPath = System.IO.Path.Combine("..", "..", "..", "..", "..", "workshop/content/770630/");
+                if (System.IO.Directory.Exists(_macPath))
+                    return _macPath;
                 return "../../workshop/content/770630/";
             }
         }

@@ -241,7 +241,7 @@ namespace GreedyKid
                     }
                     SetResolution(ResolutionX, ResolutionY, false);
                     SfxManager.Instance.SetVolume(SfxVolume);
-                    MusicManager.Instance.SetVolume(MusicVolume);
+                    MusicManager.Instance.SetVolume(1.0f);
                 }
                 catch (Exception) { }
 #elif XBOXONE
@@ -662,7 +662,7 @@ namespace GreedyKid
             if (musicVolume > 10)
                 musicVolume = 10;
             MusicVolume = musicVolume / 10.0f;
-            MusicManager.Instance.SetVolume(MusicVolume);
+            MusicManager.Instance.SetVolume(1.0f);
         }
 
         private void MusicVolumeDown()
@@ -672,7 +672,7 @@ namespace GreedyKid
             if (musicVolume < 0)
                 musicVolume = 0;
             MusicVolume = musicVolume / 10.0f;
-            MusicManager.Instance.SetVolume(MusicVolume);
+            MusicManager.Instance.SetVolume(1.0f);
         }
 
         private bool OptionMax()

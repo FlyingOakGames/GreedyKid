@@ -10,8 +10,8 @@ namespace GreedyKid
         public const string MainCampaignIdentifier = "MainCampaign";
 
         public const string LocalWorkshopPath = "Content/Workshop/";
-        private const string _defaultBuildingPath = "Content\\building";
-        private const string _defaultLevelPath = "Content\\level_";
+        private const string _defaultBuildingPath = "Content/building";
+        private const string _defaultLevelPath = "Content/level_";
 
         private string _currentBuildingPath = "";
         private string _currentLevelPath = "";
@@ -28,7 +28,7 @@ namespace GreedyKid
 
         public static void GetName(string buildingFolder, out string identifier, out string name)
         {
-            using (FileStream stream = new FileStream(buildingFolder + "\\building", FileMode.Open))
+            using (FileStream stream = new FileStream(buildingFolder + "/building", FileMode.Open))
             {
                 using (GZipStream gzipStream = new GZipStream(stream, CompressionMode.Decompress, false, true))
                 {
@@ -48,6 +48,14 @@ namespace GreedyKid
         {
             _currentBuildingPath = _defaultBuildingPath;
             _currentLevelPath = _defaultLevelPath;
+
+#if DESKTOP
+            if (!File.Exists(_currentBuildingPath)) // MacOS hack
+            {
+                _currentBuildingPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "Resources", _currentBuildingPath);
+                _currentLevelPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "Resources", _currentLevelPath);
+            }
+#endif
 
             if (buildingIdentifier != MainCampaignIdentifier)
             {
