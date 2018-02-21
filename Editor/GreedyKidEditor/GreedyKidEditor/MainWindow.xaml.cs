@@ -1311,7 +1311,7 @@ namespace GreedyKidEditor
                         dialog.ItemAlreadyExist = false;
                         try
                         {
-                            long.Parse(_building.Identifier);
+                            ulong.Parse(_building.Identifier);
                             dialog.ItemAlreadyExist = true;
                         }
                         catch (Exception) { }

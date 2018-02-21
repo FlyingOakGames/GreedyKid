@@ -1,5 +1,7 @@
 ﻿using System;
 using Steamworks;
+using System.IO;
+using System.IO.Compression;
 
 namespace GreedyKidEditor.Helpers
 {
@@ -330,6 +332,26 @@ namespace GreedyKidEditor.Helpers
             ulong itemID = pCallback.m_nPublishedFileId.m_PublishedFileId;
 
             _buildingToUpload.Identifier = itemID.ToString();
+
+            // must save before upload with new ID
+            if (File.Exists(Path.GetTempPath() + "GreedyKidWorkshopUpload" + "\\building"))
+            {
+                try
+                {
+                    File.Delete(Path.GetTempPath() + "GreedyKidWorkshopUpload" + "\\building");
+                }
+                catch (Exception) { }
+            }
+            using (FileStream fs = new FileStream(Path.GetTempPath() + "GreedyKidWorkshopUpload" + "\\building", FileMode.OpenOrCreate))
+            {
+                using (GZipStream gzipStream = new GZipStream(fs, CompressionMode.Compress))
+                {
+                    using (BinaryWriter writer = new BinaryWriter(gzipStream))
+                    {
+                        _buildingToUpload.Save(writer, true);
+                    }
+                }
+            }
 
             UpdateItem(pCallback.m_nPublishedFileId);
         }
