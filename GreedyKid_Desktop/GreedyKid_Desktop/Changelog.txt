@@ -1,4 +1,11 @@
-﻿V.10						20th February 2018
+﻿V.11						22th February 2018
+
+	Fixes:
+		Fixes progression achievements not unlocking
+		Fixes first Workshop upload to produce levels that crash the game upon loading
+		
+
+V.10						20th February 2018
 
 	Fixes:
 		Fixes MacOS crash when entering level selection

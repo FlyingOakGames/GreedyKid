@@ -158,7 +158,7 @@ namespace GreedyKid
 
                 int completedLevels = 0;
                 int totalStars = 0;
-                for (int i = 0; i < 0; i++)
+                for (int i = 0; i < _isLevelDone.Length; i++)
                 {
                     if (_isLevelDone[i])
                         completedLevels++;
