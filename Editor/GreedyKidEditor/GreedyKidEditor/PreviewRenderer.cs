@@ -740,16 +740,24 @@ namespace GreedyKidEditor
                 Rectangle timeRectangle = new Rectangle(138, 0, 50, 12);
 
                 if (IsHover(timeRectangle, true) && _hasWheelUp)
+                {
                     level.TargetTime++;
+                    _hasWheelUp = false;
+                }
                 else if (IsHover(timeRectangle, true) && _hasLeftClick)
+                {
                     level.TargetTime += 5;
+                    _hasLeftClick = false;
+                }
                 else if (IsHover(timeRectangle, true) && _hasWheelDown)
                 {
                     level.TargetTime--;
+                    _hasWheelDown = false;
                 }
                 else if (IsHover(timeRectangle, true) && _hasRightClick)
                 {
-                    level.TargetTime -= 5;                    
+                    level.TargetTime -= 5;
+                    _hasRightClick = false;
                 }
 
                 if (level.TargetTime < 1)
