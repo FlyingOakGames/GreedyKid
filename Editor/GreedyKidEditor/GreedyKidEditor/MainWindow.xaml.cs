@@ -1345,7 +1345,10 @@ namespace GreedyKidEditor
         {
             try
             {
-                System.Diagnostics.Process.Start("file://" + AppDomain.CurrentDomain.BaseDirectory + "Manual\\index.html");
+                string path = "file://" + AppDomain.CurrentDomain.BaseDirectory + "Manual\\index.html";
+                path = path.Replace("\\.\\", "\\"); // steam hack
+                loadedFile.Text = DateTime.Now.ToString("HH:mm") + ": Opening manual (" + path + ")";
+                System.Diagnostics.Process.Start(path);                
             }
             catch { }
         }
@@ -1376,7 +1379,9 @@ namespace GreedyKidEditor
                 {
                     try
                     {
-                        System.Diagnostics.Process.Start("file://" + AppDomain.CurrentDomain.BaseDirectory + "Manual\\index.html");
+                        string path = "file://" + AppDomain.CurrentDomain.BaseDirectory + "Manual\\index.html";
+                        path = path.Replace("\\.\\", "\\"); // steam hack                        
+                        System.Diagnostics.Process.Start(path);                        
                     }
                     catch { }
                 }

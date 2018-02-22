@@ -3,6 +3,7 @@
 	Fixes:
 		Fixes progression achievements not unlocking
 		Fixes first Workshop upload to produce levels that crash the game upon loading
+		Fixes editor manual not showing up correctly
 		
 
 V.10						20th February 2018
