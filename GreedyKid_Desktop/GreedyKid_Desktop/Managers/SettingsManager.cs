@@ -156,11 +156,6 @@ namespace GreedyKid
                             GamePadInputsHandler.PreferredButtonType = ButtonType.PlayStation;
                         else
                             GamePadInputsHandler.PreferredButtonType = ButtonType.Xbox;
-#if PLAYSTATION4
-                        GamePadInputsHandler.PreferredButtonType = ButtonType.PlayStation;
-#elif XBOXONE
-                        GamePadInputsHandler.PreferredButtonType = ButtonType.Xbox;
-#endif
                         break;
 
                     case "MusicVolume":
@@ -212,21 +207,8 @@ namespace GreedyKid
         {
             string path = _settingsPath;
 
-#if PLAYSTATION4
-            path = PlatformHelper.PlayStation4.BeginSave(_configPath, true);
-            if (path == null)
-                return;
-#endif
-
-#if DESKTOP || PLAYSTATION4
             if (File.Exists(path))
-#elif XBOXONE
-            byte[] buffer;
-            if (PlatformHelper.XboxOne.LoadData(path, path, out buffer))
-#endif
             {
-
-#if DESKTOP || PLAYSTATION4
                 try
                 {
                     // load
@@ -244,43 +226,18 @@ namespace GreedyKid
                     MusicManager.Instance.SetVolume(1.0f);
                 }
                 catch (Exception) { }
-#elif XBOXONE
-                AutoResolution = true;
 
-                try
-                {
-                    using (MemoryStream stream = new MemoryStream(buffer))
-                    {
-                        using (BinaryReader reader = new BinaryReader(stream))
-                        {
-                            MusicVolume = reader.ReadSingle();
-                            SfxVolume = reader.ReadSingle();
-                            Language = (Language)reader.ReadInt32();
-                        }
-                    }                    
-                }
-                catch (Exception) { }                
-#endif
-
-#if PLAYSTATION4
-                PlatformHelper.PlayStation4.EndSave();
-#endif
             }
             else
             {
-#if PLAYSTATION4
-                PlatformHelper.PlayStation4.EndSave();
-#endif
                 Save();
             }
         }
 
         public void Delete()
         {
-#if DESKTOP
             if (File.Exists(_settingsPath))
                 File.Delete(_settingsPath);
-#endif
         }
 
         public void SetResolution(int width, int height, bool save = true)
@@ -306,13 +263,6 @@ namespace GreedyKid
 
             string path = _settingsPath;            
 
-#if PLAYSTATION4
-            path = PlatformHelper.PlayStation4.BeginSave(_configPath, false);
-            if (path == null)
-                return;
-#endif
-
-#if DESKTOP || PLAYSTATION4
             using (TextWriter writer = File.CreateText(path))
             {
                 writer.Write("ResolutionX=" + ResolutionX + writer.NewLine);
@@ -333,27 +283,6 @@ namespace GreedyKid
 
                 writer.Flush();
             }
-#elif XBOXONE
-            using (MemoryStream stream = new MemoryStream())
-            {
-                using (BinaryWriter writer = new BinaryWriter(stream))
-                {
-                    writer.Write(MusicVolume);
-                    writer.Write(SfxVolume);
-                    writer.Write((int)Language);
-
-                    writer.Flush();
-                    stream.Flush();
-
-                    byte[] buffer = stream.GetBuffer();
-                    PlatformHelper.XboxOne.SaveData(path, path, buffer, buffer.Length);
-                }
-            }            
-#endif
-
-#if PLAYSTATION4
-            PlatformHelper.PlayStation4.EndSave();
-#endif
         }
 
         public void UpdateMouseSelection(int x, int y)

@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if STEAM
+
+using System;
 using Steamworks;
 
 namespace GreedyKid.Helper
@@ -44,8 +46,6 @@ namespace GreedyKid.Helper
         public SteamworksReturn Init()
         {
             _steamworksReady = false;
-
-            InitDllDirectory();
 
             /*
             if (Program.EditorMode)
@@ -120,38 +120,6 @@ namespace GreedyKid.Helper
             }
 
             return SteamworksReturn.Ok;
-        }
-
-        [System.Runtime.InteropServices.DllImport("kernel32.dll", SetLastError = true)]
-        private static extern bool SetDllDirectory(string lpPathName);
-
-        private void InitDllDirectory()
-        {
-            PlatformID pid = Environment.OSVersion.Platform;
-            bool isWindows = false;
-            switch (pid)
-            {
-                case PlatformID.Win32NT:
-                case PlatformID.Win32S:
-                case PlatformID.Win32Windows:
-                case PlatformID.WinCE:
-                    isWindows = true;
-                    break;
-                default: isWindows = false; break;
-            }
-
-            if (isWindows)
-            {
-                string executingDirectory = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-                if (Environment.Is64BitProcess)
-                {
-                    SetDllDirectory(System.IO.Path.Combine(executingDirectory, "x64"));
-                }
-                else
-                {
-                    SetDllDirectory(System.IO.Path.Combine(executingDirectory, "x86"));
-                }
-            }
         }
 
         // ************************* STEAM UPDATE *************************
@@ -392,3 +360,4 @@ namespace GreedyKid.Helper
         private Achievement_t[] m_Achievements;
     }
 }
+#endif

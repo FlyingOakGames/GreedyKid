@@ -1,5 +1,4 @@
 ﻿using Ionic.Zlib;
-using Microsoft.Xna.Framework;
 using System;
 using System.IO;
 
@@ -61,9 +60,11 @@ namespace GreedyKid
             {
                 if (isSteamWorkshop)
                 {
+#if STEAM
                     string workshopPath = Helper.SteamworksHelper.Instance.WorkshopPath;
                     _currentBuildingPath = workshopPath + buildingIdentifier + "/building"; // wrong dir
                     _currentLevelPath = workshopPath + buildingIdentifier + "/level_"; // wrong dir
+#endif
                 }
                 else
                 {

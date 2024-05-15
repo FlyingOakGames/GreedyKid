@@ -453,3 +453,305 @@
 /processorParam:TextureFormat=Color
 /build:Textures/splash.png
 
+#begin Workshop\Boo
+/copy:Workshop\Boo
+
+#begin building
+/copy:building
+
+#begin level_0
+/copy:level_0
+
+#begin level_1
+/copy:level_1
+
+#begin level_2
+/copy:level_2
+
+#begin level_3
+/copy:level_3
+
+#begin level_4
+/copy:level_4
+
+#begin level_5
+/copy:level_5
+
+#begin level_6
+/copy:level_6
+
+#begin level_7
+/copy:level_7
+
+#begin level_8
+/copy:level_8
+
+#begin level_9
+/copy:level_9
+
+#begin level_10
+/copy:level_10
+
+#begin level_11
+/copy:level_11
+
+#begin level_12
+/copy:level_12
+
+#begin level_13
+/copy:level_13
+
+#begin level_14
+/copy:level_14
+
+#begin level_15
+/copy:level_15
+
+#begin level_16
+/copy:level_16
+
+#begin level_17
+/copy:level_17
+
+#begin level_18
+/copy:level_18
+
+#begin level_19
+/copy:level_19
+
+#begin level_20
+/copy:level_20
+
+#begin level_21
+/copy:level_21
+
+#begin level_22
+/copy:level_22
+
+#begin level_23
+/copy:level_23
+
+#begin level_24
+/copy:level_24
+
+#begin level_25
+/copy:level_25
+
+#begin level_26
+/copy:level_26
+
+#begin level_27
+/copy:level_27
+
+#begin level_28
+/copy:level_28
+
+#begin level_29
+/copy:level_29
+
+#begin level_30
+/copy:level_30
+
+#begin level_31
+/copy:level_31
+
+#begin level_32
+/copy:level_32
+
+#begin level_33
+/copy:level_33
+
+#begin level_34
+/copy:level_34
+
+#begin level_35
+/copy:level_35
+
+#begin level_36
+/copy:level_36
+
+#begin level_37
+/copy:level_37
+
+#begin level_38
+/copy:level_38
+
+#begin level_39
+/copy:level_39
+
+#begin level_40
+/copy:level_40
+
+#begin level_41
+/copy:level_41
+
+#begin level_42
+/copy:level_42
+
+#begin level_43
+/copy:level_43
+
+#begin level_44
+/copy:level_44
+
+#begin level_45
+/copy:level_45
+
+#begin level_46
+/copy:level_46
+
+#begin level_47
+/copy:level_47
+
+#begin level_48
+/copy:level_48
+
+#begin level_49
+/copy:level_49
+
+#begin level_50
+/copy:level_50
+
+#begin level_51
+/copy:level_51
+
+#begin level_52
+/copy:level_52
+
+#begin level_53
+/copy:level_53
+
+#begin level_54
+/copy:level_54
+
+#begin level_55
+/copy:level_55
+
+#begin level_56
+/copy:level_56
+
+#begin level_57
+/copy:level_57
+
+#begin level_58
+/copy:level_58
+
+#begin level_59
+/copy:level_59
+
+#begin level_60
+/copy:level_60
+
+#begin level_61
+/copy:level_61
+
+#begin level_62
+/copy:level_62
+
+#begin level_63
+/copy:level_63
+
+#begin level_64
+/copy:level_64
+
+#begin level_65
+/copy:level_65
+
+#begin level_66
+/copy:level_66
+
+#begin level_67
+/copy:level_67
+
+#begin level_68
+/copy:level_68
+
+#begin level_69
+/copy:level_69
+
+#begin level_70
+/copy:level_70
+
+#begin level_71
+/copy:level_71
+
+#begin level_72
+/copy:level_72
+
+#begin level_73
+/copy:level_73
+
+#begin level_74
+/copy:level_74
+
+#begin level_75
+/copy:level_75
+
+#begin level_76
+/copy:level_76
+
+#begin level_77
+/copy:level_77
+
+#begin level_78
+/copy:level_78
+
+#begin level_79
+/copy:level_79
+
+#begin level_80
+/copy:level_80
+
+#begin level_81
+/copy:level_81
+
+#begin level_82
+/copy:level_82
+
+#begin level_83
+/copy:level_83
+
+#begin level_84
+/copy:level_84
+
+#begin level_85
+/copy:level_85
+
+#begin level_86
+/copy:level_86
+
+#begin level_87
+/copy:level_87
+
+#begin level_88
+/copy:level_88
+
+#begin level_89
+/copy:level_89
+
+#begin level_90
+/copy:level_90
+
+#begin level_91
+/copy:level_91
+
+#begin level_92
+/copy:level_92
+
+#begin level_93
+/copy:level_93
+
+#begin level_94
+/copy:level_94
+
+#begin level_95
+/copy:level_95
+
+#begin level_96
+/copy:level_96
+
+#begin level_97
+/copy:level_97
+
+#begin level_98
+/copy:level_98

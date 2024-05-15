@@ -39,7 +39,6 @@ namespace GreedyKid
 
         public void DetectStartingLanguage()
         {
-#if DESKTOP || PLAYSTATION4
             switch (System.Globalization.CultureInfo.InstalledUICulture.TwoLetterISOLanguageName)
             {
                 case "en": Language = Language.EN; break;
@@ -56,19 +55,6 @@ namespace GreedyKid
                 case "it": Language = Language.IT; break;
                 case "zh": Language = Language.CN; break;
             }
-#elif XBOXONE
-            switch (PlatformHelper.XboxOne.GetDefaultLocale())
-            {
-                case 0: Language = Language.EN; break;
-                case 1: Language = Language.FR; break;
-                case 2: Language = Language.DE; break;
-                case 3: Language = Language.RU; break;
-                case 4: Language = Language.SP; break;
-                case 5: Language = Language.BR; break;
-                case 6: Language = Language.IT; break;
-                case 7: Language = Language.CN; break;
-            }
-#endif
         }
 
         public SpriteFont Font

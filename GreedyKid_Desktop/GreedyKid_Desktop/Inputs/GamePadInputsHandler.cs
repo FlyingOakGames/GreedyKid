@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
 
 namespace GreedyKid
 {
@@ -20,11 +19,7 @@ namespace GreedyKid
 
         private GamePadState _previousGamePadState;
 
-#if PLAYSTATION4
-        public static ButtonType PreferredButtonType = ButtonType.PlayStation;
-#else
         public static ButtonType PreferredButtonType = ButtonType.Xbox;
-#endif      
 
         public GamePadInputsHandler(PlayerIndex playerIndex)
         {

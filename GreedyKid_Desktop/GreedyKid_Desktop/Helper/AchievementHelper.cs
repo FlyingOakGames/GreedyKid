@@ -53,14 +53,8 @@ namespace GreedyKid.Helper
 
         public void UnlockAchievement(Achievement id)
         {
-#if DESKTOP
+#if STEAM
             SteamworksHelper.Instance.SetAchievement(id);
-#elif XBOXONE
-            PlatformHelper.XboxOne.UnlockAchievement((int)id);
-#elif PLAYSTATION4
-            PlatformHelper.PlayStation4.UnlockAchievement((int)id);
-#elif PSVITA
-            PlatformHelper.PSVita.UnlockAchievement((int)id - 3);
 #endif
         }
     }

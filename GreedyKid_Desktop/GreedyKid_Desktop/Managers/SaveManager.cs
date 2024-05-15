@@ -224,35 +224,16 @@ namespace GreedyKid
             _hasSeenEnding1 = false;
             _hasSeenEnding2 = false;
 
-#if PLAYSTATION4
-            path = PlatformHelper.PlayStation4.BeginSave(_statsPath, true);
-            if (path == null)
-                return;
-#endif
 
-#if DESKTOP || PLAYSTATION4
             if (File.Exists(path))
-#elif XBOXONE
-            byte[] buffer;
-            if (PlatformHelper.XboxOne.LoadData(path, path, out buffer))
-#endif
             {
                 try
                 {
-#if DESKTOP || PLAYSTATION4
                     using (FileStream stream = new FileStream(path, FileMode.Open))
-#elif XBOXONE
-                    using (MemoryStream stream = new MemoryStream(buffer))
-#endif
                     {
-#if DESKTOP || PLAYSTATION4
                         using (GZipStream gzipStream = new GZipStream(stream, CompressionMode.Decompress, false, true))
                         {
                             using (BinaryReader reader = new BinaryReader(gzipStream))
-#elif XBOXONE
-                        {
-                            using (BinaryReader reader = new BinaryReader(stream))
-#endif
                             {
                                 string currentVersion = System.Reflection.Assembly.GetExecutingAssembly()
                                     .GetName()
@@ -326,36 +307,18 @@ namespace GreedyKid
                     // can't load save
                 }
             }
-
-#if PLAYSTATION4
-            PlatformHelper.PlayStation4.EndSave();
-#endif
         }
 
         public void Save(Building building)
         {
             string path = _savePath + "_" + building.Identifier;
 
-#if PLAYSTATION4
-            path = PlatformHelper.PlayStation4.BeginSave(_statsPath, false);
-            if (path == null)
-                return;
-#endif
 
-#if XBOXONE
-            using (MemoryStream stream = new MemoryStream())
-#elif DESKTOP || PLAYSTATION4
             using (FileStream stream = new FileStream(path, FileMode.Create))
-#endif
             {
-#if DESKTOP || PLAYSTATION4
                 using (GZipStream gzipStream = new GZipStream(stream, CompressionMode.Compress))
                 {
                     using (BinaryWriter writer = new BinaryWriter(gzipStream))
-#elif XBOXONE
-                {
-                    using (BinaryWriter writer = new BinaryWriter(stream))
-#endif
                     {
                         string currentVersion = System.Reflection.Assembly.GetExecutingAssembly()
                                     .GetName()
@@ -397,21 +360,12 @@ namespace GreedyKid
                         }
 
                         writer.Flush();
-#if DESKTOP || PLAYSTATION4
                         gzipStream.Flush();
-#endif
                         stream.Flush();
 
-#if XBOXONE
-                        byte[] buffer = stream.GetBuffer();
-                        PlatformHelper.XboxOne.SaveData(path, path, buffer, buffer.Length);
-#endif
                     }
                 }
             }
-#if PLAYSTATION4
-            PlatformHelper.PlayStation4.EndSave();
-#endif
         }
     }    
 }

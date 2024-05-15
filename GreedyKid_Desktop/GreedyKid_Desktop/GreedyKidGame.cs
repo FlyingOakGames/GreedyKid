@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using System;
 
 namespace GreedyKid
@@ -159,7 +158,7 @@ namespace GreedyKid
         {
             float gameTimeF = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-#if DESKTOP
+#if STEAM
             Helper.SteamworksHelper.Instance.Update(gameTimeF);
 #endif
 

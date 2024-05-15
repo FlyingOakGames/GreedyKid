@@ -168,6 +168,7 @@ namespace GreedyKid
                 }
             }
 
+#if STEAM
             // steam files
             string[] steamWorkshopIdentifiers = new string[0];
             string[] steamWorkshopBuildingNames = new string[0];
@@ -223,6 +224,7 @@ namespace GreedyKid
                     _workshopBuildingNames[i] = TextManager.Instance.SafeConvert(_workshopBuildingNames[i]);
                 }
             }
+#endif
         }
 
         private bool _localWorkshopWatched = false;
@@ -240,6 +242,7 @@ namespace GreedyKid
                 catch (Exception) { }
             }
 
+#if STEAM
             if (_steamWorkshopWatched == false)
             { 
                 try
@@ -248,7 +251,8 @@ namespace GreedyKid
                     _steamWorkshopWatched = true;
                 }
                 catch (Exception) { }                
-            }    
+            }
+#endif
         }
 
         private void CreateFileWatcher(string path)
@@ -1077,7 +1081,11 @@ namespace GreedyKid
                 yStart = 122;
 
                 UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.Campaign, yStart, 0, _selectionOption);
+#if STEAM
                 UIHelper.Instance.DrawCenteredText(spriteBatch, (Helper.SteamworksHelper.Instance.IsReady ? TextManager.Instance.Workshop : TextManager.Instance.Custom), yStart + 15, 1, _selectionOption);
+#else
+                UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.Custom, yStart + 15, 1, _selectionOption);
+#endif
                 UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.Back, yStart + 30, 2, _selectionOption);
             }            
             else if (_state == TitleScreenState.Settings)
@@ -1089,7 +1097,11 @@ namespace GreedyKid
                 yStart = 30;
 
                 // title
+#if STEAM
                 UIHelper.Instance.DrawTitle(spriteBatch, (Helper.SteamworksHelper.Instance.IsReady ? TextManager.Instance.Workshop : TextManager.Instance.Custom));
+#else
+                UIHelper.Instance.DrawTitle(spriteBatch, TextManager.Instance.Custom);
+#endif
 
                 if (_workshopIdentifiers != null && _workshopIdentifiers.Length > 0)
                 {
@@ -1111,6 +1123,7 @@ namespace GreedyKid
                 }
                 else
                 {
+#if STEAM
                     // no workshop level
                     if (Helper.SteamworksHelper.Instance.IsReady)
                     {
@@ -1120,6 +1133,7 @@ namespace GreedyKid
                         UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.WorkshopNotice3, 92, -1, 0);
                     }
                     else
+#endif
                     {
                         UIHelper.Instance.DrawCenteredText(spriteBatch, TextManager.Instance.WorkshopNotice4, 45, -1, 0);
 
