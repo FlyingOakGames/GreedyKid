@@ -18,6 +18,8 @@ namespace GreedyKid.Helper
     {
         private static SteamworksHelper _instance;
 
+        private const uint _appID = 0; // put your own Steam AppID here
+
         public static SteamworksHelper Instance
         {
             get
@@ -70,7 +72,7 @@ namespace GreedyKid.Helper
 
             try
             {
-                if (SteamAPI.RestartAppIfNecessary(new AppId_t(770630)))
+                if (SteamAPI.RestartAppIfNecessary(new AppId_t(_appID)))
                 {
                     Console.WriteLine("STEAM: Steam not launched, restarting");
                     return SteamworksReturn.RestartingThroughSteam;
@@ -214,10 +216,10 @@ namespace GreedyKid.Helper
             get
             {
                 if (_macPath == null)
-                    _macPath = System.IO.Path.Combine("..", "..", "..", "..", "..", "workshop/content/770630/");
+                    _macPath = System.IO.Path.Combine("..", "..", "..", "..", "..", "workshop/content/" + _appID + "/");
                 if (System.IO.Directory.Exists(_macPath))
                     return _macPath;
-                return "../../workshop/content/770630/";
+                return "../../workshop/content/" + _appID + "/";
             }
         }
 

@@ -50,6 +50,8 @@ namespace GreedyKidEditor.Helpers
     {
         private static SteamworksHelper _instance;
 
+        private const uint _appID = 0; // put your own Steam AppID here
+
         public static SteamworksHelper Instance
         {
             get
@@ -98,7 +100,7 @@ namespace GreedyKidEditor.Helpers
 
             try
             {
-                if (SteamAPI.RestartAppIfNecessary(new AppId_t(770630)))
+                if (SteamAPI.RestartAppIfNecessary(new AppId_t(_appID)))
                 {
                     Console.WriteLine("STEAM: Steam not launched, restarting");
                     return SteamworksReturn.RestartingThroughSteam;
