@@ -6,7 +6,7 @@
 
 This is the main repository for [Boo! Greedy Kid](https://store.steampowered.com/app/770630/Boo_Greedy_Kid/) on all platforms (Windows, macOS, and Linux) and its level editor (Windows-only).
 
-Boo! Greedy Kid is coded in C# with [MonoGame](https://monogame.net/), and uses native compilation on all platforms when published (using .NET ```PublishAot```).
+Boo! Greedy Kid is coded in C# with [MonoGame](https://monogame.net/) 3.8.1, and uses native compilation on all platforms when published (using .NET ```PublishAot```).
 
 A post-build script will create a macOS bundle automatically when using ```dotnet publish -r osx-x64```.
 
