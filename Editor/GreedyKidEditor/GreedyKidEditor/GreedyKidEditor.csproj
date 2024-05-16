@@ -1,198 +1,361 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{5964B05E-DFD2-474F-A527-6D7F2E81E27C}</ProjectGuid>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <OutputType>WinExe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GreedyKidEditor</RootNamespace>
-    <AssemblyName>GreedyKidEditor</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <WarningLevel>4</WarningLevel>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;DEVMODE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\bin\DesktopGL\AnyCPU\Release\Editor\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
+    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+    <Platforms>x64</Platforms>
+    <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
+    <Configurations>Debug;Release;ReleaseSteam;DebugSteam</Configurations>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Resources\Icon.ico</ApplicationIcon>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Devmode|AnyCPU' ">
-    <OutputPath>bin\Devmode\</OutputPath>
-    <DefineConstants>TRACE;DEVMODE</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;DEVMODE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseSteam|x64'">
+    <OutputPath>bin\x64\ReleaseSteam\</OutputPath>
+    <DefineConstants>STEAM</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugSteam|x64'">
+    <OutputPath>bin\x64\DebugSteam\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;DEVMODE;STEAM</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MonoGame.Framework, Version=3.6.0.1114, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\MonoGame.Framework.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX, Version=2.6.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\SharpDX.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.Direct2D1, Version=3.0.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\SharpDX.Direct2D1.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.Direct3D11, Version=2.6.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\SharpDX.Direct3D11.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.Direct3D9, Version=2.6.3.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\SharpDX.Direct3D9.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.DXGI, Version=2.6.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\SharpDX.DXGI.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.MediaFoundation, Version=2.6.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\SharpDX.MediaFoundation.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.XAudio2, Version=2.6.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\SharpDX.XAudio2.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.XInput, Version=3.0.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\SharpDX.XInput.dll</HintPath>
-    </Reference>
-    <Reference Include="Steamworks.NET">
-      <HintPath>.\Steamworks.NET.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Xaml">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="WindowsBase" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="WindowsFormsIntegration" />
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\autogen\isteamapplist.cs">
+      <Link>Helpers\Steamworks.NET\autogen\isteamapplist.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\autogen\isteamapps.cs">
+      <Link>Helpers\Steamworks.NET\autogen\isteamapps.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\autogen\isteamclient.cs">
+      <Link>Helpers\Steamworks.NET\autogen\isteamclient.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\autogen\isteamfriends.cs">
+      <Link>Helpers\Steamworks.NET\autogen\isteamfriends.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\autogen\isteamgameserver.cs">
+      <Link>Helpers\Steamworks.NET\autogen\isteamgameserver.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\autogen\isteamgameserverclient.cs">
+      <Link>Helpers\Steamworks.NET\autogen\isteamgameserverclient.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\autogen\isteamgameserverhttp.cs">
+      <Link>Helpers\Steamworks.NET\autogen\isteamgameserverhttp.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\autogen\isteamgameserverinventory.cs">
+      <Link>Helpers\Steamworks.NET\autogen\isteamgameserverinventory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\autogen\isteamgameservernetworking.cs">
+      <Link>Helpers\Steamworks.NET\autogen\isteamgameservernetworking.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\autogen\isteamgameservernetworkingsockets.cs">
+      <Link>Helpers\Steamworks.NET\autogen\isteamgameservernetworkingsockets.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\autogen\isteamgameservernetworkingutils.cs">
+      <Link>Helpers\Steamworks.NET\autogen\isteamgameservernetworkingutils.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\autogen\isteamgameserverstats.cs">
+      <Link>Helpers\Steamworks.NET\autogen\isteamgameserverstats.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\autogen\isteamgameserverugc.cs">
+      <Link>Helpers\Steamworks.NET\autogen\isteamgameserverugc.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\autogen\isteamgameserverutils.cs">
+      <Link>Helpers\Steamworks.NET\autogen\isteamgameserverutils.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\autogen\isteamhtmlsurface.cs">
+      <Link>Helpers\Steamworks.NET\autogen\isteamhtmlsurface.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\autogen\isteamhttp.cs">
+      <Link>Helpers\Steamworks.NET\autogen\isteamhttp.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\autogen\isteaminput.cs">
+      <Link>Helpers\Steamworks.NET\autogen\isteaminput.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\autogen\isteaminventory.cs">
+      <Link>Helpers\Steamworks.NET\autogen\isteaminventory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\autogen\isteammatchmaking.cs">
+      <Link>Helpers\Steamworks.NET\autogen\isteammatchmaking.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\autogen\isteammusic.cs">
+      <Link>Helpers\Steamworks.NET\autogen\isteammusic.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\autogen\isteammusicremote.cs">
+      <Link>Helpers\Steamworks.NET\autogen\isteammusicremote.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\autogen\isteamnetworking.cs">
+      <Link>Helpers\Steamworks.NET\autogen\isteamnetworking.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\autogen\isteamnetworkingmessages.cs">
+      <Link>Helpers\Steamworks.NET\autogen\isteamnetworkingmessages.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\autogen\isteamnetworkingsockets.cs">
+      <Link>Helpers\Steamworks.NET\autogen\isteamnetworkingsockets.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\autogen\isteamnetworkingutils.cs">
+      <Link>Helpers\Steamworks.NET\autogen\isteamnetworkingutils.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\autogen\isteamparentalsettings.cs">
+      <Link>Helpers\Steamworks.NET\autogen\isteamparentalsettings.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\autogen\isteamremoteplay.cs">
+      <Link>Helpers\Steamworks.NET\autogen\isteamremoteplay.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\autogen\isteamremotestorage.cs">
+      <Link>Helpers\Steamworks.NET\autogen\isteamremotestorage.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\autogen\isteamscreenshots.cs">
+      <Link>Helpers\Steamworks.NET\autogen\isteamscreenshots.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\autogen\isteamugc.cs">
+      <Link>Helpers\Steamworks.NET\autogen\isteamugc.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\autogen\isteamuser.cs">
+      <Link>Helpers\Steamworks.NET\autogen\isteamuser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\autogen\isteamuserstats.cs">
+      <Link>Helpers\Steamworks.NET\autogen\isteamuserstats.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\autogen\isteamutils.cs">
+      <Link>Helpers\Steamworks.NET\autogen\isteamutils.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\autogen\isteamvideo.cs">
+      <Link>Helpers\Steamworks.NET\autogen\isteamvideo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\autogen\NativeMethods.cs">
+      <Link>Helpers\Steamworks.NET\autogen\NativeMethods.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\autogen\SteamCallbacks.cs">
+      <Link>Helpers\Steamworks.NET\autogen\SteamCallbacks.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\autogen\SteamConstants.cs">
+      <Link>Helpers\Steamworks.NET\autogen\SteamConstants.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\autogen\SteamEnums.cs">
+      <Link>Helpers\Steamworks.NET\autogen\SteamEnums.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\autogen\SteamStructs.cs">
+      <Link>Helpers\Steamworks.NET\autogen\SteamStructs.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\CallbackDispatcher.cs">
+      <Link>Helpers\Steamworks.NET\CallbackDispatcher.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\CallbackIdentity.cs">
+      <Link>Helpers\Steamworks.NET\CallbackIdentity.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\InteropHelp.cs">
+      <Link>Helpers\Steamworks.NET\InteropHelp.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\ISteamMatchmakingResponses.cs">
+      <Link>Helpers\Steamworks.NET\ISteamMatchmakingResponses.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\Packsize.cs">
+      <Link>Helpers\Steamworks.NET\Packsize.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\Steam.cs">
+      <Link>Helpers\Steamworks.NET\Steam.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\MatchmakingTypes\gameserveritem_t.cs">
+      <Link>Helpers\Steamworks.NET\types\gameserveritem_t.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\MatchmakingTypes\servernetadr_t.cs">
+      <Link>Helpers\Steamworks.NET\types\servernetadr_t.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamClientPublic\CGameID.cs">
+      <Link>Helpers\Steamworks.NET\types\CGameID.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamClientPublic\CSteamID.cs">
+      <Link>Helpers\Steamworks.NET\types\CSteamID.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamClientPublic\HAuthTicket.cs">
+      <Link>Helpers\Steamworks.NET\types\HAuthTicket.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamClient\SteamAPIWarningMessageHook_t.cs">
+      <Link>Helpers\Steamworks.NET\types\SteamAPIWarningMessageHook_t.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamClient\SteamAPI_CheckCallbackRegistered_t.cs">
+      <Link>Helpers\Steamworks.NET\types\SteamAPI_CheckCallbackRegistered_t.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamDatagramTickets\SteamDatagramHostedAddress.cs">
+      <Link>Helpers\Steamworks.NET\types\SteamDatagramHostedAddress.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamDatagramTickets\SteamDatagramRelayAuthTicket.cs">
+      <Link>Helpers\Steamworks.NET\types\SteamDatagramRelayAuthTicket.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamFriends\FriendsGroupID_t.cs">
+      <Link>Helpers\Steamworks.NET\types\FriendsGroupID_t.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamHTMLSurface\HHTMLBrowser.cs">
+      <Link>Helpers\Steamworks.NET\types\HHTMLBrowser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamHTTP\HTTPCookieContainerHandle.cs">
+      <Link>Helpers\Steamworks.NET\types\HTTPCookieContainerHandle.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamHTTP\HTTPRequestHandle.cs">
+      <Link>Helpers\Steamworks.NET\types\HTTPRequestHandle.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamInput\InputActionSetHandle_t.cs">
+      <Link>Helpers\Steamworks.NET\types\InputActionSetHandle_t.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamInput\InputAnalogActionHandle_t.cs">
+      <Link>Helpers\Steamworks.NET\types\InputAnalogActionHandle_t.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamInput\InputDigitalActionHandle_t.cs">
+      <Link>Helpers\Steamworks.NET\types\InputDigitalActionHandle_t.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamInput\InputHandle_t.cs">
+      <Link>Helpers\Steamworks.NET\types\InputHandle_t.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamInput\SteamInputActionEventCallbackPointer.cs">
+      <Link>Helpers\Steamworks.NET\types\SteamInputActionEventCallbackPointer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamInput\SteamInputActionEvent_t.cs">
+      <Link>Helpers\Steamworks.NET\types\SteamInputActionEvent_t.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamInventory\SteamInventoryResult_t.cs">
+      <Link>Helpers\Steamworks.NET\types\SteamInventoryResult_t.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamInventory\SteamInventoryUpdateHandle_t.cs">
+      <Link>Helpers\Steamworks.NET\types\SteamInventoryUpdateHandle_t.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamInventory\SteamItemDef_t.cs">
+      <Link>Helpers\Steamworks.NET\types\SteamItemDef_t.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamInventory\SteamItemInstanceID_t.cs">
+      <Link>Helpers\Steamworks.NET\types\SteamItemInstanceID_t.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamMatchmaking\HServerListRequest.cs">
+      <Link>Helpers\Steamworks.NET\types\HServerListRequest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamMatchmaking\HServerQuery.cs">
+      <Link>Helpers\Steamworks.NET\types\HServerQuery.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamNetworkingSockets\ISteamNetworkingConnectionSignaling.cs">
+      <Link>Helpers\Steamworks.NET\types\ISteamNetworkingConnectionSignaling.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamNetworkingSockets\ISteamNetworkingSignalingRecvContext.cs">
+      <Link>Helpers\Steamworks.NET\types\ISteamNetworkingSignalingRecvContext.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamNetworkingTypes\FSteamNetworkingSocketsDebugOutput.cs">
+      <Link>Helpers\Steamworks.NET\types\FSteamNetworkingSocketsDebugOutput.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamNetworkingTypes\HSteamListenSocket.cs">
+      <Link>Helpers\Steamworks.NET\types\HSteamListenSocket.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamNetworkingTypes\HSteamNetConnection.cs">
+      <Link>Helpers\Steamworks.NET\types\HSteamNetConnection.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamNetworkingTypes\HSteamNetPollGroup.cs">
+      <Link>Helpers\Steamworks.NET\types\HSteamNetPollGroup.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamNetworkingTypes\SteamNetworkingConfigValue_t.cs">
+      <Link>Helpers\Steamworks.NET\types\SteamNetworkingConfigValue_t.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamNetworkingTypes\SteamNetworkingErrMsg.cs">
+      <Link>Helpers\Steamworks.NET\types\SteamNetworkingErrMsg.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamNetworkingTypes\SteamNetworkingIdentity.cs">
+      <Link>Helpers\Steamworks.NET\types\SteamNetworkingIdentity.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamNetworkingTypes\SteamNetworkingIPAddr.cs">
+      <Link>Helpers\Steamworks.NET\types\SteamNetworkingIPAddr.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamNetworkingTypes\SteamNetworkingMessage_t.cs">
+      <Link>Helpers\Steamworks.NET\types\SteamNetworkingMessage_t.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamNetworkingTypes\SteamNetworkingMicroseconds.cs">
+      <Link>Helpers\Steamworks.NET\types\SteamNetworkingMicroseconds.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamNetworkingTypes\SteamNetworkingPOPID.cs">
+      <Link>Helpers\Steamworks.NET\types\SteamNetworkingPOPID.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamNetworking\SNetListenSocket_t.cs">
+      <Link>Helpers\Steamworks.NET\types\SNetListenSocket_t.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamNetworking\SNetSocket_t.cs">
+      <Link>Helpers\Steamworks.NET\types\SNetSocket_t.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamRemotePlay\RemotePlaySessionID_t.cs">
+      <Link>Helpers\Steamworks.NET\types\RemotePlaySessionID_t.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamRemoteStorage\PublishedFileId_t.cs">
+      <Link>Helpers\Steamworks.NET\types\PublishedFileId_t.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamRemoteStorage\PublishedFileUpdateHandle_t.cs">
+      <Link>Helpers\Steamworks.NET\types\PublishedFileUpdateHandle_t.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamRemoteStorage\UGCFileWriteStreamHandle_t.cs">
+      <Link>Helpers\Steamworks.NET\types\UGCFileWriteStreamHandle_t.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamRemoteStorage\UGCHandle_t.cs">
+      <Link>Helpers\Steamworks.NET\types\UGCHandle_t.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamScreenshots\ScreenshotHandle.cs">
+      <Link>Helpers\Steamworks.NET\types\ScreenshotHandle.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamTypes\AccountID_t.cs">
+      <Link>Helpers\Steamworks.NET\types\AccountID_t.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamTypes\AppId_t.cs">
+      <Link>Helpers\Steamworks.NET\types\AppId_t.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamTypes\DepotId_t.cs">
+      <Link>Helpers\Steamworks.NET\types\DepotId_t.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamTypes\PartyBeaconID_t.cs">
+      <Link>Helpers\Steamworks.NET\types\PartyBeaconID_t.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamTypes\RTime32.cs">
+      <Link>Helpers\Steamworks.NET\types\RTime32.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamTypes\SteamAPICall_t.cs">
+      <Link>Helpers\Steamworks.NET\types\SteamAPICall_t.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamTypes\SteamIPAddress_t.cs">
+      <Link>Helpers\Steamworks.NET\types\SteamIPAddress_t.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamUGC\UGCQueryHandle_t.cs">
+      <Link>Helpers\Steamworks.NET\types\UGCQueryHandle_t.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamUGC\UGCUpdateHandle_t.cs">
+      <Link>Helpers\Steamworks.NET\types\UGCUpdateHandle_t.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamUserStats\SteamLeaderboardEntries_t.cs">
+      <Link>Helpers\Steamworks.NET\types\SteamLeaderboardEntries_t.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\SteamUserStats\SteamLeaderboard_t.cs">
+      <Link>Helpers\Steamworks.NET\types\SteamLeaderboard_t.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\Steam_api_common\HSteamPipe.cs">
+      <Link>Helpers\Steamworks.NET\types\HSteamPipe.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\types\Steam_api_common\HSteamUser.cs">
+      <Link>Helpers\Steamworks.NET\types\HSteamUser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\Helper\Steamworks.NET\Version.cs">
+      <Link>Helpers\Steamworks.NET\Version.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </ApplicationDefinition>
-    <Compile Include="Building\Cop.cs" />
-    <Compile Include="Building\Detail.cs" />
-    <Compile Include="Building\FloorDoor.cs" />
-    <Compile Include="Building\Furniture.cs" />
-    <Compile Include="Building\IMovable.cs" />
-    <Compile Include="Building\Nurse.cs" />
-    <Compile Include="Building\Retiree.cs" />
-    <Compile Include="Building\Room.cs" />
-    <Compile Include="Building\RoomDoor.cs" />
-    <Compile Include="Helpers\HashHelper.cs" />
-    <Compile Include="Helpers\SteamworksHelper.cs" />
-    <Compile Include="Helpers\SystemHelper.cs" />
-    <Compile Include="TextInputDialog.xaml.cs">
-      <DependentUpon>TextInputDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UploadDialog.xaml.cs">
-      <DependentUpon>UploadDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="WorkshopConfigDialog.xaml.cs">
-      <DependentUpon>WorkshopConfigDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Building\Building.cs" />
-    <Compile Include="Building\Floor.cs" />
-    <Compile Include="Building\Level.cs" />
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Page Include="TextInputDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UploadDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="WorkshopConfigDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="PreviewRenderer.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\steam_appid.txt" Link="steam_appid.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Content\Textures\level.png">
+    <None Update="Content\Textures\level.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -200,23 +363,9 @@
     <Resource Include="Resources\Icon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="steam_appid.txt">
+    <None Include="..\..\..\GreedyKid_Desktop\GreedyKid_Desktop\lib\win-x64\steam_api64.dll" Link="steam_api64.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="x64\CSteamworks.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="x64\steam_api64.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="x86\CSteamworks.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="x86\steam_api.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="..\..\Manual\images\add_room.gif">
       <Link>Manual\images\add_room.gif</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -346,12 +495,11 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.1.303" />
+  </ItemGroup>
 </Project>

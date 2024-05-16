@@ -65,42 +65,6 @@ namespace GreedyKidEditor
                 }
                 writer.WriteLine("---------------------------------------------------------------------" + Environment.NewLine + Environment.NewLine);
             }
-
-            // send to db
-            using (System.Net.WebClient client = new System.Net.WebClient())
-            {
-
-                string message = "EDITOR " + exception.Message;
-                string stackTrace = exception.GetType().ToString() + " -- " + exception.StackTrace;
-                if (exception.InnerException != null)
-                {
-                    message += " (Inner exception: " + exception.InnerException.Message + ")";
-                    stackTrace += " (Inner exception: " + exception.InnerException.GetType().ToString() + " -- " + exception.InnerException.StackTrace + ")";
-                }
-
-                string secret = HashHelper.SHA1(message + SystemHelper.Name + version).ToLowerInvariant();
-
-                try
-                {
-                    System.Collections.Specialized.NameValueCollection data = new System.Collections.Specialized.NameValueCollection()
-                    {
-                        { "secret", secret },
-                        { "message", message },
-                        { "stracktrace", stackTrace },
-                        { "version", version },
-                        { "os", SystemHelper.Name },
-                    };
-                    byte[] response =
-                    client.UploadValues("http://flying-oak.com/greedykidcrash.php", data);
-
-                    string result = System.Text.Encoding.UTF8.GetString(response);
-                    Console.WriteLine(result);
-                }
-                catch (System.Net.WebException)
-                {
-                    // 404
-                }
-            }
         }        
 #endif
 
@@ -1329,7 +1293,9 @@ namespace GreedyKidEditor
                             PreviewRenderer.BlockClick = true;
 
                             // upload
+#if STEAM
                             SteamworksHelper.Instance.UploadBuilding(_building);
+#endif
                             UploadDialog uploadDialog = new UploadDialog();
                             uploadDialog.Owner = this;
                             uploadDialog.Reset();

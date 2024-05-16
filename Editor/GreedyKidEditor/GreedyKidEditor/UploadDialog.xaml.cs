@@ -1,6 +1,8 @@
-﻿using System;
+﻿using System.Windows;
+#if STEAM
+using System;
 using System.Diagnostics;
-using System.Windows;
+#endif
 
 namespace GreedyKidEditor
 {
@@ -13,6 +15,7 @@ namespace GreedyKidEditor
         {
             InitializeComponent();
 
+#if STEAM
             var uploading = System.Threading.Tasks.Task.Factory.StartNew(() =>
             {                
                 Stopwatch sw = new Stopwatch();
@@ -32,6 +35,7 @@ namespace GreedyKidEditor
             System.Threading.CancellationToken.None,
             System.Threading.Tasks.TaskCreationOptions.None,
             System.Threading.Tasks.TaskScheduler.Default);
+#endif
         }
 
         public void Reset()
@@ -44,6 +48,7 @@ namespace GreedyKidEditor
             label2.Content = "";
         }
 
+#if STEAM
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
             if (Helpers.SteamworksHelper.Instance.UploadStatus == Helpers.WorkshopUploadStatus.Uploading)
@@ -114,6 +119,7 @@ namespace GreedyKidEditor
                 }
             }
         }
+#endif
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
@@ -122,20 +128,24 @@ namespace GreedyKidEditor
 
         private void hyperlink_Click(object sender, RoutedEventArgs e)
         {
+#if STEAM
             try
             {
                 System.Diagnostics.Process.Start("http://steamcommunity.com/sharedfiles/filedetails/?id=" + Helpers.SteamworksHelper.Instance.UploadID);
             }
             catch { }
+#endif
         }
 
         private void hyperlink2_Click(object sender, RoutedEventArgs e)
         {
+#if STEAM
             try
             {
                 System.Diagnostics.Process.Start("http://steamcommunity.com/sharedfiles/filedetails/?id=" + Helpers.SteamworksHelper.Instance.UploadID);
             }
             catch { }
+#endif
         }
     }
 }

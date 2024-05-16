@@ -1,7 +1,9 @@
 ﻿using System;
+#if STEAM
 using Steamworks;
 using System.IO;
 using System.IO.Compression;
+#endif
 
 namespace GreedyKidEditor.Helpers
 {
@@ -67,7 +69,9 @@ namespace GreedyKidEditor.Helpers
 
         private bool _steamworksReady = false;
 
+#if STEAM
         private CGameID m_GameID;
+#endif
 
         public bool IsReady
         {
@@ -78,7 +82,7 @@ namespace GreedyKidEditor.Helpers
         {
             _steamworksReady = false;
 
-            InitDllDirectory();
+#if STEAM
 
             if (!Packsize.Test())
             {
@@ -139,40 +143,9 @@ namespace GreedyKidEditor.Helpers
                 _shouldRetryRequestStats = true;
                 _currentRetryRequestStatsTime = 0.0f;
             }
+#endif
 
             return SteamworksReturn.Ok;
-        }
-
-        [System.Runtime.InteropServices.DllImport("kernel32.dll", SetLastError = true)]
-        private static extern bool SetDllDirectory(string lpPathName);
-
-        private void InitDllDirectory()
-        {
-            PlatformID pid = Environment.OSVersion.Platform;
-            bool isWindows = false;
-            switch (pid)
-            {
-                case PlatformID.Win32NT:
-                case PlatformID.Win32S:
-                case PlatformID.Win32Windows:
-                case PlatformID.WinCE:
-                    isWindows = true;
-                    break;
-                default: isWindows = false; break;
-            }
-
-            if (isWindows)
-            {
-                string executingDirectory = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-                if (Environment.Is64BitProcess)
-                {
-                    SetDllDirectory(System.IO.Path.Combine(executingDirectory, "x64"));
-                }
-                else
-                {
-                    SetDllDirectory(System.IO.Path.Combine(executingDirectory, "x86"));
-                }
-            }
         }
 
         // ************************* STEAM UPDATE *************************
@@ -221,6 +194,7 @@ namespace GreedyKidEditor.Helpers
         {
             if (_steamworksReady)
             {
+#if STEAM
                 try
                 {
                     SteamAPI.RunCallbacks();
@@ -238,9 +212,11 @@ namespace GreedyKidEditor.Helpers
                 {
                     _callbackException = e;
                 }
+#endif
             }
         }
 
+#if STEAM
         // ************************* WORKSHOP UPLOAD *************************
 
         private Building _buildingToUpload = null;
@@ -434,5 +410,6 @@ namespace GreedyKidEditor.Helpers
             if (pCallback.m_bUserNeedsToAcceptWorkshopLegalAgreement)
                 _uploadResult = WorkshopUploadReturn.NeedLegalAgreement;
         }
+#endif
     }
 }
