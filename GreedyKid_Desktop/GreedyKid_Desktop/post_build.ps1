@@ -4,17 +4,12 @@ $directory = $args[0]
 $identifier = $args[1]
 $projectPath = $args[2]
 
-Write-Host "Repairing white spaces in Launch.sh in case git overriden them..." -ForegroundColor DarkCyan
-
 if (Test-Path $directory"Launch.sh") {
+	Write-Host "Repairing white spaces in Launch.sh in case git overriden them..." -ForegroundColor DarkCyan
+
     $original_file = "$($directory)Launch.sh"
     $text = [IO.File]::ReadAllText($original_file) -replace "`r`n", "`n"
     [IO.File]::WriteAllText($original_file, $text)
-}
-
-if (!(Test-Path $directory"MonoGame.Framework.dll")) {
-    Write-Host "Looks like we're on NativeAOT, let's remove useless json files..." -ForegroundColor DarkCyan
-    Get-ChildItem -Path $directory *.json | foreach { Remove-Item -Path $_.FullName }
 }
 
 if ($identifier -eq "osx-x64" -Or $identifier -eq "osx-arm64") {

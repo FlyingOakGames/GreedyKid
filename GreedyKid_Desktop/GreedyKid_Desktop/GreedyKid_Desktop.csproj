@@ -128,4 +128,18 @@
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb" />
   </ItemGroup>
+
+  <!-- POST-BUILD SCRIPT TO CREATE A MAC BUNDLE -->
+
+  <PropertyGroup>
+    <!-- Because PowerShell executable has a different name on each OS... -->
+    <PowerShellCmd Condition=" '$([MSBuild]::IsOSPlatform(Windows))' ">PowerShell</PowerShellCmd>
+    <PowerShellCmd Condition=" '$([MSBuild]::IsOSPlatform(Linux))' ">pwsh</PowerShellCmd>
+    <PowerShellCmd Condition=" '$([MSBuild]::IsOSPlatform(OSX))' ">pwsh</PowerShellCmd>
+  </PropertyGroup>
+  
+  <Target Name="CleanPublishOutput" AfterTargets="Publish">
+    <Exec Command="$(PowerShellCmd) -ExecutionPolicy Unrestricted -File post_build.ps1 $(PublishDir) $(RuntimeIdentifier) $(ProjectDir)" />
+  </Target>
+  
 </Project>
