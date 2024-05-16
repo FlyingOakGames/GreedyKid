@@ -9,18 +9,30 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM64 = Debug|ARM64
 		Debug|x64 = Debug|x64
+		DebugSteam|ARM64 = DebugSteam|ARM64
+		DebugSteam|x64 = DebugSteam|x64
 		Release|ARM64 = Release|ARM64
 		Release|x64 = Release|x64
+		ReleaseSteam|ARM64 = ReleaseSteam|ARM64
+		ReleaseSteam|x64 = ReleaseSteam|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{0A17F63D-5157-4EC5-BF3E-8E10F0F474B6}.Debug|ARM64.ActiveCfg = Debug|ARM64
 		{0A17F63D-5157-4EC5-BF3E-8E10F0F474B6}.Debug|ARM64.Build.0 = Debug|ARM64
 		{0A17F63D-5157-4EC5-BF3E-8E10F0F474B6}.Debug|x64.ActiveCfg = Debug|x64
 		{0A17F63D-5157-4EC5-BF3E-8E10F0F474B6}.Debug|x64.Build.0 = Debug|x64
+		{0A17F63D-5157-4EC5-BF3E-8E10F0F474B6}.DebugSteam|ARM64.ActiveCfg = DebugSteam|ARM64
+		{0A17F63D-5157-4EC5-BF3E-8E10F0F474B6}.DebugSteam|ARM64.Build.0 = DebugSteam|ARM64
+		{0A17F63D-5157-4EC5-BF3E-8E10F0F474B6}.DebugSteam|x64.ActiveCfg = DebugSteam|x64
+		{0A17F63D-5157-4EC5-BF3E-8E10F0F474B6}.DebugSteam|x64.Build.0 = DebugSteam|x64
 		{0A17F63D-5157-4EC5-BF3E-8E10F0F474B6}.Release|ARM64.ActiveCfg = Release|ARM64
 		{0A17F63D-5157-4EC5-BF3E-8E10F0F474B6}.Release|ARM64.Build.0 = Release|ARM64
 		{0A17F63D-5157-4EC5-BF3E-8E10F0F474B6}.Release|x64.ActiveCfg = Release|x64
 		{0A17F63D-5157-4EC5-BF3E-8E10F0F474B6}.Release|x64.Build.0 = Release|x64
+		{0A17F63D-5157-4EC5-BF3E-8E10F0F474B6}.ReleaseSteam|ARM64.ActiveCfg = ReleaseSteam|ARM64
+		{0A17F63D-5157-4EC5-BF3E-8E10F0F474B6}.ReleaseSteam|ARM64.Build.0 = ReleaseSteam|ARM64
+		{0A17F63D-5157-4EC5-BF3E-8E10F0F474B6}.ReleaseSteam|x64.ActiveCfg = ReleaseSteam|x64
+		{0A17F63D-5157-4EC5-BF3E-8E10F0F474B6}.ReleaseSteam|x64.Build.0 = ReleaseSteam|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

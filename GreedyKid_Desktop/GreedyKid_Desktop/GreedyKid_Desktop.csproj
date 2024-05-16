@@ -20,6 +20,7 @@
     <StartupObject>GreedyKid.Program</StartupObject>
     <Authors>Flying Oak Games</Authors>
     <Version>1.0.0.0</Version>
+    <Configurations>Debug;Release;DebugSteam;ReleaseSteam</Configurations>
   </PropertyGroup>
   
   <ItemGroup>
@@ -52,8 +53,8 @@
   </PropertyGroup>
 
   <!-- For debugging we work with Steam enabled -->
-  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
-    <DefineConstants>$(DefineConstants);TRACE;STEAM</DefineConstants>
+  <PropertyGroup Condition="'$(Configuration)'=='DebugSteam'">
+    <DefineConstants>$(DefineConstants);DEBUG;TRACE;STEAM</DefineConstants>
   </PropertyGroup>
 
   <!-- The Steam configuration -->
