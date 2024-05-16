@@ -1,4 +1,5 @@
-﻿using Ionic.Zlib;
+﻿// Boo! Greedy Kid © 2017-2024 Flying Oak Games. All rights reserved.
+using Ionic.Zlib;
 using System;
 using System.IO;
 

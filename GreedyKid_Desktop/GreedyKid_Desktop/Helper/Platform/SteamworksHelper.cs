@@ -1,4 +1,5 @@
-﻿#if STEAM
+﻿// Boo! Greedy Kid © 2017-2024 Flying Oak Games. All rights reserved.
+#if STEAM
 
 using System;
 using Steamworks;

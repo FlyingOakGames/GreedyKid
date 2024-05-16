@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿// Boo! Greedy Kid © 2017-2024 Flying Oak Games. All rights reserved.
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 

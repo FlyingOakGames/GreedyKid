@@ -1,4 +1,5 @@
-﻿using GreedyKid.Helper;
+﻿// Boo! Greedy Kid © 2017-2024 Flying Oak Games. All rights reserved.
+using GreedyKid.Helper;
 using System;
 
 namespace GreedyKid
