@@ -31,6 +31,7 @@
   <ItemGroup>
     <!-- Trimming directive for PublishAot to work (at some point MonoGame could be updated to work without this directive) -->
     <TrimmerRootAssembly Include="MonoGame.Framework" />
+    <TrimmerRootAssembly Include="mscorlib" />
   </ItemGroup>
   
   <PropertyGroup>
