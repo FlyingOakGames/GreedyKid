@@ -40,3 +40,7 @@ This repository sole purpose is for educational use.
 We don't accept pull requests.
 
 We don't accept comments, questions, or bug reports.
+
+## Please consider thanking us
+
+The game remains a commercial project. If you are using repository, please consider buying the game on Steam to support us: [Boo! Greedy Kid on Steam](https://store.steampowered.com/app/770630/Boo_Greedy_Kid/).
