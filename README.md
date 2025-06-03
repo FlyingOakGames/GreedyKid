@@ -6,13 +6,15 @@
 
 This is the main repository for [Boo! Greedy Kid](https://store.steampowered.com/app/770630/Boo_Greedy_Kid/) on all platforms (Windows, macOS, and Linux) and its level editor (Windows-only).
 
-Boo! Greedy Kid is coded in C# with [MonoGame](https://monogame.net/) 3.8.1, and uses native compilation on all platforms when published (using .NET ```PublishAot```).
+Boo! Greedy Kid is coded in C# with [MonoGame](https://monogame.net/) 3.8.4, and uses native compilation on all platforms when published (using .NET ```PublishAot```).
 
 A post-build script will create a macOS bundle automatically when using ```dotnet publish -r osx-x64```.
 
+⚠️ This repository uses ```git-lfs```, make sure to pull LFS objects using ```git lfs pull``` after cloning the repository. Otherwise image and sound files will be empty.
+
 ## All rights reserved
 
-Boo! Greedy Kid © 2017-2024 Flying Oak Games. All rights reserved.
+Boo! Greedy Kid © 2017-2025 Flying Oak Games. All rights reserved.
 
 This is **not** a free software. You can't use code or assets for your own projects.
 
